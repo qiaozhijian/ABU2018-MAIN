@@ -68,17 +68,40 @@ void ConfigTask(void)
 {
 	CPU_INT08U  os_err;
 	os_err = os_err;
+	
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
 	HardWareInit();
 	
-	MotorInit();
+	//MotorInit();
 	
 	statusInit();
 	
+	int laserInit = (Get_Adc_Average(ADC_Channel_15,200));
+//	int i=50;
+//	while(i--)
+//	{
+//		laserInit = KalmanFilter(Get_Adc_Average(ADC_Channel_14,1));
+//		Delay_ms(1);
+//	}
+	
+//	do{
+//		gRobot.laser=(Get_Adc_Average(ADC_Channel_15,200));
+//		Delay_ms(1);
+//	}
+//	while(1);
+	//while(gRobot.laser-laserInit<20);
+	
+	uint32_t value = 1;
+	CAN_TxMsg(CAN2,SEND_TO_MOTIONCARD,(uint8_t*)(&value),4);
+	
 	OSTaskSuspend(OS_PRIO_SELF);
 }
-
+/*
+0x30 1
+0x30 2
+0x40 1
+*/
 void RobotTask(void)
 {
 	CPU_INT08U  os_err;
@@ -88,8 +111,30 @@ void RobotTask(void)
 	{
 		OSSemPend(PeriodSem, 0, &os_err);
 		
-		gRobot.laser=KalmanFilter(Get_Adc_Average(ADC_Channel_14,1));
+		AT_CMD_Handle();
 		
+		if(!(gRobot.progressCase&GET_THE_BALL))
+		{
+			if(PE_FOR_THE_BALL)
+			{	
+				uint32_t value = 2;
+				CAN_TxMsg(CAN2,SEND_TO_MOTIONCARD,(uint8_t*)(&value),4);
+				gRobot.progressCase|=GET_THE_BALL;
+			}
+		}
+		
+		if(gRobot.progressCase&READY_FIRST_BALL)
+		{
+			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
+			Delay_ms(10);
+			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
+			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
+			Delay_ms(500);
+			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
+			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
+			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
+			gRobot.progressCase&=~READY_FIRST_BALL;
+		}
 	}
 }
 
@@ -111,8 +156,10 @@ void HardWareInit(void){
 	DebugBLE_Init(921600);
 	//激光初始化
 	Laser_Init();
+	//光电初始化
+	PhotoelectricityInit();
 	
-	Delay_ms(3000);
+	Delay_ms(1000);
 	
 	Enable_ROBS();//使能舵机
 	
@@ -148,8 +195,8 @@ void MotorDisable(void){
 void statusInit(void)
 {
 	/*运动控制状态初始化*/
-	SetMotionFlag(~CLAW_STATUS_OPEN);
-	SetMotionFlag(STEER_READY);
-	SetMotionFlag(~SHOOT_BIG_ENABLE);
-	SetMotionFlag(~SHOOT_BIG_ENABLE);
+	SetMotionFlag(~AT_CLAW_STATUS_OPEN);
+	SetMotionFlag(AT_STEER_READY);
+	SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
+	SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
 }

@@ -207,42 +207,37 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gRobot.walk_t.x</ItemText>
+          <ItemText>esVelocityByBefore</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>gRobot.walk_t.y</ItemText>
+          <ItemText>esVelocity</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>esVelocityByBefore</ItemText>
+          <ItemText>velocityErr</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>esVelocity</ItemText>
+          <ItemText>Velocity</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>velocityErr</ItemText>
+          <ItemText>OSCPUUsage,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Velocity</ItemText>
+          <ItemText>timeCount</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>OSCPUUsage,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>timeCount</ItemText>
+          <ItemText>buffer[0],0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

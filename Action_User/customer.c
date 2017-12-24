@@ -57,28 +57,29 @@ void USART3_IRQHandler(void)
   }
 	OSIntExit();
 }
-
-void AT_CMD_Judge(void){
-  if((bufferI == 4) && strncmp(buffer, "AT\r\n", 4)==0)//AT    
-    atCommand=1;
-  else if((bufferI == 9) && strncmp(buffer, "AT+open\r\n", 9)==0)//AT    
-    atCommand=2;
-  else if((bufferI == 9) && strncmp(buffer, "AT+shut\r\n", 9)==0)//AT    
-    atCommand=3;
-  else 
-    atCommand=666;
-  
-}
-
 #define CLAW 	1
 #define SHOOT 2
 #define PITCH 3
 #define STEER 4
 #define GAS  	5
 
-int robsPositon = 0;
-int clawStatus = 0;
-int reset;
+void AT_CMD_Judge(void){
+  if((bufferI >= 4) && strncmp(buffer, "AT+1", 4)==0)//AT    
+    atCommand=CLAW;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0)//AT    
+    atCommand=SHOOT;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+3", 4)==0)//AT    
+    atCommand=PITCH;
+	else if((bufferI >= 4) && strncmp(buffer, "AT+4", 4)==0)//发射按钮   
+    atCommand=STEER;
+	else if((bufferI >= 4) && strncmp(buffer, "AT+5", 4)==0)//发射按钮   
+    atCommand=GAS;
+  else 
+    atCommand=666;
+  
+}
+
+
 void AT_CMD_Handle(void){
 	float value;
 	switch(atCommand)
@@ -90,12 +91,12 @@ void AT_CMD_Handle(void){
 			if(*(buffer + 4) == '1') 
 			{
 				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID, CLAW_SHUT);
-				SetMotionFlag(~CLAW_STATUS_OPEN);
+				SetMotionFlag(~AT_CLAW_STATUS_OPEN);
 			}
 			else if(*(buffer + 4) == '0') 
 			{
 				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
-				SetMotionFlag(CLAW_STATUS_OPEN);
+				SetMotionFlag(AT_CLAW_STATUS_OPEN);
 			} 
 			else{}
 			break;
@@ -104,30 +105,29 @@ void AT_CMD_Handle(void){
 		case SHOOT:
 			if(*(buffer + 4) == '1')
 			{
-				if(gRobot.motionFlag&(CLAW_STATUS_OPEN|STEER_READY))
+				if(gRobot.AT_motionFlag&(AT_CLAW_STATUS_OPEN|AT_STEER_READY))
 				{
 					GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
-					reset = 1;
 					GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
-					SetMotionFlag(SHOOT_BIG_ENABLE);
-					SetMotionFlag(SHOOT_SMALL_ENABLE);
+					SetMotionFlag(AT_SHOOT_BIG_ENABLE);
+					SetMotionFlag(AT_SHOOT_SMALL_ENABLE);
 				}
 			}
 			else if(*(buffer + 4) == '0') 
 			{
-				if(gRobot.motionFlag&(SHOOT_BIG_ENABLE|SHOOT_SMALL_ENABLE))
+				if(gRobot.AT_motionFlag&(AT_SHOOT_BIG_ENABLE|AT_SHOOT_SMALL_ENABLE))
 				{
 					GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
 					GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID, 0);
-					SetMotionFlag(~SHOOT_BIG_ENABLE);
-					SetMotionFlag(~SHOOT_SMALL_ENABLE);
+					SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
+					SetMotionFlag(~AT_SHOOT_SMALL_ENABLE);
 				}
 				else
 				{
 					GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
-					SetMotionFlag(~SHOOT_SMALL_ENABLE);
+					SetMotionFlag(~AT_SHOOT_SMALL_ENABLE);
 					GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-					SetMotionFlag(~CLAW_STATUS_OPEN);
+					SetMotionFlag(~AT_CLAW_STATUS_OPEN);
 				}
 			}
 			break;
@@ -144,17 +144,17 @@ void AT_CMD_Handle(void){
 			if(value <= -45.f)
 			{
 				ROBS_PosCrl(90, 95, 1000);
-				SetMotionFlag(~STEER_READY);
+				SetMotionFlag(~AT_STEER_READY);
 			}
 			else if(value <= 45.f)
 			{
 				ROBS_PosCrl(0, 0, 1000);
-				SetMotionFlag(STEER_READY);
+				SetMotionFlag(AT_STEER_READY);
 			}
 			else
 			{
 				ROBS_PosCrl(-90, -90, 1000);
-				SetMotionFlag(~STEER_READY);
+				SetMotionFlag(~AT_STEER_READY);
 			}
 
 			break;
@@ -162,7 +162,7 @@ void AT_CMD_Handle(void){
 		case GAS:
 			//平板的值
 			value = atof(buffer + 4);
-			CAN_TxMsg(CAN2,0X20,(uint8_t*)(&value),4);
+			CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
 			break;
 
 		default:
@@ -172,34 +172,37 @@ void AT_CMD_Handle(void){
   bufferInit();
 }
 
-
+void CAN_CMD_Handle(void)
+{
+	
+}
 
 void SetMotionFlag(uint32_t status){
 	
 	switch(status){
-		case CLAW_STATUS_OPEN:
-			gRobot.motionFlag|=CLAW_STATUS_OPEN;
+		case AT_CLAW_STATUS_OPEN:
+			gRobot.AT_motionFlag|=AT_CLAW_STATUS_OPEN;
 			break;
-		case ~CLAW_STATUS_OPEN:
-			gRobot.motionFlag&=~CLAW_STATUS_OPEN;
+		case ~AT_CLAW_STATUS_OPEN:
+			gRobot.AT_motionFlag&=~AT_CLAW_STATUS_OPEN;
 			break;
-		case STEER_READY:
-			gRobot.motionFlag|=STEER_READY;
+		case AT_STEER_READY:
+			gRobot.AT_motionFlag|=AT_STEER_READY;
 			break;
-		case ~STEER_READY:
-			gRobot.motionFlag&=~STEER_READY;
+		case ~AT_STEER_READY:
+			gRobot.AT_motionFlag&=~AT_STEER_READY;
 			break;
-		case SHOOT_BIG_ENABLE:
-			gRobot.motionFlag|=SHOOT_BIG_ENABLE;
+		case AT_SHOOT_BIG_ENABLE:
+			gRobot.AT_motionFlag|=AT_SHOOT_BIG_ENABLE;
 			break;
-		case ~SHOOT_BIG_ENABLE:
-			gRobot.motionFlag&=~SHOOT_BIG_ENABLE;
+		case ~AT_SHOOT_BIG_ENABLE:
+			gRobot.AT_motionFlag&=~AT_SHOOT_BIG_ENABLE;
 			break;
-		case SHOOT_SMALL_ENABLE:
-			gRobot.motionFlag|=SHOOT_SMALL_ENABLE;
+		case AT_SHOOT_SMALL_ENABLE:
+			gRobot.AT_motionFlag|=AT_SHOOT_SMALL_ENABLE;
 			break;
-		case ~SHOOT_SMALL_ENABLE:
-			gRobot.motionFlag&=~SHOOT_SMALL_ENABLE;
+		case ~AT_SHOOT_SMALL_ENABLE:
+			gRobot.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
 			break;
 	}
 }

@@ -189,7 +189,13 @@ void CAN2_RX0_IRQHandler(void)
 	CAN_RxMsg(CAN2, &StdId, buffer, 4);
 	canNodeId = StdId;
 
-	if(canNodeId==0X10)     //get speed value
+	if(StdId == 0x40 && buffer[0] == 1)
+	{
+		int jiang = 0;
+	}
+	
+	
+	if(canNodeId==GET_FROM_GASSENSOR)     //get speed value
 	{
 		//fix me, if length not 8
 		for(i = 0; i < 4; i++)
@@ -200,9 +206,16 @@ void CAN2_RX0_IRQHandler(void)
 		else if(msg4.dataf<0.f)
 			msg4.dataf=0.f;
 		USART_BLE_SEND(msg4.dataf);
-
 	}
 
+	if(canNodeId==GET_FROM_MOTIONCARD)     //get speed value
+	{
+		//fix me, if length not 8
+		for(i = 0; i < 4; i++)
+			msg4.data4[i] = buffer[i];
+		if(msg4.data32==0x01)
+			gRobot.progressCase|=READY_FIRST_BALL;
+	}
 	CAN_ClearFlag(CAN2, CAN_FLAG_EWG);
 	CAN_ClearFlag(CAN2, CAN_FLAG_EPV);
 	CAN_ClearFlag(CAN2, CAN_FLAG_BOF);

@@ -15,6 +15,9 @@
 #include "arm_math.h"
 /**************#define area**********/
 
+#define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12))							
+
+
 //常量定义
 #define CAR_L													0.5389f
 /*轮子直径*/
@@ -44,23 +47,37 @@
 #define RAD_TO_ANGLE(rad) 																						((rad)*57.29578f)
 
 //状态量解释
-#define CLAW_STATUS_OPEN 										0x01u
+#define AT_CLAW_STATUS_OPEN 										0x01u
 
-#define STEER_READY 												0x02u
+#define AT_STEER_READY 													0x02u
 
-#define SHOOT_BIG_ENABLE 										0x04u
+#define AT_SHOOT_BIG_ENABLE 										0x04u
 
-#define SHOOT_SMALL_ENABLE 			  					0x08u
+#define AT_SHOOT_SMALL_ENABLE 			  					0x08u
+
+//状态量解释
+#define CAN_CLAW_STATUS_OPEN 										0x01u
+
+#define CAN_STEER_READY 												0x02u
+
+#define CAN_SHOOT_BIG_ENABLE 										0x04u
+
+#define CAN_SHOOT_SMALL_ENABLE 			  					0x08u
 
 
-#define CLAW_OPEN 									  			(1)
-#define CLAW_SHUT 									  			(0)
+#define CLAW_OPEN 									  					(1)
+#define CLAW_SHUT 									 			 			(0)
 
+
+#define GET_THE_BALL														0x01u
+#define READY_FIRST_BALL												0x02u
 /**************typedef area**********/
 typedef struct{
 	
 	float laser;
-	uint16_t motionFlag; 
+	uint16_t AT_motionFlag; 
+	uint16_t CAN_motionFlag; 
+	uint16_t progressCase;
 }Robot_t ;
 
 #endif

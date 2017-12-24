@@ -5,6 +5,11 @@
 #define CAN_SEND_OK 1
 #define CAN_SEND_ERR -1
 
+#define GET_FROM_GASSENSOR				0X10
+#define SEND_TO_GASSENSOR					0X20
+#define SEND_TO_MOTIONCARD				0X30
+#define GET_FROM_MOTIONCARD				0X40
+
 void CAN_Config(CAN_TypeDef* CANx, 
 				uint32_t CAN_BaudRate,
 				GPIO_TypeDef * GPIOx,
