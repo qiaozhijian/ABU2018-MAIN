@@ -64,6 +64,7 @@ void statusInit(void);
 /*全局变量的声明*/
 Robot_t gRobot;
 
+	int aaa;
 void ConfigTask(void)
 {
 	CPU_INT08U  os_err;
@@ -73,27 +74,28 @@ void ConfigTask(void)
 	
 	HardWareInit();
 	
-	//MotorInit();
+	MotorInit();
 	
 	statusInit();
 	
-	int laserInit = (Get_Adc_Average(ADC_Channel_15,200));
-//	int i=50;
-//	while(i--)
-//	{
-//		laserInit = KalmanFilter(Get_Adc_Average(ADC_Channel_14,1));
-//		Delay_ms(1);
-//	}
+	int laserInit = (Get_Adc_Average(ADC_Channel_14,200));
 	
-//	do{
-//		gRobot.laser=(Get_Adc_Average(ADC_Channel_15,200));
-//		Delay_ms(1);
-//	}
-//	while(1);
-	//while(gRobot.laser-laserInit<20);
+	USART_OUT(DEBUG_USART,"Init");
+	USART_OUT_F(laserInit,1);
+	USART_Enter(1);
 	
-	uint32_t value = 1;
-	CAN_TxMsg(CAN2,SEND_TO_MOTIONCARD,(uint8_t*)(&value),4);
+	do{
+		gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
+		USART_OUT_F(gRobot.laser,1);
+		USART_Enter(1);
+		Delay_ms(1);
+	}
+	while(gRobot.laser-laserInit<20);
+	
+	
+	USART_OUT(DEBUG_USART,"ok\r\n");
+	MotionCardCMDSend(1);
+	USART_OUT(DEBUG_USART,"ok\r\n");
 	
 	OSTaskSuspend(OS_PRIO_SELF);
 }
@@ -113,27 +115,48 @@ void RobotTask(void)
 		
 		AT_CMD_Handle();
 		
-		if(!(gRobot.progressCase&GET_THE_BALL))
+		/*捡到球的时候*/
+		if(!(gRobot.CAN_motionFlag&GET_THE_BALL))
 		{
+			
 			if(PE_FOR_THE_BALL)
 			{	
-				uint32_t value = 2;
-				CAN_TxMsg(CAN2,SEND_TO_MOTIONCARD,(uint8_t*)(&value),4);
-				gRobot.progressCase|=GET_THE_BALL;
+				Delay_ms(500);
+				MotionCardCMDSend(2);
+				gRobot.CAN_motionFlag|=GET_THE_BALL;
+				
+				PitchAngleMotion(10.2f);
+				CourseAngleMotion(-76.9f);
+				
+				Delay_ms(500);
+				ROBS_PosCrl(0, 0, 2000);
+				USART_OUT(DEBUG_USART,"GET THE BALL");
+				USART_OUT(DEBUG_USART,"\r\n");
 			}
 		}
 		
-		if(gRobot.progressCase&READY_FIRST_BALL)
+		if(gRobot.CAN_motionFlag&READY_FIRST_BALL)
 		{
+			
+			USART_OUT(DEBUG_USART,"READY_FIRST_BALL");
+			USART_OUT(DEBUG_USART,"\r\n");
 			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
-			Delay_ms(10);
+			Delay_ms(300);
 			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
 			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
-			Delay_ms(500);
+			Delay_ms(150);
+			/*复位*/
 			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
 			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
 			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-			gRobot.progressCase&=~READY_FIRST_BALL;
+			/*去接下一个球*/
+			CourseAngleMotion(0.f);
+			PitchAngleMotion(26.0f);
+			ROBS_PosCrl(-90, -90, 1000);
+			MotionCardCMDSend(3);
+			
+			
+			gRobot.CAN_motionFlag&=~READY_FIRST_BALL;
 		}
 	}
 }
@@ -166,28 +189,26 @@ void HardWareInit(void){
 }
 void MotorInit(void){
 		//电机初始化及使能
-		ElmoInit(CAN1);
+		ElmoInit(CAN2);
 
 		//电机位置环
-		PosLoopCfg(CAN1, 1, 8000000, 8000000,1250000);
+		PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
+		//电机位置环
+		PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
 
-		MotorOn(CAN1,ELMO_BROADCAST_ID); 
-		
-		PosCrl(CAN1, 1,ABSOLUTE_MODE,0);
+		MotorOn(CAN2,5); 
+		MotorOn(CAN2,6); 
 }
 
 void MotorDisable(void){
 	
 	//电机初始化及使能
-	ElmoInit(CAN1);
+	ElmoInit(CAN2);
 	/*从电机正面看过去，逆时针为正  */
-	VelLoopCfg(CAN1,1,10000000,10000000);
-	VelLoopCfg(CAN1,2,10000000,10000000);
-	VelLoopCfg(CAN1,3,10000000,10000000);
-	VelLoopCfg(CAN1,4,10000000,10000000);
-	VelLoopCfg(CAN1,5,10000000,10000000);
+	VelLoopCfg(CAN2,5,10000000,10000000);
+	VelLoopCfg(CAN2,6,10000000,10000000);
 	
-	MotorOn(CAN1,ELMO_BROADCAST_ID); 
+	MotorOff(CAN2,ELMO_BROADCAST_ID); 
 
 	//爪子状态控制
 	//gasMotion();
@@ -199,4 +220,17 @@ void statusInit(void)
 	SetMotionFlag(AT_STEER_READY);
 	SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
 	SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
+	
+	Delay_ms(2000);
+	Delay_ms(2000);
+	Delay_ms(2000);
+	/*接球角度*/
+	PitchAngleMotion(26.0);
+	CourseAngleMotion(0);
+	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
+	ROBS_PosCrl(90, 95, 1000);
+	
+	
 }
+
+

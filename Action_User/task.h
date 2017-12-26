@@ -15,7 +15,7 @@
 #include "arm_math.h"
 /**************#define area**********/
 
-#define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_12))							
+#define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6))							
 
 
 //常量定义
@@ -76,8 +76,7 @@ typedef struct{
 	
 	float laser;
 	uint16_t AT_motionFlag; 
-	uint16_t CAN_motionFlag; 
-	uint16_t progressCase;
+	uint16_t CAN_motionFlag;
 }Robot_t ;
 
 #endif

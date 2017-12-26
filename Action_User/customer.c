@@ -57,11 +57,12 @@ void USART3_IRQHandler(void)
   }
 	OSIntExit();
 }
-#define CLAW 	1
-#define SHOOT 2
-#define PITCH 3
-#define STEER 4
-#define GAS  	5
+#define CLAW 						1
+#define SHOOT 					2
+#define PITCH 					3
+#define STEER 					4
+#define GAS  						5
+#define COURSE  				6
 
 void AT_CMD_Judge(void){
   if((bufferI >= 4) && strncmp(buffer, "AT+1", 4)==0)//AT    
@@ -74,6 +75,8 @@ void AT_CMD_Judge(void){
     atCommand=STEER;
 	else if((bufferI >= 4) && strncmp(buffer, "AT+5", 4)==0)//发射按钮   
     atCommand=GAS;
+	else if((bufferI >= 4) && strncmp(buffer, "AT+6", 4)==0)//发射按钮   
+    atCommand=COURSE;
   else 
     atCommand=666;
   
@@ -134,13 +137,13 @@ void AT_CMD_Handle(void){
 
 		case PITCH:
 			value = atof(buffer + 4);
-			value = value*28*19*8192/360;
-			PosCrl(CAN1, 1,ABSOLUTE_MODE,value);
-
+			PitchAngleMotion(value);
 			break;
 		
 		case STEER:
 			value = atof(buffer + 4);
+//				ROBS_PosCrl(value, value, 1000);
+//				SetMotionFlag(~AT_STEER_READY);
 			if(value <= -45.f)
 			{
 				ROBS_PosCrl(90, 95, 1000);
@@ -163,6 +166,11 @@ void AT_CMD_Handle(void){
 			//平板的值
 			value = atof(buffer + 4);
 			CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
+			break;
+		
+		case COURSE:
+			value = atof(buffer + 4);
+			CourseAngleMotion(value);
 			break;
 
 		default:

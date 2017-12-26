@@ -28,3 +28,4 @@ uint8_t CAN_TxMsg(CAN_TypeDef* CANx,
 
 int OSCANSendCmd(CAN_TypeDef* CANx, CanTxMsg* TxMessage);
 
+void MotionCardCMDSend(uint32_t cmd);

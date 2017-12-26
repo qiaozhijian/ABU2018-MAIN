@@ -42,20 +42,24 @@ void DebugBLE_Init(uint32_t BaudRate)
 	
   /* Enable GPIO clock */
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
 
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5, ENABLE);
 	
   /* Connect PXx to USARTx_Tx*/
-  GPIO_PinAFConfig(GPIOC, GPIO_PinSource5, GPIO_AF_UART5);
+  GPIO_PinAFConfig(GPIOC, GPIO_PinSource12, GPIO_AF_UART5);
   /* Connect PXx to USARTx_Rx*/
-  GPIO_PinAFConfig(GPIOD, GPIO_PinSource6,  GPIO_AF_UART5);
+  GPIO_PinAFConfig(GPIOD, GPIO_PinSource2,  GPIO_AF_UART5);
 	
   /* Configure USART Tx as alternate function  */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_6;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_Init(GPIOC, &GPIO_InitStructure);
+	
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
   GPIO_Init(GPIOD, &GPIO_InitStructure);
 	
 	USART_InitStructure.USART_BaudRate = BaudRate;

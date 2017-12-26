@@ -176,6 +176,7 @@ void VelCrl(CAN_TypeDef* CANx, uint8_t ElmoNum,int32_t vel)
 */
 void PosCrl(CAN_TypeDef* CANx, uint8_t ElmoNum,uint8_t posMode,int32_t pos)
 {
+	
 	SendPosCmd(CANx, ElmoNum, posMode, pos);
 	
 	BeginMotion(CANx, ElmoNum);	

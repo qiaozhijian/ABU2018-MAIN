@@ -518,6 +518,11 @@ int OSCANSendCmd(CAN_TypeDef* CANx, CanTxMsg* TxMessage)
 	
 }
 
+void MotionCardCMDSend(uint32_t cmd)
+{
+	uint32_t value = cmd;
+	CAN_TxMsg(CAN1,SEND_TO_MOTIONCARD,(uint8_t*)(&value),4);
+}
 
 
 
