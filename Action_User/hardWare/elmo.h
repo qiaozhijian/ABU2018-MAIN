@@ -10,6 +10,7 @@
 //ELMO驱动器发送ID基址
 #define SDO_RESPONSE_COB_ID_BASE 0x280
 
+
 /******************驱动器工作模式************************/
 #define TORQUE_CONTROL_MODE   (1)
 #define SPEED_CONTROL_MODE    (2)

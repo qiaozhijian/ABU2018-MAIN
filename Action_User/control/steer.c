@@ -38,8 +38,8 @@ void ROBS_PosCrl(float angleUP, float angleDOWN, int vel)
 
 	//Enable_ROBS();
 //  pos= (2048-angle/360.0f*4096.0f/30.0f*52.0f);
-  pos= (angleUP/360.0f*4096.0f)+2048;
-  pos1= (-angleDOWN/360.0f*4096.0f)+2048;
+  pos= ((angleUP-3.6)/360.0f*4096.0f)+2048;
+  pos1= (-(angleDOWN-10.8)/360.0f*4096.0f)+2048;
 	
 	USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos,vel);
 	USART_OUT(USART2,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos1,vel);

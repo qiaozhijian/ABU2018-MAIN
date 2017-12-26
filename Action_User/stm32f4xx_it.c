@@ -71,70 +71,25 @@ void CAN1_RX0_IRQHandler(void)
     //fix me, if length not 8
     for(i = 0; i < 8; i++)
       msg.data8[i] = buffer[i];
-    
     //位置
     if(msg.data32[0]==0x00005850)
     {
-     //gRobot.shootMotor_t.shootTempPos = msg.data32[1];
     }
-    
     //速度
     if(msg.data32[0]==0x00005856)
     {
-			
     }
   }
-  switch(canNodeId)
-  {
-  case  1:
-    //fix me, if length not 8
-    for(i = 0; i < 8; i++)
-      msg.data8[i] = buffer[i];
-    //速度
-    if(msg.data32[0]==0x00005856)
-    {
-      //gRobot.walk_t.tempVelFour[0] = msg.data32[1];
-    }
-    //速度
-    if(msg.data32[0]==0x00005850)
-    {
-      //gRobot.walk_t.tempPosFour[0] = msg.data32[1];
-    }
-    break;
-  case  2:
-    //fix me, if length not 8
-    for(i = 0; i < 8; i++)
-      msg.data8[i] = buffer[i];
-    
-    //速度
-    if(msg.data32[0]==0x00005856)
-    {
-      //gRobot.walk_t.tempVelFour[1] = msg.data32[1];
-    }
-    break;
-  case  3:
-    //fix me, if length not 8
-    for(i = 0; i < 8; i++)
-      msg.data8[i] = buffer[i];
-    
-    //速度
-    if(msg.data32[0]==0x00005856)
-    {
-      //gRobot.walk_t.tempVelFour[2] = msg.data32[1];
-    }
-    break;
-  case  4:
-    //fix me, if length not 8
-    for(i = 0; i < 8; i++)
-      msg.data8[i] = buffer[i];
-    
-    //速度
-    if(msg.data32[0]==0x00005856)
-    {
-      //gRobot.walk_t.tempVelFour[3] = msg.data32[1];
-    }
-    break;
-  }
+ 
+	if(StdId==GET_FROM_MOTIONCARD)     //get speed value
+	{
+		//fix me, if length not 8
+		for(i = 0; i < 4; i++)
+			msg.data8[i] = buffer[i];
+		//位置
+		if(msg.data32[0]==1)
+			gRobot.CAN_motionFlag|=READY_FIRST_BALL;
+	}
   
   CAN_ClearFlag(CAN1, CAN_FLAG_EWG);
   CAN_ClearFlag(CAN1, CAN_FLAG_EPV);
@@ -208,14 +163,6 @@ void CAN2_RX0_IRQHandler(void)
 		USART_BLE_SEND(msg4.dataf);
 	}
 
-	if(canNodeId==GET_FROM_MOTIONCARD)     //get speed value
-	{
-		//fix me, if length not 8
-		for(i = 0; i < 4; i++)
-			msg4.data4[i] = buffer[i];
-		if(msg4.data32==0x01)
-			gRobot.progressCase|=READY_FIRST_BALL;
-	}
 	CAN_ClearFlag(CAN2, CAN_FLAG_EWG);
 	CAN_ClearFlag(CAN2, CAN_FLAG_EPV);
 	CAN_ClearFlag(CAN2, CAN_FLAG_BOF);
