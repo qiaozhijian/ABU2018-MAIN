@@ -127,6 +127,7 @@ void RobotTask(void)
 				
 				PitchAngleMotion(10.2f);
 				CourseAngleMotion(-76.9f);
+				//CourseAngleMotion(-180.f);
 				
 				Delay_ms(500);
 				ROBS_PosCrl(0, 0, 2000);
@@ -228,7 +229,7 @@ void statusInit(void)
 	PitchAngleMotion(26.0);
 	CourseAngleMotion(0);
 	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-	ROBS_PosCrl(90, 95, 1000);
+	ROBS_PosCrl(90, 91, 1000);
 	
 	
 }
