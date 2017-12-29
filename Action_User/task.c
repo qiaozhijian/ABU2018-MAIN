@@ -64,7 +64,6 @@ void statusInit(void);
 /*全局变量的声明*/
 Robot_t gRobot;
 
-	int aaa;
 void ConfigTask(void)
 {
 	CPU_INT08U  os_err;
@@ -78,33 +77,12 @@ void ConfigTask(void)
 	
 	statusInit();
 	
-	int laserInit = (Get_Adc_Average(ADC_Channel_14,200));
-	
-	USART_OUT(DEBUG_USART,"Init");
-	USART_OUT_F(laserInit,1);
-	USART_Enter(1);
-	
-	do{
-		gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
-		USART_OUT_F(gRobot.laser,1);
-		USART_Enter(1);
-		Delay_ms(1);
-	}
-	while(gRobot.laser-laserInit<20);
-	
-	
-	USART_OUT(DEBUG_USART,"ok\r\n");
-	MotionCardCMDSend(1);
-	USART_OUT(DEBUG_USART,"ok\r\n");
+	gRobot.process=TO_START;
+	gRobot.laserInit=(Get_Adc_Average(ADC_Channel_14,200));
 	
 	OSTaskSuspend(OS_PRIO_SELF);
 }
-/*
-0x30 1
-0x30 2
-0x40 1
-*/
-void SendStatus(void);
+
 void RobotTask(void)
 {
 	CPU_INT08U  os_err;
@@ -115,78 +93,93 @@ void RobotTask(void)
 		OSSemPend(PeriodSem, 0, &os_err);
 		
 		AT_CMD_Handle();
-		SendStatus();
-		/*捡到球的时候*/
-		if(!(gRobot.CAN_motionFlag&GET_THE_FIRST_BALL))
-		{
-			
-			if(PE_FOR_THE_BALL)
-			{	
-				Delay_ms(500);
-				MotionCardCMDSend(2);
-				gRobot.CAN_motionFlag|=GET_THE_FIRST_BALL;
-				
-				PitchAngleMotion(10.2f);
-				CourseAngleMotion(-76.9f);
-				//CourseAngleMotion(-180.f);
-				
-				Delay_ms(500);
-				ROBS_PosCrl(0, 0, 2000);
-				USART_OUT(DEBUG_USART,"GET THE BALL");
-				USART_OUT(DEBUG_USART,"\r\n");
-			}
-		}
-		static int a;
-		if(gRobot.CAN_motionFlag&READY_FIRST_BALL&&a==0)
-		{
-			a=1;
-			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
-			Delay_ms(300);
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
-			Delay_ms(150);
-			/*复位*/
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
-			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-			/*去接下一个球*/
-			CourseAngleMotion(0.f);
-			PitchAngleMotion(27.1f);
-			ROBS_PosCrl(-90, -90, 1000);
-			MotionCardCMDSend(3);
-		}
 		
-		if((gRobot.CAN_motionFlag&GET_THE_FIRST_BALL)&&(!(gRobot.CAN_motionFlag&GET_THE_SECOND_BALL))&&(gRobot.CAN_motionFlag&READY_FIRST_BALL))
+		switch(gRobot.process)
 		{
-			if(PE_FOR_THE_BALL)
-			{	
-				gRobot.CAN_motionFlag|=GET_THE_SECOND_BALL;
-
+			case TO_START:
+				gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
+				if(gRobot.laser-gRobot.laserInit<20.f)
+				{
+					MotionCardCMDSend(1);
+					
+					gRobot.process=TO_GET_BALL_1;
+				}
+				
+				break;
+			case TO_GET_BALL_1:
+				
+				if(PE_FOR_THE_BALL)
+				{	
+					Delay_ms(500);
+					MotionCardCMDSend(2);
+					
+					PitchAngleMotion(10.2f);
+					CourseAngleMotion(-76.9f);
+					
+					Delay_ms(500);
+					ROBS_PosCrl(0, 0, 2000);
+				
+					gRobot.process=TO_THE_AREA_1;
+					
+				}
+				break;
+			case TO_THE_AREA_1:
+				
+				break;
+			case TO_THROW_BALL_1:
+				/*扔球*/
+				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
+				Delay_ms(300);
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
+				Delay_ms(150);
+				/*复位*/
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
+				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
+				/*去接下一个球*/
+				CourseAngleMotion(0.f);
+				PitchAngleMotion(27.1f);
+				ROBS_PosCrl(-90, -90, 1000);
+				/*通知控制卡*/
+				MotionCardCMDSend(3);
+				gRobot.process=TO_GET_BALL_2;
+				/*进入下一状态*/
+				break;
+			case TO_GET_BALL_2:
+				if(PE_FOR_THE_BALL)
+				{	
+					
+					PitchAngleMotion(30.1f);
+					CourseAngleMotion(-79.5f);
+					
+					MotionCardCMDSend(4);
+					Delay_ms(500);
+					ROBS_PosCrl(0, 0, 2000);
+				
+					gRobot.process=TO_THE_AREA_2;
+				}
+				break;
+			case TO_THE_AREA_2:
+				
+				break;
+			case TO_THROW_BALL_2:
+				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
+				Delay_ms(300);
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
+				Delay_ms(150);
+				/*复位*/
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
+				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
+				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
+				/*去接下一个球*/
+				CourseAngleMotion(0.f);
 				PitchAngleMotion(30.1f);
-				CourseAngleMotion(-79.5f);
-				
-				Delay_ms(500);
-				ROBS_PosCrl(0, 0, 2000);
-			}
-		}
-		
-		if(gRobot.CAN_motionFlag&READY_SECOND_BALL)
-		{
-			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
-			Delay_ms(300);
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
-			Delay_ms(150);
-			/*复位*/
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
-			GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
-			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-			/*去接下一个球*/
-			CourseAngleMotion(0.f);
-			PitchAngleMotion(30.1f);
-			ROBS_PosCrl(-90, -90, 1000);
-			MotionCardCMDSend(4);
-			gRobot.CAN_motionFlag&=~READY_SECOND_BALL;
+				ROBS_PosCrl(-90, -90, 1000);
+				MotionCardCMDSend(5);
+				gRobot.process=TO_GET_BALL_3;
+				break;
 		}
 	}
 }
@@ -262,17 +255,5 @@ void statusInit(void)
 	
 	
 }
-void SendStatus(void)
-{
-	if(gRobot.CAN_motionFlag&GET_THE_FIRST_BALL)
-		USART_OUT(DEBUG_USART,"GET_THE_FIRST_BALL\t");
-	if(gRobot.CAN_motionFlag&READY_FIRST_BALL)
-		USART_OUT(DEBUG_USART,"READY_FIRST_BALL\t");
-	if(gRobot.CAN_motionFlag&GET_THE_SECOND_BALL)
-		USART_OUT(DEBUG_USART,"GET_THE_SECOND_BALL\t");
-	if(gRobot.CAN_motionFlag&READY_SECOND_BALL)
-		USART_OUT(DEBUG_USART,"READY_SECOND_BALL\t");
-	
-	USART_Enter(1);
-}
+
 

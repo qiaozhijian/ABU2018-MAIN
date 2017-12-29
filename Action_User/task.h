@@ -69,16 +69,28 @@
 #define CLAW_SHUT 									 			 			(0)
 
 
-#define GET_THE_FIRST_BALL											0x01u
-#define READY_FIRST_BALL												0x02u
-#define READY_SECOND_BALL												0x04u
-#define GET_THE_SECOND_BALL											0x08u
+/*×´Ì¬Á¿½âÊÍ*/
+#define TO_START													1
+#define TO_GET_BALL_1											2
+#define TO_THE_AREA_1											3
+#define TO_THROW_BALL_1										4
+#define TO_GET_BALL_2											5
+#define TO_THE_AREA_2											6
+#define TO_THROW_BALL_2										7
+#define TO_GET_BALL_3											8
+
+
+
+
 /**************typedef area**********/
 typedef struct{
 	
+	float laserInit;
 	float laser;
+	
 	uint16_t AT_motionFlag; 
-	uint16_t CAN_motionFlag;
+	
+	uint8_t process;
 }Robot_t ;
 
 #endif

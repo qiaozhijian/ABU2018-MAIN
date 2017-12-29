@@ -87,10 +87,10 @@ void CAN1_RX0_IRQHandler(void)
 		for(i = 0; i < 4; i++)
 			msg.data8[i] = buffer[i];
 		//位置
-		if(msg.data32[0]==1)
-			gRobot.CAN_motionFlag|=READY_FIRST_BALL;
-		if(msg.data32[0]==2)
-			gRobot.CAN_motionFlag|=READY_SECOND_BALL;
+		if(msg.data32[0]==1&&gRobot.process==TO_THE_AREA_1)
+			gRobot.process=TO_THROW_BALL_1;
+		if(msg.data32[0]==2&&gRobot.process==TO_THE_AREA_2)
+			gRobot.process=TO_THROW_BALL_2;
 	}
   
   CAN_ClearFlag(CAN1, CAN_FLAG_EWG);
