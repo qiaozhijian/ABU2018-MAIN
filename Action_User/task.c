@@ -104,7 +104,7 @@ void RobotTask(void)
 					
 					gRobot.process=TO_GET_BALL_1;
 				}
-				
+				USART_OUT(DEBUG_USART,"TO_START\r\n");
 				break;
 			case TO_GET_BALL_1:
 				
@@ -113,18 +113,20 @@ void RobotTask(void)
 					Delay_ms(500);
 					MotionCardCMDSend(2);
 					
+					gRobot.process=TO_THE_AREA_1;
+					
 					PitchAngleMotion(10.2f);
 					CourseAngleMotion(-76.9f);
 					
 					Delay_ms(500);
 					ROBS_PosCrl(0, 0, 2000);
 				
-					gRobot.process=TO_THE_AREA_1;
 					
 				}
+				USART_OUT(DEBUG_USART,"TO_GET_BALL_1\r\n");
 				break;
 			case TO_THE_AREA_1:
-				
+				USART_OUT(DEBUG_USART,"TO_THE_AREA_1\r\n");
 				break;
 			case TO_THROW_BALL_1:
 				/*扔球*/
@@ -143,8 +145,9 @@ void RobotTask(void)
 				ROBS_PosCrl(-90, -90, 1000);
 				/*通知控制卡*/
 				MotionCardCMDSend(3);
-				gRobot.process=TO_GET_BALL_2;
 				/*进入下一状态*/
+				gRobot.process=TO_GET_BALL_2;
+				USART_OUT(DEBUG_USART,"TO_THROW_BALL_1\r\n");
 				break;
 			case TO_GET_BALL_2:
 				if(PE_FOR_THE_BALL)
@@ -154,13 +157,15 @@ void RobotTask(void)
 					CourseAngleMotion(-79.5f);
 					
 					MotionCardCMDSend(4);
+					gRobot.process=TO_THE_AREA_2;
 					Delay_ms(500);
 					ROBS_PosCrl(0, 0, 2000);
 				
-					gRobot.process=TO_THE_AREA_2;
 				}
+				USART_OUT(DEBUG_USART,"TO_GET_BALL_2\r\n");
 				break;
 			case TO_THE_AREA_2:
+				USART_OUT(DEBUG_USART,"TO_THE_AREA_2\r\n");
 				
 				break;
 			case TO_THROW_BALL_2:
@@ -179,6 +184,7 @@ void RobotTask(void)
 				ROBS_PosCrl(-90, -90, 1000);
 				MotionCardCMDSend(5);
 				gRobot.process=TO_GET_BALL_3;
+				USART_OUT(DEBUG_USART,"TO_THROW_BALL_2\r\n");
 				break;
 		}
 	}
