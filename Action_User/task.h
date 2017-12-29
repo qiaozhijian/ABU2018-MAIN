@@ -15,7 +15,7 @@
 #include "arm_math.h"
 /**************#define area**********/
 
-#define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_6))							
+#define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0))							
 
 
 //常量定义
@@ -69,8 +69,10 @@
 #define CLAW_SHUT 									 			 			(0)
 
 
-#define GET_THE_BALL														0x01u
+#define GET_THE_FIRST_BALL											0x01u
 #define READY_FIRST_BALL												0x02u
+#define READY_SECOND_BALL												0x04u
+#define GET_THE_SECOND_BALL											0x08u
 /**************typedef area**********/
 typedef struct{
 	
