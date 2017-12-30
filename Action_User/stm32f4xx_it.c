@@ -91,6 +91,8 @@ void CAN1_RX0_IRQHandler(void)
 			gRobot.process=TO_THROW_BALL_1;
 		if(msg.data32[0]==2&&gRobot.process==TO_THE_AREA_2)
 			gRobot.process=TO_THROW_BALL_2;
+		if(msg.data32[0]==3&&gRobot.process==TO_THE_AREA_3)
+			gRobot.process=TO_THROW_BALL_3;
 	}
   
   CAN_ClearFlag(CAN1, CAN_FLAG_EWG);

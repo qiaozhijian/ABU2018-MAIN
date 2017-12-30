@@ -78,6 +78,8 @@
 #define TO_THE_AREA_2											6
 #define TO_THROW_BALL_2										7
 #define TO_GET_BALL_3											8
+#define TO_THE_AREA_3											9
+#define TO_THROW_BALL_3										10
 
 
 
