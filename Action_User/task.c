@@ -94,135 +94,110 @@ void RobotTask(void)
 		
 		AT_CMD_Handle();
 		
+		USART_OUT(DEBUG_USART,"%d\r\n",gRobot.process);
+		
 		switch(gRobot.process)
 		{
 			case TO_START:
 				gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
 				if(gRobot.laser-gRobot.laserInit>20.f)
 				{
-					MotionCardCMDSend(1);
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
 					
 					gRobot.process=TO_GET_BALL_1;
 				}
-				USART_OUT(DEBUG_USART,"TO_START\r\n");
 				break;
 			case TO_GET_BALL_1:
 				
 				if(PE_FOR_THE_BALL)
 				{	
 					Delay_ms(500);
-					MotionCardCMDSend(2);
+					
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
+					
+					PrepareShootBall(BALL_1);
 					
 					gRobot.process=TO_THE_AREA_1;
 					
-					PitchAngleMotion(10.2f);
-					CourseAngleMotion(-76.9f);
-					
-					Delay_ms(500);
-					ROBS_PosCrl(0, 0, 2000);
-				
-					
 				}
-				USART_OUT(DEBUG_USART,"TO_GET_BALL_1\r\n");
 				break;
 			case TO_THE_AREA_1:
-				USART_OUT(DEBUG_USART,"TO_THE_AREA_1\r\n");
 				break;
 			case TO_THROW_BALL_1:
-				/*扔球*/
-				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
-				Delay_ms(300);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
+				/*射球*/
+				ShootBall();
+				/*给延时使发射杆能执行到位*/
 				Delay_ms(150);
-				/*复位*/
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
-				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-				/*去接下一个球*/
-				CourseAngleMotion(0.f);
-				PitchAngleMotion(27.1f);
-				ROBS_PosCrl(-90, -90, 1000);
 				/*通知控制卡*/
-				MotionCardCMDSend(3);
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
+				/*射球机构复位*/
+				ShootReset();
+				/*准备接球二*/
+				PrepareGetBall(BALL_2);
 				/*进入下一状态*/
 				gRobot.process=TO_GET_BALL_2;
-				USART_OUT(DEBUG_USART,"TO_THROW_BALL_1\r\n");
 				break;
 			case TO_GET_BALL_2:
 				if(PE_FOR_THE_BALL)
 				{	
-					
-					PitchAngleMotion(30.1f);
-					CourseAngleMotion(-79.5f);
-					
-					MotionCardCMDSend(4);
-					gRobot.process=TO_THE_AREA_2;
+					/*扫到光电后，为了更稳地接到球而给的延时*/
 					Delay_ms(500);
-					ROBS_PosCrl(0, 0, 2000);
-				
+					
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
+					
+					PrepareShootBall(BALL_2);
+					
+					gRobot.process=TO_THE_AREA_2;
 				}
-				USART_OUT(DEBUG_USART,"TO_GET_BALL_2\r\n");
 				break;
 			case TO_THE_AREA_2:
-				USART_OUT(DEBUG_USART,"TO_THE_AREA_2\r\n");
 				
 				break;
 			case TO_THROW_BALL_2:
-				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
-				Delay_ms(300);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
+				/*射球*/
+				ShootBall();
+			
+				/*给延时使发射杆能执行到位*/
 				Delay_ms(150);
-				/*复位*/
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
-				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-				/*去接下一个球*/
-				CourseAngleMotion(0.f);
-				PitchAngleMotion(30.1f);
-				ROBS_PosCrl(90, 90, 1000);
-				MotionCardCMDSend(5);
+			
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
+			
+				/*射球机构复位*/
+				ShootReset();
+			
+				/*准备接球三*/
+				PrepareGetBall(BALL_3);
+			
 				gRobot.process=TO_GET_BALL_3;
-				USART_OUT(DEBUG_USART,"TO_THROW_BALL_2\r\n");
 				break;
 			case TO_GET_BALL_3:
 				if(PE_FOR_THE_BALL)
 				{	
-					
-					PitchAngleMotion(32.5f);
-					CourseAngleMotion(-90.f);
-					
+					/*扫到光电后，为了更稳地接到球而给的延时*/
 					Delay_ms(500);
-					MotionCardCMDSend(6);
+					
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
+					
+					PrepareShootBall(BALL_3);
+					
 					gRobot.process=TO_THE_AREA_3;
-					Delay_ms(500);
-					ROBS_PosCrl(0, 0, 2000);
-				
 				}
-				USART_OUT(DEBUG_USART,"TO_GET_BALL_2\r\n");
 				break;
 			case TO_THE_AREA_3:
-				USART_OUT(DEBUG_USART,"TO_THE_AREA_2\r\n");
 				
 				break;
 			case TO_THROW_BALL_3:
-				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_OPEN);
-				Delay_ms(300);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
+				/*射球*/
+				ShootBall();
+			
+				/*给延时使发射杆能执行到位*/
 				Delay_ms(150);
-				/*复位*/
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
-				GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
-				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-				/*去接下一个球*/
-//				CourseAngleMotion(0.f);
-//				PitchAngleMotion(30.1f);
-//				ROBS_PosCrl(-90, -90, 1000);
-//				MotionCardCMDSend(7);
-				gRobot.process=15;
-				USART_OUT(DEBUG_USART,"TO_THROW_BALL_2\r\n");
+			
+				/*射球机构复位*/
+				ShootReset();
+			
+				gRobot.process=END_COMPETE;
+			
 				break;
 		}
 	}
@@ -291,12 +266,8 @@ void statusInit(void)
 	Delay_ms(2000);
 	Delay_ms(2000);
 	Delay_ms(2000);
-	/*接球角度*/
-	PitchAngleMotion(26.6);
-	CourseAngleMotion(0);
-	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
-	ROBS_PosCrl(90, 91, 1000);
 	
+	PrepareGetBall(BALL_1);
 	
 }
 

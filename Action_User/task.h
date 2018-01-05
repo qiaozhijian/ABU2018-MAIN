@@ -79,9 +79,22 @@
 #define TO_THROW_BALL_2										7
 #define TO_GET_BALL_3											8
 #define TO_THE_AREA_3											9
-#define TO_THROW_BALL_3										10
+#define TO_THROW_BALL_3									  10
+#define END_COMPETE												100
+
+/*控制卡通信解释*/
+#define NOTIFY_MOTIONCARD_START						1
+#define NOTIFY_MOTIONCARD_GOT_BALL1				2
+#define NOTIFY_MOTIONCARD_SHOT_BALL1			3
+#define NOTIFY_MOTIONCARD_GOT_BALL2				4
+#define NOTIFY_MOTIONCARD_SHOT_BALL2			5
+#define NOTIFY_MOTIONCARD_GOT_BALL3				6
 
 
+/*球编号*/
+#define BALL_1														1
+#define BALL_2														2
+#define BALL_3														3
 
 
 /**************typedef area**********/
