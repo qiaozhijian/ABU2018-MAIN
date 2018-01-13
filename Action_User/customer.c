@@ -212,53 +212,21 @@ void SetMotionFlag(uint32_t status){
 		case ~AT_SHOOT_SMALL_ENABLE:
 			gRobot.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
 			break;
+		case AT_STEER1_SUCCESS:
+			gRobot.AT_motionFlag|=AT_SHOOT_BIG_ENABLE;
+			break;
+		case ~AT_STEER1_SUCCESS:
+			gRobot.AT_motionFlag&=~AT_SHOOT_BIG_ENABLE;
+			break;
+		case AT_STEER2_SUCCESS:
+			gRobot.AT_motionFlag|=AT_SHOOT_SMALL_ENABLE;
+			break;
+		case ~AT_STEER2_SUCCESS:
+			gRobot.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
+			break;
 	}
 }
 
-
-/****************舵机一串口接收中断****start****************/
-
-void USART1_IRQHandler(void)
-{
-	//static uint8_t ch;
-
-	OS_CPU_SR  cpu_sr;
-	OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
-	OSIntNesting++;
-	OS_EXIT_CRITICAL();
-
-	if(USART_GetITStatus(USART1, USART_IT_RXNE)==SET)   
-	{
-		USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-		//ch=USART_ReceiveData(USART1);
-
-	}else{
-    USART_ReceiveData(USART1);
-  }
-	OSIntExit();
-}
-
-/****************舵机二串口接收中断****start****************/
-
-void USART2_IRQHandler(void)
-{
-	//static uint8_t ch;
-
-	OS_CPU_SR  cpu_sr;
-	OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
-	OSIntNesting++;
-	OS_EXIT_CRITICAL();
-
-	if(USART_GetITStatus(USART2, USART_IT_RXNE)==SET)   
-	{
-		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
-		//ch=USART_ReceiveData(USART2);
-
-	}else{
-    USART_ReceiveData(USART2);
-  }
-	OSIntExit();
-}
 
 /*调试蓝牙中断*/
 void UART5_IRQHandler(void)

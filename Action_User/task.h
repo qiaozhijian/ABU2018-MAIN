@@ -55,6 +55,10 @@
 
 #define AT_SHOOT_SMALL_ENABLE 			  					0x08u
 
+#define AT_STEER1_SUCCESS												0x10u
+
+#define AT_STEER2_SUCCESS												0x20u
+
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
 
@@ -83,13 +87,24 @@
 #define END_COMPETE												100
 
 /*控制卡通信解释*/
+//开始出发
 #define NOTIFY_MOTIONCARD_START						1
+//通知控制已经得到球一
 #define NOTIFY_MOTIONCARD_GOT_BALL1				2
+//通知控制卡已经完成射击球一
 #define NOTIFY_MOTIONCARD_SHOT_BALL1			3
+//通知控制已经得到球二
 #define NOTIFY_MOTIONCARD_GOT_BALL2				4
+//通知控制卡已经完成射击球二
 #define NOTIFY_MOTIONCARD_SHOT_BALL2			5
+//通知控制已经得到球三
 #define NOTIFY_MOTIONCARD_GOT_BALL3				6
-
+//通知控制卡球一掉了
+#define NOTIFY_MOTIONCARD_LOSE_BALL1			7
+//通知控制卡球二掉了
+#define NOTIFY_MOTIONCARD_LOSE_BALL2			8
+//通知控制卡球三掉了
+#define NOTIFY_MOTIONCARD_LOSE_BALL3			9
 
 /*球编号*/
 #define BALL_1														1

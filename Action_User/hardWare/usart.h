@@ -18,5 +18,7 @@ void UART5_OUT(const uint8_t *Data, ...);
 void USART_OUT_F(float value,int send);
 void USART_Enter(int send);
 void USART_BLE_SEND(float value);
+void processReport(void);
+void USART_OUT_ONCE(const char * s);
 #endif
 

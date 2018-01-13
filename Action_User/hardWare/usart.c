@@ -240,6 +240,125 @@ void USART_BLE_SEND(float value)
   sprintf( (char*)s, "AT+5%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
   USART_OUT(USART3,s);
 }
+
+/*字符串长度不能超出20个字符，调试信息内容不能超出20个*/
+//这个函数可以保证每个调试语句只发一次
+#define DEBUG_STRING_LENTH 		20
+#define DEBUG_STRING_NUM  		40
+
+void USART_OUT_ONCE(const char * s)
+{
+	static char stringArray[DEBUG_STRING_NUM][DEBUG_STRING_LENTH];
+	
+	static int count;
+	
+	static int i;
+	
+	/*如果调试字符串长度超出限制*/
+	if(strlen(s)>DEBUG_STRING_LENTH)
+	{
+		USART_OUT(DEBUG_USART,"USART_OUT_ONCE LENTH error\r\n");
+		return;
+	}	
+	
+	/*如果调试条数超出限制*/
+	if(count==DEBUG_STRING_NUM)
+	{
+		USART_OUT(DEBUG_USART,"USART_OUT_ONCE NUM error\r\n");
+		return;
+	}
+	
+	/*对已储存的字符串进行遍历*/
+	for(i=0;i<count+1;i++)
+	{
+		/*判断是否和s相同*/
+		if(strcmp(*(stringArray+i),s)==0)
+		{
+			//如果相同就跳出，不执行发数
+			break;
+		}
+		/*如果已经到最后一个了，还没相同的那就添加一个新的字符串，并发送*/
+		else if(i==count)
+		{
+			strcpy(*(stringArray+count),s);
+			
+			USART_OUT(DEBUG_USART,s);
+			
+			count++;
+			break;
+		}
+	}
+	
+}
+/*状态量解释*/
+#define TO_START													1
+#define TO_GET_BALL_1											2
+#define TO_THE_AREA_1											3
+#define TO_THROW_BALL_1										4
+#define TO_GET_BALL_2											5
+#define TO_THE_AREA_2											6
+#define TO_THROW_BALL_2										7
+#define TO_GET_BALL_3											8
+#define TO_THE_AREA_3											9
+#define TO_THROW_BALL_3									  10
+#define END_COMPETE												100
+extern Robot_t gRobot;
+void processReport(void)
+{
+	static uint8_t processLast=99;
+	
+	if(gRobot.process==processLast)
+		return;
+	
+	switch(gRobot.process)
+	{
+		case TO_START:
+			USART_OUT(DEBUG_USART,"TO_START");
+			USART_Enter(1);
+			break;
+		case TO_GET_BALL_1:
+			USART_OUT(DEBUG_USART,"TO_GET_BALL_1");
+			USART_Enter(1);
+			break;
+		case TO_THE_AREA_1:
+			USART_OUT(DEBUG_USART,"TO_THE_AREA_1");
+			USART_Enter(1);
+			break;
+		case TO_THROW_BALL_1:
+			USART_OUT(DEBUG_USART,"TO_THROW_BALL_1");
+			USART_Enter(1);
+			break;
+		case TO_GET_BALL_2:
+			USART_OUT(DEBUG_USART,"TO_GET_BALL_2");
+			USART_Enter(1);
+			break;
+		case TO_THE_AREA_2:
+			USART_OUT(DEBUG_USART,"TO_THE_AREA_2");
+			USART_Enter(1);
+			break;
+		case TO_THROW_BALL_2:
+			USART_OUT(DEBUG_USART,"TO_THROW_BALL_2");
+			USART_Enter(1);
+			break;
+		case TO_GET_BALL_3:
+			USART_OUT(DEBUG_USART,"TO_GET_BALL_3");
+			USART_Enter(1);
+			break;
+		case TO_THE_AREA_3:
+			USART_OUT(DEBUG_USART,"TO_THE_AREA_3");
+			USART_Enter(1);
+			break;
+		case TO_THROW_BALL_3:
+			USART_OUT(DEBUG_USART,"TO_THROW_BALL_3");
+			USART_Enter(1);
+			break;
+		case END_COMPETE:
+			USART_OUT(DEBUG_USART,"END_COMPETE");
+			USART_Enter(1);
+			break;
+	}
+	processLast=gRobot.process;
+}
 //void UART5_IRQHandler(void)
 //{
 //  uint8_t data = 0;

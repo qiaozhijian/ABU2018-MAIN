@@ -73,13 +73,13 @@ void ConfigTask(void)
 	
 	HardWareInit();
 	
-	MotorInit();
+//MotorInit();
 	
 	statusInit();
 	
 	gRobot.process=TO_START;
 	gRobot.laserInit=(Get_Adc_Average(ADC_Channel_14,200));
-	
+	USART_OUT(DEBUG_USART,"laserInit %d\r\n",gRobot.laserInit);
 	OSTaskSuspend(OS_PRIO_SELF);
 }
 
@@ -94,19 +94,23 @@ void RobotTask(void)
 		
 		AT_CMD_Handle();
 		
-		USART_OUT(DEBUG_USART,"%d\r\n",gRobot.process);
+		processReport();
 		
 		switch(gRobot.process)
 		{
+			/*出发*/
 			case TO_START:
-				gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
-				if(gRobot.laser-gRobot.laserInit>20.f)
-				{
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
-					
-					gRobot.process=TO_GET_BALL_1;
-				}
+//				gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
+//				
+//				if(gRobot.laser-gRobot.laserInit>20.f)
+//				{
+//					MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
+//					
+//					gRobot.process=TO_GET_BALL_1;
+//					
+//				}
 				break;
+			/*去取第一个球*/
 			case TO_GET_BALL_1:
 				
 				if(PE_FOR_THE_BALL)
@@ -121,9 +125,17 @@ void RobotTask(void)
 					
 				}
 				break;
+			/*第一个球取球完毕，去投射区一*/
 			case TO_THE_AREA_1:
+				if(!PE_FOR_THE_BALL)
+				{
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL1);
+				}
 				break;
+			/*到达投射区一，射球*/
 			case TO_THROW_BALL_1:
+				if(PE_FOR_THE_BALL)
+				{
 				/*射球*/
 				ShootBall();
 				/*给延时使发射杆能执行到位*/
@@ -136,24 +148,34 @@ void RobotTask(void)
 				PrepareGetBall(BALL_2);
 				/*进入下一状态*/
 				gRobot.process=TO_GET_BALL_2;
+				}
 				break;
+			/*去取第二个球*/
 			case TO_GET_BALL_2:
 				if(PE_FOR_THE_BALL)
 				{	
 					/*扫到光电后，为了更稳地接到球而给的延时*/
 					Delay_ms(500);
 					
+					gRobot.process=TO_THE_AREA_2;
+					
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
 					
 					PrepareShootBall(BALL_2);
 					
-					gRobot.process=TO_THE_AREA_2;
 				}
 				break;
+			/*第二个球取球完毕，去投射区二*/
 			case TO_THE_AREA_2:
-				
+				if(!PE_FOR_THE_BALL)
+				{
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL2);
+				}
 				break;
+			/*到达投射区二，射球*/
 			case TO_THROW_BALL_2:
+				if(PE_FOR_THE_BALL)
+				{
 				/*射球*/
 				ShootBall();
 			
@@ -169,24 +191,34 @@ void RobotTask(void)
 				PrepareGetBall(BALL_3);
 			
 				gRobot.process=TO_GET_BALL_3;
+				}
 				break;
+			/*去取第三个球*/
 			case TO_GET_BALL_3:
 				if(PE_FOR_THE_BALL)
 				{	
 					/*扫到光电后，为了更稳地接到球而给的延时*/
 					Delay_ms(500);
 					
+					gRobot.process=TO_THE_AREA_3;
+					
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					
 					PrepareShootBall(BALL_3);
 					
-					gRobot.process=TO_THE_AREA_3;
 				}
 				break;
+			/*第三个球取球完毕，去投射区三*/
 			case TO_THE_AREA_3:
-				
+				if(!PE_FOR_THE_BALL)
+				{
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL3);
+				}
 				break;
+			/*到达投射区三，射球*/
 			case TO_THROW_BALL_3:
+				if(PE_FOR_THE_BALL)
+				{
 				/*射球*/
 				ShootBall();
 			
@@ -197,7 +229,7 @@ void RobotTask(void)
 				ShootReset();
 			
 				gRobot.process=END_COMPETE;
-			
+				}
 				break;
 		}
 	}
