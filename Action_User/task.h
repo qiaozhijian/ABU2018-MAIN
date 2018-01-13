@@ -86,6 +86,12 @@
 #define TO_THROW_BALL_3									  10
 #define END_COMPETE												100
 
+/*比赛进程宏定义解释*/
+#define ROBOT_START							0
+#define COLORFUL_BALL_1					1
+#define COLORFUL_BALL_2					2
+#define GOLD_BALL								3
+
 /*控制卡通信解释*/
 //开始出发
 #define NOTIFY_MOTIONCARD_START						1
@@ -141,6 +147,9 @@ typedef struct{
 	
 	/*记录此时处于哪个步骤*/
 	uint8_t process;
+	
+	/*比赛进程*/
+	uint8_t robocon2018;
 	
 	/*射击所应有的参数结构体*/
 	struct{

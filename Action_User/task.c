@@ -18,6 +18,7 @@
 #include "adc.h"
 #include "algorithm.h"
 #include "steer.h"
+#include "process.h"
 /*
 ===============================================================
 						信号量定义
@@ -73,7 +74,7 @@ void ConfigTask(void)
 	
 	HardWareInit();
 	
-//MotorInit();
+	MotorInit();
 	
 	statusInit();
 	
@@ -87,6 +88,7 @@ void RobotTask(void)
 {
 	CPU_INT08U  os_err;
 	os_err = os_err;
+	
 	OSSemSet(PeriodSem, 0, &os_err);
 	while(1)
 	{
@@ -96,142 +98,34 @@ void RobotTask(void)
 		
 		processReport();
 		
-		switch(gRobot.process)
+		switch(gRobot.robocon2018)
 		{
-			/*出发*/
-			case TO_START:
-//				gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
-//				
-//				if(gRobot.laser-gRobot.laserInit>20.f)
-//				{
-//					MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
-//					
-//					gRobot.process=TO_GET_BALL_1;
-//					
-//				}
-				break;
-			/*去取第一个球*/
-			case TO_GET_BALL_1:
+			case ROBOT_START:
+				gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
 				
-				if(PE_FOR_THE_BALL)
-				{	
-					Delay_ms(500);
-					
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
-					
-					PrepareShootBall(BALL_1);
-					
-					gRobot.process=TO_THE_AREA_1;
-					
-				}
-				break;
-			/*第一个球取球完毕，去投射区一*/
-			case TO_THE_AREA_1:
-				if(!PE_FOR_THE_BALL)
+				if(gRobot.laser-gRobot.laserInit>20.f)
 				{
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL1);
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
+					
+					gRobot.process=TO_GET_BALL_1;
+					
+					gRobot.robocon2018=COLORFUL_BALL_1;
 				}
 				break;
-			/*到达投射区一，射球*/
-			case TO_THROW_BALL_1:
-				if(PE_FOR_THE_BALL)
-				{
-				/*射球*/
-				ShootBall();
-				/*给延时使发射杆能执行到位*/
-				Delay_ms(150);
-				/*通知控制卡*/
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
-				/*射球机构复位*/
-				ShootReset();
-				/*准备接球二*/
-				PrepareGetBall(BALL_2);
-				/*进入下一状态*/
-				gRobot.process=TO_GET_BALL_2;
-				}
+			case COLORFUL_BALL_1:
+				/*完成彩球一的投射*/
+				FightForBall1();
 				break;
-			/*去取第二个球*/
-			case TO_GET_BALL_2:
-				if(PE_FOR_THE_BALL)
-				{	
-					/*扫到光电后，为了更稳地接到球而给的延时*/
-					Delay_ms(500);
-					
-					gRobot.process=TO_THE_AREA_2;
-					
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
-					
-					PrepareShootBall(BALL_2);
-					
-				}
+			case COLORFUL_BALL_2:
+				/*完成彩球二的投射*/
+				FightForBall2();
 				break;
-			/*第二个球取球完毕，去投射区二*/
-			case TO_THE_AREA_2:
-				if(!PE_FOR_THE_BALL)
-				{
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL2);
-				}
-				break;
-			/*到达投射区二，射球*/
-			case TO_THROW_BALL_2:
-				if(PE_FOR_THE_BALL)
-				{
-				/*射球*/
-				ShootBall();
-			
-				/*给延时使发射杆能执行到位*/
-				Delay_ms(150);
-			
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
-			
-				/*射球机构复位*/
-				ShootReset();
-			
-				/*准备接球三*/
-				PrepareGetBall(BALL_3);
-			
-				gRobot.process=TO_GET_BALL_3;
-				}
-				break;
-			/*去取第三个球*/
-			case TO_GET_BALL_3:
-				if(PE_FOR_THE_BALL)
-				{	
-					/*扫到光电后，为了更稳地接到球而给的延时*/
-					Delay_ms(500);
-					
-					gRobot.process=TO_THE_AREA_3;
-					
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
-					
-					PrepareShootBall(BALL_3);
-					
-				}
-				break;
-			/*第三个球取球完毕，去投射区三*/
-			case TO_THE_AREA_3:
-				if(!PE_FOR_THE_BALL)
-				{
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL3);
-				}
-				break;
-			/*到达投射区三，射球*/
-			case TO_THROW_BALL_3:
-				if(PE_FOR_THE_BALL)
-				{
-				/*射球*/
-				ShootBall();
-			
-				/*给延时使发射杆能执行到位*/
-				Delay_ms(150);
-			
-				/*射球机构复位*/
-				ShootReset();
-			
-				gRobot.process=END_COMPETE;
-				}
+			case GOLD_BALL:
+				/*完成金球的投射*/
+				FightForGoldBall();
 				break;
 		}
+		
 	}
 }
 
@@ -295,6 +189,8 @@ void statusInit(void)
 	SetMotionFlag(AT_STEER_READY);
 	SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
 	SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
+	
+	gRobot.robocon2018=ROBOT_START;
 	
 	Delay_ms(2000);
 	Delay_ms(2000);

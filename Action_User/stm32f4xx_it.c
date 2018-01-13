@@ -151,7 +151,7 @@ void CAN2_RX0_IRQHandler(void)
 
 	if(StdId == 0x40 && buffer[0] == 1)
 	{
-		int jiang = 0;
+		
 	}
 	
 	
@@ -310,7 +310,23 @@ void NMI_Handler(void)
     UART5_OUT((uint8_t *)"NMI exception !!!!!!!!!!!!!\r\n");
   }
 }
-
+void Hex_To_Str(uint8_t * pHex,char * s,float num)
+{
+  char        hex[] = "0123456789ABCDEF";
+  char        *pStr = s;
+  for (uint8_t i = 0; i < (int)(num/2.f+0.5f); i++)//(int)(x+0.5f)是把x四舍五入的意思
+  {
+    
+    /*
+    1.*pStr++右结合,并且*索引的是没有++之前的地址
+    2.f.移位不会改变指针指向的那个空间的值
+    3.对指针指向空间的移位也不会改变指针的指向
+    */
+    if (((num<((int)(num / 2.f + 0.5f))*2.f)&&i>0)|| (num==((int)(num / 2.f + 0.5f)) * 2.f))
+      *pStr++ = hex[*(pHex + (int)(num / 2.f + 0.5f) - i - 1) >> 4];
+    *pStr++ = hex[*(pHex + (int)(num / 2.f + 0.5f) - i - 1) & 0x0F];
+  }
+}
 /**
 * @brief  This function handles Hard Fault exception.
 * @param  None
@@ -319,10 +335,44 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   
+	  static uint32_t r_sp ;
+		/*判断发生异常时使用MSP还是PSP*/
+		if(__get_PSP()!=0x00) //获取SP的值
+			r_sp = __get_PSP(); 
+		else
+			r_sp = __get_MSP(); 
+		/*因为经历中断函数入栈之后，堆栈指针会减小0x10，所以平移回来（可能不具有普遍性）*/
+		r_sp = r_sp+0x10;
+		/*串口发数通知*/
+		USART_OUT(DEBUG_USART,"\r\nHardFault");
+  	char sPoint[2]={0};
+		USART_OUT(DEBUG_USART,"%s","0x");
+		/*获取出现异常时程序的地址*/
+		for(int i=3;i>=-28;i--){
+			Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
+			USART_OUT(DEBUG_USART,"%s",sPoint);
+			if(i%4==0)
+				USART_Enter(1);
+		}
+		/*发送回车符*/
+		USART_Enter(1);
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
-    UART5_OUT((uint8_t *)"Hard Fault exception!!!!!!!!!!\r\n");
+		/*串口发数通知*/
+		USART_OUT(DEBUG_USART,"\r\nHardFault");
+  	char sPoint[2]={0};
+		USART_OUT(DEBUG_USART,"%s","0x");
+		/*获取出现异常时程序的地址*/
+		for(int i=3;i>=-28;i--){
+			Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
+			USART_OUT(DEBUG_USART,"%s",sPoint);
+			if(i%4==0)
+				USART_Enter(1);
+		}
+		/*发送回车符*/
+		USART_Enter(1);
+		Delay_ms(10);
   }
 }
 
