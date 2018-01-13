@@ -13,5 +13,7 @@ void ShootReset(void);
 void PrepareGetBall(int index);
 
 void PrepareShootBall(int index);
+
+void prepareMotionParaInit(void);
 #endif
 

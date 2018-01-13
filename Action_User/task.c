@@ -243,6 +243,8 @@ void HardWareInit(void){
 	
 	CAN_Config(CAN2, 500, GPIOB, GPIO_Pin_5, GPIO_Pin_6);
 
+	/*初始化取球，射击参数结构体*/
+	prepareMotionParaInit();
 	//舵机1串口初始化
 	Steer1Init(1000000);
 	//舵机2串口初始化
@@ -255,7 +257,6 @@ void HardWareInit(void){
 	Laser_Init();
 	//光电初始化
 	PhotoelectricityInit();
-	
 	Delay_ms(1000);
 	
 	Enable_ROBS();//使能舵机

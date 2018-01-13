@@ -112,15 +112,53 @@
 #define BALL_3														3
 
 
+typedef struct{
+	/*航向角*/
+	float courseAngle;
+	/*俯仰角*/
+	float pitchAngle;
+	/*舵机角*/
+	float steerAngle;
+	/*舵机旋转的速度*/
+	int steerSpeed;
+	/*气压值*/
+	float gasAim;
+	
+}shootPara_t;
+
+
 /**************typedef area**********/
 typedef struct{
 	
+	/*激光的初始值*/
 	float laserInit;
+	
+	/*激光测得的值*/
 	float laser;
 	
+	/*关于控制命令执行的动作情况*/
 	uint16_t AT_motionFlag; 
 	
+	/*记录此时处于哪个步骤*/
 	uint8_t process;
+	
+	/*射击所应有的参数结构体*/
+	struct{
+		
+		shootPara_t PrepareGetBall1;
+		
+		shootPara_t PrepareGetBall2;
+		
+		shootPara_t PrepareGetBall3;
+		
+		shootPara_t PrepareShootBall1;
+		
+		shootPara_t PrepareShootBall2;
+		
+		shootPara_t PrepareShootBall3;
+		
+	}prepareMotion;
+	
 }Robot_t ;
 
 #endif

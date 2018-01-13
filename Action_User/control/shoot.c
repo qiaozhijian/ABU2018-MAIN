@@ -43,39 +43,85 @@ void ShootReset(void)
 	GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
 }
 
+void prepareMotionParaInit(void)
+{
+	/*准备去拿第一个球的数据*/
+	gRobot.prepareMotion.PrepareGetBall1.courseAngle=0.f;
+	gRobot.prepareMotion.PrepareGetBall1.pitchAngle=26.6f;
+	gRobot.prepareMotion.PrepareGetBall1.steerAngle=90.f;
+	gRobot.prepareMotion.PrepareGetBall1.steerSpeed=1000;
+	gRobot.prepareMotion.PrepareGetBall1.gasAim=0.f;
+	
+	/*准备去拿第二个球的数据*/
+	gRobot.prepareMotion.PrepareGetBall2.courseAngle=0.f;
+	gRobot.prepareMotion.PrepareGetBall2.pitchAngle=27.1f;
+	gRobot.prepareMotion.PrepareGetBall2.steerAngle=-90.f;
+	gRobot.prepareMotion.PrepareGetBall2.steerSpeed=1000;
+	gRobot.prepareMotion.PrepareGetBall2.gasAim=0.f;
+	
+	/*准备去拿第三个球的数据*/
+	gRobot.prepareMotion.PrepareGetBall3.courseAngle=30.1f;
+	gRobot.prepareMotion.PrepareGetBall3.pitchAngle=0.f;
+	gRobot.prepareMotion.PrepareGetBall3.steerAngle=90.f;
+	gRobot.prepareMotion.PrepareGetBall3.steerSpeed=1000;
+	gRobot.prepareMotion.PrepareGetBall3.gasAim=0.f;
+	
+	/*准备射第一个球的数据*/
+	gRobot.prepareMotion.PrepareShootBall1.courseAngle=-76.9f;
+	gRobot.prepareMotion.PrepareShootBall1.pitchAngle=10.2f;
+	gRobot.prepareMotion.PrepareShootBall1.steerAngle=0.f;
+	gRobot.prepareMotion.PrepareShootBall1.steerSpeed=2000;
+	gRobot.prepareMotion.PrepareShootBall1.gasAim=0.f;
+	
+	/*准备射第二个球的数据*/
+	gRobot.prepareMotion.PrepareShootBall2.courseAngle=-79.5f;
+	gRobot.prepareMotion.PrepareShootBall2.pitchAngle=30.1f;
+	gRobot.prepareMotion.PrepareShootBall1.steerAngle=0.f;
+	gRobot.prepareMotion.PrepareShootBall1.steerSpeed=2000;
+	gRobot.prepareMotion.PrepareShootBall2.gasAim=0.f;
+	
+	/*准备射第三个球的数据*/
+	gRobot.prepareMotion.PrepareShootBall3.courseAngle=-90.f;
+	gRobot.prepareMotion.PrepareShootBall3.pitchAngle=32.5f;
+	gRobot.prepareMotion.PrepareShootBall1.steerAngle=0.f;
+	gRobot.prepareMotion.PrepareShootBall1.steerSpeed=2000;
+	gRobot.prepareMotion.PrepareShootBall3.gasAim=0.f;
+	
+}
+
 void PrepareGetBall(int index)
 {
 	switch(index)
 	{
 		case BALL_1:
 			/*设置俯仰角度*/
-			PitchAngleMotion(26.6);
+			PitchAngleMotion(gRobot.prepareMotion.PrepareGetBall1.pitchAngle);
 			/*设置航向角度*/
-			CourseAngleMotion(0);
+			CourseAngleMotion(gRobot.prepareMotion.PrepareGetBall1.courseAngle);
 			/*关闭下方限位爪*/
 			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
 			/*舵机转向*/
-			ROBS_PosCrl(90, 91, 1000);
+			ROBS_PosCrl(gRobot.prepareMotion.PrepareGetBall1.steerAngle, gRobot.prepareMotion.PrepareGetBall1.steerAngle, gRobot.prepareMotion.PrepareGetBall1.steerSpeed);
 			break;
 		case BALL_2:
 			/*设置俯仰角度*/
-			PitchAngleMotion(27.1f);
+			PitchAngleMotion(gRobot.prepareMotion.PrepareGetBall2.pitchAngle);
 			/*设置航向角度*/
-			CourseAngleMotion(0.f);
+			CourseAngleMotion(gRobot.prepareMotion.PrepareGetBall2.courseAngle);
 			/*关闭下方限位爪*/
 			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
 			/*舵机转向*/
-			ROBS_PosCrl(-90, -90, 1000);
+			ROBS_PosCrl(gRobot.prepareMotion.PrepareGetBall2.steerAngle, gRobot.prepareMotion.PrepareGetBall2.steerAngle, gRobot.prepareMotion.PrepareGetBall2.steerSpeed);
 			break;
 		case BALL_3:
 			/*设置俯仰角度*/
-			PitchAngleMotion(30.1f);
+			PitchAngleMotion(gRobot.prepareMotion.PrepareGetBall3.pitchAngle);
 			/*设置航向角度*/
-			CourseAngleMotion(0.f);
+			CourseAngleMotion(gRobot.prepareMotion.PrepareGetBall3.courseAngle);
 			/*关闭下方限位爪*/
 			GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
 			/*舵机转向*/
-			ROBS_PosCrl(90, 90, 1000);
+			ROBS_PosCrl(gRobot.prepareMotion.PrepareGetBall3.steerAngle, gRobot.prepareMotion.PrepareGetBall3.steerAngle, gRobot.prepareMotion.PrepareGetBall3.steerSpeed);
 			break;
 		default:
 			USART_OUT(DEBUG_USART,"PrepareGetBall error\r\n");
@@ -89,39 +135,39 @@ void PrepareShootBall(int index)
 	{
 		case BALL_1:
 			/*设置俯仰角度*/
-			PitchAngleMotion(10.2f);
+			PitchAngleMotion(gRobot.prepareMotion.PrepareShootBall1.pitchAngle);
 			/*设置航向角度*/
-			CourseAngleMotion(-76.9f);
+			CourseAngleMotion(gRobot.prepareMotion.PrepareShootBall1.courseAngle);
 			/*避免球乱晃*/
 			Delay_ms(500);
 			/*提前打开发射装置小气缸*/
 			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
 			/*舵机转向*/
-			ROBS_PosCrl(0, 0, 2000);
+			ROBS_PosCrl(gRobot.prepareMotion.PrepareShootBall1.steerAngle, gRobot.prepareMotion.PrepareShootBall1.steerAngle, gRobot.prepareMotion.PrepareShootBall1.steerSpeed);
 			break;
 		case BALL_2:
 			/*设置俯仰角度*/
-			PitchAngleMotion(30.1f);
+			PitchAngleMotion(gRobot.prepareMotion.PrepareShootBall2.pitchAngle);
 			/*设置航向角度*/
-			CourseAngleMotion(-79.5f);
+			CourseAngleMotion(gRobot.prepareMotion.PrepareShootBall2.courseAngle);
 			/*避免球乱晃*/
 			Delay_ms(500);
 			/*提前打开发射装置小气缸*/
 			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
 			/*舵机转向*/
-			ROBS_PosCrl(0, 0, 2000);
+			ROBS_PosCrl(gRobot.prepareMotion.PrepareShootBall2.steerAngle, gRobot.prepareMotion.PrepareShootBall2.steerAngle, gRobot.prepareMotion.PrepareShootBall2.steerSpeed);
 			break;
 		case BALL_3:
 			/*设置俯仰角度*/
-			PitchAngleMotion(32.5f);
+			PitchAngleMotion(gRobot.prepareMotion.PrepareShootBall3.pitchAngle);
 			/*设置航向角度*/
-			CourseAngleMotion(-90.f);
+			CourseAngleMotion(gRobot.prepareMotion.PrepareShootBall3.courseAngle);
 			/*避免球乱晃*/
 			Delay_ms(500);
 			/*提前打开发射装置小气缸*/
 			GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
 			/*舵机转向*/
-			ROBS_PosCrl(0, 0, 2000);
+			ROBS_PosCrl(gRobot.prepareMotion.PrepareShootBall3.steerAngle, gRobot.prepareMotion.PrepareShootBall3.steerAngle, gRobot.prepareMotion.PrepareShootBall3.steerSpeed);
 			break;
 		default:
 			USART_OUT(DEBUG_USART,"PrepareShootBall error\r\n");
