@@ -8,6 +8,5 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void AT_CMD_Handle(void);
-void RemoteCtr(void);
 void SetMotionFlag(uint32_t status);
 #endif

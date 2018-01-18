@@ -149,10 +149,39 @@ void CAN2_RX0_IRQHandler(void)
 	CAN_RxMsg(CAN2, &StdId, buffer, 4);
 	canNodeId = StdId;
 
-	if(StdId == 0x40 && buffer[0] == 1)
-	{
-		
-	}
+  if((StdId - SDO_RESPONSE_COB_ID_BASE)==5)     //get speed value
+  {
+    //fix me, if length not 8
+    for(i = 0; i < 8; i++)
+      msg.data8[i] = buffer[i];
+    //位置
+    if(msg.data32[0]==0x00005850)
+    {
+			gRobot.motorPara_t.pitchPos=msg.data32[1];
+			gRobot.motorPara_t.pitchReadSuccess=1;
+    }
+    //速度
+    if(msg.data32[0]==0x00005856)
+    {
+			
+    }
+  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==6)     //get speed value
+  {
+    //fix me, if length not 8
+    for(i = 0; i < 8; i++)
+      msg.data8[i] = buffer[i];
+    //位置
+    if(msg.data32[0]==0x00005850)
+    {
+			gRobot.motorPara_t.coursePos=msg.data32[1];
+			gRobot.motorPara_t.courseReadSuccess=1;
+    }
+    //速度
+    if(msg.data32[0]==0x00005856)
+    {
+			
+    }
+  }
 	
 	
 	if(canNodeId==GET_FROM_GASSENSOR)     //get speed value
@@ -165,7 +194,8 @@ void CAN2_RX0_IRQHandler(void)
 			msg4.dataf=1.f;
 		else if(msg4.dataf<0.f)
 			msg4.dataf=0.f;
-		USART_BLE_SEND(msg4.dataf);
+		gRobot.motorPara_t.gasValue=msg4.dataf;
+		USART_BLE_SEND(gRobot.motorPara_t.gasValue);
 	}
 
 	CAN_ClearFlag(CAN2, CAN_FLAG_EWG);
@@ -224,8 +254,6 @@ void TIM2_IRQHandler(void)
       OSSemPost(PeriodSem);
       periodCounter = PERIOD_COUNTER;
     }
-    
-    
     TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
   }
   OSIntExit();
@@ -352,10 +380,10 @@ void HardFault_Handler(void)
 			Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
 			USART_OUT(DEBUG_USART,"%s",sPoint);
 			if(i%4==0)
-				USART_Enter(1);
+				USART_Enter();
 		}
 		/*发送回车符*/
-		USART_Enter(1);
+		USART_Enter();
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
@@ -368,10 +396,10 @@ void HardFault_Handler(void)
 			Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
 			USART_OUT(DEBUG_USART,"%s",sPoint);
 			if(i%4==0)
-				USART_Enter(1);
+				USART_Enter();
 		}
 		/*发送回车符*/
-		USART_Enter(1);
+		USART_Enter();
 		Delay_ms(10);
   }
 }

@@ -3,6 +3,7 @@
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_adc.h"
 #include "timer.h"
+#include "usart.h"
 									   
 void  Laser_Init(void)
 {    
@@ -46,12 +47,22 @@ void  Laser_Init(void)
 
 u16 Get_Adc(u8 channel)   
 {
+	int times=0;
 	/*使用规则序列中的第 1 个转换，采样时间为480个周期，耗时23.42us（（480+12）/21）*/
 	ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_480Cycles );
   //使能指定的 ADC1 的软件转换启动功能
 	ADC_SoftwareStartConv(ADC1);		
 	//等待转换结束
-	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));
+	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ))
+	{
+		times++;
+		if(times>300)
+		{
+			USART_OUT(DEBUG_USART,"ADC dead while%d\r\n",times);
+			
+			break;
+		}
+	}
 	//获取转换 ADC 转换结果数据
 	return ADC_GetConversionValue(ADC1);	
 }

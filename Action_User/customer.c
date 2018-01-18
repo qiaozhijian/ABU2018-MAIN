@@ -11,15 +11,11 @@
 #include "shoot.h"
 #include "steer.h"
 #include  <includes.h>
+#include "process.h"
 
 extern Robot_t gRobot;
 
 void AT_CMD_Judge(void);
-
-void RemoteCtr(void)
-{
-	
-}
 
 static char buffer[20];
 static int bufferI=0;
@@ -180,10 +176,7 @@ void AT_CMD_Handle(void){
   bufferInit();
 }
 
-void CAN_CMD_Handle(void)
-{
-	
-}
+
 
 void SetMotionFlag(uint32_t status){
 	
@@ -213,39 +206,82 @@ void SetMotionFlag(uint32_t status){
 			gRobot.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
 			break;
 		case AT_STEER1_SUCCESS:
-			gRobot.AT_motionFlag|=AT_SHOOT_BIG_ENABLE;
+			gRobot.AT_motionFlag|=AT_STEER1_SUCCESS;
 			break;
 		case ~AT_STEER1_SUCCESS:
-			gRobot.AT_motionFlag&=~AT_SHOOT_BIG_ENABLE;
+			gRobot.AT_motionFlag&=~AT_STEER1_SUCCESS;
 			break;
 		case AT_STEER2_SUCCESS:
-			gRobot.AT_motionFlag|=AT_SHOOT_SMALL_ENABLE;
+			gRobot.AT_motionFlag|=AT_STEER2_SUCCESS;
 			break;
 		case ~AT_STEER2_SUCCESS:
-			gRobot.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
+			gRobot.AT_motionFlag&=~AT_STEER2_SUCCESS;
+			break;
+		case AT_STEER1_READ_SUCCESS:
+			gRobot.AT_motionFlag|=AT_STEER1_READ_SUCCESS;
+			break;
+		case ~AT_STEER1_READ_SUCCESS:
+			gRobot.AT_motionFlag&=~AT_STEER1_READ_SUCCESS;
+			break;
+		case AT_STEER2_READ_SUCCESS:
+			gRobot.AT_motionFlag|=AT_STEER2_READ_SUCCESS;
+			break;
+		case ~AT_STEER2_READ_SUCCESS:
+			gRobot.AT_motionFlag&=~AT_STEER2_READ_SUCCESS;
 			break;
 	}
 }
 
 
 /*µ˜ ‘¿∂—¿÷–∂œ*/
+static char bufferUART5[20];
+static int bufferUART5_I=0;
+static int atCommand_UART5=0;
+
+void UART5_bufferInit(void){
+  bufferUART5_I=0;
+  for(int i=0;i<20;i++)
+    bufferUART5[i]=0;
+		atCommand_UART5=0;
+}
+void UART5_AT_CMD_Judge(void);
 void UART5_IRQHandler(void)
 {
-	//static uint8_t ch;
-
+  uint8_t data;
 	OS_CPU_SR  cpu_sr;
 	OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
 	OSIntNesting++;
 	OS_EXIT_CRITICAL();
-
-	if(USART_GetITStatus(UART5, USART_IT_RXNE)==SET)   
-	{
-		USART_ClearITPendingBit(UART5,USART_IT_RXNE);
-		//ch=USART_ReceiveData(UART5);
-
-	}else{
-    USART_ReceiveData(UART5);
+  if(USART_GetITStatus(UART5,USART_IT_RXNE)==SET)
+  {
+    USART_ClearITPendingBit( UART5,USART_IT_RXNE);
+    data=USART_ReceiveData(UART5);
+    bufferUART5[bufferUART5_I]=data;
+    bufferUART5_I++;
+    if(bufferUART5_I>1&&bufferUART5[bufferUART5_I-1]=='\n'&&bufferUART5[bufferUART5_I-2]=='\r'){
+      UART5_AT_CMD_Judge();
+    }else{
+      if(bufferUART5[0]!='A'){
+        UART5_bufferInit();
+        USART_OUT(UART5,"NOT START WITH 'A'\r\n");
+      }
+    }
+  }else{
+    data=USART_ReceiveData(UART5);
   }
 	OSIntExit();
+}
+
+void UART5_AT_CMD_Judge(void){
+  if((bufferUART5_I >= 4) && strncmp(bufferUART5, "AT+report", 4)==0)//AT    
+  {
+		StatusReport();
+	}
+  else if((bufferUART5_I >= 4) && strncmp(bufferUART5, "AT+2", 4)==0)//AT    
+	{
+		
+	}
+  else 
+    atCommand_UART5=666;
 }
 

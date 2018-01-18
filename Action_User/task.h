@@ -59,6 +59,10 @@
 
 #define AT_STEER2_SUCCESS												0x20u
 
+#define AT_STEER1_READ_SUCCESS									0x40u
+
+#define AT_STEER2_READ_SUCCESS									0x80u
+
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
 
@@ -117,6 +121,12 @@
 #define BALL_2														2
 #define BALL_3														3
 
+#define DELAY_TASK_NUM										2
+/*延时进行的任务*/
+#define DELAY_STEER1_CHECK_POS										0x01
+#define DELAY_STEER2_CHECK_POS										0x02
+
+
 
 typedef struct{
 	/*航向角*/
@@ -168,7 +178,40 @@ typedef struct{
 		
 	}prepareMotion;
 	
+	
+	struct{
+		
+		/*舵机的目标位置*/
+		int steerAimPos[2][2];
+		/*舵机的位置*/
+		int steerPos[2];
+		/*错误记录，第一个是错误类型，第二个是发生的过程*/
+		char error[10][2];
+		/*错误发生的次数*/
+		char errorTime;
+	}steer_t;
+	
+	struct{
+		
+		int courseAimPos;
+		int coursePos;
+		char courseReadSuccess;
+		
+		int pitchAimPos;
+		int pitchPos;
+		char pitchReadSuccess;
+		
+		float gasValue;
+		float gasAimValue;
+	}motorPara_t;
+	
+	uint16_t delayTask;
+	uint16_t delayTaskMs[DELAY_TASK_NUM];
+	
 }Robot_t ;
+
+
+
 
 #endif
 

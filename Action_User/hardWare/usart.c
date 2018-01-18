@@ -221,17 +221,16 @@ void ControlBLE_Init(uint32_t BaudRate)
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器、
 }
 /*使用操作系统没有设置任务堆栈8字节对齐，直接使用sprintf会一直输出0*/
-void USART_OUT_F(float value,int send)
+void USART_OUT_F(float value)
 {
   char s[9]={0};
 	int integer=( int )value;
   sprintf( (char*)s, "%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
-	if(send)
-		USART_OUT(DEBUG_USART,s);
+	
+	USART_OUT(DEBUG_USART,s);
 }
-void USART_Enter(int send){
-	if(send)
-		USART_OUT(DEBUG_USART,"\r\n");
+void USART_Enter(void){
+	USART_OUT(DEBUG_USART,"\r\n");
 }
 void USART_BLE_SEND(float value)
 {
@@ -243,7 +242,7 @@ void USART_BLE_SEND(float value)
 
 /*字符串长度不能超出20个字符，调试信息内容不能超出20个*/
 //这个函数可以保证每个调试语句只发一次
-#define DEBUG_STRING_LENTH 		20
+#define DEBUG_STRING_LENTH 		40
 #define DEBUG_STRING_NUM  		40
 
 void USART_OUT_ONCE(const char * s)
@@ -288,7 +287,6 @@ void USART_OUT_ONCE(const char * s)
 			break;
 		}
 	}
-	
 }
 /*状态量解释*/
 #define TO_START													1
@@ -314,47 +312,47 @@ void processReport(void)
 	{
 		case TO_START:
 			USART_OUT(DEBUG_USART,"TO_START");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_GET_BALL_1:
 			USART_OUT(DEBUG_USART,"TO_GET_BALL_1");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_THE_AREA_1:
 			USART_OUT(DEBUG_USART,"TO_THE_AREA_1");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_THROW_BALL_1:
 			USART_OUT(DEBUG_USART,"TO_THROW_BALL_1");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_GET_BALL_2:
 			USART_OUT(DEBUG_USART,"TO_GET_BALL_2");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_THE_AREA_2:
 			USART_OUT(DEBUG_USART,"TO_THE_AREA_2");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_THROW_BALL_2:
 			USART_OUT(DEBUG_USART,"TO_THROW_BALL_2");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_GET_BALL_3:
 			USART_OUT(DEBUG_USART,"TO_GET_BALL_3");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_THE_AREA_3:
 			USART_OUT(DEBUG_USART,"TO_THE_AREA_3");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case TO_THROW_BALL_3:
 			USART_OUT(DEBUG_USART,"TO_THROW_BALL_3");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 		case END_COMPETE:
 			USART_OUT(DEBUG_USART,"END_COMPETE");
-			USART_Enter(1);
+			USART_Enter();
 			break;
 	}
 	processLast=gRobot.process;

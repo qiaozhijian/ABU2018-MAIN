@@ -72,6 +72,9 @@ void ConfigTask(void)
 	
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
+	//给航向，俯仰电机上电初始化时间
+	Delay_ms(100);
+	
 	HardWareInit();
 	
 	MotorInit();
@@ -80,7 +83,6 @@ void ConfigTask(void)
 	
 	gRobot.process=TO_START;
 	gRobot.laserInit=(Get_Adc_Average(ADC_Channel_14,200));
-	USART_OUT(DEBUG_USART,"laserInit %d\r\n",gRobot.laserInit);
 	OSTaskSuspend(OS_PRIO_SELF);
 }
 
@@ -98,18 +100,27 @@ void RobotTask(void)
 		
 		processReport();
 		
+		DelayTaskRun();
+		
 		switch(gRobot.robocon2018)
 		{
 			case ROBOT_START:
-				gRobot.laser=(Get_Adc_Average(ADC_Channel_14,100));
-				
+				gRobot.laser=Get_Adc_Average(ADC_Channel_14,1);
+				USART_OUT_F(gRobot.laser);
+				gRobot.laser=KalmanFilter(gRobot.laser);
+				USART_OUT_F(gRobot.laser);
+				USART_Enter();
 				if(gRobot.laser-gRobot.laserInit>20.f)
 				{
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
+					PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
 					
-					gRobot.process=TO_GET_BALL_1;
+					PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
 					
-					gRobot.robocon2018=COLORFUL_BALL_1;
+					//MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
+					
+				//	gRobot.process=TO_GET_BALL_1;
+					
+				//	gRobot.robocon2018=COLORFUL_BALL_1;
 				}
 				break;
 			case COLORFUL_BALL_1:
@@ -125,8 +136,7 @@ void RobotTask(void)
 				FightForGoldBall();
 				break;
 		}
-		
-	}
+ 	} 
 }
 
 void HardWareInit(void){
@@ -136,7 +146,7 @@ void HardWareInit(void){
 	CAN_Config(CAN1, 500, GPIOB, GPIO_Pin_8, GPIO_Pin_9);
 	
 	CAN_Config(CAN2, 500, GPIOB, GPIO_Pin_5, GPIO_Pin_6);
-
+	
 	/*初始化取球，射击参数结构体*/
 	prepareMotionParaInit();
 	//舵机1串口初始化
@@ -145,32 +155,31 @@ void HardWareInit(void){
 	Steer2Init(1000000);
 	//控制蓝牙
 	ControlBLE_Init(115200);
-	//调试蓝牙
+	/*调试蓝牙*/
 	DebugBLE_Init(921600);
-	//激光初始化
+	/*激光初始化*/
 	Laser_Init();
-	//光电初始化
+	/*光电初始化*/
 	PhotoelectricityInit();
-	Delay_ms(1000);
 	
+	Delay_ms(3000);
 	Enable_ROBS();//使能舵机
 	
 }
 void MotorInit(void){
-		//电机初始化及使能
-		ElmoInit(CAN2);
-
-		//电机位置环
-		PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
-		//电机位置环
-		PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
-
-		MotorOn(CAN2,5); 
-		MotorOn(CAN2,6); 
-}
-
-void MotorDisable(void){
+	//电机初始化及使能
+	ElmoInit(CAN2);
 	
+	//电机位置环
+	PosLoopCfg(CAN2, 5, 8000000, 8000000,100000);
+	//电机位置环
+	PosLoopCfg(CAN2, 6, 8000000, 8000000,100000);
+	
+	MotorOn(CAN2,5); 
+	MotorOn(CAN2,6); 
+}	
+	
+void MotorDisable(void){
 	//电机初始化及使能
 	ElmoInit(CAN2);
 	/*从电机正面看过去，逆时针为正  */
@@ -178,12 +187,12 @@ void MotorDisable(void){
 	VelLoopCfg(CAN2,6,10000000,10000000);
 	
 	MotorOff(CAN2,ELMO_BROADCAST_ID); 
-
+	
 	//爪子状态控制
 	//gasMotion();
-}
+}	
 void statusInit(void)
-{
+{	
 	/*运动控制状态初始化*/
 	SetMotionFlag(~AT_CLAW_STATUS_OPEN);
 	SetMotionFlag(AT_STEER_READY);
@@ -192,12 +201,10 @@ void statusInit(void)
 	
 	gRobot.robocon2018=ROBOT_START;
 	
-	Delay_ms(2000);
-	Delay_ms(2000);
-	Delay_ms(2000);
+	Delay_ms(3000);
 	
 	PrepareGetBall(BALL_1);
 	
-}
+}	
 
 
