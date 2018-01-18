@@ -126,7 +126,7 @@
 #define DELAY_STEER1_CHECK_POS										0x01
 #define DELAY_STEER2_CHECK_POS										0x02
 
-
+#define STEER_ERROR_TIME										10
 
 typedef struct{
 	/*航向角*/
@@ -186,7 +186,7 @@ typedef struct{
 		/*舵机的位置*/
 		int steerPos[2];
 		/*错误记录，第一个是错误类型，第二个是发生的过程*/
-		char error[10][2];
+		char error[STEER_ERROR_TIME][2];
 		/*错误发生的次数*/
 		char errorTime;
 	}steer_t;

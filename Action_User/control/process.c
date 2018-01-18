@@ -158,7 +158,7 @@ void FightForGoldBall(void)
 
 void DelayMsRun(char task,short ms)
 {
-	int index;
+	int index=0;
 	gRobot.delayTask|=task;
 	while(task!=1)
 	{
@@ -169,8 +169,9 @@ void DelayMsRun(char task,short ms)
 }
 void DelayStop(char task)
 {
-	int index;
+	int index=0;
 	gRobot.delayTask&=~task;
+	
 	while(task!=1)
 	{
 		task>>=1;
@@ -186,44 +187,53 @@ void DelayTaskRun(void)
 	/*检测舵机1的位置有没有到达*/
 	if(gRobot.delayTask&DELAY_STEER1_CHECK_POS)
 	{
+		ReadSteer1Pos();
 		delayMs[0]++;
 		if(delayMs[0]*PERIOD_COUNTER>gRobot.delayTaskMs[0])
 		{
+			DelayStop(DELAY_STEER1_CHECK_POS);
 			//4096/360=11.377
-			if(abs(gRobot.steer_t.steerAimPos[0][1]-gRobot.steer_t.steerPos[0])>80*11.377f)
+			if(abs(gRobot.steer_t.steerAimPos[0][1]-gRobot.steer_t.steerPos[0])>2*11.377f)
 			{
 				Steer1ROBS_PosCrl(gRobot.steer_t.steerAimPos[0][0],2000);
-				USART_OUT_ONCE("DELAY_STEER1_CHECK_POS FAIL\r\n");
-				SetMotionFlag(STEER1_ROTATE_FAIL);
+				//USART_OUT(DEBUG_USART,"DELAY_STEER1_CHECK_POS FAIL\r\n");
+				SteerErrorRecord(STEER1_ROTATE_FAIL);
 			}
 			else
 			{
-				USART_OUT_ONCE("DELAY_STEER1_CHECK_POS SUCCESS\r\n");
+				USART_OUT(DEBUG_USART,"DELAY_STEER1_CHECK_POS SUCCESS\r\n");
 			}
-			DelayStop(DELAY_STEER1_CHECK_POS);
 			delayMs[0]=0;
+		}
+		else{
+//			USART_OUT_F(abs(gRobot.steer_t.steerAimPos[0][1]-gRobot.steer_t.steerPos[0]));
 		}
 	}
 	
 	/*检测舵机2的位置有没有到达*/
 	if(gRobot.delayTask&DELAY_STEER2_CHECK_POS)
 	{
+		ReadSteer2Pos();
 		delayMs[1]++;
 		if(delayMs[1]*PERIOD_COUNTER>gRobot.delayTaskMs[1])
 		{
+			DelayStop(DELAY_STEER2_CHECK_POS);
 			//4096/360=11.377
 			if(abs(gRobot.steer_t.steerAimPos[1][1]-gRobot.steer_t.steerPos[1])>80*11.377f)
 			{
-				Steer1ROBS_PosCrl(gRobot.steer_t.steerAimPos[1][0],2000);
-				USART_OUT_ONCE("DELAY_STEER2_CHECK_POS FAIL\r\n");
-				SetMotionFlag(STEER2_ROTATE_FAIL);
+				Steer2ROBS_PosCrl(gRobot.steer_t.steerAimPos[1][0],2000);
+				//USART_OUT(DEBUG_USART,"DELAY_STEER2_CHECK_POS FAIL\r\n");
+				SteerErrorRecord(STEER2_ROTATE_FAIL);
 			}
 			else
 			{
-				USART_OUT_ONCE("DELAY_STEER2_CHECK_POS SUCCESS\r\n");
+				USART_OUT(DEBUG_USART,"DELAY_STEER2_CHECK_POS SUCCESS\r\n");
 			}
-			DelayStop(DELAY_STEER2_CHECK_POS);
 			delayMs[1]=0;
+		}
+		else{
+//			USART_OUT_F(abs(gRobot.steer_t.steerAimPos[1][1]-gRobot.steer_t.steerPos[1]));
+//			USART_Enter();
 		}
 	}
 	

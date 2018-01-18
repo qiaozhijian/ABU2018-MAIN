@@ -462,61 +462,7 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
 }
 void UART5_OUT(const uint8_t *Data, ...)
 { 
-	const char *s;
-    int d;
-    char buf[16];
-    va_list ap;
-    va_start(ap, Data);
-
-	while(*Data != 0)				                          //判断是否到达字符串结束符
-	{
-		if(*Data == 0x5c)									  //'\'
-		{	
-			switch (*++Data)
-			{
-				case 'r':							          //回车符	   
-					UART5BufPut(0x0d);
-					Data++;
-					break;
-				case 'n':	
-					//换行符
-					UART5BufPut(0x0a);
-					Data++;
-					break;
-				
-				default:
-					Data++;
-				    break;
-			}	 
-		}
-		else if(*Data == '%')									  //
-		{
-			switch (*++Data)				
-			{
-				case 's':										  //字符串
-                	s = va_arg(ap, const char *);
-                	for (; *s; s++) 
-				    {
-						UART5BufPut(*s);
-                	}
-					Data++;
-                	break;
-            	case 'd':										  //十进制
-                	d = va_arg(ap, int);
-                	itoa(d, buf, 10);
-                	for (s = buf; *s; s++) 
-				    {
-						UART5BufPut(*s);
-                	}
-					Data++;
-                	break;
-				default:
-					Data++;
-				    break;
-			}		 
-		}
-		else UART5BufPut(*Data++);
-	}
+	USART_OUT(UART5,(uint8_t *)Data);
 }
 /******************************************************
 		整形数据转字符串函数

@@ -83,15 +83,15 @@ void prepareMotionParaInit(void)
 	/*准备射第二个球的数据*/
 	gRobot.prepareMotion.PrepareShootBall2.courseAngle=-79.5f;
 	gRobot.prepareMotion.PrepareShootBall2.pitchAngle=30.1f;
-	gRobot.prepareMotion.PrepareShootBall1.steerAngle=0.f;
-	gRobot.prepareMotion.PrepareShootBall1.steerSpeed=2000;
+	gRobot.prepareMotion.PrepareShootBall2.steerAngle=0.f;
+	gRobot.prepareMotion.PrepareShootBall2.steerSpeed=2000;
 	gRobot.prepareMotion.PrepareShootBall2.gasAim=0.45f;
 	
 	/*准备射第三个球的数据*/
 	gRobot.prepareMotion.PrepareShootBall3.courseAngle=-90.f;
 	gRobot.prepareMotion.PrepareShootBall3.pitchAngle=32.5f;
-	gRobot.prepareMotion.PrepareShootBall1.steerAngle=0.f;
-	gRobot.prepareMotion.PrepareShootBall1.steerSpeed=2000;
+	gRobot.prepareMotion.PrepareShootBall3.steerAngle=0.f;
+	gRobot.prepareMotion.PrepareShootBall3.steerSpeed=2000;
 	gRobot.prepareMotion.PrepareShootBall3.gasAim=0.45f;
 	
 }
@@ -154,15 +154,15 @@ void PrepareShootBall(int index)
 	{
 		case BALL_1:
 			//传入准备射球的参数
-			PrepareShootBallMotion(gRobot.prepareMotion.PrepareGetBall1);
+			PrepareShootBallMotion(gRobot.prepareMotion.PrepareShootBall1);
 			break;
 		case BALL_2:
 			//传入准备射球的参数
-			PrepareShootBallMotion(gRobot.prepareMotion.PrepareGetBall2);
+			PrepareShootBallMotion(gRobot.prepareMotion.PrepareShootBall2);
 			break;
 		case BALL_3:
 			//传入准备射球的参数
-			PrepareShootBallMotion(gRobot.prepareMotion.PrepareGetBall3);
+			PrepareShootBallMotion(gRobot.prepareMotion.PrepareShootBall3);
 			break;
 		default:
 			USART_OUT(DEBUG_USART,"PrepareShootBall error\r\n");

@@ -100,7 +100,7 @@ void RobotTask(void)
 		
 		processReport();
 		
-		//DelayTaskRun();
+		DelayTaskRun();
 		
 		switch(gRobot.robocon2018)
 		{
@@ -113,11 +113,11 @@ void RobotTask(void)
 					
 					PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
 					
-					//MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
 					
-				//	gRobot.process=TO_GET_BALL_1;
+					gRobot.process=TO_GET_BALL_1;
 					
-				//	gRobot.robocon2018=COLORFUL_BALL_1;
+					gRobot.robocon2018=COLORFUL_BALL_1;
 				}
 				break;
 			case COLORFUL_BALL_1:
@@ -161,6 +161,7 @@ void HardWareInit(void){
 	
 	Delay_ms(3000);
 	Enable_ROBS();//使能舵机
+	Enable_ServoMode();
 	
 }
 void MotorInit(void){
@@ -185,8 +186,6 @@ void MotorDisable(void){
 	
 	MotorOff(CAN2,ELMO_BROADCAST_ID); 
 	
-	//爪子状态控制
-	//gasMotion();
 }	
 void statusInit(void)
 {	
@@ -198,9 +197,9 @@ void statusInit(void)
 	
 	gRobot.robocon2018=ROBOT_START;
 	
-	//Delay_ms(3000);
+	Delay_ms(3000);
 	
-	//PrepareGetBall(BALL_1);
+	PrepareGetBall(BALL_1);
 	
 }	
 

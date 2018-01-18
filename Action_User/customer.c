@@ -89,6 +89,7 @@ void AT_CMD_Handle(void){
 			break;
 		/*控制张爪*/
 		case CLAW:
+			USART_OUT(DEBUG_USART,"OK\r\n");
 			if(*(buffer + 4) == '1') 
 			{
 				GasValveControl(GASVALVE_BOARD_ID , CLAW_ID, CLAW_SHUT);
@@ -104,6 +105,7 @@ void AT_CMD_Handle(void){
 		
 		/*控制是否射击*/
 		case SHOOT:
+			USART_OUT(DEBUG_USART,"OK\r\n");
 			if(*(buffer + 4) == '1')
 			{
 				if(gRobot.AT_motionFlag&(AT_CLAW_STATUS_OPEN|AT_STEER_READY))
@@ -134,39 +136,42 @@ void AT_CMD_Handle(void){
 			break;
 
 		case PITCH:
+			USART_OUT(DEBUG_USART,"OK\r\n");
 			value = atof(buffer + 4);
 			PitchAngleMotion(value);
 			break;
 		
 		case STEER:
+			USART_OUT(DEBUG_USART,"OK\r\n");
 			value = atof(buffer + 4);
 //				ROBS_PosCrl(value, value, 1000);
 //				SetMotionFlag(~AT_STEER_READY);
 			if(value <= -45.f)
 			{
-				ROBS_PosCrl(90, 90, 000);
+				ROBS_PosCrl(90, 90, 2000);
 				SetMotionFlag(~AT_STEER_READY);
 			}
 			else if(value <= 45.f)
 			{
-				ROBS_PosCrl(0, 0, 1000);
+				ROBS_PosCrl(0, 0, 2000);
 				SetMotionFlag(AT_STEER_READY);
 			}
 			else
 			{
-				ROBS_PosCrl(-90, -90, 1000);
+				ROBS_PosCrl(-90, -90, 2000);
 				SetMotionFlag(~AT_STEER_READY);
 			}
-
 			break;
 		
 		case GAS:
+			USART_OUT(DEBUG_USART,"OK\r\n");
 			//平板的值
 			value = atof(buffer + 4);
 			CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
 			break;
 		
 		case COURSE:
+			USART_OUT(DEBUG_USART,"OK\r\n");
 			value = atof(buffer + 4);
 			CourseAngleMotion(value);
 			break;

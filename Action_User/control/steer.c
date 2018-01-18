@@ -21,6 +21,7 @@ void Enable_ROBS()
 		{
 			USART_OUT(DEBUG_USART,"STEER1_ENABLE_FAIL\r\n");
 			SteerErrorRecord(STEER1_ENABLE_FAIL);
+			break;
 		}
 	}
 	SetMotionFlag(~AT_STEER1_SUCCESS);
@@ -33,6 +34,7 @@ void Enable_ROBS()
 		{
 			USART_OUT(DEBUG_USART,"STEER2_ENABLE_FAIL\r\n");
 			SteerErrorRecord(STEER2_ENABLE_FAIL);
+			break;
 		}
 	}
 	SetMotionFlag(~AT_STEER2_SUCCESS);
@@ -87,10 +89,11 @@ void Steer1ROBS_PosCrl(float angleUP, int vel)
 		{
 			USART_OUT(DEBUG_USART,"STEER1_ROTATE_SEND_FAIL\r\n");
 			SteerErrorRecord(STEER1_ROTATE_SEND_FAIL);
+			break;
 		}
 	}
 	SetMotionFlag(~AT_STEER1_SUCCESS);
-	DelayMsRun(DELAY_STEER1_CHECK_POS,1000);
+	DelayMsRun(DELAY_STEER1_CHECK_POS,100);
 	
 	times=0;
 }
@@ -116,11 +119,12 @@ void Steer2ROBS_PosCrl(float angleDOWN, int vel)
 		{
 			USART_OUT(DEBUG_USART,"STEER2_ROTATE_SEND_FAIL\r\n");
 			SteerErrorRecord(STEER2_ROTATE_SEND_FAIL);
+			break;
 		}
 	}
 	ReadROBSAngle();
 	SetMotionFlag(~AT_STEER2_SUCCESS);
-	DelayMsRun(DELAY_STEER2_CHECK_POS,1000);
+	DelayMsRun(DELAY_STEER2_CHECK_POS,100);
 	times=0;
 }
 
@@ -177,6 +181,7 @@ void Steer2ROBS_PosTimeCrl(float angleDOWN, int time)
 	
 //	while(!(gRobot.AT_motionFlag&AT_STEER2_SUCCESS))
 //	{
+						
 		USART_OUT(USART2,"#1 W 42,2,%d:44,2,%d\r\n",pos1,time);
 //		Delay_ms(1);
 //		times++;
@@ -211,11 +216,9 @@ void Stop(void)
 	USART_OUT(USART2,"#1 W 46,2,0:44,2,0\r\n");
 } 
 
-//读位置
-void ReadROBSAngle(void)
+void ReadSteer1Pos(void)
 {
 	static int times1=0;
-	static int times2=0;
 	
 	//如果没有读成功
 	while(!(gRobot.AT_motionFlag&AT_STEER1_READ_SUCCESS))
@@ -226,11 +229,17 @@ void ReadROBSAngle(void)
 		if(times1>10)
 		{
 			USART_OUT(DEBUG_USART,"AT_STEER1_READ_FAIL\r\n");
+			break;
 		}
 	}
 	//复位
 	SetMotionFlag(~AT_STEER1_READ_SUCCESS);
 	times1=0;
+}
+
+void ReadSteer2Pos(void)
+{
+	static int times2=0;
 	
 	//如果没有读成功
 	while(!(gRobot.AT_motionFlag&AT_STEER2_READ_SUCCESS))
@@ -241,11 +250,18 @@ void ReadROBSAngle(void)
 		if(times2>10)
 		{
 			USART_OUT(DEBUG_USART,"AT_STEER2_READ_FAIL\r\n");
+			break;
 		}
 	}
 	//复位
 	SetMotionFlag(~AT_STEER2_READ_SUCCESS);
 	times2=0;
+}
+//读位置
+void ReadROBSAngle(void)
+{
+	ReadSteer1Pos();
+	ReadSteer2Pos();
 }
 
 void SteerErrorReport(void)
@@ -325,9 +341,18 @@ void SteerErrorReport(void)
 
 void SteerErrorRecord(char type)
 {
-	gRobot.steer_t.error[gRobot.steer_t.errorTime][0]=type;
-	gRobot.steer_t.error[gRobot.steer_t.errorTime][1]=gRobot.process;
-	gRobot.steer_t.errorTime++;
+	int i=0;
+	while(gRobot.steer_t.error[i][0]!=type||gRobot.steer_t.error[i][1]!=gRobot.process)
+	{
+		i++;
+		if(i==STEER_ERROR_TIME)
+		{
+			gRobot.steer_t.error[gRobot.steer_t.errorTime][0]=type;
+			gRobot.steer_t.error[gRobot.steer_t.errorTime][1]=gRobot.process;
+			gRobot.steer_t.errorTime++;
+			break;
+		}
+	}
 }
 
 /****************舵机一串口接收中断****start****************/
@@ -347,7 +372,6 @@ void USART1_IRQHandler(void)
 	{
 		USART_ClearITPendingBit(USART1,USART_IT_RXNE);
 		ch=USART_ReceiveData(USART1);
-		USART_SendData(DEBUG_USART,ch);
 		if(ch=='@') step=0;
 		
 		switch(step)
@@ -491,7 +515,6 @@ void USART2_IRQHandler(void)
 	{
 		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
 		ch=USART_ReceiveData(USART2);
-		USART_SendData(DEBUG_USART,ch);
 		if(ch=='@') step=0;
 		switch(step)
 		{

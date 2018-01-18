@@ -42,4 +42,9 @@ void SteerErrorReport(void);
 void Steer1ROBS_PosCrl(float angleUP, int vel);
 
 void Steer2ROBS_PosCrl(float angleDOWN, int vel);
+
+void ReadSteer1Pos(void);
+
+void ReadSteer2Pos(void);
+
 #endif
