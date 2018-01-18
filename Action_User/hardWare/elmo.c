@@ -60,8 +60,7 @@ void MotorOn(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			//在这里应加入异常处理
-			
+			USART_OUT(DEBUG_USART,"MotorOn dead while\r\n");
 		}
 	}
 }
@@ -104,8 +103,7 @@ void MotorOff(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			//在这里应加入异常处理
-		
+			USART_OUT(DEBUG_USART,"MotorOff dead while\r\n");
 		}
 	}
 
@@ -230,7 +228,7 @@ void SetUnitMode(CAN_TypeDef* CANx, uint8_t ElmoNum, uint8_t unitMode)
 		timeout++;
 		if(timeout > 60000)
 		{
-			//在这里应加入异常处理
+			USART_OUT(DEBUG_USART,"SetUnitMode dead while\r\n");
 		
 		}
 	}
@@ -278,7 +276,7 @@ void SetSmoothFactor(CAN_TypeDef* CANx, uint8_t ElmoNum, uint8_t smoothFactor)
 		timeout++;
 		if(timeout > 60000)
 		{
-			//在这里应加入异常处理
+			USART_OUT(DEBUG_USART,"SetSmoothFactor dead while\r\n");
 		
 		}
 	}
@@ -331,7 +329,7 @@ void SetAccAndDec(CAN_TypeDef* CANx, uint8_t ElmoNum, uint32_t acc, uint32_t dec
 			timeout++;
 			if(timeout > 60000)
 			{
-				//在这里应加入异常处理
+				USART_OUT(DEBUG_USART,"SetAccAndDec dead while\r\n");
 			
 			}
 		}
@@ -385,7 +383,7 @@ void SetVelLimit(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit, int32_t
 			timeout++;
 			if(timeout > 60000)
 			{
-				//在这里应加入异常处理
+				USART_OUT(DEBUG_USART,"SetVelLimit dead while\r\n");
 			
 			}
 		}
@@ -439,8 +437,7 @@ void SetPosLimit(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit, int32_t
 			timeout++;
 			if(timeout > 60000)
 			{
-				//在这里应加入异常处理
-			
+				USART_OUT(DEBUG_USART,"SetPosLimit dead while\r\n");
 			}
 		}
 	}
@@ -493,8 +490,7 @@ void SetPosCountingRange(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit,
 			timeout++;
 			if(timeout > 60000)
 			{
-				//在这里应加入异常处理
-			
+				USART_OUT(DEBUG_USART,"SetPosCountingRange dead while\r\n");
 			}
 		}
 	}
@@ -542,8 +538,7 @@ void SetPosLoopVel(CAN_TypeDef* CANx, uint8_t ElmoNum,int32_t vel)
 		timeout++;
 		if(timeout > 60000)
 		{
-			//在这里应加入异常处理
-		
+				USART_OUT(DEBUG_USART,"SetPosLoopVel dead while\r\n");
 		}
 	}
 }
@@ -590,8 +585,7 @@ void SetJoggingVel(CAN_TypeDef* CANx, uint8_t ElmoNum,int32_t vel)
 		timeout++;
 		if(timeout > 60000)
 		{
-			//在这里应加入异常处理
-		
+				USART_OUT(DEBUG_USART,"SetJoggingVel dead while\r\n");
 		}
 	}
 }
@@ -652,7 +646,7 @@ void SendPosCmd(CAN_TypeDef* CANx, uint8_t ElmoNum,uint8_t posMode,int32_t pos)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"SendPosCmd dead while\r\n");
 		}
 	}
 
@@ -697,8 +691,7 @@ void BeginMotion(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			//在这里应加入异常处理
-		
+				USART_OUT(DEBUG_USART,"BeginMotion dead while\r\n");
 		}
 	}
 }
@@ -743,7 +736,7 @@ void ReadActualVoltage(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadActualVoltage dead while\r\n");
 		}
 	}
  }
@@ -786,7 +779,7 @@ void ReadActualCurrent(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadActualCurrent dead while\r\n");
 		}
 	} 
  }
@@ -829,7 +822,7 @@ void ReadActualPos(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadActualPos dead while\r\n");
 		}
 	} 
  }
@@ -872,7 +865,7 @@ void ReadActualVel(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+			USART_OUT(DEBUG_USART,"ReadActualVel dead while\r\n");
 		}
 	}
 }
@@ -915,7 +908,7 @@ void ReadActualTemperature(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadActualTemperature dead while\r\n");
 		}
 	}
 }
@@ -958,7 +951,7 @@ void ReadCurrentLimitFlag(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadCurrentLimitFlag dead while\r\n");
 		}
 	}
 }
@@ -1001,7 +994,7 @@ void ReadVelocityError(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadVelocityError dead while\r\n");
 		}
 	}
 }
@@ -1044,7 +1037,7 @@ void ReadCommandVelocity(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadCommandVelocity dead while\r\n");
 		}
 	}
 }
@@ -1088,7 +1081,7 @@ void ReadJoggingVelocity(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadJoggingVelocity dead while\r\n");
 		}
 	}
 }
@@ -1131,7 +1124,7 @@ void ReadUnitMode(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadUnitMode dead while\r\n");
 		}
 	}
 }
@@ -1175,7 +1168,7 @@ void ReadReferenceMode(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadReferenceMode dead while\r\n");
 		}
 	}
 }
@@ -1218,7 +1211,7 @@ void ReadMotorFailure(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-			
+				USART_OUT(DEBUG_USART,"ReadMotorFailure dead while\r\n");
 		}
 	}
 }

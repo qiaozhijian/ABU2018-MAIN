@@ -40,6 +40,8 @@ void USART3_IRQHandler(void)
     data=USART_ReceiveData(USART3);
     buffer[bufferI]=data;
     bufferI++;
+		if(bufferI==20)
+			bufferI=0;
     if(bufferI>1&&buffer[bufferI-1]=='\n'&&buffer[bufferI-2]=='\r'){
       AT_CMD_Judge();
     }else{
@@ -142,7 +144,7 @@ void AT_CMD_Handle(void){
 //				SetMotionFlag(~AT_STEER_READY);
 			if(value <= -45.f)
 			{
-				ROBS_PosCrl(90, 95, 1000);
+				ROBS_PosCrl(90, 90, 000);
 				SetMotionFlag(~AT_STEER_READY);
 			}
 			else if(value <= 45.f)
@@ -242,7 +244,7 @@ void UART5_bufferInit(void){
   bufferUART5_I=0;
   for(int i=0;i<20;i++)
     bufferUART5[i]=0;
-		atCommand_UART5=0;
+	atCommand_UART5=0;
 }
 void UART5_AT_CMD_Judge(void);
 void UART5_IRQHandler(void)
@@ -258,6 +260,8 @@ void UART5_IRQHandler(void)
     data=USART_ReceiveData(UART5);
     bufferUART5[bufferUART5_I]=data;
     bufferUART5_I++;
+		if(bufferUART5_I==20)
+			bufferUART5_I=0;
     if(bufferUART5_I>1&&bufferUART5[bufferUART5_I-1]=='\n'&&bufferUART5[bufferUART5_I-2]=='\r'){
       UART5_AT_CMD_Judge();
     }else{
@@ -273,7 +277,7 @@ void UART5_IRQHandler(void)
 }
 
 void UART5_AT_CMD_Judge(void){
-  if((bufferUART5_I >= 4) && strncmp(bufferUART5, "AT+report", 4)==0)//AT    
+  if((bufferUART5_I >= 9) && strncmp(bufferUART5, "AT+report", 9)==0)//AT    
   {
 		StatusReport();
 	}
@@ -283,5 +287,6 @@ void UART5_AT_CMD_Judge(void){
 	}
   else 
     atCommand_UART5=666;
+  UART5_bufferInit();
 }
 

@@ -23,7 +23,7 @@ void Enable_ServoMode(void) ;
 //使能电机模式
 void Enable_MotorMode(void);
 
-void ROBS_VelCrl(int vel,int time);
+void ROBS_PosTimeCrl(float angleUP, float angleDOWN, int time);
 
 void ROBS_PosCrl(float angleUP, float angleDOWN, int vel);
 

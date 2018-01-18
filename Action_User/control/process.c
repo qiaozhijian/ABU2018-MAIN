@@ -233,19 +233,19 @@ void DelayTaskRun(void)
 void MotionStatus(void)
 {
 	ReadROBSAngle();
-	USART_OUT(DEBUG_USART,"steer 1 aimpos %d\trealpos %d\r\n",gRobot.steer_t.steerAimPos[0],gRobot.steer_t.steerPos[0]);
-	USART_OUT(DEBUG_USART,"steer 2 aimpos %d\trealpos %d\r\n",gRobot.steer_t.steerAimPos[1],gRobot.steer_t.steerPos[1]);
+	USART_OUT(DEBUG_USART,"steer 1 aimpos %d\trealpos %d\r\n",gRobot.steer_t.steerAimPos[0][1],gRobot.steer_t.steerPos[0]);
+	USART_OUT(DEBUG_USART,"steer 2 aimpos %d\trealpos %d\r\n",gRobot.steer_t.steerAimPos[1][1],gRobot.steer_t.steerPos[1]);
 	
-	while(!gRobot.motorPara_t.pitchReadSuccess)
-		ReadActualPos(CAN2,5);
-	gRobot.motorPara_t.pitchReadSuccess=0;
+//	while(!gRobot.motorPara_t.pitchReadSuccess)
+//		ReadActualPos(CAN2,5);
+//	gRobot.motorPara_t.pitchReadSuccess=0;
 	
-	while(!gRobot.motorPara_t.courseReadSuccess)
-		ReadActualPos(CAN2,6);
-	gRobot.motorPara_t.courseReadSuccess=0;
-	
-	USART_OUT(DEBUG_USART,"course aimpos %d\trealpos %d\r\n",gRobot.motorPara_t.courseAimPos,gRobot.motorPara_t.coursePos);
-	USART_OUT(DEBUG_USART,"pitch aimpos %d\trealpos %d\r\n",gRobot.motorPara_t.pitchAimPos,gRobot.motorPara_t.pitchPos);
+//	while(!gRobot.motorPara_t.courseReadSuccess)
+//		ReadActualPos(CAN2,6);
+//	gRobot.motorPara_t.courseReadSuccess=0;
+//	
+//	USART_OUT(DEBUG_USART,"course aimpos %d\trealpos %d\r\n",gRobot.motorPara_t.courseAimPos,gRobot.motorPara_t.coursePos);
+//	USART_OUT(DEBUG_USART,"pitch aimpos %d\trealpos %d\r\n",gRobot.motorPara_t.pitchAimPos,gRobot.motorPara_t.pitchPos);
 	
 	USART_OUT(DEBUG_USART,"gasValue aim ");
 	USART_OUT_F(gRobot.motorPara_t.gasAimValue);
@@ -253,9 +253,61 @@ void MotionStatus(void)
 	USART_OUT_F(gRobot.motorPara_t.gasValue);
 	USART_OUT(DEBUG_USART,"\r\n");
 }
+
+void processReponse(void)
+{
+	switch(gRobot.process)
+	{
+		case TO_START:
+			USART_OUT(DEBUG_USART,"TO_START");
+			USART_Enter();
+			break;
+		case TO_GET_BALL_1:
+			USART_OUT(DEBUG_USART,"TO_GET_BALL_1");
+			USART_Enter();
+			break;
+		case TO_THE_AREA_1:
+			USART_OUT(DEBUG_USART,"TO_THE_AREA_1");
+			USART_Enter();
+			break;
+		case TO_THROW_BALL_1:
+			USART_OUT(DEBUG_USART,"TO_THROW_BALL_1");
+			USART_Enter();
+			break;
+		case TO_GET_BALL_2:
+			USART_OUT(DEBUG_USART,"TO_GET_BALL_2");
+			USART_Enter();
+			break;
+		case TO_THE_AREA_2:
+			USART_OUT(DEBUG_USART,"TO_THE_AREA_2");
+			USART_Enter();
+			break;
+		case TO_THROW_BALL_2:
+			USART_OUT(DEBUG_USART,"TO_THROW_BALL_2");
+			USART_Enter();
+			break;
+		case TO_GET_BALL_3:
+			USART_OUT(DEBUG_USART,"TO_GET_BALL_3");
+			USART_Enter();
+			break;
+		case TO_THE_AREA_3:
+			USART_OUT(DEBUG_USART,"TO_THE_AREA_3");
+			USART_Enter();
+			break;
+		case TO_THROW_BALL_3:
+			USART_OUT(DEBUG_USART,"TO_THROW_BALL_3");
+			USART_Enter();
+			break;
+		case END_COMPETE:
+			USART_OUT(DEBUG_USART,"END_COMPETE");
+			USART_Enter();
+			break;
+	}
+}
+
 void StatusReport(void)
 {
-	processReport();
+	processReponse();
 	SteerErrorReport();
 	MotionStatus();
 }

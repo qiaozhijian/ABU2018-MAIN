@@ -125,14 +125,71 @@ void Steer2ROBS_PosCrl(float angleDOWN, int vel)
 }
 
 //电机模式下函数
-
+void Steer1ROBS_PosTimeCrl(float angleUP, int time);
+void Steer2ROBS_PosTimeCrl(float angleUP, int time);
 
 //以vel的速度转time ms,time=0代表一直转
-void ROBS_VelCrl(int vel,int time)
+void ROBS_PosTimeCrl(float angleUP, float angleDOWN, int time)
 {
-	USART_OUT(USART1,"#1 W 46,2,%d:44,2,%d\r\n",vel,time);
-	USART_OUT(USART2,"#1 W 46,2,%d:44,2,%d\r\n",vel,time);
+	Steer1ROBS_PosTimeCrl(angleUP, time);
+	Steer2ROBS_PosTimeCrl(angleUP, time);
 	//#1 W 46,2,vel:44,2,time\r\n
+}
+
+void Steer1ROBS_PosTimeCrl(float angleUP, int time)
+{
+	static int times=0;
+	float pos;
+	
+  pos= ((angleUP-3.6)/360.0f*4096.0f)+2048;
+	
+	gRobot.steer_t.steerAimPos[0][0]=angleUP;
+	gRobot.steer_t.steerAimPos[0][1]=pos;
+	
+//	while(!(gRobot.AT_motionFlag&AT_STEER1_SUCCESS))
+//	{
+		USART_OUT(USART1,"#1 W 42,2,%d:44,2,%d\r\n",pos,time);
+//		Delay_ms(1);
+//		times++;
+//		if(times>10)
+//		{
+//			USART_OUT(DEBUG_USART,"STEER1_ROTATE_SEND_FAIL\r\n");
+//			SteerErrorRecord(STEER1_ROTATE_SEND_FAIL);
+//		}
+//	}
+//	SetMotionFlag(~AT_STEER1_SUCCESS);
+//	DelayMsRun(DELAY_STEER1_CHECK_POS,1000);
+//	
+//	times=0;
+}
+
+void Steer2ROBS_PosTimeCrl(float angleDOWN, int time)
+{
+	static int times=0;
+	float pos1;
+
+	//Enable_ROBS();
+//  pos= (2048-angle/360.0f*4096.0f/30.0f*52.0f);
+  pos1= (-(angleDOWN-10.8)/360.0f*4096.0f)+2048;
+	
+	gRobot.steer_t.steerAimPos[1][0]=angleDOWN;
+	gRobot.steer_t.steerAimPos[1][1]=pos1;
+	
+//	while(!(gRobot.AT_motionFlag&AT_STEER2_SUCCESS))
+//	{
+		USART_OUT(USART2,"#1 W 42,2,%d:44,2,%d\r\n",pos1,time);
+//		Delay_ms(1);
+//		times++;
+//		if(times>10)
+//		{
+//			USART_OUT(DEBUG_USART,"STEER2_ROTATE_SEND_FAIL\r\n");
+//			SteerErrorRecord(STEER2_ROTATE_SEND_FAIL);
+//		}
+//	}
+//	ReadROBSAngle();
+//	SetMotionFlag(~AT_STEER2_SUCCESS);
+//	DelayMsRun(DELAY_STEER2_CHECK_POS,1000);
+//	times=0;
 }
 
 void TurnLeft(int vel)
@@ -379,24 +436,28 @@ void USART1_IRQHandler(void)
 					step=0;
 				break;
 			case 13:
-				buffer[i]=ch;
-				i++;
-				if(i==4)
+				if(ch=='\r')
 				{
-					i=0;
 					step++;
-					gRobot.steer_t.steerPos[0]=(buffer[0]-'0')*1000+(buffer[1]-'0')*100+(buffer[2]-'0')*10+(buffer[3]-'0');
+					gRobot.steer_t.steerPos[0]=0;
+					for(int j=0;j<i;j++)
+					{
+						gRobot.steer_t.steerPos[0]+=(buffer[j]-'0')*pow(10,i-j-1);
+					}
 					if(gRobot.steer_t.steerPos[0]>4095||gRobot.steer_t.steerPos[0]<0)
-						USART_OUT(DEBUG_USART,"steer1readerror\r\n");
+					{
+						USART_OUT(DEBUG_USART,"steer1readbackvalueout\r\n");
+						step=0;
+					}
+					i=100;
 				}
+				if(i<4){
+					buffer[i]=ch;
+					i++;
+				}else
+					i=0;
 				break;
 			case 14:
-				if(ch=='\r')
-					step++;
-				else
-					step=0;
-				break;
-			case 15:
 				if(ch=='\n')
 				{
 					SetMotionFlag(AT_STEER1_READ_SUCCESS);
@@ -518,24 +579,28 @@ void USART2_IRQHandler(void)
 					step=0;
 				break;
 			case 13:
-				buffer[i]=ch;
-				i++;
-				if(i==4)
+				if(ch=='\r')
 				{
-					i=0;
 					step++;
-					gRobot.steer_t.steerPos[1]=(buffer[0]-'0')*1000+(buffer[1]-'0')*100+(buffer[2]-'0')*10+(buffer[3]-'0');
-					if(gRobot.steer_t.steerPos[0]>4095||gRobot.steer_t.steerPos[0]<0)
-						USART_OUT(DEBUG_USART,"steer2readerror\r\n");
+					gRobot.steer_t.steerPos[1]=0;
+					for(int j=0;j<i;j++)
+					{
+						gRobot.steer_t.steerPos[1]+=(buffer[j]-'0')*pow(10,i-j-1);
+					}
+					if(gRobot.steer_t.steerPos[1]>4095||gRobot.steer_t.steerPos[1]<0)
+					{
+						USART_OUT(DEBUG_USART,"steer2readbackvalueout\r\n");
+						step=0;
+					}
+					i=100;
 				}
+				if(i<4){
+					buffer[i]=ch;
+					i++;
+				}else
+					i=0;
 				break;
 			case 14:
-				if(ch=='\r')
-					step++;
-				else
-					step=0;
-				break;
-			case 15:
 				if(ch=='\n')
 				{
 					SetMotionFlag(AT_STEER2_READ_SUCCESS);

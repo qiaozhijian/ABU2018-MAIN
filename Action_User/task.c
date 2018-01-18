@@ -100,16 +100,13 @@ void RobotTask(void)
 		
 		processReport();
 		
-		DelayTaskRun();
+		//DelayTaskRun();
 		
 		switch(gRobot.robocon2018)
 		{
 			case ROBOT_START:
-				gRobot.laser=Get_Adc_Average(ADC_Channel_14,1);
-				USART_OUT_F(gRobot.laser);
-				gRobot.laser=KalmanFilter(gRobot.laser);
-				USART_OUT_F(gRobot.laser);
-				USART_Enter();
+				gRobot.laser=Get_Adc_Average(ADC_Channel_14,100);
+			
 				if(gRobot.laser-gRobot.laserInit>20.f)
 				{
 					PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
@@ -201,9 +198,9 @@ void statusInit(void)
 	
 	gRobot.robocon2018=ROBOT_START;
 	
-	Delay_ms(3000);
+	//Delay_ms(3000);
 	
-	PrepareGetBall(BALL_1);
+	//PrepareGetBall(BALL_1);
 	
 }	
 

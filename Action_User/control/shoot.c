@@ -96,18 +96,18 @@ void prepareMotionParaInit(void)
 	
 }
 
-void PrepareGetBallMotion(shootPara_t PrepareGetBall)
+void PrepareGetBallMotion(shootPara_t PrepareGetBall_t)
 {
 		//设置气压
-		GasMotion(PrepareGetBall.gasAim);
+		GasMotion(PrepareGetBall_t.gasAim);
 		/*设置俯仰角度*/
-		PitchAngleMotion(PrepareGetBall.pitchAngle);
+		PitchAngleMotion(PrepareGetBall_t.pitchAngle);
 		/*设置航向角度*/
-		CourseAngleMotion(PrepareGetBall.courseAngle);
+		CourseAngleMotion(PrepareGetBall_t.courseAngle);
 		/*关闭下方限位爪*/
 		GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , CLAW_SHUT);
 		/*舵机转向*/
-		ROBS_PosCrl(PrepareGetBall.steerAngle, PrepareGetBall.steerAngle, PrepareGetBall.steerSpeed);
+		ROBS_PosCrl(PrepareGetBall_t.steerAngle, PrepareGetBall_t.steerAngle, PrepareGetBall_t.steerSpeed);
 }
 
 void PrepareGetBall(int index)
@@ -132,20 +132,20 @@ void PrepareGetBall(int index)
 	}	
 }
 
-void PrepareShootBallMotion(shootPara_t PrepareGetBall)
+void PrepareShootBallMotion(shootPara_t PrepareShootBall_t)
 {
 	//设置气压
-	GasMotion(PrepareGetBall.gasAim);
+	GasMotion(PrepareShootBall_t.gasAim);
 	/*设置俯仰角度*/
-	PitchAngleMotion(PrepareGetBall.pitchAngle);
+	PitchAngleMotion(PrepareShootBall_t.pitchAngle);
 	/*设置航向角度*/
-	CourseAngleMotion(PrepareGetBall.courseAngle);
+	CourseAngleMotion(PrepareShootBall_t.courseAngle);
 	/*避免球乱晃*/
 	Delay_ms(500);
 	/*提前打开发射装置小气缸*/
 	GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
 	/*舵机转向*/
-	ROBS_PosCrl(PrepareGetBall.steerAngle, PrepareGetBall.steerAngle, PrepareGetBall.steerSpeed);
+	ROBS_PosCrl(PrepareShootBall_t.steerAngle, PrepareShootBall_t.steerAngle, PrepareShootBall_t.steerSpeed);
 }
 
 void PrepareShootBall(int index)

@@ -1,5 +1,6 @@
 #include "algorithm.h"
 #include "stdint.h"
+#include "usart.h"
 
 /*延时大，不用了！*/
 #define THRESHOLD_TEMP 		 0.01f
@@ -89,6 +90,6 @@ float KalmanFilter(float measureData)
   
   /* 更新预测误差 */
   P_last=(1-Kk)*P_mid;
-  
+	
   return act_value;
 }

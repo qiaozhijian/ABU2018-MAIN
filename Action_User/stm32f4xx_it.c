@@ -197,6 +197,10 @@ void CAN2_RX0_IRQHandler(void)
 		gRobot.motorPara_t.gasValue=msg4.dataf;
 		USART_BLE_SEND(gRobot.motorPara_t.gasValue);
 	}
+	else
+	{
+		msg4.dataf=msg4.dataf;
+	}
 
 	CAN_ClearFlag(CAN2, CAN_FLAG_EWG);
 	CAN_ClearFlag(CAN2, CAN_FLAG_EPV);
