@@ -219,7 +219,7 @@ void DelayTaskRun(void)
 		{
 			DelayStop(DELAY_STEER2_CHECK_POS);
 			//4096/360=11.377
-			if(abs(gRobot.steer_t.steerAimPos[1][1]-gRobot.steer_t.steerPos[1])>80*11.377f)
+			if(abs(gRobot.steer_t.steerAimPos[1][1]-gRobot.steer_t.steerPos[1])>2*11.377f)
 			{
 				Steer2ROBS_PosCrl(gRobot.steer_t.steerAimPos[1][0],2000);
 				//USART_OUT(DEBUG_USART,"DELAY_STEER2_CHECK_POS FAIL\r\n");
