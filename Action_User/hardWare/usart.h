@@ -14,7 +14,6 @@ void DebugBLE_Init(uint32_t BaudRate);
 
 void USART_OUT(USART_TypeDef* USARTx, const char *Data,...);
 char *itoa(int value, char *string, int radix);
-void UART5_OUT(const uint8_t *Data, ...);
 void USART_OUT_F(float value);
 void USART_Enter(void);
 void USART_BLE_SEND(float value);

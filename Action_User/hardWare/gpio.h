@@ -5,9 +5,9 @@
 
 #define KEYSWITCH		    	(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2))
 
-#define LED_OFF				GPIO_ResetBits(GPIOE, GPIO_Pin_7)
+#define BEEP_ON          		 GPIO_SetBits(GPIOE, GPIO_Pin_7)
 
-#define LED_ON				GPIO_SetBits(GPIOE, GPIO_Pin_7)
+#define BEEP_OFF         		 GPIO_ResetBits(GPIOE, GPIO_Pin_7)
 
 void GPIO_Init_Pins(GPIO_TypeDef * GPIOx,uint16_t GPIO_Pin,GPIOMode_TypeDef GPIO_Mode);
 

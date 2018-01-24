@@ -460,10 +460,6 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
 		while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET);
 	}
 }
-void UART5_OUT(const uint8_t *Data, ...)
-{ 
-	USART_OUT(UART5,(uint8_t *)Data);
-}
 /******************************************************
 		整形数据转字符串函数
         char *itoa(int value, char *string, int radix)

@@ -32,7 +32,7 @@ OS_EVENT *CANSendMutex;
 
 static  OS_STK  App_ConfigStk[Config_TASK_START_STK_SIZE];
 
-static 	OS_STK  RobotTaskStk[SHOOT_TASK_STK_SIZE];
+static 	OS_STK  RobotTaskStk[ROBOT_TASK_STK_SIZE];
 
 void App_Task()
 {
@@ -53,7 +53,7 @@ void App_Task()
 
 	os_err = OSTaskCreate(	(void (*)(void *)) RobotTask,
 							(void		  * ) 0,
-							(OS_STK		* )&RobotTaskStk[SHOOT_TASK_STK_SIZE-1],
+							(OS_STK		* )&RobotTaskStk[ROBOT_TASK_STK_SIZE-1],
 							(INT8U		   ) SHOOT_TASK_PRIO);
 
 }
@@ -106,7 +106,7 @@ void RobotTask(void)
 		{
 			case ROBOT_START:
 				gRobot.laser=Get_Adc_Average(ADC_Channel_14,100);
-			
+				
 				if(gRobot.laser-gRobot.laserInit>20.f)
 				{
 					PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
@@ -120,7 +120,7 @@ void RobotTask(void)
 					gRobot.robocon2018=COLORFUL_BALL_1;
 				}
 				break;
-			case COLORFUL_BALL_1:
+			case COLORFUL_BALL_1: 
 				/*完成彩球一的投射*/
 				FightForBall1();
 				break;
@@ -158,6 +158,9 @@ void HardWareInit(void){
 	Laser_Init();
 	/*光电初始化*/
 	PhotoelectricityInit();
+	
+	//蜂鸣器PE7
+	GPIO_Init_Pins(GPIOE, GPIO_Pin_7, GPIO_Mode_OUT);
 	
 	Delay_ms(3000);
 	Enable_ROBS();//使能舵机
@@ -198,6 +201,14 @@ void statusInit(void)
 	gRobot.robocon2018=ROBOT_START;
 	
 	Delay_ms(3000);
+	
+	/*与上一次的调试数据区分开*/
+	USART_Enter();
+	USART_Enter();
+	USART_Enter();
+	USART_Enter();
+	USART_Enter();
+	USART_Enter();
 	
 	PrepareGetBall(BALL_1);
 	

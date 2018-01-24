@@ -10,4 +10,7 @@ void DelayMsRun(char task,short ms);
 void DelayStop(char task);
 void DelayTaskRun(void);
 void StatusReport(void);
+void SteerErrorRecord(char type);
+void SteerErrorReport(void);
+
 #endif

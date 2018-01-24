@@ -62,10 +62,10 @@ static  void  RobotTask(void);
 *                             Size of the task stacks (# of OS_STK entries)
 *********************************************************************************************************
 */
-#define  APP_TASK_START_STK_SIZE					256u
-#define  Config_TASK_START_STK_SIZE					256u
+#define  APP_TASK_START_STK_SIZE										256u
+#define  Config_TASK_START_STK_SIZE									256u
 
-#define  SHOOT_TASK_STK_SIZE                        1024u
+#define  ROBOT_TASK_STK_SIZE                        1024u
 
 /*
 *********************************************************************************************************

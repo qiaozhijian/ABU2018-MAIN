@@ -448,7 +448,7 @@ uint8_t CAN_TxMsg(CAN_TypeDef* CANx,
 		timeout++;
 		if(timeout > 60000)
 		{
-			UART5_OUT((uint8_t *)"CAN Error in Elmo Init!!!!!!!!!\r\n");
+			USART_OUT(DEBUG_USART,"CAN Error in Elmo Init!!!!!!!!!\r\n");
 		}
 	}
 	return 1;		
@@ -509,7 +509,7 @@ int OSCANSendCmd(CAN_TypeDef* CANx, CanTxMsg* TxMessage)
 		timeout++;
 		if(timeout > 60000)
 		{
-			UART5_OUT((uint8_t *)"OSCANSend Error!!!!!!!\r\n");
+			USART_OUT(DEBUG_USART,"OSCANSend Error!!!!!!!\r\n");
 		}
 	}
 	OSMutexPost(CANSendMutex);

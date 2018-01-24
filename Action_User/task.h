@@ -77,6 +77,19 @@
 #define CLAW_SHUT 									 			 			(0)
 
 
+/**错误发生情况**/
+#define STEER1_ENABLE_FAIL														1
+#define STEER1_ROTATE_FAIL														2
+#define STEER2_ENABLE_FAIL														3
+#define STEER2_ROTATE_FAIL														4
+#define STEER1_ROTATE_SEND_FAIL												5
+#define STEER2_ROTATE_SEND_FAIL												6
+#define CAN1_FAIL																			7
+#define CAN2_FAIL																			8
+
+
+
+
 /*状态量解释*/
 #define TO_START													1
 #define TO_GET_BALL_1											2
@@ -185,10 +198,6 @@ typedef struct{
 		int steerAimPos[2][2];
 		/*舵机的位置*/
 		int steerPos[2];
-		/*错误记录，第一个是错误类型，第二个是发生的过程*/
-		char error[STEER_ERROR_TIME][2];
-		/*错误发生的次数*/
-		char errorTime;
 	}steer_t;
 	
 	struct{
@@ -207,6 +216,11 @@ typedef struct{
 	
 	uint16_t delayTask;
 	uint16_t delayTaskMs[DELAY_TASK_NUM];
+	
+	/*错误记录，第一个是错误类型，第二个是发生的过程*/
+	char error[STEER_ERROR_TIME][2];
+	/*错误发生的次数*/
+	char errorTime;
 	
 }Robot_t ;
 

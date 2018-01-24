@@ -75,7 +75,7 @@ void Steer1ROBS_PosCrl(float angleUP, int vel)
 	static int times=0;
 	float pos;
 	
-  pos= ((angleUP-3.6)/360.0f*4096.0f)+2048;
+  pos= ((angleUP-3.6f)/360.0f*4096.0f)+2048.f;
 	
 	gRobot.steer_t.steerAimPos[0][0]=angleUP;
 	gRobot.steer_t.steerAimPos[0][1]=pos;
@@ -105,7 +105,7 @@ void Steer2ROBS_PosCrl(float angleDOWN, int vel)
 
 	//Enable_ROBS();
 //  pos= (2048-angle/360.0f*4096.0f/30.0f*52.0f);
-  pos1= (-(angleDOWN-10.8)/360.0f*4096.0f)+2048;
+  pos1= (-(angleDOWN-10.8f)/360.0f*4096.0f)+2048.f;
 	
 	gRobot.steer_t.steerAimPos[1][0]=angleDOWN;
 	gRobot.steer_t.steerAimPos[1][1]=pos1;
@@ -145,7 +145,7 @@ void Steer1ROBS_PosTimeCrl(float angleUP, int time)
 	static int times=0;
 	float pos;
 	
-  pos= ((angleUP-3.6)/360.0f*4096.0f)+2048;
+  pos= ((angleUP-3.6f)/360.0f*4096.0f)+2048.f;
 	
 	gRobot.steer_t.steerAimPos[0][0]=angleUP;
 	gRobot.steer_t.steerAimPos[0][1]=pos;
@@ -174,7 +174,7 @@ void Steer2ROBS_PosTimeCrl(float angleDOWN, int time)
 
 	//Enable_ROBS();
 //  pos= (2048-angle/360.0f*4096.0f/30.0f*52.0f);
-  pos1= (-(angleDOWN-10.8)/360.0f*4096.0f)+2048;
+  pos1= (-(angleDOWN-10.8f)/360.0f*4096.0f)+2048.f;
 	
 	gRobot.steer_t.steerAimPos[1][0]=angleDOWN;
 	gRobot.steer_t.steerAimPos[1][1]=pos1;
@@ -264,96 +264,6 @@ void ReadROBSAngle(void)
 	ReadSteer2Pos();
 }
 
-void SteerErrorReport(void)
-{
-	for(int i=0;i<gRobot.steer_t.errorTime;i++)
-	{
-		switch(gRobot.steer_t.error[i][0])
-		{
-			case STEER1_ENABLE_FAIL:
-				USART_OUT(DEBUG_USART,"STEER1_ENABLE_FAIL\t");
-				break;
-			case STEER1_ROTATE_FAIL:
-				USART_OUT(DEBUG_USART,"STEER1_ROTATE_FAIL\t");
-				break;
-			case STEER2_ENABLE_FAIL:
-				USART_OUT(DEBUG_USART,"STEER2_ENABLE_FAIL\t");
-				break;
-			case STEER2_ROTATE_FAIL:
-				USART_OUT(DEBUG_USART,"STEER2_ROTATE_FAIL\t");
-				break;
-			case STEER1_ROTATE_SEND_FAIL:
-				USART_OUT(DEBUG_USART,"STEER1_ROTATE_SEND_FAIL\t");
-				break;
-			case STEER2_ROTATE_SEND_FAIL:
-				USART_OUT(DEBUG_USART,"STEER2_ROTATE_SEND_FAIL\t");
-				break;
-		}
-		switch(gRobot.steer_t.error[i][1])
-		{
-			case TO_START:
-				USART_OUT(DEBUG_USART,"TO_START");
-				USART_Enter();
-				break;
-			case TO_GET_BALL_1:
-				USART_OUT(DEBUG_USART,"TO_GET_BALL_1");
-				USART_Enter();
-				break;
-			case TO_THE_AREA_1:
-				USART_OUT(DEBUG_USART,"TO_THE_AREA_1");
-				USART_Enter();
-				break;
-			case TO_THROW_BALL_1:
-				USART_OUT(DEBUG_USART,"TO_THROW_BALL_1");
-				USART_Enter();
-				break;
-			case TO_GET_BALL_2:
-				USART_OUT(DEBUG_USART,"TO_GET_BALL_2");
-				USART_Enter();
-				break;
-			case TO_THE_AREA_2:
-				USART_OUT(DEBUG_USART,"TO_THE_AREA_2");
-				USART_Enter();
-				break;
-			case TO_THROW_BALL_2:
-				USART_OUT(DEBUG_USART,"TO_THROW_BALL_2");
-				USART_Enter();
-				break;
-			case TO_GET_BALL_3:
-				USART_OUT(DEBUG_USART,"TO_GET_BALL_3");
-				USART_Enter();
-				break;
-			case TO_THE_AREA_3:
-				USART_OUT(DEBUG_USART,"TO_THE_AREA_3");
-				USART_Enter();
-				break;
-			case TO_THROW_BALL_3:
-				USART_OUT(DEBUG_USART,"TO_THROW_BALL_3");
-				USART_Enter();
-				break;
-			case END_COMPETE:
-				USART_OUT(DEBUG_USART,"END_COMPETE");
-				USART_Enter();
-				break;
-		}
-	}
-}
-
-void SteerErrorRecord(char type)
-{
-	int i=0;
-	while(gRobot.steer_t.error[i][0]!=type||gRobot.steer_t.error[i][1]!=gRobot.process)
-	{
-		i++;
-		if(i==STEER_ERROR_TIME)
-		{
-			gRobot.steer_t.error[gRobot.steer_t.errorTime][0]=type;
-			gRobot.steer_t.error[gRobot.steer_t.errorTime][1]=gRobot.process;
-			gRobot.steer_t.errorTime++;
-			break;
-		}
-	}
-}
 
 /****************舵机一串口接收中断****start****************/
 

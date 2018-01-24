@@ -816,7 +816,7 @@ void ReadActualPos(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	TxMessage.DLC=8;
 
 
-   	TxMessage.Data[0] = *(unsigned long*)&data[0][0]&0xff;
+  TxMessage.Data[0] = *(unsigned long*)&data[0][0]&0xff;
 	TxMessage.Data[1] = (*(unsigned long*)&data[0][0]>>8)&0xff;
 	TxMessage.Data[2] = (*(unsigned long*)&data[0][0]>>16)&0xff;
 	TxMessage.Data[3] = (*(unsigned long*)&data[0][0]>>24)&0xff;
@@ -832,7 +832,7 @@ void ReadActualPos(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 60000)
 		{
-				USART_OUT(DEBUG_USART,"ReadActualPos dead while\r\n");
+			USART_OUT(DEBUG_USART,"ReadActualPos dead while\r\n");
 			break;
 		}
 	} 

@@ -12,6 +12,7 @@
 #include "steer.h"
 #include  <includes.h>
 #include "process.h"
+#include "gpio.h"
 
 extern Robot_t gRobot;
 
@@ -82,7 +83,7 @@ void AT_CMD_Judge(void){
 
 
 void AT_CMD_Handle(void){
-	float value;
+	float value=0.0f;
 	switch(atCommand)
 	{
 		case 0:
@@ -243,13 +244,11 @@ void SetMotionFlag(uint32_t status){
 /*µ˜ ‘¿∂—¿÷–∂œ*/
 static char bufferUART5[20];
 static int bufferUART5_I=0;
-static int atCommand_UART5=0;
 
 void UART5_bufferInit(void){
   bufferUART5_I=0;
   for(int i=0;i<20;i++)
     bufferUART5[i]=0;
-	atCommand_UART5=0;
 }
 void UART5_AT_CMD_Judge(void);
 void UART5_IRQHandler(void)
@@ -286,12 +285,15 @@ void UART5_AT_CMD_Judge(void){
   {
 		StatusReport();
 	}
-  else if((bufferUART5_I >= 4) && strncmp(bufferUART5, "AT+2", 4)==0)//AT    
+  else if((bufferUART5_I >= 4) && strncmp(bufferUART5, "AT+PE", 5)==0)//AT    
 	{
-		
+		USART_OUT(DEBUG_USART,"PE\t%d\r\n",PE_FOR_THE_BALL);
 	}
-  else 
-    atCommand_UART5=666;
+  else if((bufferUART5_I >= 4) && strncmp(bufferUART5, "AT+init",7 )==0)//AT    
+	{
+		PhotoelectricityInit();
+	}
+  
   UART5_bufferInit();
 }
 

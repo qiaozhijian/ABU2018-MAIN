@@ -122,8 +122,8 @@ void CAN1_SCE_IRQHandler(void)
   OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
   OSIntNesting++;
   OS_EXIT_CRITICAL();
-  UART5_OUT((uint8_t *)"CAN1 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN1));
-  //	BEEP_ON;
+  USART_OUT(DEBUG_USART,"CAN1 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN1));
+ 	BEEP_ON;
   CAN_ClearFlag(CAN1, CAN_FLAG_BOF);
   OSIntExit();
 }
@@ -146,10 +146,10 @@ void CAN2_RX0_IRQHandler(void)
 	OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
 	OSIntNesting++;
 	OS_EXIT_CRITICAL();
-	CAN_RxMsg(CAN2, &StdId, buffer, 4);
+	CAN_RxMsg(CAN2, &StdId, buffer, 8);
 	canNodeId = StdId;
 
-  if((StdId - SDO_RESPONSE_COB_ID_BASE)==5)     //get speed value
+  if((StdId - SDO_RESPONSE_COB_ID_BASE)==5)     //俯仰
   {
     //fix me, if length not 8
     for(i = 0; i < 8; i++)
@@ -165,7 +165,7 @@ void CAN2_RX0_IRQHandler(void)
     {
 			
     }
-  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==6)     //get speed value
+  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==6)     //航向
   {
     //fix me, if length not 8
     for(i = 0; i < 8; i++)
@@ -227,8 +227,8 @@ void CAN2_SCE_IRQHandler(void)
 	OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
 	OSIntNesting++;
 	OS_EXIT_CRITICAL();
-//	UART5_OUT((uint8_t *)"CAN2 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN2));
-//	BEEP_ON;
+	USART_OUT(DEBUG_USART,"CAN2 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN2));
+	BEEP_ON;
 	CAN_ClearFlag(CAN2, CAN_FLAG_BOF);
 	OSIntExit();
 }
@@ -339,7 +339,7 @@ void NMI_Handler(void)
 {
   while (1)
   {
-    UART5_OUT((uint8_t *)"NMI exception !!!!!!!!!!!!!\r\n");
+    USART_OUT(DEBUG_USART,"NMI exception !!!!!!!!!!!!!\r\n");
   }
 }
 void Hex_To_Str(uint8_t * pHex,char * s,float num)
@@ -418,7 +418,7 @@ void MemManage_Handler(void)
   /* Go to infinite loop when Memory Manage exception occurs */
   while (1)
   {
-    UART5_OUT((uint8_t *)"Memory Manage exception occurs!!!!!!!!!\r\n");
+    USART_OUT(DEBUG_USART,"Memory Manage exception occurs!!!!!!!!!\r\n");
   }
 }
 
@@ -433,7 +433,7 @@ void BusFault_Handler(void)
   /* Go to infinite loop when Bus Fault exception occurs */
   while (1)
   {
-    UART5_OUT((uint8_t *)"Bus Fault exception!!!!!!!!\r\n");
+    USART_OUT(DEBUG_USART,"Bus Fault exception!!!!!!!!\r\n");
   }
 }
 
@@ -448,7 +448,7 @@ void UsageFault_Handler(void)
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)
   {
-    UART5_OUT((uint8_t *)"Usage Fault exception!!!!!!!!!\r\n");
+    USART_OUT(DEBUG_USART,"Usage Fault exception!!!!!!!!!\r\n");
   }
 }
 

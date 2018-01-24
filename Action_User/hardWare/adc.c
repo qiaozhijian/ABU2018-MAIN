@@ -58,7 +58,7 @@ u16 Get_Adc(u8 channel)
 		times++;
 		if(times>300)
 		{
-			USART_OUT(DEBUG_USART,"ADC dead while%d\r\n",times);
+			USART_OUT(DEBUG_USART,"ADC dead while\r\n");
 			
 			break;
 		}
