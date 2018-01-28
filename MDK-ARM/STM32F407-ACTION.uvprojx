@@ -425,6 +425,11 @@
               <FileType>1</FileType>
               <FilePath>..\Action_User\control\steer.c</FilePath>
             </File>
+            <File>
+              <FileName>motion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\control\motion.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -9,544 +9,489 @@
 
 extern Robot_t gRobot;
 //打开舵机的扭力输出
-void Enable_ROBS()
+void Enable_ROBS(void)
 {
-	static int times[2]={0,0};
-	while(!(gRobot.AT_motionFlag&AT_STEER1_SUCCESS))
-	{
-		USART_OUT(USART1,"#1 W 40,1,1\r\n");
-		Delay_ms(1);
-		times[0]++;
-		if(times[0]>10)
-		{
-			USART_OUT(DEBUG_USART,"STEER1_ENABLE_FAIL\r\n");
-			SteerErrorRecord(STEER1_ENABLE_FAIL);
-			break;
-		}
-	}
-	SetMotionFlag(~AT_STEER1_SUCCESS);
-	while(!(gRobot.AT_motionFlag&AT_STEER2_SUCCESS))
-	{
-		USART_OUT(USART2,"#1 W 40,1,1\r\n");
-		Delay_ms(1);
-		times[1]++;
-		if(times[1]>10)
-		{
-			USART_OUT(DEBUG_USART,"STEER2_ENABLE_FAIL\r\n");
-			SteerErrorRecord(STEER2_ENABLE_FAIL);
-			break;
-		}
-	}
-	SetMotionFlag(~AT_STEER2_SUCCESS);
-	times[0]=0;
-	times[1]=0;
-	 //#1 W 40,1,1\r\n
+  static int times[2]={0,0};
+  while(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
+  {
+    USART_OUT(USART1,"#1 W 40,1,1\r\n");
+    Delay_ms(1);
+    times[0]++;
+    if(times[0]>10)
+    {
+      USART_OUT(DEBUG_USART,"HOLD_BALL1_ENABLE_FAIL\r\n");
+      SteerErrorRecord(HOLD_BALL1_ENABLE_FAIL);
+      break;
+    }
+  }
+  SetMotionFlag(~AT_HOLD_BALL1_SUCCESS);
+  while(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
+  {
+    USART_OUT(UART5,"#1 W 40,1,1\r\n");
+    Delay_ms(1);
+    times[1]++;
+    if(times[1]>10)
+    {
+      USART_OUT(DEBUG_USART,"HOLD_BALL2_ENABLE_FAIL\r\n");
+      SteerErrorRecord(HOLD_BALL2_ENABLE_FAIL);
+      break;
+    }
+  }
+  SetMotionFlag(~AT_HOLD_BALL2_SUCCESS);
+  times[0]=0;
+  times[1]=0;
+  //#1 W 40,1,1\r\n
 }
-
-//使能伺服模式
-void Enable_ServoMode()
-{
-	USART_OUT(USART1,"#1 W 20,1,0\r\n");
-	USART_OUT(USART2,"#1 W 20,1,0\r\n");
-	 //#1 W 20,1,0\r\n
-}
-
-//使能电机模式
-void Enable_MotorMode()
-{
-	USART_OUT(USART1,"#1 W 20,1,1\r\n");
-	USART_OUT(USART2,"#1 W 20,1,1\r\n");
-   //#1 W 20,1,1\r\n
-}
-
-
 
 //伺服模式下函数
 
- //以vel的速度转到angle角度
-void ROBS_PosCrl(float angleUP, float angleDOWN, int vel)
+//以vel的速度转到angle角度
+void HoldBallPosCrl(float angle,int vel)
 {
-	Steer1ROBS_PosCrl(angleUP, vel);
-	Steer2ROBS_PosCrl(angleDOWN, vel);
+  float pos1=0.f;
+  float pos2=0.f;
+	
+	gRobot.holdBallAimAngle=angle;
+	
+	pos1=HOLD_BALL1_ANGLE_TO_CODE(gRobot.holdBallAimAngle);
+	pos2=HOLD_BALL2_ANGLE_TO_CODE(gRobot.holdBallAimAngle);
+	
+  USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos1,vel);
+  USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos2,vel);
+	
 }
 
-void Steer1ROBS_PosCrl(float angleUP, int vel)
+void ReadHoldBallSteerPos(void)
 {
-	static int times=0;
-	float pos;
+  USART_OUT(USART1,"#1 R 56,2,1\r\n");
+  USART_OUT(UART5,"#1 R 56,2,1\r\n");
+}
+
+
+/*******DEFINE*******/
+#define INSTRUCTION_PING												0x01 
+#define INSTRUCTION_READ												0x02 
+#define INSTRUCTION_WRITE												0x03
+#define INSTRUCTION_REG_WRITE										0x04
+#define INSTRUCTION_ACTION											0x05 
+#define INSTRUCTION_SYNC_WRITE									0x83 
+#define INSTRUCTION_BULKWRITE_DATA							0x09 
+#define INSTRUCTION_RESET												0x06 
+
+
+
+void SetNumber(unsigned char num)
+{
+  /*
+  *字头：0XFF, 0XFF 
+  *ID ： 0XFE(广播指令)
+  *长度：0x04 3+1 （1个数据长度 设置ID为num）
+  *指令：0x03 写指令
+  *地址：0x05 储存ID的地址
+  *校验和：checkSum
+  */
+  unsigned char command[8]={0XFF, 0XFF, 0XFE, 0X04, 0X03, 0X05, num, 0x00};
+  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+  checkSum=~checkSum;
+  command[7]=checkSum;
+  
+	RS485_Send_Data(command,8);
+  
+  /*应答包 FF FF 01（ID） 03（数据长度） 00（错误状态） 01 FA（校验和） */
+}
+
+
+/*不需要打开也可以转*/
+void OpenSteerTorque(unsigned char num)
+{
+  /*
+  *字头：0XFF, 0XFF 
+  *ID ： num
+  *长度：0x04 3+1 （1个数据长度 打开扭矩）
+  *指令：0x03 写指令
+  *地址：0x28 储存ID的地址
+  *校验和：checkSum
+  */
+  unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X03, 0X28, 0x01, 0x00};
+  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+  checkSum=~checkSum;
+  command[7]=checkSum;
+  
+	RS485_Send_Data(command,8);
+  
+  /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
+}
+
+void SteerPosCrl(float angle)
+{
+  /*
+  *字头：0XFF, 0XFF 
+  *ID ： num
+  *长度：0x05 3+2 （1个数据长度 位置）
+  *指令：0x03 写指令
+  *地址：0x2A 储存ID的地址
+  *校验和：checkSum
+  */	
+	gRobot.courseAimAngle=angle;
+  short pos = CAMERA_ANGLE_TO_CODE(gRobot.courseAimAngle);
+  
+  u8 command[9]={0XFF, 0XFF, 0XFE, 0X05, 0X03, 0X2A, 0x01,0x01,0x00};
+  command[6]=pos&0xFF;
+  command[7]=(pos>>8)&0xFF;
+  u8 checkSum = (command[2]+command[3]+command[4]+command[5]+command[6]+command[7])&0xFF;
+  checkSum=~checkSum;
+  command[8]=checkSum;
+  
+  RS485_Send_Data(command,9);
+  
+  /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
+}
+
+
+
+
+void CameraAlign(void)
+{
+	float x=0.f;
+	float y=0.f;
+	float direction=0.f;
 	
-  pos= ((angleUP-3.6f)/360.0f*4096.0f)+2048.f;
+	x=gRobot.posX+CAMERA_TO_GYRO_X;
+	y=gRobot.posY-CAMERA_TO_GYRO_Y;
 	
-	gRobot.steer_t.steerAimPos[0][0]=angleUP;
-	gRobot.steer_t.steerAimPos[0][1]=pos;
-	
-	while(!(gRobot.AT_motionFlag&AT_STEER1_SUCCESS))
+	if(gRobot.process>=TO_THE_AREA_1&&gRobot.process<TO_GET_BALL_3)
 	{
-		USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos,vel);
-		Delay_ms(1);
-		times++;
-		if(times>10)
-		{
-			USART_OUT(DEBUG_USART,"STEER1_ROTATE_SEND_FAIL\r\n");
-			SteerErrorRecord(STEER1_ROTATE_SEND_FAIL);
-			break;
-		}
-	}
-	SetMotionFlag(~AT_STEER1_SUCCESS);
-	DelayMsRun(DELAY_STEER1_CHECK_POS,100);
-	
-	times=0;
-}
-
-void Steer2ROBS_PosCrl(float angleDOWN, int vel)
-{
-	static int times=0;
-	float pos1;
-
-	//Enable_ROBS();
-//  pos= (2048-angle/360.0f*4096.0f/30.0f*52.0f);
-  pos1= (-(angleDOWN-10.8f)/360.0f*4096.0f)+2048.f;
-	
-	gRobot.steer_t.steerAimPos[1][0]=angleDOWN;
-	gRobot.steer_t.steerAimPos[1][1]=pos1;
-	
-	while(!(gRobot.AT_motionFlag&AT_STEER2_SUCCESS))
+		direction=atan2f(QUICK_MARK_X_1-x,y-QUICK_MARK_Y);
+	}else if(gRobot.process>=TO_GET_BALL_3)
 	{
-		USART_OUT(USART2,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos1,vel);
-		Delay_ms(1);
-		times++;
-		if(times>10)
-		{
-			USART_OUT(DEBUG_USART,"STEER2_ROTATE_SEND_FAIL\r\n");
-			SteerErrorRecord(STEER2_ROTATE_SEND_FAIL);
-			break;
-		}
+		direction=atan2f(QUICK_MARK_X_2-x,y-QUICK_MARK_Y);
 	}
-	ReadROBSAngle();
-	SetMotionFlag(~AT_STEER2_SUCCESS);
-	DelayMsRun(DELAY_STEER2_CHECK_POS,100);
-	times=0;
-}
-
-//电机模式下函数
-void Steer1ROBS_PosTimeCrl(float angleUP, int time);
-void Steer2ROBS_PosTimeCrl(float angleUP, int time);
-
-//以vel的速度转time ms,time=0代表一直转
-void ROBS_PosTimeCrl(float angleUP, float angleDOWN, int time)
-{
-	Steer1ROBS_PosTimeCrl(angleUP, time);
-	Steer2ROBS_PosTimeCrl(angleUP, time);
-	//#1 W 46,2,vel:44,2,time\r\n
-}
-
-void Steer1ROBS_PosTimeCrl(float angleUP, int time)
-{
-	static int times=0;
-	float pos;
 	
-  pos= ((angleUP-3.6f)/360.0f*4096.0f)+2048.f;
+	if(direction>60.f)
+		direction=60.f;
+	else if(direction<-60.f)
+		direction=-60.f;
 	
-	gRobot.steer_t.steerAimPos[0][0]=angleUP;
-	gRobot.steer_t.steerAimPos[0][1]=pos;
+	SteerPosCrl(RAD_TO_ANGLE(direction));
 	
-//	while(!(gRobot.AT_motionFlag&AT_STEER1_SUCCESS))
-//	{
-		USART_OUT(USART1,"#1 W 42,2,%d:44,2,%d\r\n",pos,time);
-//		Delay_ms(1);
-//		times++;
-//		if(times>10)
-//		{
-//			USART_OUT(DEBUG_USART,"STEER1_ROTATE_SEND_FAIL\r\n");
-//			SteerErrorRecord(STEER1_ROTATE_SEND_FAIL);
-//		}
-//	}
-//	SetMotionFlag(~AT_STEER1_SUCCESS);
-//	DelayMsRun(DELAY_STEER1_CHECK_POS,1000);
-//	
-//	times=0;
-}
-
-void Steer2ROBS_PosTimeCrl(float angleDOWN, int time)
-{
-	static int times=0;
-	float pos1;
-
-	//Enable_ROBS();
-//  pos= (2048-angle/360.0f*4096.0f/30.0f*52.0f);
-  pos1= (-(angleDOWN-10.8f)/360.0f*4096.0f)+2048.f;
-	
-	gRobot.steer_t.steerAimPos[1][0]=angleDOWN;
-	gRobot.steer_t.steerAimPos[1][1]=pos1;
-	
-//	while(!(gRobot.AT_motionFlag&AT_STEER2_SUCCESS))
-//	{
-						
-		USART_OUT(USART2,"#1 W 42,2,%d:44,2,%d\r\n",pos1,time);
-//		Delay_ms(1);
-//		times++;
-//		if(times>10)
-//		{
-//			USART_OUT(DEBUG_USART,"STEER2_ROTATE_SEND_FAIL\r\n");
-//			SteerErrorRecord(STEER2_ROTATE_SEND_FAIL);
-//		}
-//	}
-//	ReadROBSAngle();
-//	SetMotionFlag(~AT_STEER2_SUCCESS);
-//	DelayMsRun(DELAY_STEER2_CHECK_POS,1000);
-//	times=0;
-}
-
-void TurnLeft(int vel)
-{
-	  USART_OUT(USART1,"#1 W 46,2,%d:44,2,0\r\n",-vel);
-		USART_OUT(USART2,"#1 W 46,2,%d:44,2,0\r\n",-vel);
-}
-
-void TurnRight(int vel)
-{
-	USART_OUT(USART1,"#1 W 46,2,%d:44,2,0\r\n",vel);
-	USART_OUT(USART2,"#1 W 46,2,%d:44,2,0\r\n",vel);
-
-}
-
-void Stop(void)
-{
-	USART_OUT(USART1,"#1 W 46,2,0:44,2,0\r\n");
-	USART_OUT(USART2,"#1 W 46,2,0:44,2,0\r\n");
-} 
-
-void ReadSteer1Pos(void)
-{
-	static int times1=0;
-	
-	//如果没有读成功
-	while(!(gRobot.AT_motionFlag&AT_STEER1_READ_SUCCESS))
-	{
-		USART_OUT(USART1,"#1 R 56,2,1\r\n");
-		Delay_ms(1);
-		times1++;
-		if(times1>10)
-		{
-			USART_OUT(DEBUG_USART,"AT_STEER1_READ_FAIL\r\n");
-			break;
-		}
-	}
-	//复位
-	SetMotionFlag(~AT_STEER1_READ_SUCCESS);
-	times1=0;
-}
-
-void ReadSteer2Pos(void)
-{
-	static int times2=0;
-	
-	//如果没有读成功
-	while(!(gRobot.AT_motionFlag&AT_STEER2_READ_SUCCESS))
-	{
-		USART_OUT(USART2,"#1 R 56,2,1\r\n");
-		Delay_ms(1);
-		times2++;
-		if(times2>10)
-		{
-			USART_OUT(DEBUG_USART,"AT_STEER2_READ_FAIL\r\n");
-			break;
-		}
-	}
-	//复位
-	SetMotionFlag(~AT_STEER2_READ_SUCCESS);
-	times2=0;
-}
-//读位置
-void ReadROBSAngle(void)
-{
-	ReadSteer1Pos();
-	ReadSteer2Pos();
 }
 
 
+void SteerResponseError(unsigned char errorWord)
+{
+  if(errorWord&0x20)
+  {
+    
+  }else if(errorWord&0x08)
+  {
+    
+  }else if(errorWord&0x04)
+  {
+    
+  }else if(errorWord&0x02)
+  {
+    
+  }else if(errorWord&0x01)
+  {
+    
+  }
+  else
+  {
+    //成功
+  }
+}
 /****************舵机一串口接收中断****start****************/
 
 void USART1_IRQHandler(void)
 {
-	static uint8_t ch;
-	static uint8_t step;
-	static char buffer[4]={0};
-	static int i=0;
-	OS_CPU_SR  cpu_sr;
-	OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
-	OSIntNesting++;
-	OS_EXIT_CRITICAL();
-
-	if(USART_GetITStatus(USART1, USART_IT_RXNE)==SET)   
-	{
-		USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-		ch=USART_ReceiveData(USART1);
-		if(ch=='@') step=0;
-		
-		switch(step)
-		{
-			case 0:
-				if(ch=='@')
-					step++;
-				else
-					step=0;
-				break;
-			case 1:
-				if(ch=='1')
-					step++;
-				else
-					step=0;
-				break;
-			case 2:
-				if(ch==' ')
-					step++;
-				else
-					step=0;
-				break;
-			case 3:
-				if(ch=='A')
-					step++;
-				else
-					step=0;
-				break;
-			case 4:
-				if(ch=='C')
-					step++;
-				else
-					step=0;
-				break;
-			case 5:
-				if(ch=='K')
-					step++;
-				else
-					step=0;
-				break;
-			case 6:
-				if(ch=='\r')
-					step++;
-				else if(ch==' ')
-					step=8;
-				else
-					step=0;
-				break;
-			case 7:
-				if(ch=='\n')
+  static uint8_t ch;
+  static uint8_t step;
+  static unsigned char buffer[4]={0};
+  static int i=0;
+	static float pos=0;
+  OS_CPU_SR  cpu_sr;
+  OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  
+  if(USART_GetITStatus(USART1, USART_IT_RXNE)==SET)   
+  {
+    USART_ClearITPendingBit(USART1,USART_IT_RXNE);
+    ch=USART_ReceiveData(USART1);
+    if(ch=='@') step=0;
+    
+    switch(step)
+    {
+    case 0:
+      if(ch=='@')
+        step++;
+      else
+        step=0;
+      break;
+    case 1:
+      if(ch=='1')
+        step++;
+      else
+        step=0;
+      break;
+    case 2:
+      if(ch==' ')
+        step++;
+      else
+        step=0;
+      break;
+    case 3:
+      if(ch=='A')
+        step++;
+      else
+        step=0;
+      break;
+    case 4:
+      if(ch=='C')
+        step++;
+      else
+        step=0;
+      break;
+    case 5:
+      if(ch=='K')
+        step++;
+      else
+        step=0;
+      break;
+    case 6:
+      if(ch=='\r')
+        step++;
+      else if(ch==' ')
+        step=8;
+      else
+        step=0;
+      break;
+    case 7:
+      if(ch=='\n')
+      {
+        SetMotionFlag(AT_HOLD_BALL1_SUCCESS);
+        step=0;
+      }else
+        step=0;
+      break;
+    case 8:
+      if(ch=='5')
+        step++;
+      else
+        step=0;
+      break;
+    case 9:
+      if(ch=='6')
+        step++;
+      else
+        step=0;
+      break;
+      //56,2,4095\r\n
+    case 10:
+      if(ch==',')
+        step++;
+      else
+        step=0;
+      break;
+    case 11:
+      if(ch=='2')
+        step++;
+      else
+        step=0;
+      break;
+    case 12:
+      if(ch==',')
+        step++;
+      else
+        step=0;
+      break;
+    case 13:
+      if(ch=='\r')
+      {
+        step++;
+        for(int j=0;j<i;j++)
+        {
+          pos+=(buffer[j]-'0')*pow(10,i-j-1);
+        }
+        if(pos>4095||pos<0)
+        {
+          USART_OUT(DEBUG_USART,"steer1readbackvalueout\r\n");
+          step=0;
+        }else
 				{
-					SetMotionFlag(AT_STEER1_SUCCESS);
-					step=0;
-				}else
-					step=0;
-				break;
-			case 8:
-				if(ch=='5')
-					step++;
-				else
-					step=0;
-				break;
-			case 9:
-				if(ch=='6')
-					step++;
-				else
-					step=0;
-				break;
-				//56,2,4095\r\n
-			case 10:
-				if(ch==',')
-					step++;
-				else
-					step=0;
-				break;
-			case 11:
-				if(ch=='2')
-					step++;
-				else
-					step=0;
-				break;
-			case 12:
-				if(ch==',')
-					step++;
-				else
-					step=0;
-				break;
-			case 13:
-				if(ch=='\r')
-				{
-					step++;
-					gRobot.steer_t.steerPos[0]=0;
-					for(int j=0;j<i;j++)
-					{
-						gRobot.steer_t.steerPos[0]+=(buffer[j]-'0')*pow(10,i-j-1);
-					}
-					if(gRobot.steer_t.steerPos[0]>4095||gRobot.steer_t.steerPos[0]<0)
-					{
-						USART_OUT(DEBUG_USART,"steer1readbackvalueout\r\n");
-						step=0;
-					}
-					i=100;
+					gRobot.holdBallAngle[0]=HOLD_BALL1_CODE_TO_ANGLE(pos);
 				}
-				if(i<4){
-					buffer[i]=ch;
-					i++;
-				}else
-					i=0;
-				break;
-			case 14:
-				if(ch=='\n')
-				{
-					SetMotionFlag(AT_STEER1_READ_SUCCESS);
-					step=0;
-				}else
-					step=0;
-				break;
-		}
-		
-	}else{
+        i=100;
+      }
+			pos=0;
+      if(i<4){
+        buffer[i]=ch;
+        i++;
+      }else
+        i=0;
+      break;
+    case 14:
+      if(ch=='\n')
+      {
+        SetMotionFlag(AT_HOLD_BALL1_READ_SUCCESS);
+        step=0;
+      }else
+        step=0;
+      break;
+    }
+    
+  }else{
     USART_ReceiveData(USART1);
   }
-	OSIntExit();
+  OSIntExit();
 }
 
 /****************舵机二串口接收中断****start****************/
 
-void USART2_IRQHandler(void)
+void UART5_IRQHandler(void)
 {
-	static uint8_t ch;
-	static uint8_t step;
-	static char buffer[4]={0};
-	static int i=0;
-
-	OS_CPU_SR  cpu_sr;
-	OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
-	OSIntNesting++;
-	OS_EXIT_CRITICAL();
-
-	if(USART_GetITStatus(USART2, USART_IT_RXNE)==SET)   
-	{
-		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
-		ch=USART_ReceiveData(USART2);
-		if(ch=='@') step=0;
-		switch(step)
-		{
-			case 0:
-				if(ch=='@')
-					step++;
-				else
-					step=0;
-				break;
-			case 1:
-				if(ch=='1')
-					step++;
-				else
-					step=0;
-				break;
-			case 2:
-				if(ch==' ')
-					step++;
-				else
-					step=0;
-				break;
-			case 3:
-				if(ch=='A')
-					step++;
-				else
-					step=0;
-				break;
-			case 4:
-				if(ch=='C')
-					step++;
-				else
-					step=0;
-				break;
-			case 5:
-				if(ch=='K')
-					step++;
-				else
-					step=0;
-				break;
-			case 6:
-				if(ch=='\r')
-					step++;
-				else if(ch==' ')
-					step=8;
-				else
-					step=0;
-				break;
-			case 7:
-				if(ch=='\n')
+  static uint8_t ch;
+  static uint8_t step;
+  static unsigned char buffer[4]={0};
+  static int i=0;
+  static int pos=0;
+	
+  OS_CPU_SR  cpu_sr;
+  OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  
+  if(USART_GetITStatus(UART5, USART_IT_RXNE)==SET)   
+  {
+    USART_ClearITPendingBit(UART5,USART_IT_RXNE);
+    ch=USART_ReceiveData(UART5);
+    USART_SendData(DEBUG_USART,ch);
+    if(ch=='@') step=0;
+    switch(step)
+    {
+    case 0:
+      if(ch=='@')
+        step++;
+      else
+        step=0;
+      break;
+    case 1:
+      if(ch=='1')
+        step++;
+      else
+        step=0;
+      break;
+    case 2:
+      if(ch==' ')
+        step++;
+      else
+        step=0;
+      break;
+    case 3:
+      if(ch=='A')
+        step++;
+      else
+        step=0;
+      break;
+    case 4:
+      if(ch=='C')
+        step++;
+      else
+        step=0;
+      break;
+    case 5:
+      if(ch=='K')
+        step++;
+      else
+        step=0;
+      break;
+    case 6:
+      if(ch=='\r')
+        step++;
+      else if(ch==' ')
+        step=8;
+      else
+        step=0;
+      break;
+    case 7:
+      if(ch=='\n')
+      {
+        SetMotionFlag(AT_HOLD_BALL2_SUCCESS);
+        step=0;
+      }else
+        step=0;
+      break;
+    case 8:
+      if(ch=='5')
+        step++;
+      else
+        step=0;
+      break;
+    case 9:
+      if(ch=='6')
+        step++;
+      else
+        step=0;
+      break;
+      //56,2,4095\r\n
+    case 10:
+      if(ch==',')
+        step++;
+      else
+        step=0;
+      break;
+    case 11:
+      if(ch=='2')
+        step++;
+      else
+        step=0;
+      break;
+    case 12:
+      if(ch==',')
+        step++;
+      else
+        step=0;
+      break;
+    case 13:
+      if(ch=='\r')
+      {
+        step++;
+        for(int j=0;j<i;j++)
+        {
+          pos+=(buffer[j]-'0')*pow(10,i-j-1);
+        }
+        if(pos>4095||pos<0)
+        {
+          USART_OUT(DEBUG_USART,"steer2readbackvalueout\r\n");
+          step=0;
+        }else
 				{
-					SetMotionFlag(AT_STEER2_SUCCESS);
-					step=0;
-				}else
-					step=0;
-				break;
-			case 8:
-				if(ch=='5')
-					step++;
-				else
-					step=0;
-				break;
-			case 9:
-				if(ch=='6')
-					step++;
-				else
-					step=0;
-				break;
-				//56,2,4095\r\n
-			case 10:
-				if(ch==',')
-					step++;
-				else
-					step=0;
-				break;
-			case 11:
-				if(ch=='2')
-					step++;
-				else
-					step=0;
-				break;
-			case 12:
-				if(ch==',')
-					step++;
-				else
-					step=0;
-				break;
-			case 13:
-				if(ch=='\r')
-				{
-					step++;
-					gRobot.steer_t.steerPos[1]=0;
-					for(int j=0;j<i;j++)
-					{
-						gRobot.steer_t.steerPos[1]+=(buffer[j]-'0')*pow(10,i-j-1);
-					}
-					if(gRobot.steer_t.steerPos[1]>4095||gRobot.steer_t.steerPos[1]<0)
-					{
-						USART_OUT(DEBUG_USART,"steer2readbackvalueout\r\n");
-						step=0;
-					}
-					i=100;
+					gRobot.holdBallAngle[1]=HOLD_BALL2_CODE_TO_ANGLE(pos);
 				}
-				if(i<4){
-					buffer[i]=ch;
-					i++;
-				}else
-					i=0;
-				break;
-			case 14:
-				if(ch=='\n')
-				{
-					SetMotionFlag(AT_STEER2_READ_SUCCESS);
-					step=0;
-				}else
-					step=0;
-				break;
-		}
-
-	}else{
-    USART_ReceiveData(USART2);
+        i=100;
+      }
+				pos=0;
+    
+      if(i<4){
+        buffer[i]=ch;
+        i++;
+      }else
+        i=0;
+      break;
+    case 14:
+      if(ch=='\n')
+      {
+        SetMotionFlag(AT_HOLD_BALL2_READ_SUCCESS);
+        step=0;
+      }else
+        step=0;
+      break;
+    }
+    
+  }else{
+    USART_ReceiveData(UART5);
   }
-	OSIntExit();
+  OSIntExit();
 }
 
 

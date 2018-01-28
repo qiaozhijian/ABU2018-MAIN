@@ -57,44 +57,27 @@ void CAN1_RX0_IRQHandler(void)
   OS_CPU_SR  cpu_sr;
   uint8_t buffer[8];
   uint32_t StdId=0;
-  uint8_t canNodeId = 0;
   int32_t i = 0;
   
   OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
   OSIntNesting++;
   OS_EXIT_CRITICAL();
   CAN_RxMsg(CAN1, &StdId, buffer, 8);
-  canNodeId = StdId - SDO_RESPONSE_COB_ID_BASE;
   
-  if(canNodeId==5)     //get speed value
+  if(StdId==GET_FROM_MOTIONCARD)     //get speed value
   {
     //fix me, if length not 8
-    for(i = 0; i < 8; i++)
+    for(i = 0; i < 4; i++)
       msg.data8[i] = buffer[i];
     //位置
-    if(msg.data32[0]==0x00005850)
-    {
-    }
-    //速度
-    if(msg.data32[0]==0x00005856)
-    {
-    }
+    if(msg.data32[0]==1&&gRobot.process==TO_THE_AREA_1)
+      gRobot.process=TO_THROW_BALL_1;
+    if(msg.data32[0]==2&&gRobot.process==TO_THE_AREA_2)
+      gRobot.process=TO_THROW_BALL_2;
+    if(msg.data32[0]==3&&gRobot.process==TO_THE_AREA_3)
+      gRobot.process=TO_THROW_BALL_3;
+    USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
   }
- 
-	if(StdId==GET_FROM_MOTIONCARD)     //get speed value
-	{
-		//fix me, if length not 8
-		for(i = 0; i < 4; i++)
-			msg.data8[i] = buffer[i];
-		//位置
-		if(msg.data32[0]==1&&gRobot.process==TO_THE_AREA_1)
-			gRobot.process=TO_THROW_BALL_1;
-		if(msg.data32[0]==2&&gRobot.process==TO_THE_AREA_2)
-			gRobot.process=TO_THROW_BALL_2;
-		if(msg.data32[0]==3&&gRobot.process==TO_THE_AREA_3)
-			gRobot.process=TO_THROW_BALL_3;
-		USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
-	}
   
   CAN_ClearFlag(CAN1, CAN_FLAG_EWG);
   CAN_ClearFlag(CAN1, CAN_FLAG_EPV);
@@ -123,32 +106,32 @@ void CAN1_SCE_IRQHandler(void)
   OSIntNesting++;
   OS_EXIT_CRITICAL();
   USART_OUT(DEBUG_USART,"CAN1 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN1));
- 	BEEP_ON;
+  BEEP_ON;
   CAN_ClearFlag(CAN1, CAN_FLAG_BOF);
   OSIntExit();
 }
 
 union MSG4
 {
-	uint8_t data4[4];
-	int data32;
-	float dataf;
+  uint8_t data4[4];
+  int data32;
+  float dataf;
 }msg4;
 
 void CAN2_RX0_IRQHandler(void)
 {
-	OS_CPU_SR  cpu_sr;
-	uint8_t buffer[4];
-	uint32_t StdId=0;
-	uint8_t canNodeId = 0;
-	int32_t i = 0;
-
-	OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
-	OSIntNesting++;
-	OS_EXIT_CRITICAL();
-	CAN_RxMsg(CAN2, &StdId, buffer, 8);
-	canNodeId = StdId;
-
+  OS_CPU_SR  cpu_sr;
+  uint8_t buffer[4];
+  uint32_t StdId=0;
+  uint8_t canNodeId = 0;
+  int32_t i = 0;
+  
+  OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  CAN_RxMsg(CAN2, &StdId, buffer, 8);
+  canNodeId = StdId;
+  
   if((StdId - SDO_RESPONSE_COB_ID_BASE)==5)     //俯仰
   {
     //fix me, if length not 8
@@ -157,13 +140,13 @@ void CAN2_RX0_IRQHandler(void)
     //位置
     if(msg.data32[0]==0x00005850)
     {
-			gRobot.motorPara_t.pitchPos=msg.data32[1];
-			gRobot.motorPara_t.pitchReadSuccess=1;
+      gRobot.pitchAimAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
+      SetMotionFlag(AT_PITCH_READ_SUCCESS);
     }
     //速度
     if(msg.data32[0]==0x00005856)
     {
-			
+      
     }
   }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==6)     //航向
   {
@@ -173,64 +156,63 @@ void CAN2_RX0_IRQHandler(void)
     //位置
     if(msg.data32[0]==0x00005850)
     {
-			gRobot.motorPara_t.coursePos=msg.data32[1];
-			gRobot.motorPara_t.courseReadSuccess=1;
+      gRobot.courseAimAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
+      SetMotionFlag(AT_COURSE_READ_SUCCESS);
     }
     //速度
     if(msg.data32[0]==0x00005856)
     {
-			
+      
     }
   }
-	
-	
-	if(canNodeId==GET_FROM_GASSENSOR)     //get speed value
-	{
-		//fix me, if length not 8
-		for(i = 0; i < 4; i++)
-			msg4.data4[i] = buffer[i];
-		//位置
-		if(msg4.dataf>1.0f)
-			msg4.dataf=1.f;
-		else if(msg4.dataf<0.f)
-			msg4.dataf=0.f;
-		gRobot.motorPara_t.gasValue=msg4.dataf;
-		USART_BLE_SEND(gRobot.motorPara_t.gasValue);
-	}
-	else
-	{
-		msg4.dataf=msg4.dataf;
-	}
-
-	CAN_ClearFlag(CAN2, CAN_FLAG_EWG);
-	CAN_ClearFlag(CAN2, CAN_FLAG_EPV);
-	CAN_ClearFlag(CAN2, CAN_FLAG_BOF);
-	CAN_ClearFlag(CAN2, CAN_FLAG_LEC);
-
-	CAN_ClearFlag(CAN2, CAN_FLAG_FMP0);
-	CAN_ClearFlag(CAN2, CAN_FLAG_FF0);
-	CAN_ClearFlag(CAN2, CAN_FLAG_FOV0);
-	CAN_ClearFlag(CAN2, CAN_FLAG_FMP1);
-	CAN_ClearFlag(CAN2, CAN_FLAG_FF1);
-	CAN_ClearFlag(CAN2, CAN_FLAG_FOV1);
-	OSIntExit();
+  
+  
+  if(canNodeId==GET_FROM_GASSENSOR)     //get speed value
+  {
+    //fix me, if length not 8
+    for(i = 0; i < 4; i++)
+      msg4.data4[i] = buffer[i];
+    //位置
+    if(msg4.dataf>1.0f)
+      msg4.dataf=1.f;
+    else if(msg4.dataf<0.f)
+      msg4.dataf=0.f;
+    gRobot.gasValue=msg4.dataf;
+  }
+  else
+  {
+    msg4.dataf=msg4.dataf;
+  }
+  
+  CAN_ClearFlag(CAN2, CAN_FLAG_EWG);
+  CAN_ClearFlag(CAN2, CAN_FLAG_EPV);
+  CAN_ClearFlag(CAN2, CAN_FLAG_BOF);
+  CAN_ClearFlag(CAN2, CAN_FLAG_LEC);
+  
+  CAN_ClearFlag(CAN2, CAN_FLAG_FMP0);
+  CAN_ClearFlag(CAN2, CAN_FLAG_FF0);
+  CAN_ClearFlag(CAN2, CAN_FLAG_FOV0);
+  CAN_ClearFlag(CAN2, CAN_FLAG_FMP1);
+  CAN_ClearFlag(CAN2, CAN_FLAG_FF1);
+  CAN_ClearFlag(CAN2, CAN_FLAG_FOV1);
+  OSIntExit();
 }
 /**
-  * @brief  CAN2 SCE interrupt  handler
-  * @note
-  * @param  None
-  * @retval None
-  */
+* @brief  CAN2 SCE interrupt  handler
+* @note
+* @param  None
+* @retval None
+*/
 void CAN2_SCE_IRQHandler(void)
 {
-	OS_CPU_SR  cpu_sr;
-	OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
-	OSIntNesting++;
-	OS_EXIT_CRITICAL();
-	USART_OUT(DEBUG_USART,"CAN2 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN2));
-	BEEP_ON;
-	CAN_ClearFlag(CAN2, CAN_FLAG_BOF);
-	OSIntExit();
+  OS_CPU_SR  cpu_sr;
+  OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  USART_OUT(DEBUG_USART,"CAN2 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN2));
+  BEEP_ON;
+  CAN_ClearFlag(CAN2, CAN_FLAG_BOF);
+  OSIntExit();
 }
 
 /*************定时器2******start************/
@@ -367,44 +349,44 @@ void Hex_To_Str(uint8_t * pHex,char * s,float num)
 void HardFault_Handler(void)
 {
   
-	  static uint32_t r_sp ;
-		/*判断发生异常时使用MSP还是PSP*/
-		if(__get_PSP()!=0x00) //获取SP的值
-			r_sp = __get_PSP(); 
-		else
-			r_sp = __get_MSP(); 
-		/*因为经历中断函数入栈之后，堆栈指针会减小0x10，所以平移回来（可能不具有普遍性）*/
-		r_sp = r_sp+0x10;
-		/*串口发数通知*/
-		USART_OUT(DEBUG_USART,"\r\nHardFault");
-  	char sPoint[2]={0};
-		USART_OUT(DEBUG_USART,"%s","0x");
-		/*获取出现异常时程序的地址*/
-		for(int i=3;i>=-28;i--){
-			Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
-			USART_OUT(DEBUG_USART,"%s",sPoint);
-			if(i%4==0)
-				USART_Enter();
-		}
-		/*发送回车符*/
-		USART_Enter();
+  static uint32_t r_sp ;
+  /*判断发生异常时使用MSP还是PSP*/
+  if(__get_PSP()!=0x00) //获取SP的值
+    r_sp = __get_PSP(); 
+  else
+    r_sp = __get_MSP(); 
+  /*因为经历中断函数入栈之后，堆栈指针会减小0x10，所以平移回来（可能不具有普遍性）*/
+  r_sp = r_sp+0x10;
+  /*串口发数通知*/
+  USART_OUT(DEBUG_USART,"\r\nHardFault");
+  char sPoint[2]={0};
+  USART_OUT(DEBUG_USART,"%s","0x");
+  /*获取出现异常时程序的地址*/
+  for(int i=3;i>=-28;i--){
+    Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
+    USART_OUT(DEBUG_USART,"%s",sPoint);
+    if(i%4==0)
+      USART_Enter();
+  }
+  /*发送回车符*/
+  USART_Enter();
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
-		/*串口发数通知*/
-		USART_OUT(DEBUG_USART,"\r\nHardFault");
-  	char sPoint[2]={0};
-		USART_OUT(DEBUG_USART,"%s","0x");
-		/*获取出现异常时程序的地址*/
-		for(int i=3;i>=-28;i--){
-			Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
-			USART_OUT(DEBUG_USART,"%s",sPoint);
-			if(i%4==0)
-				USART_Enter();
-		}
-		/*发送回车符*/
-		USART_Enter();
-		Delay_ms(10);
+    /*串口发数通知*/
+    USART_OUT(DEBUG_USART,"\r\nHardFault");
+    char sPoint[2]={0};
+    USART_OUT(DEBUG_USART,"%s","0x");
+    /*获取出现异常时程序的地址*/
+    for(int i=3;i>=-28;i--){
+      Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
+      USART_OUT(DEBUG_USART,"%s",sPoint);
+      if(i%4==0)
+        USART_Enter();
+    }
+    /*发送回车符*/
+    USART_Enter();
+    Delay_ms(10);
   }
 }
 
