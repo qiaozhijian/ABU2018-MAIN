@@ -121,7 +121,7 @@ union MSG4
 void CAN2_RX0_IRQHandler(void)
 {
   OS_CPU_SR  cpu_sr;
-  uint8_t buffer[4];
+  uint8_t buffer[8];
   uint32_t StdId=0;
   uint8_t canNodeId = 0;
   int32_t i = 0;

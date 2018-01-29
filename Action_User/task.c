@@ -93,12 +93,13 @@ void ConfigTask(void)
 #endif
 
     gRobot.process=TO_START;
-  gRobot.laserInit=(Get_Adc_Average(ADC_Channel_14,200));
+//  gRobot.laserInit=(Get_Adc_Average(ADC_Channel_14,200));
   OSTaskSuspend(OS_PRIO_SELF);
 }
 
 void RobotTask(void)
 {
+	unsigned char msg = 0x11;
   CPU_INT08U  os_err;
   os_err = os_err;
   
@@ -106,7 +107,10 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
-		USART_OUT(UART5,"123456%d",11);
+	  msg = msg;
+//	CAN_TxMsg(CAN1,0x10,&msg,1);
+//		VelCrl(CAN1,2,1000);
+		USART_OUT(UART5,"123456");
 //	//	#define TEST
 //#ifdef TEST
 //		SelfTest();
@@ -176,34 +180,34 @@ void HardWareInit(void){
   prepareMotionParaInit();
 	
 	/*持球上舵机初始化*/
-  Steer1Init(1000000);
+//  Steer1Init(1000000);
 	/*持球下舵机初始化*/
   Steer2Init(1000000);
-  //摄像头转台初始化
-  CameraSteerInit(1000000);
-	
-	/*与摄像头通信的串口初始化*/
-	CameraInit(115200);
-	
-	/*接收定位系统数据的串口初始化*/
-	GYRO_Init(115200);
-	
-  /*调试蓝牙*/
-  DebugBLE_Init(921600);
-	
-  /*激光初始化*/
-  Laser_Init();
-	
-  /*光电初始化*/
-  PhotoelectricityInit();
-  
-  //蜂鸣器PE7
-  GPIO_Init_Pins(GPIOE, GPIO_Pin_7, GPIO_Mode_OUT);
-  
-#ifndef	DEBUG 
-  Delay_ms(3000);
-  Enable_ROBS();//使能舵机
-#endif
+//  //摄像头转台初始化
+//  CameraSteerInit(1000000);
+//	
+//	/*与摄像头通信的串口初始化*/
+//	CameraInit(115200);
+//	
+//	/*接收定位系统数据的串口初始化*/
+//	GYRO_Init(115200);
+//	
+//  /*调试蓝牙*/
+//  DebugBLE_Init(921600);
+//	
+//  /*激光初始化*/
+//  Laser_Init();
+//	
+//  /*光电初始化*/
+//  PhotoelectricityInit();
+//  
+//  //蜂鸣器PE7
+//  GPIO_Init_Pins(GPIOE, GPIO_Pin_7, GPIO_Mode_OUT);
+//  
+//#ifndef	DEBUG 
+//  Delay_ms(3000);
+//  Enable_ROBS();//使能舵机
+//#endif
   
 }
 void MotorInit(void){
