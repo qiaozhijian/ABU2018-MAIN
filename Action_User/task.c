@@ -70,6 +70,13 @@ void ConfigTask(void)
 {
   CPU_INT08U  os_err;
   os_err = os_err;
+	
+//	char iiiii = 0;
+//	
+//	while(1)
+//	{
+//		iiiii = iiiii;
+//	}
   
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
   
@@ -77,13 +84,15 @@ void ConfigTask(void)
   Delay_ms(100);
   
   HardWareInit();
-  
+	
+	
+
 #ifndef	DEBUG 
-  MotorInit();
-  statusInit();
+ // MotorInit();
+ // statusInit();
 #endif
-  
-  gRobot.process=TO_START;
+
+    gRobot.process=TO_START;
   gRobot.laserInit=(Get_Adc_Average(ADC_Channel_14,200));
   OSTaskSuspend(OS_PRIO_SELF);
 }
@@ -97,58 +106,61 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
-#ifdef TEST
-		SelfTest();
-#else		
-    AT_CMD_Handle();
-    
-    processReport();
-		
-		/*运动状态标志位更新*/
-		MotionStatusUpdate();
-		
-		gRobot.holdBallAimAngle=360.f;
-		
-		/*运动参数执行*/
-		MotionExecute();
-		
-		/*运动状态更新*/
-    MotionRead();
-    
-		#ifndef	DEBUG 
-    switch(gRobot.robocon2018)
-    {
-    case ROBOT_START:
-      gRobot.laser=Get_Adc_Average(ADC_Channel_14,100);
-      
-      if(gRobot.laser-gRobot.laserInit>20.f)
-      {
-        PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
-        
-        PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
-        
-        MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
-        
-        gRobot.process=TO_GET_BALL_1;
-        
-        gRobot.robocon2018=COLORFUL_BALL_1;
-      }
-      break;
-    case COLORFUL_BALL_1: 
-      /*完成彩球一的投射*/
-      FightForBall1();
-      break;
-    case COLORFUL_BALL_2:
-      /*完成彩球二的投射*/
-      FightForBall2();
-      break;
-    case GOLD_BALL:
-      /*完成金球的投射*/
-      FightForGoldBall();
-      break;
-    }
-		#endif
-#endif
+		USART_OUT(UART5,"123456%d",11);
+//	//	#define TEST
+//#ifdef TEST
+//		SelfTest();
+//#else		
+//    AT_CMD_Handle();
+//		
+//		
+//    processReport();
+//		
+//		/*运动状态标志位更新*/
+//		MotionStatusUpdate();
+//		
+//		/*运动参数执行*/
+//		MotionExecute();
+//SteerPosCrl(gRobot.cameraAimAngle);
+//		
+//		/*运动状态更新*/
+////    MotionRead();
+////    
+////		USART_OUT(UART4,"6\r\n");
+//		#ifndef	DEBUG 
+//    switch(gRobot.robocon2018)
+//    {
+//    case ROBOT_START:
+//      gRobot.laser=Get_Adc_Average(ADC_Channel_14,100);
+//      
+//      if(gRobot.laser-gRobot.laserInit>20.f)
+//      {
+//        //PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
+////        
+//        //PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
+//        
+//        MotionCardCMDSend(NOTIFY_MOTIONCARD_START);
+//        
+//        //gRobot.process=TO_GET_BALL_1;
+//        
+//        //gRobot.robocon2018=COLORFUL_BALL_1;
+//      }
+//      break;
+//    case COLORFUL_BALL_1: 
+//      /*完成彩球一的投射*/
+//      FightForBall1();
+//      break;
+//    case COLORFUL_BALL_2:
+//      /*完成彩球二的投射*/
+//      FightForBall2();
+//      break;
+//    case GOLD_BALL:
+//      /*完成金球的投射*/
+//      FightForGoldBall();
+//      break;
+//    }
+//		#endif
+//#endif
   } 
 }
 
@@ -199,24 +211,16 @@ void MotorInit(void){
   ElmoInit(CAN2);
   
   //电机位置环
-  PosLoopCfg(CAN2, 5, 8000000, 8000000,100000);
+  PosLoopCfg(CAN2, 5, 100000, 100000,100000);
   //电机位置环
-  PosLoopCfg(CAN2, 6, 8000000, 8000000,100000);
+  PosLoopCfg(CAN2, 6, 100000, 100000,100000);
   
   MotorOn(CAN2,5); 
   MotorOn(CAN2,6); 
 }	
 
-void MotorDisable(void){
-  //电机初始化及使能
-  ElmoInit(CAN2);
-  /*从电机正面看过去，逆时针为正  */
-  VelLoopCfg(CAN2,5,10000000,10000000);
-  VelLoopCfg(CAN2,6,10000000,10000000);
-  
-  MotorOff(CAN2,ELMO_BROADCAST_ID); 
-  
-}	
+
+
 //状态初始化，张开抓投球，等舵机到0的时候，闭合之后舵机才能转
 void statusInit(void)
 {	
@@ -236,7 +240,7 @@ void statusInit(void)
 	GoldBallGraspStairOneOn();
 	GoldBallGraspStairTwoOn();
 	
-  Delay_ms(3000);
+	Delay_ms(3000);
   
   /*与上一次的调试数据区分开*/
   USART_Enter();
@@ -246,7 +250,7 @@ void statusInit(void)
   USART_Enter();
   USART_Enter();
   
-  PrepareGetBall(BALL_1);
+  //PrepareGetBall(BALL_1);
   
 }	
 

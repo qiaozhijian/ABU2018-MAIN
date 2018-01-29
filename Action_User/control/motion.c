@@ -13,8 +13,8 @@ extern Robot_t gRobot;
 void MotionExecute(void)
 {
 	/*如果持球舵机没有到位*/
-	if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
-		||!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
+//	if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+//		||!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
 	{
 		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
 	}
@@ -44,6 +44,7 @@ void MotionRead(void)
   /*将读航向角姿态的标志位归0*/
 	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
 	/*读取舵机状态*/
+	
 	ReadHoldBallSteerPos();
 	/*像平板发送气压值*/
  // USART_BLE_SEND(gRobot.gasValue);

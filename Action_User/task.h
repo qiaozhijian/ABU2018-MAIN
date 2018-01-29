@@ -13,7 +13,7 @@
 #include "shoot.h"
 #include "arm_math.h"
 /**************#define area**********/
-					
+
 //#define DEBUG
 //#define TEST
 
@@ -55,20 +55,25 @@
 /*弧度制转换为角度制*/
 #define RAD_TO_ANGLE(rad) 																						((rad)*57.29578f)
 
-#define PITCH_CODE_TO_ANGLE(code)													((code)/12233.387f)
-#define PITCH_ANGLE_TO_CODE(angle)												((int)((angle)*12233.387f))//((angle)*28.0f*19.2f*8192.f/360.f)
+/*3508减速比3591/187=19.203208*/
+#define PITCH_CODE_TO_ANGLE(code)													((code)/8738.1333f)
+#define PITCH_ANGLE_TO_CODE(angle)												((int)((angle)*8738.1333f))//((angle)*20.0f*19.2f*8192.f/360.f)
 
-#define COURSE_CODE_TO_ANGLE(code)												((code)/4369.07+5.6f)
-#define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle)-5.6f)*4369.07f))//((angle-5.6f)*10.0f*19.2f*8192.f/360.f)
+#define COURSE_CODE_TO_ANGLE(code)												((code)/6116.693f)
+#define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle))*6116.693f))//((angle-5.6f)*14.0f*19.2f*8192.f/360.f)
 
-#define HOLD_BALL1_CODE_TO_ANGLE(code)												((code)/11.378f) //(code)/4096.f*360.f
-#define HOLD_BALL1_ANGLE_TO_CODE(angle)												((int)((angle)*11.378f))//(angle)*4096.f/360.f
+#define HOLD_BALL1_CODE_TO_ANGLE(code)												 ((code)/11.378f) //(code)/4096.f*360.f
+#define HOLD_BALL1_ANGLE_TO_CODE(angle)												((int)((180.f-(angle))*11.378f))//(angle)*4096.f/360.f
+
+
 
 #define HOLD_BALL2_CODE_TO_ANGLE(code)												((code)/11.378f) //(code)/4096.f*360.f
-#define HOLD_BALL2_ANGLE_TO_CODE(angle)												((int)((angle)*11.378f))//(angle)*4096.f/360.f
-	
+#define HOLD_BALL2_ANGLE_TO_CODE(angle)												((int)(((angle)+180.f)*11.378f))//(angle)*4096.f/360.f
+
+
+
 #define CAMERA_CODE_TO_ANGLE(code)												((code)/11.378f) //(code)/4096.f*360.f
-#define CAMERA_ANGLE_TO_CODE(angle)												((int)((angle)*11.378f))//(angle)*4096.f/360.f
+#define CAMERA_ANGLE_TO_CODE(angle)												((int)(angle*11.378f))//(angle)*4096.f/360.f
 
 //状态量解释
 #define AT_CLAW_STATUS_OPEN 										0x01u
@@ -235,7 +240,7 @@ typedef struct{
   float cameraAimAngle;
   /*相机舵机的位置*/
   float cameraAngle;
-	
+  
   /*航向角*/
   float courseAimAngle;
   float courseAngle;
@@ -289,6 +294,7 @@ typedef struct{
 #define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0))							
 #define DEBUG
 
+
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙800mm
 //摄像头位于自动车偏右21.85mm，距墙172.44mm方向的地方
@@ -322,13 +328,13 @@ typedef struct{
 #define RAD_TO_ANGLE(rad) 																						((rad)*57.29578f)
 
 //状态量解释
-#define AT_CLAW_STATUS_OPEN 										0x01u
+#define AT_CLAW_STATUS_OPEN 												0x01u
 
-#define AT_STEER_READY 													0x02u
+#define AT_STEER_READY 															0x02u
 
-#define AT_SHOOT_BIG_ENABLE 										0x04u
+#define AT_SHOOT_BIG_ENABLE 												0x04u
 
-#define AT_SHOOT_SMALL_ENABLE 			  					0x08u
+#define AT_SHOOT_SMALL_ENABLE 			  							0x08u
 
 #define AT_HOLD_BALL1_SUCCESS												0x10u
 
@@ -432,7 +438,7 @@ typedef struct{
 
 /**************typedef area**********/
 typedef struct{
- 
+  
   /*比赛进程*/
   uint8_t robocon2018;
   
@@ -446,14 +452,14 @@ typedef struct{
   float laserInit;
   /*激光测得的值*/
   float laser;
-	
+  
   /*舵机的目标位置*/
   int steerAimAngle[2];
   /*舵机的位置*/
   int steerAngle[2];
   
   /*航向角*/
-	float courseAimAngle;
+  float courseAimAngle;
   float courseAimAngle;
   char courseReadSuccess;
   
@@ -466,19 +472,19 @@ typedef struct{
   float gasValue;
   float gasAimValue;
   
-	/*--------延时执行任务信息--------*/
+  /*--------延时执行任务信息--------*/
   /*延时类型*/
   uint16_t delayTask;
   /*延时需要的时间*/
   uint16_t delayTaskMs[DELAY_TASK_NUM];
   
-	/*--------错误记录信息--------*/
+  /*--------错误记录信息--------*/
   /*错误记录，第一个是错误类型，第二个是发生的过程*/
   char error[STEER_ERROR_TIME][2];
   /*错误发生的次数*/
   char errorTime;
   
-	/*--------姿态信息--------*/
+  /*--------姿态信息--------*/
   float angle;
   float posX;
   float posY;

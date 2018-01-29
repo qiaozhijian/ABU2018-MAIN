@@ -53,23 +53,23 @@ void GasValveControl(uint8_t boardNum , uint8_t valveNum , uint8_t valveState)
 /*控制下爪张开闭合的气阀*/
 void ClawOpen(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , 0);
+	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , 1);
 }
 
 void ClawShut(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , 1);
+	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , 0);
 }
 
 /*射球完毕时的归位小气阀*/
 void ShootSmallOpen(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
+	GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
 }
 
 void ShootSmallShut(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
+	GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
 }
 
 /*射球时的助力大气阀*/

@@ -50,11 +50,17 @@ void HoldBallPosCrl(float angle,int vel)
 {
   float pos1=0.f;
   float pos2=0.f;
+	float angleTemp=0.f;
+	
+	if(angle>90.f)
+		angle=90.f;
+	if(angle<-90.f)
+		angle=-90.f;
 	
 	gRobot.holdBallAimAngle=angle;
 	
-	pos1=HOLD_BALL1_ANGLE_TO_CODE(gRobot.holdBallAimAngle);
-	pos2=HOLD_BALL2_ANGLE_TO_CODE(gRobot.holdBallAimAngle);
+	pos1=HOLD_BALL1_ANGLE_TO_CODE(gRobot.holdBallAimAngle);   //302  顺时针为正 转到360不再转
+	pos2=HOLD_BALL2_ANGLE_TO_CODE(gRobot.holdBallAimAngle);			//240 +90 逆时针为正
 	
   USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos1,vel);
   USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos2,vel);
@@ -63,8 +69,11 @@ void HoldBallPosCrl(float angle,int vel)
 
 void ReadHoldBallSteerPos(void)
 {
+		USART_OUT(UART4,"1\t");
   USART_OUT(USART1,"#1 R 56,2,1\r\n");
+		USART_OUT(UART4,"2\t");
   USART_OUT(UART5,"#1 R 56,2,1\r\n");
+		USART_OUT(UART4,"3\t");
 }
 
 
@@ -132,8 +141,8 @@ void SteerPosCrl(float angle)
   *地址：0x2A 储存ID的地址
   *校验和：checkSum
   */	
-	gRobot.courseAimAngle=angle;
-  short pos = CAMERA_ANGLE_TO_CODE(gRobot.courseAimAngle);
+	gRobot.cameraAimAngle=angle;
+  short pos = CAMERA_ANGLE_TO_CODE(gRobot.cameraAimAngle);
   
   u8 command[9]={0XFF, 0XFF, 0XFE, 0X05, 0X03, 0X2A, 0x01,0x01,0x00};
   command[6]=pos&0xFF;
@@ -172,7 +181,7 @@ void CameraAlign(void)
 	else if(direction<-60.f)
 		direction=-60.f;
 	
-	SteerPosCrl(RAD_TO_ANGLE(direction));
+	//SteerPosCrl(RAD_TO_ANGLE(direction));
 	
 }
 
@@ -319,7 +328,7 @@ void USART1_IRQHandler(void)
           step=0;
         }else
 				{
-					gRobot.holdBallAngle[0]=HOLD_BALL1_CODE_TO_ANGLE(pos);
+					//gRobot.holdBallAngle[0]=HOLD_BALL1_CODE_TO_ANGLE(pos);
 				}
         i=100;
       }
@@ -365,7 +374,6 @@ void UART5_IRQHandler(void)
   {
     USART_ClearITPendingBit(UART5,USART_IT_RXNE);
     ch=USART_ReceiveData(UART5);
-    USART_SendData(DEBUG_USART,ch);
     if(ch=='@') step=0;
     switch(step)
     {
@@ -466,7 +474,7 @@ void UART5_IRQHandler(void)
           step=0;
         }else
 				{
-					gRobot.holdBallAngle[1]=HOLD_BALL2_CODE_TO_ANGLE(pos);
+					//gRobot.holdBallAngle[1]=HOLD_BALL2_CODE_TO_ANGLE(pos);
 				}
         i=100;
       }

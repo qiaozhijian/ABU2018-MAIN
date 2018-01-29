@@ -164,6 +164,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name> }H,P跆w }H,</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -200,18 +201,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>321</LineNumber>
+          <LineNumber>388</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134220698</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\Action_User\control\steer.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Action_User\stm32f4xx_it.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/stm32f4xx_it.c\388</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -219,6 +220,21 @@
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>gRobot,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>USARTx</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>USARTx</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>UART5</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -248,6 +264,14 @@
           <ItemText>StdId,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
+      <MemoryWindow1>
+        <Mm>
+          <WinNumber>1</WinNumber>
+          <SubType>0</SubType>
+          <ItemText>0x2000A588</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
@@ -285,12 +309,28 @@
       <bLin2Auto>0</bLin2Auto>
       <SystemViewers>
         <Entry>
-          <Name>System Viewer\ADC1</Name>
+          <Name>System Viewer\UART4</Name>
+          <WinId>35904</WinId>
+        </Entry>
+        <Entry>
+          <Name>System Viewer\UART5</Name>
           <WinId>35905</WinId>
         </Entry>
         <Entry>
-          <Name>System Viewer\CAN2</Name>
-          <WinId>35904</WinId>
+          <Name>System Viewer\USART1</Name>
+          <WinId>35903</WinId>
+        </Entry>
+        <Entry>
+          <Name>System Viewer\USART2</Name>
+          <WinId>35902</WinId>
+        </Entry>
+        <Entry>
+          <Name>System Viewer\USART3</Name>
+          <WinId>35901</WinId>
+        </Entry>
+        <Entry>
+          <Name>System Viewer\USART6</Name>
+          <WinId>35900</WinId>
         </Entry>
       </SystemViewers>
       <DebugDescription>

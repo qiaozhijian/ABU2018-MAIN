@@ -28,10 +28,10 @@ void PitchAngleMotion(float angle)
 
 void CourseAngleMotion(float angle)
 {
-  if(angle>0.f)
+  if(angle<0.f)
     angle=0.f;
-  else if(angle<-180.f)
-    angle=-180.f;
+  else if(angle>180.f)
+    angle=180.f;
 	
 	gRobot.courseAimAngle=angle;
 	
@@ -64,14 +64,14 @@ void ShootReset(void)
 void prepareMotionParaInit(void)
 {
   /*准备去拿第一个球的数据*/
-  PrepareGetBall1.courseAngle=0.f;
-  PrepareGetBall1.pitchAngle=26.6f;
-  PrepareGetBall1.steerAngle=90.f;
+  PrepareGetBall1.courseAngle=5.6f;
+  PrepareGetBall1.pitchAngle=25.6f;
+  PrepareGetBall1.steerAngle=0.f;
   PrepareGetBall1.steerSpeed=1000;
   PrepareGetBall1.gasAim=0.45f;
   
   /*准备去拿第二个球的数据*/
-  PrepareGetBall2.courseAngle=0.f;
+  PrepareGetBall2.courseAngle=5.6f;
   PrepareGetBall2.pitchAngle=27.1f;
   PrepareGetBall2.steerAngle=-90.f;
   PrepareGetBall2.steerSpeed=1000;
@@ -79,27 +79,27 @@ void prepareMotionParaInit(void)
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=30.1f;
-  PrepareGetBall3.pitchAngle=0.f;
+  PrepareGetBall3.pitchAngle=20.2f;
   PrepareGetBall3.steerAngle=90.f;
   PrepareGetBall3.steerSpeed=1000;
   PrepareGetBall3.gasAim=0.45f;
   
   /*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=-76.9f;
+  PrepareShootBall1.courseAngle=76.9f;
   PrepareShootBall1.pitchAngle=10.2f;
   PrepareShootBall1.steerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
   PrepareShootBall1.gasAim=0.45f;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=-79.5f;
+  PrepareShootBall2.courseAngle=79.5f;
   PrepareShootBall2.pitchAngle=30.1f;
   PrepareShootBall2.steerAngle=0.f;
   PrepareShootBall2.steerSpeed=2000;
   PrepareShootBall2.gasAim=0.45f;
   
   /*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=-90.f;
+  PrepareShootBall3.courseAngle=90.f;
   PrepareShootBall3.pitchAngle=32.5f;
   PrepareShootBall3.steerAngle=0.f;
   PrepareShootBall3.steerSpeed=2000;

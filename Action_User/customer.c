@@ -286,8 +286,7 @@ void AT_CMD_Handle(void){
   case STEER:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-    //				HoldBallPosCrl(value, value, 1000);
-    //				SetMotionFlag(~AT_STEER_READY);
+
     if(value <= -45.f)
     {
 			gRobot.holdBallAimAngle=90.f;
@@ -303,6 +302,9 @@ void AT_CMD_Handle(void){
 			gRobot.holdBallAimAngle=-90.f;
       SetMotionFlag(~AT_STEER_READY);
     }
+			gRobot.holdBallAimAngle=value;
+			gRobot.cameraAimAngle=value;
+      SetMotionFlag(~AT_STEER_READY);
     break;
     
   case GAS:
