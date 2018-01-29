@@ -121,7 +121,7 @@ union MSG4
 void CAN2_RX0_IRQHandler(void)
 {
   OS_CPU_SR  cpu_sr;
-  uint8_t buffer[4];
+  uint8_t buffer[8];
   uint32_t StdId=0;
   uint8_t canNodeId = 0;
   int32_t i = 0;
@@ -132,57 +132,57 @@ void CAN2_RX0_IRQHandler(void)
   CAN_RxMsg(CAN2, &StdId, buffer, 8);
   canNodeId = StdId;
   
-//  if((StdId - SDO_RESPONSE_COB_ID_BASE)==5)     //俯仰
-//  {
-//    //fix me, if length not 8
-//    for(i = 0; i < 8; i++)
-//      msg.data8[i] = buffer[i];
-//    //位置
-//    if(msg.data32[0]==0x00005850)
-//    {
-//      gRobot.pitchAimAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
-//      SetMotionFlag(AT_PITCH_READ_SUCCESS);
-//    }
-//    //速度
-//    if(msg.data32[0]==0x00005856)
-//    {
-//      
-//    }
-//  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==6)     //航向
-//  {
-//    //fix me, if length not 8
-//    for(i = 0; i < 8; i++)
-//      msg.data8[i] = buffer[i];
-//    //位置
-//    if(msg.data32[0]==0x00005850)
-//    {
-//      gRobot.courseAimAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
-//      SetMotionFlag(AT_COURSE_READ_SUCCESS);
-//    }
-//    //速度
-//    if(msg.data32[0]==0x00005856)
-//    {
-//      
-//    }
-//  }
-//  
-//  
-//  if(canNodeId==GET_FROM_GASSENSOR)     //get speed value
-//  {
-//    //fix me, if length not 8
-//    for(i = 0; i < 4; i++)
-//      msg4.data4[i] = buffer[i];
-//    //位置
-//    if(msg4.dataf>1.0f)
-//      msg4.dataf=1.f;
-//    else if(msg4.dataf<0.f)
-//      msg4.dataf=0.f;
-//    gRobot.gasValue=msg4.dataf;
-//  }
-//  else
-//  {
-//    msg4.dataf=msg4.dataf;
-//  }
+  if((StdId - SDO_RESPONSE_COB_ID_BASE)==5)     //俯仰
+  {
+    //fix me, if length not 8
+    for(i = 0; i < 8; i++)
+      msg.data8[i] = buffer[i];
+    //位置
+    if(msg.data32[0]==0x00005850)
+    {
+      gRobot.pitchAimAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
+      SetMotionFlag(AT_PITCH_READ_SUCCESS);
+    }
+    //速度
+    if(msg.data32[0]==0x00005856)
+    {
+      
+    }
+  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==6)     //航向
+  {
+    //fix me, if length not 8
+    for(i = 0; i < 8; i++)
+      msg.data8[i] = buffer[i];
+    //位置
+    if(msg.data32[0]==0x00005850)
+    {
+      gRobot.courseAimAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
+      SetMotionFlag(AT_COURSE_READ_SUCCESS);
+    }
+    //速度
+    if(msg.data32[0]==0x00005856)
+    {
+      
+    }
+  }
+  
+  
+  if(canNodeId==GET_FROM_GASSENSOR)     //get speed value
+  {
+    //fix me, if length not 8
+    for(i = 0; i < 4; i++)
+      msg4.data4[i] = buffer[i];
+    //位置
+    if(msg4.dataf>1.0f)
+      msg4.dataf=1.f;
+    else if(msg4.dataf<0.f)
+      msg4.dataf=0.f;
+    gRobot.gasValue=msg4.dataf;
+  }
+  else
+  {
+    msg4.dataf=msg4.dataf;
+  }
   
   CAN_ClearFlag(CAN2, CAN_FLAG_EWG);
   CAN_ClearFlag(CAN2, CAN_FLAG_EPV);

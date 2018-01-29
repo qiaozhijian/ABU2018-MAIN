@@ -63,7 +63,7 @@
 #define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle))*6116.693f))//((angle-5.6f)*14.0f*19.2f*8192.f/360.f)
 
 #define HOLD_BALL1_CODE_TO_ANGLE(code)												 ((code)/11.378f) //(code)/4096.f*360.f
-#define HOLD_BALL1_ANGLE_TO_CODE(angle)												((int)((180.f-(angle))*11.378f))//(angle)*4096.f/360.f
+#define HOLD_BALL1_ANGLE_TO_CODE(angle)												((int)((180.f-(angle-3.3f))*11.378f))//(angle)*4096.f/360.f
 
 
 
@@ -73,7 +73,7 @@
 
 
 #define CAMERA_CODE_TO_ANGLE(code)												((code)/11.378f) //(code)/4096.f*360.f
-#define CAMERA_ANGLE_TO_CODE(angle)												((int)(angle*11.378f))//(angle)*4096.f/360.f
+#define CAMERA_ANGLE_TO_CODE(angle)												((int)(((angle))*11.378f))//(angle)*4096.f/360.f
 
 //×´Ì¬Á¿½âÊÍ
 #define AT_CLAW_STATUS_OPEN 										0x01u
