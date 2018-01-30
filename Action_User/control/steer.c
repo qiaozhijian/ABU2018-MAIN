@@ -20,7 +20,7 @@ void Enable_ROBS(void)
     if(times[0]>10)
     {
       USART_OUT(DEBUG_USART,"HOLD_BALL1_ENABLE_FAIL\r\n");
-      SteerErrorRecord(HOLD_BALL1_ENABLE_FAIL);
+      ErrorRecord(HOLD_BALL1_ENABLE_FAIL);
       break;
     }
   }
@@ -33,7 +33,7 @@ void Enable_ROBS(void)
     if(times[1]>10)
     {
       USART_OUT(DEBUG_USART,"HOLD_BALL2_ENABLE_FAIL\r\n");
-      SteerErrorRecord(HOLD_BALL2_ENABLE_FAIL);
+      ErrorRecord(HOLD_BALL2_ENABLE_FAIL);
       break;
     }
   }

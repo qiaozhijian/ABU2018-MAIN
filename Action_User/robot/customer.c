@@ -133,7 +133,7 @@ void USART6_IRQHandler(void)
     data=USART_ReceiveData(USART6);
     buffer[bufferI]=data;
     bufferI++;
-    if(bufferI==20)
+    if(bufferI>=20)
       bufferI=0;
     if(bufferI>1&&buffer[bufferI-1]=='\n'&&buffer[bufferI-2]=='\r'){
       AT_CMD_Judge();
@@ -191,15 +191,24 @@ void AT_CMD_Judge(void){
   else if((bufferI >= 4) && strncmp(buffer, "AT+init",7 )==0)//AT    
   {
     PhotoelectricityInit();
+    USART_OUT(DEBUG_USART,"OK\r\n");
   }
   else if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
   {
-		SetMotionFlag(AT_CAMERA_SUCCESS);
+		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
     //摄像头连接成功
   }
-  else if((bufferI >= 5) && strncmp(buffer, "AT+CP",5 )==0)
+	//打开气阀返回
+  else if((bufferI == 9) && strncmp(buffer, "AT+OPST\r\n",9 )==0)
   {
-    //
+		gRobot.isOpenGasReturn=1;
+    USART_OUT(DEBUG_USART,"OK\r\n");
+  }
+	//关闭气阀返回
+  else if((bufferI == 9) && strncmp(buffer, "AT+STST\r\n",9 )==0)
+  {
+		gRobot.isOpenGasReturn=0;
+    USART_OUT(DEBUG_USART,"OK\r\n");
   }
   
   if((bufferI >= 4) && strncmp(buffer, "AT+1", 4)==0)//AT    
@@ -244,7 +253,9 @@ void AT_CMD_Handle(void){
       ClawOpen();
       SetMotionFlag(AT_CLAW_STATUS_OPEN);
     } 
-    else{}
+    else{
+		
+		}
     break;
     
     /*控制是否射击*/
@@ -299,7 +310,6 @@ void AT_CMD_Handle(void){
       SetMotionFlag(~AT_STEER_READY);
     }
 			gRobot.holdBallAimAngle=value;
-			gRobot.cameraAimAngle=value;
       SetMotionFlag(~AT_STEER_READY);
     break;
     
@@ -409,12 +419,6 @@ void SetMotionFlag(uint32_t status){
   case ~AT_HOLD_BALL2_READ_SUCCESS:
     gRobot.AT_motionFlag&=~AT_HOLD_BALL2_READ_SUCCESS;
     break;
-  case AT_CAMERA_READ_SUCCESS:
-    gRobot.AT_motionFlag|=AT_CAMERA_READ_SUCCESS;
-    break;
-  case ~AT_CAMERA_READ_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_CAMERA_READ_SUCCESS;
-    break;
   case AT_COURSE_READ_SUCCESS:
     gRobot.AT_motionFlag|=AT_COURSE_READ_SUCCESS;
     break;
@@ -438,6 +442,24 @@ void SetMotionFlag(uint32_t status){
     break;
   case ~AT_PITCH_SUCCESS:
     gRobot.AT_motionFlag&=~AT_PITCH_SUCCESS;
+    break;
+  case AT_GAS_SUCCESS:
+    gRobot.AT_motionFlag|=AT_GAS_SUCCESS;
+    break;
+  case ~AT_GAS_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_GAS_SUCCESS;
+    break;
+  case AT_CAMERA_TALK_SUCCESS:
+    gRobot.AT_motionFlag|=AT_CAMERA_TALK_SUCCESS;
+    break;
+  case ~AT_CAMERA_TALK_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_CAMERA_TALK_SUCCESS;
+    break;
+  case AT_CAMERA_ROTATE_SUCCESS:
+    gRobot.AT_motionFlag|=AT_CAMERA_ROTATE_SUCCESS;
+    break;
+  case ~AT_CAMERA_ROTATE_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_CAMERA_ROTATE_SUCCESS;
     break;
   }
 }

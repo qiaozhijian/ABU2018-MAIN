@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F4XX, USE_STDPERIPH_DRIVER,__FPU_PRESENT=1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libraries\CMSIS;..\Libraries\CMSIS\startup;..\Action_User;..\uCOS-ii\Port;..\uCOS-ii\Source;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Action_User;..\Action_User\hardWare;..\Action_User\math;..\Action_User\control;..\Libraries\dsplib;..\Libraries\dsplib\Include;..\LC;..\MotionCard</IncludePath>
+              <IncludePath>..\Libraries\CMSIS;..\Libraries\CMSIS\startup;..\Action_User;..\uCOS-ii\Port;..\uCOS-ii\Source;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Action_User;..\Action_User\hardWare;..\Action_User\math;..\Action_User\control;..\Libraries\dsplib;..\Libraries\dsplib\Include;..\LC;..\MotionCard;..\Action_User\robot</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -383,27 +383,32 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Action_User\main.c</FilePath>
+              <FilePath>..\Action_User\robot\main.c</FilePath>
             </File>
             <File>
               <FileName>task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Action_User\task.c</FilePath>
+              <FilePath>..\Action_User\robot\task.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Action_User\stm32f4xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>customer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Action_User\customer.c</FilePath>
+              <FilePath>..\Action_User\robot\stm32f4xx_it.c</FilePath>
             </File>
             <File>
               <FileName>process.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Action_User\control\process.c</FilePath>
+              <FilePath>..\Action_User\robot\process.c</FilePath>
+            </File>
+            <File>
+              <FileName>customer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\robot\customer.c</FilePath>
+            </File>
+            <File>
+              <FileName>errorReport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\robot\errorReport.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -469,6 +474,16 @@
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Action_User\hardWare\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>DataRecover.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\hardWare\DataRecover.c</FilePath>
+            </File>
+            <File>
+              <FileName>iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\hardWare\iwdg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -664,6 +679,11 @@
               <FileName>stm32f4xx_rng.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_rng.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Libraries\STM32F4xx_StdPeriph_Driver\src\stm32f4xx_iwdg.c</FilePath>
             </File>
           </Files>
         </Group>

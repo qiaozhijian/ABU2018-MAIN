@@ -94,9 +94,9 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
-#ifdef TEST
+		#ifdef TEST
 		SelfTest();
-#else		
+		#else		
     AT_CMD_Handle();
 		
     processReport();
@@ -111,12 +111,21 @@ void RobotTask(void)
 		
 		/*运动状态更新*/
     MotionRead();
-    
+//		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
+//		USART_OUT_F(gRobot.posX);
+//		USART_OUT_F(gRobot.posY);
+//		USART_OUT_F(gRobot.angle);
+//		USART_Enter();
+//		
 		#ifndef	DEBUG 
     switch(gRobot.robocon2018)
     {
     case ROBOT_START:
-      if(gRobot.posX>3000.f)
+			if(gRobot.posX>100.f)
+			{
+				PrepareGetBall(BALL_1);			
+			}
+      if(gRobot.posX>4000.f)
 		  {
 				gRobot.process=TO_GET_BALL_1;
 		  	gRobot.robocon2018=COLORFUL_BALL_1;
@@ -224,7 +233,7 @@ void statusInit(void)
   USART_Enter();
   USART_Enter();
   
-  PrepareGetBall(BALL_1);
+  PrepareGetBall(READY);
   
 	/*等待慢转动状态完成*/
   Delay_ms(5000);

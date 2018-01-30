@@ -29,6 +29,12 @@ void MotionExecute(void)
 		PitchAngleMotion(gRobot.pitchAimAngle);
 	}
 	
+	if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+	{
+		//PitchAngleMotion(gRobot.pitchAimAngle);
+	}
+	
+	
 	//CameraAlign();
 	
 }
@@ -45,6 +51,8 @@ void MotionExecute(void)
 */
 void MotionRead(void)
 {
+	static char count=0;
+	count++;
 	/*读取俯仰角*/
 	ReadActualPos(CAN2,5);
   /*将读俯仰角姿态的标志位归0*/
@@ -57,7 +65,12 @@ void MotionRead(void)
 	
 	ReadHoldBallSteerPos();
 	/*像平板发送气压值*/
- // USART_BLE_SEND(gRobot.gasValue);
+	//if(gRobot.isOpenGasReturn&&count==3)
+	if(count==3)
+	{
+		count=0;
+	//	USART_BLE_SEND(gRobot.gasValue);
+	}
 }
 
 
@@ -74,11 +87,11 @@ void MotionStatusUpdate(void)
 {
 	if(abs(gRobot.cameraAimAngle-gRobot.cameraAngle)<1.f)
 	{
-		SetMotionFlag(AT_CAMERA_SUCCESS);
+		SetMotionFlag(AT_CAMERA_ROTATE_SUCCESS);
 	}
 	else
 	{
-		SetMotionFlag(~AT_CAMERA_SUCCESS);
+		SetMotionFlag(~AT_CAMERA_ROTATE_SUCCESS);
 	}
 	
 	
@@ -116,6 +129,15 @@ void MotionStatusUpdate(void)
 	else
 	{
 		SetMotionFlag(~AT_HOLD_BALL2_SUCCESS);
+	}
+	
+	if(abs(gRobot.gasAimValue-gRobot.gasValue)<0.01f)
+	{
+		SetMotionFlag(AT_GAS_SUCCESS);
+	}
+	else
+	{
+		SetMotionFlag(~AT_GAS_SUCCESS);
 	}
 	
 }

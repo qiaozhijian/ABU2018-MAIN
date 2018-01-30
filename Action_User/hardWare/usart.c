@@ -358,6 +358,7 @@ void USART_BLE_SEND(float value)
   int integer=( int )value;
   sprintf( (char*)s, "AT+5%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
   USART_OUT(DEBUG_USART,s);
+	USART_Enter();
 }
 
 /*字符串长度不能超出20个字符，调试信息内容不能超出20个*/
@@ -411,16 +412,18 @@ void USART_OUT_ONCE(const char * s)
 
 extern Robot_t gRobot;
 
+
 void TalkToCamera(uint32_t command)
 {
+	return;
 	int times=0;
 	switch(command)
 	{
-		case CAMERA_SHUT_ALL:
+		case CAMERA_START:
 			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-			while(!gRobot.AT_motionFlag&AT_CAMERA_SUCCESS)
+			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
 			{
-				USART_OUT(USART6,"AT+%d\r\n",CAMERA_SHUT_ALL);
+				USART_OUT(CAMERA_USART,"AT\r\n");
 				Delay_us(50);
 				times++;
 				if(times>100)
@@ -430,13 +433,29 @@ void TalkToCamera(uint32_t command)
 				}
 			}
 			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_SUCCESS);
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+		case CAMERA_SHUT_ALL:
+			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
+			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
+			{
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
+				Delay_us(50);
+				times++;
+				if(times>100)
+				{
+					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+					break;
+				}
+			}
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
 			break;
 		case CAMERA_OPEN_NEAR:
 			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-			while(!gRobot.AT_motionFlag&AT_CAMERA_SUCCESS)
+			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
 			{
-				USART_OUT(USART6,"AT+%d\r\n",CAMERA_OPEN_NEAR);
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
 				Delay_us(50);
 				times++;
 				if(times>100)
@@ -446,13 +465,13 @@ void TalkToCamera(uint32_t command)
 				}
 			}
 			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_SUCCESS);
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
 			break;
 		case CAMERA_OPEN_FAR:
 			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-			while(!gRobot.AT_motionFlag&AT_CAMERA_SUCCESS)
+			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
 			{
-				USART_OUT(USART6,"AT+%d\r\n",CAMERA_OPEN_FAR);
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
 				Delay_us(50);
 				times++;
 				if(times>100)
@@ -462,7 +481,7 @@ void TalkToCamera(uint32_t command)
 				}
 			}
 			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_SUCCESS);
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
 			break;
 	}
 }
@@ -522,7 +541,16 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
         for (; *s; s++) 
         {
           USART_SendData(USARTx, *s);
-          while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET);
+          
+          while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET){
+						aa++;
+						if(aa>100)
+						{
+							USART_OUT(DEBUG_USART,"TCDEAD\r\n");
+							break;
+						}
+					};
+					aa=0;
         }
         Data++;
         break;
@@ -535,6 +563,11 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
 					//100
           while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET){
 						aa++;
+						if(aa>100)
+						{
+							USART_OUT(DEBUG_USART,"TCDEAD\r\n");
+							break;
+						}
 					};
 					aa=0;
         }
@@ -546,9 +579,14 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
       }		 
     }
     else USART_SendData(USARTx, *Data++);
-     while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET){
-			aa++;
-			};
+          while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET){
+						aa++;
+						if(aa>100)
+						{
+							USART_OUT(DEBUG_USART,"TCDEAD\r\n");
+							break;
+						}
+					};
 			aa=0;
   }
 }

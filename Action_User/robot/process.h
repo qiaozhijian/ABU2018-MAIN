@@ -8,8 +8,6 @@ void FightForBall2(void);
 void FightForGoldBall(void);
 
 void StatusReport(void);
-void SteerErrorRecord(char type);
-void SteerErrorReport(void);
 void processReport(void);
 
 //void DelayMsRun(char task,short ms);
