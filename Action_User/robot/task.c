@@ -111,6 +111,8 @@ void RobotTask(void)
 		
 		/*运动状态更新*/
     MotionRead();
+		
+		USART_OUT(USART6,"AT\r\n");
 //		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
 //		USART_OUT_F(gRobot.posX);
 //		USART_OUT_F(gRobot.posY);
