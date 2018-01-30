@@ -50,7 +50,16 @@ void FightForBall1(void)
     break;
     /*到达投射区一，射球*/
   case TO_THROW_BALL_1:
-    if(PE_FOR_THE_BALL)
+		/*光电到位*/
+    if(PE_FOR_THE_BALL
+				/*持球舵机到位*/
+				&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+					/*持球舵机到位*/
+					&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+						/*俯仰到位，*/
+						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
+							/*航向到位*/
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -66,6 +75,21 @@ void FightForBall1(void)
       gRobot.process=TO_GET_BALL_2;
       gRobot.robocon2018=COLORFUL_BALL_2;
     }
+		else
+		{
+			USART_OUT(DEBUG_USART,"THROW1\t");
+			if(!PE_FOR_THE_BALL)
+				USART_OUT(DEBUG_USART,"!PE\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB1\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB2\t");
+			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
+				USART_OUT(DEBUG_USART,"!PITCH\t");
+			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
+				USART_OUT(DEBUG_USART,"!COURSE\t");
+			USART_Enter();
+		}
     break;
   }
 }
@@ -99,7 +123,16 @@ void FightForBall2(void)
     break;
     /*到达投射区二，射球*/
   case TO_THROW_BALL_2:
-    if(PE_FOR_THE_BALL)
+		/*光电到位*/
+    if(PE_FOR_THE_BALL
+				/*持球舵机到位*/
+				&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+					/*持球舵机到位*/
+					&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+						/*俯仰到位，*/
+						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
+							/*航向到位*/
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -118,6 +151,21 @@ void FightForBall2(void)
       gRobot.process=TO_GET_BALL_3;
       gRobot.robocon2018=GOLD_BALL;
     }
+		else
+		{
+			USART_OUT(DEBUG_USART,"THROW2\t");
+			if(!PE_FOR_THE_BALL)
+				USART_OUT(DEBUG_USART,"!PE\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB1\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB2\t");
+			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
+				USART_OUT(DEBUG_USART,"!PITCH\t");
+			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
+				USART_OUT(DEBUG_USART,"!COURSE\t");
+			USART_Enter();
+		}
     break;
   }
   
@@ -154,7 +202,16 @@ void FightForGoldBall(void)
     break;
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
-    if(PE_FOR_THE_BALL)
+		/*光电到位*/
+    if(PE_FOR_THE_BALL
+				/*持球舵机到位*/
+				&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+					/*持球舵机到位*/
+					&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+						/*俯仰到位，*/
+						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
+							/*航向到位*/
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -167,6 +224,21 @@ void FightForGoldBall(void)
       
       gRobot.process=END_COMPETE;
     }
+		else
+		{
+			USART_OUT(DEBUG_USART,"THROW3\t");
+			if(!PE_FOR_THE_BALL)
+				USART_OUT(DEBUG_USART,"!PE\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB1\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB2\t");
+			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
+				USART_OUT(DEBUG_USART,"!PITCH\t");
+			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
+				USART_OUT(DEBUG_USART,"!COURSE\t");
+			USART_Enter();
+		}
     break;
   }
 }

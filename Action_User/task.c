@@ -78,13 +78,9 @@ void ConfigTask(void)
   
   HardWareInit();
 	
-	#ifndef	DEBUG 
   MotorInit();
 	
   statusInit();
-	#endif
-  Delay_ms(5000);
-  gRobot.robocon2018=ROBOT_START;
 	
   OSTaskSuspend(OS_PRIO_SELF);
 }
@@ -103,7 +99,6 @@ void RobotTask(void)
 #else		
     AT_CMD_Handle();
 		
-		
     processReport();
 		
 		/*运动状态标志位更新*/
@@ -121,14 +116,11 @@ void RobotTask(void)
     switch(gRobot.robocon2018)
     {
     case ROBOT_START:
-
-        PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);
-        
-        PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
-        
+      if(gRobot.posX>3000.f)
+		  {
 				gRobot.process=TO_GET_BALL_1;
-				gRobot.robocon2018=COLORFUL_BALL_1;
-
+		  	gRobot.robocon2018=COLORFUL_BALL_1;
+			}
       break;
     case COLORFUL_BALL_1: 
       /*完成彩球一的投射*/
@@ -170,7 +162,7 @@ void HardWareInit(void){
 	CameraInit(115200);
 	
 	/*接收定位系统数据的串口初始化*/
-	GYRO_Init(115200);
+	GYRO_Init(921600);
 	
   /*调试蓝牙*/
   DebugBLE_Init(921600);
@@ -188,6 +180,7 @@ void HardWareInit(void){
   
 }
 void MotorInit(void){
+	#ifndef	DEBUG 
   //电机初始化及使能
   ElmoInit(CAN2);
   
@@ -198,6 +191,7 @@ void MotorInit(void){
   
   MotorOn(CAN2,5); 
   MotorOn(CAN2,6); 
+	#endif
 }	
 
 
@@ -211,6 +205,7 @@ void statusInit(void)
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   
+	#ifndef	DEBUG 
 	ClawShut();
 	BoostPoleReturn();
 	ShootSmallShut();
@@ -231,6 +226,15 @@ void statusInit(void)
   
   PrepareGetBall(BALL_1);
   
+	/*等待慢转动状态完成*/
+  Delay_ms(5000);
+	
+	/*恢复快速转动状态*/
+  PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);        
+  PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
+	#endif
+	
+  gRobot.robocon2018=ROBOT_START;
 }	
 
 

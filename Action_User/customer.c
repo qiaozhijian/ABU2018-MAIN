@@ -78,10 +78,9 @@ void USART3_IRQHandler(void)
     case 4:
       if (ch == 0x0d)
       {
-        gRobot.angle=posture.ActVal[0] ;//角度
-        gRobot.posX = posture.ActVal[3];//x
-        gRobot.posY = posture.ActVal[4];//y 
-        
+        gRobot.angle=posture.ActVal[0] ;
+        gRobot.posY = -posture.ActVal[3];
+        gRobot.posX = -posture.ActVal[4];
       }
       count = 0;
       break;
@@ -106,6 +105,7 @@ void USART3_IRQHandler(void)
 #define GAS  						5
 #define COURSE  				6
 #define TEST_GAS  			7
+#define CAMERA	  			8
 
 /*调试蓝牙中断*/
 static char buffer[20];
@@ -216,6 +216,8 @@ void AT_CMD_Judge(void){
     atCommand=COURSE;
   else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//发射按钮   
     atCommand=TEST_GAS;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//发射按钮   
+    atCommand=CAMERA;
   else 
     atCommand=666;
   
@@ -277,12 +279,6 @@ void AT_CMD_Handle(void){
     }
     break;
     
-  case PITCH:
-    USART_OUT(DEBUG_USART,"OK\r\n");
-    value = atof(buffer + 4);
-    PitchAngleMotion(value);
-    break;
-    
   case STEER:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
@@ -314,10 +310,16 @@ void AT_CMD_Handle(void){
     CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
     break;
     
+  case PITCH:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    value = atof(buffer + 4);
+		gRobot.pitchAimAngle=value;
+    break;
+    
   case COURSE:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-    CourseAngleMotion(value);
+		gRobot.courseAimAngle=value;
     break;
    
 	case TEST_GAS:
@@ -326,6 +328,27 @@ void AT_CMD_Handle(void){
 		//GasValveControl(GASVALVE_BOARD_ID,*(buffer+4)-'0',*(buffer+5)-'0');
 		break;
 	
+  case CAMERA:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    value = atof(buffer + 4);
+
+    if(value <= -45.f)
+    {
+			gRobot.cameraAimAngle=-45.f;
+      SetMotionFlag(~AT_STEER_READY);
+    }
+    else if(value >= 45.f)
+    {
+			gRobot.cameraAimAngle=45.f;
+      SetMotionFlag(AT_STEER_READY);
+    }
+    else
+    {
+			gRobot.cameraAimAngle=value;
+      SetMotionFlag(~AT_STEER_READY);
+    }
+    break;
+		
   default:
     break;
   }

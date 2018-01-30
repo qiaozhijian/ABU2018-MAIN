@@ -18,14 +18,14 @@
 //#define TEST
 
 //常量定义
-//定位系统位于自动车水平方向的中间，垂直方向距墙800mm
+//定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f
 //摄像头位于自动车偏右21.85mm，距墙172.44mm方向的地方
 //二维码板子距墙505mm
 #define CAMERA_TO_GYRO_X							21.85f
-#define CAMERA_TO_GYRO_Y							627.56f
+#define CAMERA_TO_GYRO_Y							332.56f
 #define QUICK_MARK_X_1								5505.f
 #define QUICK_MARK_X_2								6505.f
-#define QUICK_MARK_Y									505.f
+#define QUICK_MARK_Y									800.f
 
 
 #define CAR_L													0.5389f
@@ -55,25 +55,13 @@
 /*弧度制转换为角度制*/
 #define RAD_TO_ANGLE(rad) 																						((rad)*57.29578f)
 
-/*3508减速比3591/187=19.203208*/
+/*3508减速比3591/187=19.203208  8192位总脉冲*/
 #define PITCH_CODE_TO_ANGLE(code)													((code)/8738.1333f)
 #define PITCH_ANGLE_TO_CODE(angle)												((int)((angle)*8738.1333f))//((angle)*20.0f*19.2f*8192.f/360.f)
 
 #define COURSE_CODE_TO_ANGLE(code)												((code)/6116.693f)
 #define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle))*6116.693f))//((angle-5.6f)*14.0f*19.2f*8192.f/360.f)
 
-#define HOLD_BALL1_CODE_TO_ANGLE(code)												 ((code)/11.378f) //(code)/4096.f*360.f
-#define HOLD_BALL1_ANGLE_TO_CODE(angle)												((int)((180.f-(angle-3.3f))*11.378f))//(angle)*4096.f/360.f
-
-
-
-#define HOLD_BALL2_CODE_TO_ANGLE(code)												((code)/11.378f) //(code)/4096.f*360.f
-#define HOLD_BALL2_ANGLE_TO_CODE(angle)												((int)(((angle)+180.f)*11.378f))//(angle)*4096.f/360.f
-
-
-
-#define CAMERA_CODE_TO_ANGLE(code)												((code)/11.378f) //(code)/4096.f*360.f
-#define CAMERA_ANGLE_TO_CODE(angle)												((int)(((angle))*11.378f))//(angle)*4096.f/360.f
 
 //状态量解释
 #define AT_CLAW_STATUS_OPEN 										0x01u
@@ -134,7 +122,7 @@
 /*舵机号命名*/
 #define HOLD_BALL1														1
 #define HOLD_BALL2														2
-#define CAMERA														3
+#define CAMERA_STEER													3
 
 /*状态量解释*/
 #define TO_START													1

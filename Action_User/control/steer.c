@@ -48,20 +48,26 @@ void Enable_ROBS(void)
 //以vel的速度转到angle角度
 void HoldBallPosCrl(float angle,int vel)
 {
-  float pos1=0.f;
-  float pos2=0.f;
-	float angleTemp=0.f;
+  int pos1=0.f;
+  int pos2=0.f;
+	
+	/*检测爪子是否闭合，张开时转动会有干涉*/
+	if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+	{
+		ClawShut();
+	}
 	
 	if(angle>90.f)
 		angle=90.f;
 	if(angle<-90.f)
 		angle=-90.f;
 	
-	pos1=HOLD_BALL1_ANGLE_TO_CODE(angle);   
-	pos2=HOLD_BALL2_ANGLE_TO_CODE(angle);			
+	/*1/4096.f*360.f=11.378*/
+	pos1=(int)((180.f-(angle-3.3f))*11.378f);   
+	pos2=(int)((angle+180.f)*11.378f);			
 	
-  USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos1,vel);
-  USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n",(int)pos2,vel);
+  USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",pos1,vel);
+  USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n", pos2,vel);
 	
 }
 
@@ -141,8 +147,10 @@ void SteerPosCrl(float angle)
 	else if(angle<-45.f)
 		angle=-45.f;
 	
+	/*减速比为2*/
 	angle=angle*2.f+259.7f;
-  short pos = CAMERA_ANGLE_TO_CODE(angle);
+	/*360.f/4096.f=11.378f*/
+  short pos = angle*11.378f;
   
   u8 command[9]={0XFF, 0XFF, 0XFE, 0X05, 0X03, 0X2A, 0x01,0x01,0x00};
   command[6]=pos&0xFF;
@@ -168,7 +176,7 @@ void CameraAlign(void)
 	x=gRobot.posX+CAMERA_TO_GYRO_X;
 	y=gRobot.posY-CAMERA_TO_GYRO_Y;
 	
-	if(gRobot.process>=TO_THE_AREA_1&&gRobot.process<TO_GET_BALL_3)
+	if(gRobot.process>=TO_GET_BALL_1&&gRobot.process<TO_GET_BALL_3)
 	{
 		direction=atan2f(QUICK_MARK_X_1-x,y-QUICK_MARK_Y);
 	}else if(gRobot.process>=TO_GET_BALL_3)
@@ -176,13 +184,14 @@ void CameraAlign(void)
 		direction=atan2f(QUICK_MARK_X_2-x,y-QUICK_MARK_Y);
 	}
 	
-	if(direction>60.f)
-		direction=60.f;
-	else if(direction<-60.f)
-		direction=-60.f;
+	direction=RAD_TO_ANGLE(direction);
 	
-	//SteerPosCrl(RAD_TO_ANGLE(direction));
+	if(direction>30.f)
+		direction=30.f;
+	else if(direction<-30.f)
+		direction=-30.f;
 	
+	SteerPosCrl(direction);
 }
 
 
@@ -328,7 +337,7 @@ void USART1_IRQHandler(void)
           step=0;
         }else
 				{
-					//gRobot.holdBallAngle[0]=HOLD_BALL1_CODE_TO_ANGLE(pos);
+					gRobot.holdBallAngle[0]=180.f-pos/11.378f+3.3f;
 				}
         i=100;
       }
@@ -474,7 +483,7 @@ void UART5_IRQHandler(void)
           step=0;
         }else
 				{
-					//gRobot.holdBallAngle[1]=HOLD_BALL2_CODE_TO_ANGLE(pos);
+					gRobot.holdBallAngle[1]=pos/11.378f-180.f;
 				}
         i=100;
       }

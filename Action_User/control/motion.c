@@ -13,10 +13,20 @@ extern Robot_t gRobot;
 void MotionExecute(void)
 {
 	/*如果持球舵机没有到位*/
-//	if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
-//		||!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
+	if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+		||!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
 	{
 		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
+	}
+	
+	if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
+	{
+		CourseAngleMotion(gRobot.courseAimAngle);
+	}
+	
+	if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
+	{
+		PitchAngleMotion(gRobot.pitchAimAngle);
 	}
 	
 	//CameraAlign();

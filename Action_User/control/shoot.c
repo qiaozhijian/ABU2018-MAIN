@@ -16,6 +16,7 @@ motionPara_t PrepareShootBall3;
 
 void PitchAngleMotion(float angle)
 {
+  /*控制的为-20°-10°实际给电机的是30°-0°*/
   if(angle>10.f)
     angle=10.f;
   else if(angle<-20.f)
@@ -108,6 +109,13 @@ void prepareMotionParaInit(void)
 
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
 {
+	
+	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
+	gRobot.courseAimAngle=PrepareGetBall_t.courseAngle;
+	gRobot.pitchAimAngle=PrepareGetBall_t.pitchAngle;
+	gRobot.gasAimValue=PrepareGetBall_t.gasAim;
+	gRobot.holdBallAimAngle=PrepareGetBall_t.steerAngle;
+	
   //设置气压
   GasMotion(PrepareGetBall_t.gasAim);
   /*设置俯仰角度*/
@@ -144,6 +152,13 @@ void PrepareGetBall(int index)
 
 void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
 {
+	
+	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
+	gRobot.courseAimAngle=PrepareShootBall_t.courseAngle;
+	gRobot.pitchAimAngle=PrepareShootBall_t.pitchAngle;
+	gRobot.gasAimValue=PrepareShootBall_t.gasAim;
+	gRobot.holdBallAimAngle=PrepareShootBall_t.steerAngle;
+	
   //设置气压
   GasMotion(PrepareShootBall_t.gasAim);
   /*设置俯仰角度*/
