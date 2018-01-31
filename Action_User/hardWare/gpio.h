@@ -5,9 +5,9 @@
 
 #define KEYSWITCH		    	(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2))
 
-#define BEEP_ON          		 GPIO_SetBits(GPIOE, GPIO_Pin_7)
+#define BEEP_ON          		 GPIO_SetBits(GPIOC, GPIO_Pin_3)
 
-#define BEEP_OFF         		 GPIO_ResetBits(GPIOE, GPIO_Pin_7)
+#define BEEP_OFF         		 GPIO_ResetBits(GPIOC, GPIO_Pin_3)
 
 #define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_15))		
 

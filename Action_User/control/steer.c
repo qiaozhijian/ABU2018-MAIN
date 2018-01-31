@@ -43,38 +43,71 @@ void Enable_ROBS(void)
   //#1 W 40,1,1\r\n
 }
 
-//伺服模式下函数
+
 
 //以vel的速度转到angle角度
 void HoldBallPosCrl(float angle,int vel)
 {
-  int pos1=0.f;
-  int pos2=0.f;
-	
+	HoldSteer1PosCrl(angle,vel);
+	HoldSteer2PosCrl(angle,vel);
+}
+
+
+void HoldSteer1PosCrl(float angle,int vel)
+{
+  int pos=0.f;
 	/*检测爪子是否闭合，张开时转动会有干涉*/
 	if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
 	{
 		ClawShut();
 	}
-	
-	if(angle>90.f)
-		angle=90.f;
-	if(angle<-90.f)
-		angle=-90.f;
-	
+	if(angle>100.f)
+		angle=100.f;
+	if(angle<-100.f)
+		angle=-100.f;
+
 	/*1/4096.f*360.f=11.378*/
-	pos1=(int)((180.f-(angle-3.3f))*11.378f);   
-	pos2=(int)((angle/7.f*6.f+180.f)*11.378f);			
+	pos=(int)((180.f-(angle-3.3f))*11.378f);  
 	
-  USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",pos1,vel);
-  USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n", pos2,vel);
-	
+  USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",pos,vel);
 }
+
+void HoldSteer2PosCrl(float angle,int vel)
+{
+  int pos=0.f;
+	/*检测爪子是否闭合，张开时转动会有干涉*/
+	if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+	{
+		ClawShut();
+	}
+	if(angle>100.f)
+		angle=100.f;
+	if(angle<-100.f)
+		angle=-100.f;
+
+	/*1/4096.f*360.f=11.378*/
+	pos=(int)(((angle)/7.f*6.f+180.f)*11.378f);	 
+	
+  SteerPosCrlBy485(0xfe,pos);
+}
+
 
 void ReadHoldBallSteerPos(void)
 {
   USART_OUT(USART1,"#1 R 56,2,1\r\n");
   USART_OUT(UART5,"#1 R 56,2,1\r\n");
+}
+
+void SteerPosCrlBy485(int num,int pos)
+{
+  u8 command[9]={0XFF, 0XFF, num, 0X05, 0X03, 0X2A, 0x01,0x01,0x00};
+  command[6]=pos&0xFF;
+  command[7]=(pos>>8)&0xFF;
+  u8 checkSum = (command[2]+command[3]+command[4]+command[5]+command[6]+command[7])&0xFF;
+  checkSum=~checkSum;
+  command[8]=checkSum;
+  
+  RS485_Send_Data(command,9);
 }
 
 
@@ -89,26 +122,6 @@ void ReadHoldBallSteerPos(void)
 #define INSTRUCTION_RESET												0x06 
 
 
-
-void SetNumber(unsigned char num)
-{
-  /*
-  *字头：0XFF, 0XFF 
-  *ID ： 0XFE(广播指令)
-  *长度：0x04 3+1 （1个数据长度 设置ID为num）
-  *指令：0x03 写指令
-  *地址：0x05 储存ID的地址
-  *校验和：checkSum
-  */
-  unsigned char command[8]={0XFF, 0XFF, 0XFE, 0X04, 0X03, 0X05, num, 0x00};
-  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
-  checkSum=~checkSum;
-  command[7]=checkSum;
-  
-	RS485_Send_Data(command,8);
-  
-  /*应答包 FF FF 01（ID） 03（数据长度） 00（错误状态） 01 FA（校验和） */
-}
 
 
 /*不需要打开也可以转*/
@@ -132,8 +145,53 @@ void OpenSteerTorque(unsigned char num)
   /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
 }
 
-void SteerPosCrl(float angle)
+void SetNumber(unsigned char num)
 {
+  /*
+  *字头：0XFF, 0XFF 
+  *ID ： 0XFE(广播指令)
+  *长度：0x04 3+1 （1个数据长度 设置ID为num）
+  *指令：0x03 写指令
+  *地址：0x05 储存ID的地址
+  *校验和：checkSum
+  */
+	UnLockSteer(0xfe);
+  unsigned char command[8]={0XFF, 0XFF, 0XFE, 0X04, 0X03, 0X05, num, 0x00};
+  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+  checkSum=~checkSum;
+  command[7]=checkSum;
+  
+	RS485_Send_Data(command,8);
+  
+  /*应答包 FF FF 01（ID） 03（数据长度） 00（错误状态） 01 FA（校验和） */
+}
+
+
+/*不需要打开也可以转*/
+void UnLockSteer(int num)
+{
+  /*
+  *字头：0XFF, 0XFF 
+  *ID ： num
+  *长度：0x04 3+1 （1个数据长度）
+  *指令：0x03 写指令
+  *地址：0x28 储存ID的地址
+  *校验和：checkSum
+  */
+  unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X03, 0X30, 0x00, 0x00};
+  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+  checkSum=~checkSum;
+  command[7]=checkSum;
+  
+	RS485_Send_Data(command,8);
+  
+  /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
+}
+
+
+void CameraSteerPosCrl(float angle)
+{
+//	SetNumber(2);
   /*
   *字头：0XFF, 0XFF 
   *ID ： num
@@ -146,21 +204,11 @@ void SteerPosCrl(float angle)
 		angle=45.f;
 	else if(angle<-45.f)
 		angle=-45.f;
-	
 	/*减速比为2*/
 	angle=angle*2.f+259.7f;
-	/*360.f/4096.f=11.378f*/
-  short pos = angle*11.378f;
-  
-  u8 command[9]={0XFF, 0XFF, 0XFE, 0X05, 0X03, 0X2A, 0x01,0x01,0x00};
-  command[6]=pos&0xFF;
-  command[7]=(pos>>8)&0xFF;
-  u8 checkSum = (command[2]+command[3]+command[4]+command[5]+command[6]+command[7])&0xFF;
-  checkSum=~checkSum;
-  command[8]=checkSum;
-  
-  RS485_Send_Data(command,9);
-  
+	
+	SteerPosCrlBy485(2,angle);
+
   /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
 }
 
@@ -191,7 +239,7 @@ void CameraAlign(void)
 	else if(direction<-30.f)
 		direction=-30.f;
 	
-	SteerPosCrl(direction);
+	CameraSteerPosCrl(direction);
 }
 
 

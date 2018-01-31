@@ -5,16 +5,17 @@
 #include "stm32f4xx_it.h"
 #include "steer.h"
 #include "includes.h"
+#include "customer.h"
 extern Robot_t gRobot;
 
 extern OS_EVENT *PeriodSem;
 void SelfTest(void)
 {
+	AT_CMD_Handle();
 	static int step=0;
 	switch(step)
 	{
 		case 0:
-			BEEP_ON;
 			break;
 	}
 }
@@ -64,14 +65,14 @@ void FightForBall1(void)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f))
 								/*气压到位*/
-								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+							//	&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))||PE_FOR_THE_BALL)
     {
       /*射球*/
       ShootBall();
       /*给延时使发射杆能执行到位*/
-      Delay_ms(150);
+      Delay_ms(500);
       /*通知控制卡*/
       MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
       /*射球机构复位*/
@@ -141,15 +142,15 @@ void FightForBall2(void)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f))
 								/*气压到位*/
-								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+						//		&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))||PE_FOR_THE_BALL)
     {
       /*射球*/
       ShootBall();
       
       /*给延时使发射杆能执行到位*/
-      Delay_ms(150);
+      Delay_ms(500);
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
       
@@ -224,15 +225,15 @@ void FightForGoldBall(void)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f))
 								/*气压到位*/
-								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+							//	&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))||PE_FOR_THE_BALL)
     {
       /*射球*/
       ShootBall();
       
       /*给延时使发射杆能执行到位*/
-      Delay_ms(150);
+      Delay_ms(500);
       
       /*射球机构复位*/
       ShootReset();
@@ -263,6 +264,22 @@ void FightForGoldBall(void)
 
 void MotionStatus(void)
 {
+	
+	#ifdef TEST
+	/*返回舵机一的状态*/
+  USART_OUT(DEBUG_USART,"steer 1 aimAngle ");
+	USART_OUT_F(gRobot.holdBallAimAngle[0]);
+  USART_OUT(DEBUG_USART,"realpos ");
+	USART_OUT_F(gRobot.holdBallAngle[0]);
+	USART_Enter();
+	
+	/*返回舵机二的状态*/
+  USART_OUT(DEBUG_USART,"steer 2 aimAngle ");
+	USART_OUT_F(gRobot.holdBallAimAngle[1]);
+  USART_OUT(DEBUG_USART,"realpos ");
+	USART_OUT_F(gRobot.holdBallAngle[1]);
+	USART_Enter();
+	#else
 	/*返回舵机一的状态*/
   USART_OUT(DEBUG_USART,"steer 1 aimAngle ");
 	USART_OUT_F(gRobot.holdBallAimAngle);
@@ -276,6 +293,7 @@ void MotionStatus(void)
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.holdBallAngle[1]);
 	USART_Enter();
+	#endif
 	
 	/*返回舵机三的状态*/
   USART_OUT(DEBUG_USART,"steer 3 aimAngle ");

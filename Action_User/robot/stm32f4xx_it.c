@@ -247,6 +247,44 @@ void TIM2_IRQHandler(void)
   OSIntExit();
 }
 
+uint32_t startCnt=0;
+uint32_t Cnt=0;
+
+void TIM7_IRQHandler(void)
+{ 
+	OS_CPU_SR  cpu_sr;
+  OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  if(TIM_GetITStatus(TIM7, TIM_IT_Update)==SET)
+  {	
+//		if(startCnt==1)
+//		{
+//			Cnt++;
+//			USART_OUT(DEBUG_USART,"%d\r\n",Cnt*100);
+//		}
+		//printf("%d\r\n",Cnt);
+		//IWDG_Feed();
+    TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
+	}
+  OSIntExit();
+}
+
+void StartCount(void)
+{
+	//printf("%d\t",startCnt);
+	startCnt=1;
+	Cnt=0;
+}
+
+uint32_t returnEndUs(void)
+{
+	uint32_t	end;
+	end=Cnt*100;
+	Cnt=0;
+	startCnt=0;
+	return end;
+}	
 
 void TIM1_UP_TIM10_IRQHandler(void)
 {

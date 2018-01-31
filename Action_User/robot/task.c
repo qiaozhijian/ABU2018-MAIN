@@ -20,6 +20,8 @@
 #include "steer.h"
 #include "process.h"
 #include "motion.h"
+#include "iwdg.h"
+#include "DataRecover.h"
 /*
 ===============================================================
 信号量定义
@@ -72,16 +74,22 @@ void ConfigTask(void)
   os_err = os_err;
   
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-  
+  /*调试蓝牙*/
+  DebugBLE_Init(921600);
+//#endif
+//	SoftWareReset();
+//#endif
   //给航向，俯仰电机上电初始化时间
   Delay_ms(100);
   
   HardWareInit();
+	if(!gRobot.resetFlag)
+  {
+		MotorInit();
+		statusInit();
+	}
 	
-  MotorInit();
-	
-  statusInit();
-	
+	//IWDG_Init(1,50); // 12ms
   OSTaskSuspend(OS_PRIO_SELF);
 }
 
@@ -94,6 +102,7 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
+		IWDG_Feed();
 		#ifdef TEST
 		SelfTest();
 		#else		
@@ -107,16 +116,12 @@ void RobotTask(void)
 		/*运动参数执行*/
 		MotionExecute();
 		
-		SteerPosCrl(gRobot.cameraAimAngle);
-		
 		/*运动状态更新*/
     MotionRead();
 		
-//		USART_SendData(USART6,41);
-//		USART_OUT(USART6,"AT\r\n");
+
 		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
-//		USART_OUT_F(gRobot.posX);
-//		USART_OUT_F(gRobot.posY);
+
 		USART_OUT_F(gRobot.angle);
 		USART_Enter();
 		
@@ -131,9 +136,10 @@ void RobotTask(void)
 		  {
 				gRobot.process=TO_GET_BALL_1;
 		  	gRobot.robocon2018=COLORFUL_BALL_1;
+				
 			}
       break;
-    case COLORFUL_BALL_1: 
+    case COLORFUL_BALL_1:
       /*完成彩球一的投射*/
       FightForBall1();
       break;
@@ -153,7 +159,7 @@ void RobotTask(void)
 void HardWareInit(void){
   //定时器初始化
   TIM_Init(TIM2, 99, 839, 0, 0);   //1ms主定时器
-  
+	
   CAN_Config(CAN1, 500, GPIOB, GPIO_Pin_8, GPIO_Pin_9);
   
   CAN_Config(CAN2, 500, GPIOB, GPIO_Pin_5, GPIO_Pin_6);
@@ -174,19 +180,14 @@ void HardWareInit(void){
 	/*接收定位系统数据的串口初始化*/
 	GYRO_Init(921600);
 	
-  /*调试蓝牙*/
-  DebugBLE_Init(921600);
 	
   /*光电初始化*/
   PhotoelectricityInit();
   
   //蜂鸣器PE7
-  GPIO_Init_Pins(GPIOE, GPIO_Pin_7, GPIO_Mode_OUT);
-  
-#ifndef	DEBUG 
-  Delay_ms(3000);
-  Enable_ROBS();//使能舵机
-#endif
+  GPIO_Init_Pins(GPIOC, GPIO_Pin_3, GPIO_Mode_OUT);
+	
+  TIM_Init(TIM7,99,83,0,0);					//100us
   
 }
 void MotorInit(void){
@@ -209,6 +210,9 @@ void MotorInit(void){
 //状态初始化，张开抓投球，等舵机到0的时候，闭合之后舵机才能转
 void statusInit(void)
 {	
+  Delay_ms(3000);
+  Enable_ROBS();//使能舵机
+	
   /*运动控制状态初始化*/
   SetMotionFlag(~AT_CLAW_STATUS_OPEN);
   SetMotionFlag(AT_STEER_READY);
@@ -233,7 +237,9 @@ void statusInit(void)
   USART_Enter();
   USART_Enter();
   
+	#ifndef TEST
   PrepareGetBall(READY);
+	#endif
   
 	/*等待慢转动状态完成*/
   Delay_ms(5000);
@@ -241,6 +247,10 @@ void statusInit(void)
 	/*恢复快速转动状态*/
   PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);        
   PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
+	
+	BEEP_ON;
+	Delay_ms(4000);
+	BEEP_OFF;
 	
   gRobot.robocon2018=ROBOT_START;
 }	

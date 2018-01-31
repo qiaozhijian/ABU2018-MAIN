@@ -838,8 +838,8 @@ ARM Macro Assembler    Page 13
   402 00000024         CRYP_IRQHandler
   403 00000024         HASH_RNG_IRQHandler
   404 00000024         FPU_IRQHandler
-  405 00000024         
-  406 00000024 E7FE            B                .
+  405 00000024 E7FE            B                .
+  406 00000026         
   407 00000026         
   408 00000026                 ENDP
   409 00000026         

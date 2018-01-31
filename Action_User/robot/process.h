@@ -10,6 +10,8 @@ void FightForGoldBall(void);
 void StatusReport(void);
 void processReport(void);
 
+void SelfTest(void);
+
 //void DelayMsRun(char task,short ms);
 //void DelayStop(char task);
 //void DelayTaskRun(void);

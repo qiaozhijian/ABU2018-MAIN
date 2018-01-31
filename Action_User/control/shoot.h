@@ -30,5 +30,7 @@ void PrepareGetBall(int index);
 void PrepareShootBall(int index);
 
 void prepareMotionParaInit(void);
+
+void GasMotion(float value);
 #endif
 

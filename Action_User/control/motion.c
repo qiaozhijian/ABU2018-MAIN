@@ -1,7 +1,7 @@
 #include "task.h"
 #include "steer.h"
 #include "can.h"
-
+#include "shoot.h"
 extern Robot_t gRobot;
 
 /* 动作执行函数
@@ -10,13 +10,18 @@ extern Robot_t gRobot;
 *	控制摄像头转向的舵机三
 *
 */
+
 void MotionExecute(void)
 {
 	/*如果持球舵机没有到位*/
 	if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
 		||!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
 	{
+		#ifdef TEST
+		HoldBallPosCrl(gRobot.holdBallAimAngle[0],2000);
+		#else
 		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
+		#endif
 	}
 	
 	if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
@@ -31,14 +36,14 @@ void MotionExecute(void)
 	
 	if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
 	{
-		//PitchAngleMotion(gRobot.pitchAimAngle);
+		GasMotion(gRobot.gasAimValue);
 	}
 	
-	
+	//CameraSteerPosCrl(gRobot.cameraAimAngle);
+
 	//CameraAlign();
 	
 }
-
 
 /* 动作状态问询函数
 * 
@@ -85,16 +90,7 @@ void MotionRead(void)
 */
 void MotionStatusUpdate(void)
 {
-	if(abs(gRobot.cameraAimAngle-gRobot.cameraAngle)<1.f)
-	{
-		SetMotionFlag(AT_CAMERA_ROTATE_SUCCESS);
-	}
-	else
-	{
-		SetMotionFlag(~AT_CAMERA_ROTATE_SUCCESS);
-	}
-	
-	
+	/*判断航向角是否到位*/
 	if(abs(gRobot.courseAimAngle-gRobot.courseAngle)<1.f)
 	{
 		SetMotionFlag(AT_COURSE_SUCCESS);
@@ -104,6 +100,7 @@ void MotionStatusUpdate(void)
 		SetMotionFlag(~AT_COURSE_SUCCESS);
 	}
 	
+	/*判断俯仰角是否到位*/
 	if(abs(gRobot.pitchAimAngle-gRobot.pitchAngle)<1.f)
 	{
 		SetMotionFlag(AT_PITCH_SUCCESS);
@@ -113,22 +110,42 @@ void MotionStatusUpdate(void)
 		SetMotionFlag(~AT_PITCH_SUCCESS);
 	}
 	
-	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[0])<1.f)
+	#ifndef TEST
+	/*判断持球舵机一是否到位*/
+	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
 	{
 		SetMotionFlag(AT_HOLD_BALL1_SUCCESS);
-	}
+		/*转到一定小角度就转不动了，干脆就不转了*/
+		if(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+			gRobot.holdBallAimAngle=gRobot.holdBallAngle[0];
+	}	
 	else
 	{
 		SetMotionFlag(~AT_HOLD_BALL1_SUCCESS);
 	}
 	
-	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[1])<1.f)
+	/*判断持球舵机二是否到位*/
+	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[1])<0.5f)
 	{
 		SetMotionFlag(AT_HOLD_BALL2_SUCCESS);
+		/*转到一定小角度就转不动了，干脆就不转了*/
+		if(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+			gRobot.holdBallAimAngle=gRobot.holdBallAngle[1];
 	}
 	else
 	{
 		SetMotionFlag(~AT_HOLD_BALL2_SUCCESS);
+	}
+	#endif
+	
+	/*判断相机转台舵机是否到位*/
+	if(abs(gRobot.cameraAimAngle-gRobot.cameraAngle)<0.5f)
+	{
+		SetMotionFlag(AT_CAMERA_ROTATE_SUCCESS);
+	}
+	else
+	{
+		SetMotionFlag(~AT_CAMERA_ROTATE_SUCCESS);
 	}
 	
 	if(abs(gRobot.gasAimValue-gRobot.gasValue)<0.01f)
@@ -141,4 +158,3 @@ void MotionStatusUpdate(void)
 	}
 	
 }
-

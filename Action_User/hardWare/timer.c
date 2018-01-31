@@ -15,7 +15,7 @@
 #include "misc.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
-
+#include "iwdg.h"
 
 
 //精确延时函数调用wait
@@ -317,7 +317,7 @@ void Delay_us(uint32_t nTime)
 
 void Delay_ms(uint32_t nTime)
 {
-	
+	IWDG_Feed();
   for(;nTime>0;nTime--)
     Delay_us(1000);
 }
@@ -553,130 +553,6 @@ void TIM4_Pwm_Init(u32 arr,u32 psc)
 	TIM_SetCompare3(TIM4,0.05*2000);
 }
 
-static float Percent[3];
 
-/**
-  * @brief  设置电机占空比
-	* @param  Num:电机号
-	* @param  Percent:给出速度控制信号的百分比 0-100
-  * @retval None
-  */
-void SetCompare(uint8_t Num, float Percent)
-{
-	float Compare = 0;
-	Compare = 0.05f + Percent/100.0f*0.05f;
-	
-	if(Compare > 130.0f) Compare = 130.0f;
-	if(Compare < 0.0f) 	 Compare = 0.0f;
-	
-	if(Num == 1)
-		TIM_SetCompare1(TIM4,Compare*2000);
-	if(Num ==2)
-		TIM_SetCompare3(TIM4,Compare*2000);
-}
-/**
-  * @brief  设置电机占空比
-	* @param  Num:电机号
-  * @retval None
-  */
-void SetSpeed(uint8_t Num,float percent)
-{
-	Percent[Num] = percent;	
-	SetCompare(Num,Percent[Num]);
-}
-/**
-  * @brief  获得电机占空比
-	* @param  Num:电机号
-  * @retval None
-  */
-float GetSpeed(uint8_t Num)
-{
-	return Percent[Num];	
-}
-/**
-  * @brief  增加电机占空比
-	* @param  Num:电机号
-  * @retval None
-  */
-void IncSpeed(uint8_t Num)
-{
-	Percent[Num] += 3.0f;	
-	SetCompare(Num,Percent[Num]);
-}
-/**
-  * @brief  减小电机占空比
-	* @param  Num:电机号
-  * @retval None
-  */
-void DecSpeed(uint8_t Num)
-{
-	Percent[Num] -= 3.0f;	
-	SetCompare(Num,Percent[Num]);
-}
-
-
-
-
-/*********************************WIFI*************************/
-/**************************************************************/
-
-extern vu16 USART3_RX_STA;
- 
-//通用定时器中断初始化
-//这里始终选择为APB1的2倍，而APB1为36M
-//arr：自动重装值。
-//psc：时钟预分频数		 
-void TIM7_Int_Init(u16 arr,u16 psc)
-{	
-	NVIC_InitTypeDef NVIC_InitStructure;
-	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);//TIM7时钟使能    
-	
-	//定时器TIM7初始化
-	TIM_TimeBaseStructure.TIM_Period = arr; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值	
-	TIM_TimeBaseStructure.TIM_Prescaler =psc; //设置用来作为TIMx时钟频率除数的预分频值
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //设置时钟分割:TDTS = Tck_tim
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
-	TIM_TimeBaseInit(TIM7, &TIM_TimeBaseStructure); //根据指定的参数初始化TIMx的时间基数单位
- 
-	TIM_ITConfig(TIM7,TIM_IT_Update,ENABLE ); //使能指定的TIM7中断,允许更新中断
-
-	 	  
-	NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0 ;//抢占优先级0
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;		//子优先级1
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
-	
-}
-
-uint32_t gunTimCnt = 0u;
-static uint32_t plantShootTime[7][7] = {0u};
-/**
-  * @brief	
-  * @note	
-  * @param	
-  *     @arg	
-  * @retval	
-  */
-void SetShootPlantTime(int plant, int shootMethod)
-{
-	plantShootTime[plant][shootMethod] = gunTimCnt;
-}
-/**
-  * @brief	
-  * @note	
-  * @param	
-  *     @arg	
-  * @retval	
-  */
-uint8_t CheckShootPlantTimeDelay(int plant, int shootMethod, uint32_t delayMs)
-{
-	if(gunTimCnt - plantShootTime[plant][shootMethod] > delayMs)
-		return 1;
-	else
-		return 0;
-}
 /*********************************WIFI*************************/
 /**************************************************************/

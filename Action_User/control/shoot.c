@@ -50,7 +50,7 @@ void ShootBall(void)
   /*夹子打开*/
   ClawOpen();
   /*进行适当延时保证夹子和球不干涉*/
-  Delay_ms(300);
+  Delay_ms(1000);
   /*把两个发射气缸打开*/
   ShootBigOpen();
 }
@@ -67,7 +67,7 @@ void prepareMotionParaInit(void)
 	/*准备区动作*/
   PrepareCompete.courseAngle=0.0f;
   PrepareCompete.pitchAngle=-20.0f;
-  PrepareCompete.steerAngle=-89.f;
+  PrepareCompete.steerAngle=-85.f;
   PrepareCompete.steerSpeed=2000;
   PrepareCompete.gasAim=0.55f;
   /*准备去拿第一个球的数据*/
@@ -79,7 +79,7 @@ void prepareMotionParaInit(void)
   
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=90.f;
-  PrepareGetBall2.pitchAngle=0.0f;
+  PrepareGetBall2.pitchAngle=3.1f;
   PrepareGetBall2.steerAngle=85.f;
   PrepareGetBall2.steerSpeed=2000;
   PrepareGetBall2.gasAim=0.55f;
@@ -113,7 +113,6 @@ void prepareMotionParaInit(void)
   PrepareShootBall3.gasAim=0.6f;
   
 }
-
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
 {
 	
@@ -121,7 +120,11 @@ void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
 	gRobot.courseAimAngle=PrepareGetBall_t.courseAngle;
 	gRobot.pitchAimAngle=PrepareGetBall_t.pitchAngle;
 	gRobot.gasAimValue=PrepareGetBall_t.gasAim;
+	#ifdef TEST
+	gRobot.holdBallAimAngle[0]=gRobot.holdBallAimAngle[1]=PrepareGetBall_t.steerAngle;
+	#else
 	gRobot.holdBallAimAngle=PrepareGetBall_t.steerAngle;
+	#endif
 	
   //设置气压
   GasMotion(PrepareGetBall_t.gasAim);
@@ -132,9 +135,12 @@ void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
   /*关闭下方限位爪*/
   ClawShut();
   /*舵机转向*/
+	#ifdef TEST
   HoldBallPosCrl(PrepareGetBall_t.steerAngle, PrepareGetBall_t.steerSpeed);
+	#else
+  HoldBallPosCrl(PrepareGetBall_t.steerAngle, PrepareGetBall_t.steerSpeed);
+	#endif
 }
-
 void PrepareGetBall(int index)
 {
   switch(index)
@@ -168,7 +174,11 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
 	gRobot.courseAimAngle=PrepareShootBall_t.courseAngle;
 	gRobot.pitchAimAngle=PrepareShootBall_t.pitchAngle;
 	gRobot.gasAimValue=PrepareShootBall_t.gasAim;
+	#ifdef TEST
+	gRobot.holdBallAimAngle[0]=gRobot.holdBallAimAngle[1]=PrepareShootBall_t.steerAngle;
+	#else
 	gRobot.holdBallAimAngle=PrepareShootBall_t.steerAngle;
+	#endif
 	
   //设置气压
   GasMotion(PrepareShootBall_t.gasAim);
@@ -181,9 +191,12 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
   /*提前打开发射装置小气缸*/
   ShootSmallOpen();
   /*舵机转向*/
+	#ifdef TEST
   HoldBallPosCrl( PrepareShootBall_t.steerAngle, PrepareShootBall_t.steerSpeed);
+	#else
+  HoldBallPosCrl( PrepareShootBall_t.steerAngle, PrepareShootBall_t.steerSpeed);
+	#endif
 }
-
 void PrepareShootBall(int index)
 {
   switch(index)

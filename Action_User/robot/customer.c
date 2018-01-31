@@ -106,6 +106,8 @@ void USART3_IRQHandler(void)
 #define COURSE  				6
 #define TEST_GAS  			7
 #define CAMERA	  			8
+#define STEER1 					9
+#define STEER2 					10
 
 /*µ˜ ‘¿∂—¿÷–∂œ*/
 static char buffer[20];
@@ -119,6 +121,24 @@ void BufferInit(void){
     buffer[i]=0;
 }
 void AT_CMD_Judge(void);
+
+void USART2_IRQHandler(void)
+{
+  uint8_t data;
+  OS_CPU_SR  cpu_sr;
+  OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  if(USART_GetITStatus(USART2,USART_IT_RXNE)==SET)
+  {
+    USART_ClearITPendingBit( USART2,USART_IT_RXNE);
+    data=USART_ReceiveData(USART2);
+    data=data;
+  }else{
+    data=USART_ReceiveData(USART2);
+  }
+  OSIntExit();
+}
 
 void USART6_IRQHandler(void)
 {
@@ -293,26 +313,9 @@ void AT_CMD_Handle(void){
   case STEER:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-
-    if(value <= -45.f)
-    {
-			gRobot.holdBallAimAngle=90.f;
-      SetMotionFlag(~AT_STEER_READY);
-    }
-    else if(value <= 45.f)
-    {
-			gRobot.holdBallAimAngle=0.f;
-      SetMotionFlag(AT_STEER_READY);
-    }
-    else
-    {
-			gRobot.holdBallAimAngle=-90.f;
-      SetMotionFlag(~AT_STEER_READY);
-    }
-			gRobot.holdBallAimAngle=value;
-      SetMotionFlag(~AT_STEER_READY);
 		#ifdef TEST
-		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
+		gRobot.holdBallAimAngle[0]=gRobot.holdBallAimAngle[1]=value;
+		HoldBallPosCrl(gRobot.holdBallAimAngle[0],2000);
 		#endif
     break;
     
@@ -343,34 +346,34 @@ void AT_CMD_Handle(void){
    
 	case TEST_GAS:
     USART_OUT(DEBUG_USART,"OK\r\n");
-		
 		//GasValveControl(GASVALVE_BOARD_ID,*(buffer+4)-'0',*(buffer+5)-'0');
 		break;
 	
   case CAMERA:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-
-    if(value <= -45.f)
-    {
-			gRobot.cameraAimAngle=-45.f;
-      SetMotionFlag(~AT_STEER_READY);
-    }
-    else if(value >= 45.f)
-    {
-			gRobot.cameraAimAngle=45.f;
-      SetMotionFlag(AT_STEER_READY);
-    }
-    else
-    {
-			gRobot.cameraAimAngle=value;
-      SetMotionFlag(~AT_STEER_READY);
-    }
-		#ifdef TEST
-		SteerPosCrl(gRobot.cameraAimAngle);
-		#endif
+		gRobot.cameraAimAngle=value;
+		CameraSteerPosCrl(gRobot.cameraAimAngle);
     break;
 		
+	case STEER1:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    value = atof(buffer + 4);
+		#ifdef TEST
+		gRobot.holdBallAimAngle[0]=value;
+		HoldSteer1PosCrl(gRobot.holdBallAimAngle[0],2000);
+		#endif
+		break;
+		
+	case STEER2:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    value = atof(buffer + 4);
+		#ifdef TEST
+		gRobot.holdBallAimAngle[1]=value;
+		HoldSteer2PosCrl(gRobot.holdBallAimAngle[1],2000);
+		#endif
+		break;
+	
   default:
     break;
   }

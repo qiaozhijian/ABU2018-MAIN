@@ -4,7 +4,7 @@
 
 #define GASVALVE_BOARD_ID 				0
 
-#define SHOOT_LED_ID											1
+#define SHOOT_LED_ID							1
 
 #define LED_BOARD_ID 							0
 

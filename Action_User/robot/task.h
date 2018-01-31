@@ -8,14 +8,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include "usart.h"
-#include "gasvalveControl.h"
-#include "elmo.h"
-#include "shoot.h"
-#include "arm_math.h"
-#include "errorReport.h"
 /**************#define area**********/
 
-//#define TEST
+#define TEST
 
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f
@@ -208,7 +203,11 @@ typedef struct{
   uint32_t robocon2018;
   
   /*持球舵机的目标位置*/
+	#ifndef TEST
   float holdBallAimAngle;
+	#else
+  float holdBallAimAngle[2];
+	#endif
   /*持球舵机的位置*/
   float holdBallAngle[2];
   
@@ -255,5 +254,10 @@ typedef struct{
   
 }Robot_t ;
 
+#include "gasvalveControl.h"
+#include "elmo.h"
+#include "shoot.h"
+#include "arm_math.h"
+#include "errorReport.h"
 #endif
 

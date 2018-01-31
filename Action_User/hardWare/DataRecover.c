@@ -71,7 +71,6 @@ void STMFLASH_Write(DataSave_t *pBuffer,u32 resetTime)
   
   while(WriteAddr<endaddr)//写数据
   {
-   // uint32_t aaa=*address;
     if(FLASH_ProgramWord(WriteAddr,*address)!=FLASH_COMPLETE)//写入数据
     { 
       address=address;	//写入异常
@@ -87,8 +86,6 @@ void STMFLASH_Write(DataSave_t *pBuffer,u32 resetTime)
 /*把传入的机器人结构体的参数保存到“flash写入结构体”里*/
 void WriteFlashData(Robot_t *pBuffer,u32 resetTime)
 {
-	
-  
   STMFLASH_Write(&dataSave,gRobot.resetTime);
 }
 
@@ -106,37 +103,51 @@ float STMFLASH_ReadFloat(u32 faddr)
   return *(volatile float*)faddr; 
 }  
 
+
 /*读出第resetTime个结构体的值，resetTime取0 1 2 3*/
 void STMFLASH_Read(DataSave_t* temp,uint32_t resetTime)   	
 {
   uint32_t baseAdd=FLASH_SAVE_ADDR+resetTime*sizeof(DataSave_t);
   
+//  uint32_t isReset;
   temp->isReset=STMFLASH_ReadWord(baseAdd);
   
-  temp->AT_motionFlag=STMFLASH_ReadFloat(baseAdd+MAX_SIZE);
+//  uint32_t AT_motionFlag; 
+  temp->AT_motionFlag=STMFLASH_ReadWord(baseAdd+MAX_SIZE);
   
-  temp->process=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*2);
+//  uint32_t process;
+  temp->process=STMFLASH_ReadWord(baseAdd+MAX_SIZE*2);
   
-  temp->robocon2018=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*3);
+//  uint32_t robocon2018;
+  temp->robocon2018=STMFLASH_ReadWord(baseAdd+MAX_SIZE*3);
   
+//  float holdBallAimAngle;
   temp->holdBallAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*4);
   
+//  float cameraAimAngle;
   temp->cameraAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*5);
   
+//  float courseAimAngle;
   temp->courseAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*6);
   
+//  float pitchAimAngle;
   temp->pitchAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*7);
   
+//  float gasAimValue;
   temp->gasAimValue=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*8);
   
-  temp->isOpenGasReturn=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*9);
+//	uint32_t isOpenGasReturn;
+  temp->isOpenGasReturn=STMFLASH_ReadWord(baseAdd+MAX_SIZE*9);
 	
-	temp->errorTime=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*10);
+//  uint32_t errorTime;
+	temp->errorTime=STMFLASH_ReadWord(baseAdd+MAX_SIZE*10);
   
-//	for(int i=0;i<ERROR_TIME*2;i++)
-//	{
-//		(temp->error)[i]=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*11+i);
-//	}
+//  uint32_t error[ERROR_TIME][2];
+	for(int i=0;i<ERROR_TIME;i++)
+	{
+		(temp->error)[i][0]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*2);
+		(temp->error)[i][1]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*2+1);
+	}
 	
 }
 
@@ -173,6 +184,7 @@ softReset
 ************/
 
 
+#ifndef TEST
 void SoftWareReset(void)
 {
   FindResetTime();
@@ -228,6 +240,6 @@ void SoftWareReset(void)
 		gRobot.resetFlag=1;
   }
 }
-
+#endif
 
 

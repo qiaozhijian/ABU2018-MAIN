@@ -25,7 +25,7 @@
 
 //FLASH起始地址
 #define STM32_FLASH_BASE 					0x08000000 	//STM32 FLASH的起始地址
-#define FLASH_SAVE_ADDR 					0x08080000 	//设置FLASH 保存地址(必须为偶数，且所在扇区,要大于本代码所占用到的扇区.//否则,写操作的时候,可能会导致擦除整个扇区,从而引起部分程序丢失.引起死机.
+#define FLASH_SAVE_ADDR 					0x080A0000 	//设置FLASH 保存地址(必须为偶数，且所在扇区,要大于本代码所占用到的扇区.//否则,写操作的时候,可能会导致擦除整个扇区,从而引起部分程序丢失.引起死机.
 #define MAX_SIZE									4
 
 
