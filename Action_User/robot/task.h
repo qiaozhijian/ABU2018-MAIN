@@ -15,7 +15,6 @@
 #include "errorReport.h"
 /**************#define area**********/
 
-//#define DEBUG
 //#define TEST
 
 //常量定义

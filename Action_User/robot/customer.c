@@ -311,6 +311,9 @@ void AT_CMD_Handle(void){
     }
 			gRobot.holdBallAimAngle=value;
       SetMotionFlag(~AT_STEER_READY);
+		#ifdef TEST
+		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
+		#endif
     break;
     
   case GAS:
@@ -324,12 +327,18 @@ void AT_CMD_Handle(void){
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
 		gRobot.pitchAimAngle=value;
+		#ifdef TEST
+		PitchAngleMotion(gRobot.pitchAimAngle);
+		#endif
     break;
     
   case COURSE:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
 		gRobot.courseAimAngle=value;
+		#ifdef TEST
+		CourseAngleMotion(gRobot.courseAimAngle);
+		#endif
     break;
    
 	case TEST_GAS:
@@ -357,6 +366,9 @@ void AT_CMD_Handle(void){
 			gRobot.cameraAimAngle=value;
       SetMotionFlag(~AT_STEER_READY);
     }
+		#ifdef TEST
+		SteerPosCrl(gRobot.cameraAimAngle);
+		#endif
     break;
 		
   default:

@@ -120,7 +120,6 @@ void RobotTask(void)
 		USART_OUT_F(gRobot.angle);
 		USART_Enter();
 		
-		#ifndef	DEBUG 
     switch(gRobot.robocon2018)
     {
     case ROBOT_START:
@@ -146,9 +145,8 @@ void RobotTask(void)
       /*完成金球的投射*/
       FightForGoldBall();
       break;
-    }
+    }	
 		#endif
-#endif
   } 
 }
 
@@ -192,7 +190,7 @@ void HardWareInit(void){
   
 }
 void MotorInit(void){
-	#ifndef	DEBUG 
+	
   //电机初始化及使能
   ElmoInit(CAN2);
   
@@ -203,7 +201,7 @@ void MotorInit(void){
   
   MotorOn(CAN2,5); 
   MotorOn(CAN2,6); 
-	#endif
+	
 }	
 
 
@@ -217,7 +215,6 @@ void statusInit(void)
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   
-	#ifndef	DEBUG 
 	ClawShut();
 	BoostPoleReturn();
 	ShootSmallShut();
@@ -244,7 +241,6 @@ void statusInit(void)
 	/*恢复快速转动状态*/
   PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);        
   PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
-	#endif
 	
   gRobot.robocon2018=ROBOT_START;
 }	
