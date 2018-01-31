@@ -39,6 +39,7 @@
 #include "gpio.h"
 #include "elmo.h"
 #include "task.h"
+#include "DataRecover.h"
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
@@ -258,11 +259,11 @@ void TIM7_IRQHandler(void)
   OS_EXIT_CRITICAL();
   if(TIM_GetITStatus(TIM7, TIM_IT_Update)==SET)
   {	
-//		if(startCnt==1)
-//		{
-//			Cnt++;
-//			USART_OUT(DEBUG_USART,"%d\r\n",Cnt*100);
-//		}
+		if(startCnt==1)
+		{
+			Cnt++;
+			//USART_OUT(DEBUG_USART,"%d\r\n",Cnt*100);
+		}
 		//printf("%d\r\n",Cnt);
 		//IWDG_Feed();
     TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
@@ -283,6 +284,7 @@ uint32_t returnEndUs(void)
 	end=Cnt*100;
 	Cnt=0;
 	startCnt=0;
+	USART_OUT(DEBUG_USART,"%d\r\n",end);
 	return end;
 }	
 
@@ -388,28 +390,35 @@ void Hex_To_Str(uint8_t * pHex,char * s,float num)
 */
 void HardFault_Handler(void)
 {
-  
-  static uint32_t r_sp ;
-  /*判断发生异常时使用MSP还是PSP*/
-  if(__get_PSP()!=0x00) //获取SP的值
-    r_sp = __get_PSP(); 
-  else
-    r_sp = __get_MSP(); 
-  /*因为经历中断函数入栈之后，堆栈指针会减小0x10，所以平移回来（可能不具有普遍性）*/
-  r_sp = r_sp+0x10;
-  /*串口发数通知*/
-  USART_OUT(DEBUG_USART,"\r\nHardFault");
-  char sPoint[2]={0};
-  USART_OUT(DEBUG_USART,"%s","0x");
-  /*获取出现异常时程序的地址*/
-  for(int i=3;i>=-28;i--){
-    Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
-    USART_OUT(DEBUG_USART,"%s",sPoint);
-    if(i%4==0)
-      USART_Enter();
-  }
-  /*发送回车符*/
-  USART_Enter();
+  	if(gRobot.resetTime<=500)
+	{
+		FindResetTime();
+		
+		gRobot.isReset=1;
+		
+		WriteFlashData(gRobot,gRobot.resetTime);
+	}
+//  static uint32_t r_sp ;
+//  /*判断发生异常时使用MSP还是PSP*/
+//  if(__get_PSP()!=0x00) //获取SP的值
+//    r_sp = __get_PSP(); 
+//  else
+//    r_sp = __get_MSP(); 
+//  /*因为经历中断函数入栈之后，堆栈指针会减小0x10，所以平移回来（可能不具有普遍性）*/
+//  r_sp = r_sp+0x10;
+//  /*串口发数通知*/
+//  USART_OUT(DEBUG_USART,"\r\nHardFault");
+//  char sPoint[2]={0};
+//  USART_OUT(DEBUG_USART,"%s","0x");
+//  /*获取出现异常时程序的地址*/
+//  for(int i=3;i>=-28;i--){
+//    Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
+//    USART_OUT(DEBUG_USART,"%s",sPoint);
+//    if(i%4==0)
+//      USART_Enter();
+//  }
+//  /*发送回车符*/
+//  USART_Enter();
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {

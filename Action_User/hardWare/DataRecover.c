@@ -84,8 +84,48 @@ void STMFLASH_Write(DataSave_t *pBuffer,u32 resetTime)
 } 
 
 /*把传入的机器人结构体的参数保存到“flash写入结构体”里*/
-void WriteFlashData(Robot_t *pBuffer,u32 resetTime)
+void WriteFlashData(Robot_t robot,u32 resetTime)
 {
+//  uint32_t isReset;
+  dataSave.isReset=robot.isReset;
+  
+//  uint32_t AT_motionFlag; 
+  dataSave.AT_motionFlag=robot.AT_motionFlag;
+  
+//  uint32_t process;
+  dataSave.process=robot.process;
+  
+//  uint32_t robocon2018;
+  dataSave.robocon2018=robot.robocon2018;
+  
+//  float holdBallAimAngle;
+  dataSave.holdBallAimAngle=robot.holdBallAimAngle;
+  
+//  float cameraAimAngle;
+  dataSave.cameraAimAngle=robot.cameraAimAngle;
+  
+//  float courseAimAngle;
+  dataSave.courseAimAngle=robot.courseAimAngle;
+  
+//  float pitchAimAngle;
+  dataSave.pitchAimAngle=robot.pitchAimAngle;
+  
+//  float gasAimValue;
+  dataSave.gasAimValue=robot.gasAimValue;
+  
+//	uint32_t isOpenGasReturn;
+  dataSave.isOpenGasReturn=robot.isOpenGasReturn;
+	
+//  uint32_t errorTime;
+	dataSave.errorTime=robot.errorTime;
+  
+//  uint32_t error[ERROR_TIME][2];
+	for(int i=0;i<ERROR_TIME;i++)
+	{
+		dataSave.error[i][0]=robot.error[i][0];
+		dataSave.error[i][1]=robot.error[i][1];
+	}
+  
   STMFLASH_Write(&dataSave,gRobot.resetTime);
 }
 

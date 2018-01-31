@@ -29,11 +29,7 @@
 #ifndef __STM32F4xx_IT_H
 #define __STM32F4xx_IT_H
 
-#ifdef __cplusplus
- extern "C" {
-#endif 
-
-#define PERIOD_COUNTER 10
+#define PERIOD_COUNTER 5
 /* Includes ------------------------------------------------------------------*/
 
 /* Exported types ------------------------------------------------------------*/
@@ -50,9 +46,7 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void StartCount(void);
 unsigned int returnEndUs(void);
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* __STM32F4xx_IT_H */
 

@@ -10,7 +10,7 @@
 #include "usart.h"
 /**************#define area**********/
 
-#define TEST
+//#define TEST
 
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f
@@ -238,7 +238,13 @@ typedef struct{
   uint32_t error[ERROR_TIME][2];
   /*错误发生的次数*/
   uint32_t errorTime;
-  
+	
+  float angle;
+  float posX;
+  float posY;
+	
+	/*系统复位有关变量*/
+  /*{*/
 	/*判断此次是否为看门狗复位*/
 	uint32_t isReset;
 	
@@ -247,10 +253,7 @@ typedef struct{
 	
 	/*重启后可以选择性执行程序*/
 	uint32_t resetFlag;
-	
-  float angle;
-  float posX;
-  float posY;
+	/*}*/
   
 }Robot_t ;
 

@@ -12,6 +12,7 @@ extern OS_EVENT *PeriodSem;
 void SelfTest(void)
 {
 	AT_CMD_Handle();
+	USART_BLE_SEND(gRobot.gasValue);
 	static int step=0;
 	switch(step)
 	{

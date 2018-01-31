@@ -231,7 +231,7 @@ void AT_CMD_Judge(void){
     USART_OUT(DEBUG_USART,"OK\r\n");
   }
   
-  if((bufferI >= 4) && strncmp(buffer, "AT+1", 4)==0)//AT    
+  if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0)//AT    
     atCommand=CLAW;
   else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0)//AT    
     atCommand=SHOOT;
@@ -247,6 +247,10 @@ void AT_CMD_Judge(void){
     atCommand=TEST_GAS;
   else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//发射按钮   
     atCommand=CAMERA;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+9", 4)==0)//发射按钮   
+    atCommand=STEER1;
+  else if((bufferI >= 5) && strncmp(buffer, "AT+12", 5)==0)//发射按钮   
+    atCommand=STEER2;
   else 
     atCommand=666;
   
@@ -367,7 +371,7 @@ void AT_CMD_Handle(void){
 		
 	case STEER2:
     USART_OUT(DEBUG_USART,"OK\r\n");
-    value = atof(buffer + 4);
+    value = atof(buffer + 5);
 		#ifdef TEST
 		gRobot.holdBallAimAngle[1]=value;
 		HoldSteer2PosCrl(gRobot.holdBallAimAngle[1],2000);

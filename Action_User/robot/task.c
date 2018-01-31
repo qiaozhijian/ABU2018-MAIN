@@ -71,11 +71,11 @@ Robot_t gRobot;
 void ConfigTask(void)
 {
   CPU_INT08U  os_err;
-  os_err = os_err;
-  
+  os_err = os_err;  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
   /*调试蓝牙*/
   DebugBLE_Init(921600);
+	USART_OUT(DEBUG_USART,"START\r\n");
 //#endif
 //	SoftWareReset();
 //#endif
@@ -89,10 +89,10 @@ void ConfigTask(void)
 		statusInit();
 	}
 	
-	//IWDG_Init(1,50); // 12ms
+	IWDG_Init(1,30); // 11ms-11.2ms
   OSTaskSuspend(OS_PRIO_SELF);
 }
-
+/*0.6 4.2 -4.5 181.3 */
 void RobotTask(void)
 {
   CPU_INT08U  os_err;
@@ -107,23 +107,19 @@ void RobotTask(void)
 		SelfTest();
 		#else		
     AT_CMD_Handle();
-		
     processReport();
-		
 		/*运动状态标志位更新*/
 		MotionStatusUpdate();
-		
 		/*运动参数执行*/
 		MotionExecute();
-		
 		/*运动状态更新*/
+		
     MotionRead();
 		
+//		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
 
-		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
-
-		USART_OUT_F(gRobot.angle);
-		USART_Enter();
+//		USART_OUT_F(gRobot.angle);
+//		USART_Enter();
 		
     switch(gRobot.robocon2018)
     {

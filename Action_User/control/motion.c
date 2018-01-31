@@ -2,6 +2,7 @@
 #include "steer.h"
 #include "can.h"
 #include "shoot.h"
+#include "stm32f4xx_it.h"
 extern Robot_t gRobot;
 
 /* 动作执行函数
@@ -26,7 +27,9 @@ void MotionExecute(void)
 	
 	if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
 	{
+		StartCount();
 		CourseAngleMotion(gRobot.courseAimAngle);
+		returnEndUs();
 	}
 	
 	if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
@@ -74,7 +77,7 @@ void MotionRead(void)
 //	if(count==3)
 	{
 		count=0;
-		USART_BLE_SEND(gRobot.gasValue);
+		//USART_BLE_SEND(gRobot.gasValue);
 	}
 }
 

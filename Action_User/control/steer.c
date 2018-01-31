@@ -56,11 +56,7 @@ void HoldBallPosCrl(float angle,int vel)
 void HoldSteer1PosCrl(float angle,int vel)
 {
   int pos=0.f;
-	/*检测爪子是否闭合，张开时转动会有干涉*/
-	if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
-	{
-		ClawShut();
-	}
+
 	if(angle>100.f)
 		angle=100.f;
 	if(angle<-100.f)

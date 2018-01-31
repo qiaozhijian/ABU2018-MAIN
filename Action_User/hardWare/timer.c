@@ -317,9 +317,16 @@ void Delay_us(uint32_t nTime)
 
 void Delay_ms(uint32_t nTime)
 {
-	IWDG_Feed();
   for(;nTime>0;nTime--)
+	{
+		if(nTime>2)
+		{
+			if(nTime%2==0)
+			IWDG_Feed();
+		}else
+			IWDG_Feed();
     Delay_us(1000);
+	}
 }
 
 /**

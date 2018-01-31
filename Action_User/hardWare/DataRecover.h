@@ -82,7 +82,7 @@ typedef struct{
 
 
 void STMFLASH_ERASE(void);
-void WriteFlashData(Robot_t *pBuffer,unsigned int resetTime);
+void WriteFlashData(Robot_t robot,u32 resetTime);
 void SoftWareReset(void);
 void STMFLASH_Read(DataSave_t* flashdata,uint32_t resetTime) ;
 void FindResetTime(void);
