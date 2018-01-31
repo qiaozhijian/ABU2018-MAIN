@@ -66,10 +66,10 @@ void MotionRead(void)
 	ReadHoldBallSteerPos();
 	/*像平板发送气压值*/
 	//if(gRobot.isOpenGasReturn&&count==3)
-	if(count==3)
+//	if(count==3)
 	{
 		count=0;
-	//	USART_BLE_SEND(gRobot.gasValue);
+		USART_BLE_SEND(gRobot.gasValue);
 	}
 }
 

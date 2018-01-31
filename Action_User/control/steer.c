@@ -64,7 +64,7 @@ void HoldBallPosCrl(float angle,int vel)
 	
 	/*1/4096.f*360.f=11.378*/
 	pos1=(int)((180.f-(angle-3.3f))*11.378f);   
-	pos2=(int)((angle+180.f)*11.378f);			
+	pos2=(int)((angle/7.f*6.f+180.f)*11.378f);			
 	
   USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",pos1,vel);
   USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n", pos2,vel);

@@ -415,75 +415,74 @@ extern Robot_t gRobot;
 
 void TalkToCamera(uint32_t command)
 {
-	return;
-	int times=0;
-	switch(command)
-	{
-		case CAMERA_START:
-			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
-			{
-				USART_OUT(CAMERA_USART,"AT\r\n");
-				Delay_us(50);
-				times++;
-				if(times>100)
-				{
-					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-					break;
-				}
-			}
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-		case CAMERA_SHUT_ALL:
-			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
-			{
-				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
-				Delay_us(50);
-				times++;
-				if(times>100)
-				{
-					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-					break;
-				}
-			}
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-		case CAMERA_OPEN_NEAR:
-			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
-			{
-				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
-				Delay_us(50);
-				times++;
-				if(times>100)
-				{
-					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-					break;
-				}
-			}
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-		case CAMERA_OPEN_FAR:
-			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
-			{
-				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
-				Delay_us(50);
-				times++;
-				if(times>100)
-				{
-					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-					break;
-				}
-			}
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-	}
+//	int times=0;
+//	switch(command)
+//	{
+//		case CAMERA_START:
+//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
+//			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+//			{
+//				USART_OUT(CAMERA_USART,"AT\r\n");
+//				Delay_us(50);
+//				times++;
+//				if(times>100)
+//				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+//				}
+//			}
+//			/*清空标志位*/
+//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+//			break;
+//		case CAMERA_SHUT_ALL:
+//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
+//			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
+//			{
+//				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
+//				Delay_us(50);
+//				times++;
+//				if(times>100)
+//				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+//				}
+//			}
+//			/*清空标志位*/
+//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+//			break;
+//		case CAMERA_OPEN_NEAR:
+//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
+//			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
+//			{
+//				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
+//				Delay_us(50);
+//				times++;
+//				if(times>100)
+//				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+//				}
+//			}
+//			/*清空标志位*/
+//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+//			break;
+//		case CAMERA_OPEN_FAR:
+//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
+//			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
+//			{
+//				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
+//				Delay_us(50);
+//				times++;
+//				if(times>100)
+//				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+//				}
+//			}
+//			/*清空标志位*/
+//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+//			break;
+//	}
 }
 
 
@@ -544,9 +543,10 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
           
           while(USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET){
 						aa++;
+						//100这个值跟串口波特率有关，波特率小的发送时间就长一点就容易进if(aa>100)
 						if(aa>100)
 						{
-							USART_OUT(DEBUG_USART,"TCDEAD\r\n");
+							//USART_OUT(DEBUG_USART,"TCDEAD\r\n");
 							break;
 						}
 					};
@@ -565,7 +565,7 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
 						aa++;
 						if(aa>100)
 						{
-							USART_OUT(DEBUG_USART,"TCDEAD\r\n");
+							//USART_OUT(DEBUG_USART,"TCDEAD\r\n");
 							break;
 						}
 					};
@@ -583,7 +583,7 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
 						aa++;
 						if(aa>100)
 						{
-							USART_OUT(DEBUG_USART,"TCDEAD\r\n");
+							//USART_OUT(DEBUG_USART,"TCDEAD\r\n");
 							break;
 						}
 					};

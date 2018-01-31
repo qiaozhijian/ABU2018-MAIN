@@ -4,9 +4,10 @@
 #include "process.h"
 #include "stm32f4xx_it.h"
 #include "steer.h"
-
+#include "includes.h"
 extern Robot_t gRobot;
 
+extern OS_EVENT *PeriodSem;
 void SelfTest(void)
 {
 	static int step=0;
@@ -21,7 +22,9 @@ void SelfTest(void)
 /*完成投射彩球一的任务*/
 void FightForBall1(void)
 {
-  
+  CPU_INT08U  os_err;
+  os_err = os_err;
+	
   switch(gRobot.process)
   {
     /*去取第一个球*/
@@ -30,6 +33,8 @@ void FightForBall1(void)
     if(PE_FOR_THE_BALL)
     {	
       Delay_ms(500);
+			
+			OSSemSet(PeriodSem, 0, &os_err);
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
       
