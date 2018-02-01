@@ -76,23 +76,30 @@ void ConfigTask(void)
   /*调试蓝牙*/
   DebugBLE_Init(921600);
 	USART_OUT(DEBUG_USART,"START\r\n");
-//#endif
-//	SoftWareReset();
-//#endif
-  //给航向，俯仰电机上电初始化时间
-  Delay_ms(100);
+	
+	#ifndef TEST
+	SoftWareReset();
+	#endif
+	
   
   HardWareInit();
 	if(!gRobot.resetFlag)
   {
+		//给航向，俯仰电机上电初始化时间
+		Delay_ms(100);
+		/*电机初始化*/
 		MotorInit();
+		/*状态初始化*/
 		statusInit();
 	}
 	
+	#ifndef TEST
 	IWDG_Init(1,30); // 11ms-11.2ms
+	#endif
+	
   OSTaskSuspend(OS_PRIO_SELF);
 }
-/*0.6 4.2 -4.5 181.3 */
+
 void RobotTask(void)
 {
   CPU_INT08U  os_err;
@@ -106,20 +113,26 @@ void RobotTask(void)
 		#ifdef TEST
 		SelfTest();
 		#else		
+		
+		/*蓝牙命令处理*/
     AT_CMD_Handle();
+		
+		/*过程报告*/
     processReport();
+		
 		/*运动状态标志位更新*/
 		MotionStatusUpdate();
+		
 		/*运动参数执行*/
 		MotionExecute();
-		/*运动状态更新*/
 		
+		/*运动状态更新*/
     MotionRead();
 		
-//		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
-
-//		USART_OUT_F(gRobot.angle);
-//		USART_Enter();
+		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
+		USART_OUT_F(gRobot.gasValue);
+		USART_OUT_F(gRobot.angle);
+		USART_Enter();
 		
     switch(gRobot.robocon2018)
     {
@@ -132,7 +145,6 @@ void RobotTask(void)
 		  {
 				gRobot.process=TO_GET_BALL_1;
 		  	gRobot.robocon2018=COLORFUL_BALL_1;
-				
 			}
       break;
     case COLORFUL_BALL_1:
@@ -223,6 +235,7 @@ void statusInit(void)
 	GoldBallGraspStairOneOn();
 	GoldBallGraspStairTwoOn();
 	
+	#ifndef TEST
 	Delay_ms(3000);
   
   /*与上一次的调试数据区分开*/
@@ -233,19 +246,22 @@ void statusInit(void)
   USART_Enter();
   USART_Enter();
   
-	#ifndef TEST
   PrepareGetBall(READY);
-	#endif
   
 	/*等待慢转动状态完成*/
   Delay_ms(5000);
 	
+	#endif
 	/*恢复快速转动状态*/
   PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);        
   PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
 	
 	BEEP_ON;
-	Delay_ms(4000);
+	ShootLedOn();
+	Delay_ms(600);
+	Delay_ms(600);
+	Delay_ms(600);
+	ShootLedOff();
 	BEEP_OFF;
 	
   gRobot.robocon2018=ROBOT_START;

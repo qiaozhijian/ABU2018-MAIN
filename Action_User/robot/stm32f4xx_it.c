@@ -392,12 +392,14 @@ void HardFault_Handler(void)
 {
   	if(gRobot.resetTime<=500)
 	{
+		/*确定要写的结构体*/
 		FindResetTime();
 		
 		gRobot.isReset=1;
 		
 		WriteFlashData(gRobot,gRobot.resetTime);
 	}
+	/*屏蔽掉的只是为了返回进硬件中断的错误语句，但是比赛的时候不可能出现错误，只可能有静电等突发因素，所以不用返回了*/
 //  static uint32_t r_sp ;
 //  /*判断发生异常时使用MSP还是PSP*/
 //  if(__get_PSP()!=0x00) //获取SP的值
@@ -422,19 +424,8 @@ void HardFault_Handler(void)
   /* Go to infinite loop when Hard Fault exception occurs */
   while (1)
   {
-//    /*串口发数通知*/
-//    char sPoint[2]={0};
-//    USART_OUT(DEBUG_USART,"%s","0x");
-//    /*获取出现异常时程序的地址*/
-//    for(int i=3;i>=-28;i--){
-//      Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
-//      USART_OUT(DEBUG_USART,"%s",sPoint);
-//      if(i%4==0)
-//        USART_Enter();
-//    }
-//    /*发送回车符*/
-//    USART_Enter();
-    Delay_ms(10);
+		//方便打断点，无意义
+    gRobot.isReset=gRobot.isReset;
   }
 }
 

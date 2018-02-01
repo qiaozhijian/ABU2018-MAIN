@@ -11,13 +11,13 @@ extern Robot_t gRobot;
 //打开舵机的扭力输出
 void Enable_ROBS(void)
 {
-  static int times[2]={0,0};
+  static int times;
   while(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
   {
     USART_OUT(USART1,"#1 W 40,1,1\r\n");
     Delay_ms(1);
-    times[0]++;
-    if(times[0]>10)
+    times ++;
+    if(times >10)
     {
       USART_OUT(DEBUG_USART,"HOLD_BALL1_ENABLE_FAIL\r\n");
       ErrorRecord(HOLD_BALL1_ENABLE_FAIL);
@@ -25,21 +25,8 @@ void Enable_ROBS(void)
     }
   }
   SetMotionFlag(~AT_HOLD_BALL1_SUCCESS);
-  while(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
-  {
-    USART_OUT(UART5,"#1 W 40,1,1\r\n");
-    Delay_ms(1);
-    times[1]++;
-    if(times[1]>10)
-    {
-      USART_OUT(DEBUG_USART,"HOLD_BALL2_ENABLE_FAIL\r\n");
-      ErrorRecord(HOLD_BALL2_ENABLE_FAIL);
-      break;
-    }
-  }
-  SetMotionFlag(~AT_HOLD_BALL2_SUCCESS);
-  times[0]=0;
-  times[1]=0;
+
+  times =0;
   //#1 W 40,1,1\r\n
 }
 
@@ -63,7 +50,7 @@ void HoldSteer1PosCrl(float angle,int vel)
 		angle=-100.f;
 
 	/*1/4096.f*360.f=11.378*/
-	pos=(int)((180.f-(angle-3.3f))*11.378f);  
+	pos=(int)((180.f-(angle-3.4f))*11.378f);  
 	
   USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",pos,vel);
 }
@@ -82,7 +69,7 @@ void HoldSteer2PosCrl(float angle,int vel)
 		angle=-100.f;
 
 	/*1/4096.f*360.f=11.378*/
-	pos=(int)(((angle)/7.f*6.f+180.f)*11.378f);	 
+	pos=(int)(((angle-14.5f)/7.f*6.f+180.f)*11.378f);	 
 	
   SteerPosCrlBy485(0xfe,pos);
 }

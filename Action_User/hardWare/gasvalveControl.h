@@ -6,7 +6,7 @@
 
 #define SHOOT_LED_ID							1
 
-#define LED_BOARD_ID 							0
+#define LED_BOARD_ID 							1
 
 /*控制气阀板的函数*/
 void GasValveControl(uint8_t boardNum , uint8_t valveNum , uint8_t valveState);

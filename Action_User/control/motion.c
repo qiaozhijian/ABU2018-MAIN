@@ -5,6 +5,38 @@
 #include "stm32f4xx_it.h"
 extern Robot_t gRobot;
 
+void PitchAngleMotion(float angle)
+{
+  /*控制的为-20°-10°实际给电机的是30°-0°*/
+  if(angle>10.f)
+    angle=10.f;
+  else if(angle<-20.f)
+    angle=-20.f;
+	
+	angle=10.f-angle;
+	
+  PosCrl(CAN2, 5,ABSOLUTE_MODE,PITCH_ANGLE_TO_CODE(angle));
+}
+
+void CourseAngleMotion(float angle)
+{
+  if(angle<0.f)
+    angle=0.f;
+  else if(angle>190.f)
+    angle=190.f;
+	
+	angle=angle+10.6f;
+	
+  PosCrl(CAN2, 6,ABSOLUTE_MODE,COURSE_ANGLE_TO_CODE(angle));
+}
+
+void GasMotion(float value)
+{
+  CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
+}
+
+
+
 /* 动作执行函数
 * 
 * 持球的舵机一与舵机二
@@ -27,9 +59,7 @@ void MotionExecute(void)
 	
 	if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
 	{
-		StartCount();
 		CourseAngleMotion(gRobot.courseAimAngle);
-		returnEndUs();
 	}
 	
 	if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))

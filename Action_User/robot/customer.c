@@ -13,7 +13,8 @@
 #include  <includes.h>
 #include "process.h"
 #include "gpio.h"
-
+#include "motion.h"
+#include "timer.h"
 extern Robot_t gRobot;
 
 
@@ -230,6 +231,13 @@ void AT_CMD_Judge(void){
 		gRobot.isOpenGasReturn=0;
     USART_OUT(DEBUG_USART,"OK\r\n");
   }
+  else if((bufferI >= 12) && strncmp(buffer, "AT+HARDFAULT\r\n",12 )==0)
+  {
+//		int a[2];
+//    USART_OUT(DEBUG_USART,"hardfault\r\n");
+//		for(int i=10000;i<80000;i++)
+//			a[i]=100;
+  }
   
   if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0)//AT    
     atCommand=CLAW;
@@ -320,6 +328,9 @@ void AT_CMD_Handle(void){
 		#ifdef TEST
 		gRobot.holdBallAimAngle[0]=gRobot.holdBallAimAngle[1]=value;
 		HoldBallPosCrl(gRobot.holdBallAimAngle[0],2000);
+		#else
+		gRobot.holdBallAimAngle=value;
+		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
 		#endif
     break;
     
@@ -366,6 +377,9 @@ void AT_CMD_Handle(void){
 		#ifdef TEST
 		gRobot.holdBallAimAngle[0]=value;
 		HoldSteer1PosCrl(gRobot.holdBallAimAngle[0],2000);
+		#else
+		gRobot.holdBallAimAngle=value;
+		HoldSteer1PosCrl(gRobot.holdBallAimAngle,2000);
 		#endif
 		break;
 		
@@ -375,6 +389,9 @@ void AT_CMD_Handle(void){
 		#ifdef TEST
 		gRobot.holdBallAimAngle[1]=value;
 		HoldSteer2PosCrl(gRobot.holdBallAimAngle[1],2000);
+		#else
+		gRobot.holdBallAimAngle=value;
+		HoldSteer2PosCrl(gRobot.holdBallAimAngle,2000);
 		#endif
 		break;
 	

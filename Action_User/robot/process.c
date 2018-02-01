@@ -4,19 +4,71 @@
 #include "process.h"
 #include "stm32f4xx_it.h"
 #include "steer.h"
-#include "includes.h"
 #include "customer.h"
-extern Robot_t gRobot;
+#include "motion.h"
+#include "includes.h"
 
 extern OS_EVENT *PeriodSem;
+
+extern Robot_t gRobot;
+
 void SelfTest(void)
 {
+	
+  CPU_INT08U  os_err;
+  os_err = os_err;
+	
 	AT_CMD_Handle();
 	USART_BLE_SEND(gRobot.gasValue);
-	static int step=0;
+	static int step=99;
 	switch(step)
 	{
 		case 0:
+			ShootSmallOpen();
+						//电机位置环
+			PosLoopCfg(CAN2, 5, 100000, 100000,100000);
+			//电机位置环
+			PosLoopCfg(CAN2, 6, 100000, 100000,100000);
+			step++;
+			break;
+		case 1:
+			CourseAngleMotion(0.f);
+			PitchAngleMotion(0.f);
+			step++;
+			break;
+		case 2:
+			if(PE_FOR_THE_BALL)
+			{
+				step++;
+				Delay_ms(1000);
+				/*清除信号量*/
+				OSSemSet(PeriodSem, 0, &os_err);
+				CourseAngleMotion(180.f);
+				Delay_ms(1000);
+				/*清除信号量*/
+				OSSemSet(PeriodSem, 0, &os_err);
+			}
+			break;
+		case 3:
+			//开小气阀
+		
+			ReadActualPos(CAN2,6);
+			if(gRobot.courseAngle>160.f)
+			{
+				//关小气阀
+				step++;
+			}
+			break;
+		case 4:
+			if(gRobot.courseAngle>179.f)
+			{
+				ShootBall();
+				Delay_ms(1000);
+				/*清除信号量*/
+				OSSemSet(PeriodSem, 0, &os_err);
+				ShootReset();
+				step=0;
+			}
 			break;
 	}
 }
@@ -35,7 +87,7 @@ void FightForBall1(void)
     if(PE_FOR_THE_BALL)
     {	
       Delay_ms(500);
-			
+			/*清除信号量*/
 			OSSemSet(PeriodSem, 0, &os_err);
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
@@ -74,6 +126,8 @@ void FightForBall1(void)
       ShootBall();
       /*给延时使发射杆能执行到位*/
       Delay_ms(500);
+			/*清除信号量*/
+			OSSemSet(PeriodSem, 0, &os_err);
       /*通知控制卡*/
       MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
       /*射球机构复位*/
@@ -86,19 +140,18 @@ void FightForBall1(void)
     }
 		else
 		{
-			USART_OUT(DEBUG_USART,"THROW1\t");
 			if(!PE_FOR_THE_BALL)
-				USART_OUT(DEBUG_USART,"!PE\t");
+				USART_OUT_ONCE("!PE1\t");
 			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB1\t");
+				USART_OUT_ONCE("!HB11\t");
 			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB2\t");
+				USART_OUT_ONCE("!HB21\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
-				USART_OUT(DEBUG_USART,"!PITCH\t");
+				USART_OUT_ONCE("!PITCH1\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
-				USART_OUT(DEBUG_USART,"!COURSE\t");
+				USART_OUT_ONCE("!COURSE1\t");
 			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
-				USART_OUT(DEBUG_USART,"!GAS\t");
+				USART_OUT_ONCE("!GAS1\t");
 			USART_Enter();
 		}
     break;
@@ -108,6 +161,9 @@ void FightForBall1(void)
 /*完成投射彩球二的任务*/
 void FightForBall2(void)
 {
+  CPU_INT08U  os_err;
+  os_err = os_err;
+	
   switch(gRobot.process)
   {
     /*去取第二个球*/
@@ -116,7 +172,8 @@ void FightForBall2(void)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
-      
+			/*清除信号量*/
+			OSSemSet(PeriodSem, 0, &os_err);
       gRobot.process=TO_THE_AREA_2;
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
@@ -152,7 +209,8 @@ void FightForBall2(void)
       
       /*给延时使发射杆能执行到位*/
       Delay_ms(500);
-      
+			/*清除信号量*/
+			OSSemSet(PeriodSem, 0, &os_err);
       MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
       
       /*射球机构复位*/
@@ -166,19 +224,18 @@ void FightForBall2(void)
     }
 		else
 		{
-			USART_OUT(DEBUG_USART,"THROW2\t");
 			if(!PE_FOR_THE_BALL)
-				USART_OUT(DEBUG_USART,"!PE\t");
+				USART_OUT_ONCE("!PE2\t");
 			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB1\t");
+				USART_OUT_ONCE("!HB12\t");
 			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB2\t");
+				USART_OUT_ONCE("!HB22\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
-				USART_OUT(DEBUG_USART,"!PITCH\t");
+				USART_OUT_ONCE("!PITCH2\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
-				USART_OUT(DEBUG_USART,"!COURSE\t");
+				USART_OUT_ONCE("!COURSE2\t");
 			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
-				USART_OUT(DEBUG_USART,"!GAS\t");
+				USART_OUT_ONCE("!GAS2\t");
 			USART_Enter();
 		}
     break;
@@ -189,6 +246,9 @@ void FightForBall2(void)
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
+  CPU_INT08U  os_err;
+  os_err = os_err;
+	
   switch(gRobot.process)
   {
     /*去取第三个球*/
@@ -197,7 +257,8 @@ void FightForGoldBall(void)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
-      
+			/*清除信号量*/
+			OSSemSet(PeriodSem, 0, &os_err);
 			TalkToCamera(CAMERA_OPEN_FAR);
       
       gRobot.process=TO_THE_AREA_3;
@@ -235,7 +296,8 @@ void FightForGoldBall(void)
       
       /*给延时使发射杆能执行到位*/
       Delay_ms(500);
-      
+			/*清除信号量*/
+			OSSemSet(PeriodSem, 0, &os_err);
       /*射球机构复位*/
       ShootReset();
       
@@ -243,19 +305,18 @@ void FightForGoldBall(void)
     }
 		else
 		{
-			USART_OUT(DEBUG_USART,"THROW3\t");
 			if(!PE_FOR_THE_BALL)
-				USART_OUT(DEBUG_USART,"!PE\t");
+				USART_OUT_ONCE("!PE3\t");
 			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB1\t");
+				USART_OUT_ONCE("!HB13\t");
 			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB2\t");
+				USART_OUT_ONCE("!HB23\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
-				USART_OUT(DEBUG_USART,"!PITCH\t");
+				USART_OUT_ONCE("!PITCH3\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
-				USART_OUT(DEBUG_USART,"!COURSE\t");
+				USART_OUT_ONCE("!COURSE3\t");
 			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
-				USART_OUT(DEBUG_USART,"!GAS\t");
+				USART_OUT_ONCE("!GAS3\t");
 			USART_Enter();
 		}
     break;

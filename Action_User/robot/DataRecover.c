@@ -99,7 +99,9 @@ void WriteFlashData(Robot_t robot,u32 resetTime)
   dataSave.robocon2018=robot.robocon2018;
   
 //  float holdBallAimAngle;
+	#ifndef TEST
   dataSave.holdBallAimAngle=robot.holdBallAimAngle;
+	#endif
   
 //  float cameraAimAngle;
   dataSave.cameraAimAngle=robot.cameraAimAngle;
@@ -185,8 +187,8 @@ void STMFLASH_Read(DataSave_t* temp,uint32_t resetTime)
 //  uint32_t error[ERROR_TIME][2];
 	for(int i=0;i<ERROR_TIME;i++)
 	{
-		(temp->error)[i][0]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*2);
-		(temp->error)[i][1]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*2+1);
+		(temp->error)[i][0]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*MAX_SIZE*2);
+		(temp->error)[i][1]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*MAX_SIZE*2+MAX_SIZE);
 	}
 	
 }
@@ -227,12 +229,13 @@ softReset
 #ifndef TEST
 void SoftWareReset(void)
 {
+	/*计算重启次数*/
   FindResetTime();
   
-  //如果flash被写过
+  //如果flash被写过（曾经重启过）
   if(gRobot.resetTime>0)
   {
-    //得到最后一个结构体
+    //得到最后一个结构体（更新dataSave）
     STMFLASH_Read(&dataSave,gRobot.resetTime-1);
   }
   
@@ -274,9 +277,10 @@ void SoftWareReset(void)
     }
     /*写一个reset=set的*/
     dataSave.isReset=0;
-    //再往下一个空位写一个结构体
+    //再往下一个空位写一个结构体，便于下次开电识别
     STMFLASH_Write(&dataSave,gRobot.resetTime);
 		
+		/*表示这次是重启程序*/
 		gRobot.resetFlag=1;
   }
 }

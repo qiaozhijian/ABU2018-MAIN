@@ -17,10 +17,6 @@ typedef struct{
 }motionPara_t;
 
 
-void PitchAngleMotion(float angle);
-
-void CourseAngleMotion(float angle);
-
 void ShootBall(void);
 
 void ShootReset(void);
@@ -30,7 +26,5 @@ void PrepareGetBall(int index);
 void PrepareShootBall(int index);
 
 void prepareMotionParaInit(void);
-
-void GasMotion(float value);
 #endif
 

@@ -410,6 +410,11 @@
               <FileType>1</FileType>
               <FilePath>..\Action_User\robot\errorReport.c</FilePath>
             </File>
+            <File>
+              <FileName>DataRecover.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\robot\DataRecover.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -474,11 +479,6 @@
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Action_User\hardWare\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>DataRecover.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Action_User\hardWare\DataRecover.c</FilePath>
             </File>
             <File>
               <FileName>iwdg.c</FileName>

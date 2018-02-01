@@ -446,7 +446,7 @@ uint8_t CAN_TxMsg(CAN_TypeDef* CANx,
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 2001)
+		if(timeout > 3001)
 		{
 			USART_OUT(DEBUG_USART,"CAN Error in Elmo Init!!!!!!!!!\r\n");
 			break;
@@ -508,12 +508,14 @@ int OSCANSendCmd(CAN_TypeDef* CANx, CanTxMsg* TxMessage)
 	while(!(CAN_TransmitStatus(CANx,mailBox) == CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 2001)
+		if(timeout > 3001)
 		{
 			USART_OUT(DEBUG_USART,"OSCANSend Error!!!!!!!\r\n");
 			break;
 		}
 	}
+//	USART_OUT(DEBUG_USART,"%d\r\n",timeout);
+//	timeout=0;
 	OSMutexPost(CANSendMutex);
 	return CAN_SEND_OK;
 

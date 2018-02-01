@@ -2,6 +2,10 @@
 #include "task.h"
 #include "timer.h"
 #include "steer.h"
+#include "motion.h"
+#include "includes.h"
+
+extern OS_EVENT *PeriodSem;
 
 
 extern Robot_t gRobot;
@@ -15,48 +19,26 @@ motionPara_t PrepareShootBall1;
 motionPara_t PrepareShootBall2;
 motionPara_t PrepareShootBall3;
 
-void PitchAngleMotion(float angle)
-{
-  /*控制的为-20°-10°实际给电机的是30°-0°*/
-  if(angle>10.f)
-    angle=10.f;
-  else if(angle<-20.f)
-    angle=-20.f;
-	
-	angle=10.f-angle;
-	
-  PosCrl(CAN2, 5,ABSOLUTE_MODE,PITCH_ANGLE_TO_CODE(angle));
-}
-
-void CourseAngleMotion(float angle)
-{
-  if(angle<0.f)
-    angle=0.f;
-  else if(angle>190.f)
-    angle=190.f;
-	
-	angle=angle+10.6f;
-	
-  PosCrl(CAN2, 6,ABSOLUTE_MODE,COURSE_ANGLE_TO_CODE(angle));
-}
-
-void GasMotion(float value)
-{
-  CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
-}
 
 void ShootBall(void)
 {				
+  CPU_INT08U  os_err;
+  os_err = os_err;
+	
+	ShootLedOn();
   /*夹子打开*/
   ClawOpen();
   /*进行适当延时保证夹子和球不干涉*/
   Delay_ms(1000);
+	/*清除信号量*/
+	OSSemSet(PeriodSem, 0, &os_err);
   /*把两个发射气缸打开*/
   ShootBigOpen();
 }
 
 void ShootReset(void)
 {
+	ShootLedOff();
   /*复位*/
   ShootSmallShut();
   ShootBigShut();
@@ -69,20 +51,35 @@ void prepareMotionParaInit(void)
   PrepareCompete.pitchAngle=-20.0f;
   PrepareCompete.steerAngle=-85.f;
   PrepareCompete.steerSpeed=2000;
-  PrepareCompete.gasAim=0.55f;
+  PrepareCompete.gasAim=0.57f;
+	
   /*准备去拿第一个球的数据*/
   PrepareGetBall1.courseAngle=0.0f;
   PrepareGetBall1.pitchAngle=0.0f;
   PrepareGetBall1.steerAngle=0.f;
   PrepareGetBall1.steerSpeed=2000;
-  PrepareGetBall1.gasAim=0.55f;
+  PrepareGetBall1.gasAim=0.57f;
   
+  /*准备射第一个球的数据*/
+  PrepareShootBall1.courseAngle=180.0f;
+  PrepareShootBall1.pitchAngle=0.0f;
+  PrepareShootBall1.steerAngle=0.f;
+  PrepareShootBall1.steerSpeed=2000;
+  PrepareShootBall1.gasAim=0.57f;
+	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=90.f;
   PrepareGetBall2.pitchAngle=3.1f;
   PrepareGetBall2.steerAngle=85.f;
   PrepareGetBall2.steerSpeed=2000;
-  PrepareGetBall2.gasAim=0.55f;
+  PrepareGetBall2.gasAim=0.57f;
+  
+  /*准备射第二个球的数据*/
+  PrepareShootBall2.courseAngle=180.0f;
+  PrepareShootBall2.pitchAngle=0.5f;
+  PrepareShootBall2.steerAngle=0.f;
+  PrepareShootBall2.steerSpeed=2000;
+  PrepareShootBall2.gasAim=0.57f;
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=0.0f;
@@ -91,26 +88,12 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.steerSpeed=2000;
   PrepareGetBall3.gasAim=0.6f;
   
-  /*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=180.0f;
-  PrepareShootBall1.pitchAngle=0.0f;
-  PrepareShootBall1.steerAngle=0.f;
-  PrepareShootBall1.steerSpeed=2000;
-  PrepareShootBall1.gasAim=0.55f;
-  
-  /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=180.0f;
-  PrepareShootBall2.pitchAngle=0.0f;
-  PrepareShootBall2.steerAngle=0.f;
-  PrepareShootBall2.steerSpeed=2000;
-  PrepareShootBall2.gasAim=0.55f;
-  
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=180.0f;
-  PrepareShootBall3.pitchAngle=-4.8f;
+  PrepareShootBall3.pitchAngle=-5.3f;
   PrepareShootBall3.steerAngle=0.f;
   PrepareShootBall3.steerSpeed=2000;
-  PrepareShootBall3.gasAim=0.56f;
+  PrepareShootBall3.gasAim=0.57f;
   
 }
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
@@ -169,6 +152,8 @@ void PrepareGetBall(int index)
 
 void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
 {
+  CPU_INT08U  os_err;
+  os_err = os_err;
 	
 	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
 	gRobot.courseAimAngle=PrepareShootBall_t.courseAngle;
@@ -188,6 +173,8 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
   CourseAngleMotion(PrepareShootBall_t.courseAngle);
   /*避免球乱晃*/
   Delay_ms(500);
+	/*清除信号量*/
+	OSSemSet(PeriodSem, 0, &os_err);
   /*提前打开发射装置小气缸*/
   ShootSmallOpen();
   /*舵机转向*/
