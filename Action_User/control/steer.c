@@ -71,7 +71,7 @@ void HoldSteer2PosCrl(float angle,int vel)
 	/*1/4096.f*360.f=11.378*/
 	pos=(int)(((angle-14.5f)/7.f*6.f+180.f)*11.378f);	 
 	
-  SteerPosCrlBy485(0xfe,pos);
+  SteerPosCrlBy485(0x02,pos);
 }
 
 
@@ -174,7 +174,7 @@ void UnLockSteer(int num)
 
 void CameraSteerPosCrl(float angle)
 {
-//	SetNumber(2);
+	int pos=0.f;
   /*
   *字头：0XFF, 0XFF 
   *ID ： num
@@ -190,7 +190,9 @@ void CameraSteerPosCrl(float angle)
 	/*减速比为2*/
 	angle=angle*2.f+259.7f;
 	
-	SteerPosCrlBy485(2,angle);
+	pos=angle*11.378f;
+	
+	SteerPosCrlBy485(0x03,pos);
 
   /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
 }

@@ -20,7 +20,7 @@ void SelfTest(void)
 	
 	AT_CMD_Handle();
 	USART_BLE_SEND(gRobot.gasValue);
-	static int step=99;
+	static int step=10;
 	switch(step)
 	{
 		case 0:
@@ -548,6 +548,10 @@ void processReport(void)
   }
   processLast=gRobot.process;
 }
+
+
+
+
 //void DelayTaskRun(void)
 //{
 //  static int delayMs[DELAY_TASK_NUM]={0};

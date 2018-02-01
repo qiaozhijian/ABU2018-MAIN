@@ -109,10 +109,13 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
-		IWDG_Feed();
+		
 		#ifdef TEST
 		SelfTest();
 		#else		
+		
+		/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
+		IWDG_Feed();
 		
 		/*蓝牙命令处理*/
     AT_CMD_Handle();
@@ -257,11 +260,11 @@ void statusInit(void)
   PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
 	
 	BEEP_ON;
-	ShootLedOn();
+//	ShootLedOn();
 	Delay_ms(600);
-	Delay_ms(600);
-	Delay_ms(600);
-	ShootLedOff();
+//	Delay_ms(600);
+//	Delay_ms(600);
+//	ShootLedOff();
 	BEEP_OFF;
 	
   gRobot.robocon2018=ROBOT_START;
