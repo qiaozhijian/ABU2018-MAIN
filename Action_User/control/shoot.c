@@ -49,7 +49,7 @@ void prepareMotionParaInit(void)
 	/*准备区动作*/
   PrepareCompete.courseAngle=0.0f;
   PrepareCompete.pitchAngle=-20.0f;
-  PrepareCompete.steerAngle=-85.f;
+  PrepareCompete.steerAngle=-95.f;
   PrepareCompete.steerSpeed=2000;
   PrepareCompete.gasAim=0.57f;
 	

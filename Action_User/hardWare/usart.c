@@ -293,7 +293,6 @@ void CameraInit(uint32_t BaudRate)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
   NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器、
       
-	TalkToCamera(CAMERA_OPEN_NEAR);
 }
 
 void DebugBLE_Init(uint32_t BaudRate)
@@ -408,81 +407,6 @@ void USART_OUT_ONCE(const char * s)
       break;
     }
   }
-}
-
-extern Robot_t gRobot;
-
-
-void TalkToCamera(uint32_t command)
-{
-//	int times=0;
-//	switch(command)
-//	{
-//		case CAMERA_START:
-//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-//			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
-//			{
-//				USART_OUT(CAMERA_USART,"AT\r\n");
-//				Delay_us(50);
-//				times++;
-//				if(times>100)
-//				{
-//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-//					break;
-//				}
-//			}
-//			/*清空标志位*/
-//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-//			break;
-//		case CAMERA_SHUT_ALL:
-//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-//			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
-//			{
-//				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
-//				Delay_us(50);
-//				times++;
-//				if(times>100)
-//				{
-//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-//					break;
-//				}
-//			}
-//			/*清空标志位*/
-//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-//			break;
-//		case CAMERA_OPEN_NEAR:
-//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-//			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
-//			{
-//				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
-//				Delay_us(50);
-//				times++;
-//				if(times>100)
-//				{
-//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-//					break;
-//				}
-//			}
-//			/*清空标志位*/
-//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-//			break;
-//		case CAMERA_OPEN_FAR:
-//			/*如果与摄像头通信标志位没有置一，50us发一次数据*/
-//			while(!gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS)
-//			{
-//				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
-//				Delay_us(50);
-//				times++;
-//				if(times>100)
-//				{
-//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-//					break;
-//				}
-//			}
-//			/*清空标志位*/
-//			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-//			break;
-//	}
 }
 
 

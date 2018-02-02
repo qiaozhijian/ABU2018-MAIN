@@ -31,6 +31,5 @@ void USART_OUT_F(float value);
 void USART_Enter(void);
 void USART_BLE_SEND(float value);
 void USART_OUT_ONCE(const char * s);
-void TalkToCamera(uint32_t command);
 #endif
 

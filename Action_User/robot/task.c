@@ -132,10 +132,10 @@ void RobotTask(void)
 		/*运动状态更新*/
     MotionRead();
 		
-		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
-		USART_OUT_F(gRobot.gasValue);
-		USART_OUT_F(gRobot.angle);
-		USART_Enter();
+//		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
+//		USART_OUT_F(gRobot.gasValue);
+//		USART_OUT_F(gRobot.angle);
+//		USART_Enter();
 		
     switch(gRobot.robocon2018)
     {
@@ -186,7 +186,7 @@ void HardWareInit(void){
   CameraSteerInit(1000000);
 	
 	/*与摄像头通信的串口初始化*/
-	CameraInit(115200);
+	CameraInit(256000);
 	
 	/*接收定位系统数据的串口初始化*/
 	GYRO_Init(921600);
@@ -222,7 +222,12 @@ void MotorInit(void){
 void statusInit(void)
 {	
   Delay_ms(3000);
-  Enable_ROBS();//使能舵机
+	
+	//打开扭矩开关
+  OpenSteerAll();
+	
+ //设置回应等级（注意不要打开写开关，因为打开扭矩输出需要回答）
+	ShutAllSteerResponse();
 	
   /*运动控制状态初始化*/
   SetMotionFlag(~AT_CLAW_STATUS_OPEN);
@@ -248,7 +253,8 @@ void statusInit(void)
   USART_Enter();
   USART_Enter();
   USART_Enter();
-  
+
+	
   PrepareGetBall(READY);
   
 	/*等待慢转动状态完成*/
@@ -259,12 +265,17 @@ void statusInit(void)
   PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);        
   PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
 	
+	#ifdef TEST
+//	TalkToCamera(CAMERA_START);
+//	TalkToCamera(CAMERA_OPEN_NEAR);
+//	TalkToCamera(CAMERA_SHUT_ALL);
+//	TalkToCamera(CAMERA_OPEN_FAR);
+	#endif
+	
 	BEEP_ON;
-//	ShootLedOn();
-	Delay_ms(600);
-//	Delay_ms(600);
-//	Delay_ms(600);
-//	ShootLedOff();
+	ShootLedOn();
+	Delay_ms(2000);
+	ShootLedOff();
 	BEEP_OFF;
 	
   gRobot.robocon2018=ROBOT_START;

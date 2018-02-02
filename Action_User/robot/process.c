@@ -11,7 +11,7 @@
 extern OS_EVENT *PeriodSem;
 
 extern Robot_t gRobot;
-
+extern int flagggg;
 void SelfTest(void)
 {
 	
@@ -23,9 +23,24 @@ void SelfTest(void)
 	static int step=10;
 	switch(step)
 	{
+		case 10:
+//			SetResponseStair(0x01);
+//	HoldSteer1PosCrl(0.f,2000);		
+//	OpenSteerTorque(0xfe);
+//  SteerPosCrlBy485(0xfe,(int)(180.f*11.378f));
+//		HoldSteer2PosCrl(30.f,2000);
+		
+//		if(flagggg==1)
+//		{
+//			BoostPolePush();
+//			step++;
+//		}
+//		
+
+			break;
 		case 0:
 			ShootSmallOpen();
-						//电机位置环
+			//电机位置环
 			PosLoopCfg(CAN2, 5, 100000, 100000,100000);
 			//电机位置环
 			PosLoopCfg(CAN2, 6, 100000, 100000,100000);
@@ -92,7 +107,7 @@ void FightForBall1(void)
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
       
-			TalkToCamera(CAMERA_OPEN_NEAR);
+			//TalkToCamera(CAMERA_OPEN_NEAR);
 			
       PrepareShootBall(BALL_1);
       
@@ -259,7 +274,7 @@ void FightForGoldBall(void)
       Delay_ms(500);
 			/*清除信号量*/
 			OSSemSet(PeriodSem, 0, &os_err);
-			TalkToCamera(CAMERA_OPEN_FAR);
+			//TalkToCamera(CAMERA_OPEN_FAR);
       
       gRobot.process=TO_THE_AREA_3;
       

@@ -2,7 +2,7 @@
 #include "can.h"
 #include "usart.h"
 #include "gpio.h"
-
+#include "iwdg.h"
 
 /*******************************控制驱动器命令************************************/
 /**
@@ -58,8 +58,10 @@ void MotorOn(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"MotorOn dead while\r\n");
 			break;
 		}
@@ -104,8 +106,10 @@ void MotorOff(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"MotorOff dead while\r\n");
 			break;
 		}
@@ -230,8 +234,10 @@ void SetUnitMode(CAN_TypeDef* CANx, uint8_t ElmoNum, uint8_t unitMode)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"SetUnitMode dead while\r\n");
 			break;
 		}
@@ -278,8 +284,10 @@ void SetSmoothFactor(CAN_TypeDef* CANx, uint8_t ElmoNum, uint8_t smoothFactor)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"SetSmoothFactor dead while\r\n");
 			break;
 		}
@@ -331,8 +339,10 @@ void SetAccAndDec(CAN_TypeDef* CANx, uint8_t ElmoNum, uint32_t acc, uint32_t dec
 		while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 		{
 			timeout++;
-			if(timeout > 3001)
+			if(timeout > 5009)
 			{
+			if(timeout%1003==0)
+				IWDG_Feed();
 				USART_OUT(DEBUG_USART,"SetAccAndDec dead while\r\n");
 			break;
 			}
@@ -385,8 +395,10 @@ void SetVelLimit(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit, int32_t
 		while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 		{
 			timeout++;
-			if(timeout > 3001)
+			if(timeout > 5009)
 			{
+			if(timeout%1003==0)
+				IWDG_Feed();
 				USART_OUT(DEBUG_USART,"SetVelLimit dead while\r\n");
 				break;
 			}
@@ -439,7 +451,7 @@ void SetPosLimit(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit, int32_t
 		while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 		{
 			timeout++;
-			if(timeout > 3001)
+			if(timeout > 5009)
 			{
 				USART_OUT(DEBUG_USART,"SetPosLimit dead while\r\n");
 				break;
@@ -493,7 +505,7 @@ void SetPosCountingRange(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit,
 		while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 		{
 			timeout++;
-			if(timeout > 3001)
+			if(timeout > 5009)
 			{
 				USART_OUT(DEBUG_USART,"SetPosCountingRange dead while\r\n");
 				break;
@@ -542,7 +554,7 @@ void SetPosLoopVel(CAN_TypeDef* CANx, uint8_t ElmoNum,int32_t vel)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"SetPosLoopVel dead while\r\n");
 				break;
@@ -590,7 +602,7 @@ void SetJoggingVel(CAN_TypeDef* CANx, uint8_t ElmoNum,int32_t vel)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 			USART_OUT(DEBUG_USART,"SetJoggingVel dead while\r\n");
 			break;
@@ -652,7 +664,7 @@ void SendPosCmd(CAN_TypeDef* CANx, uint8_t ElmoNum,uint8_t posMode,int32_t pos)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 			USART_OUT(DEBUG_USART,"SendPosCmd dead while\r\n");
 			break;
@@ -698,7 +710,7 @@ void BeginMotion(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"BeginMotion dead while\r\n");
 			break;
@@ -744,8 +756,10 @@ void ReadActualVoltage(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 				USART_OUT(DEBUG_USART,"ReadActualVoltage dead while\r\n");
 			break;
 		}
@@ -788,7 +802,7 @@ void ReadActualCurrent(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadActualCurrent dead while\r\n");
 			break;
@@ -832,8 +846,10 @@ void ReadActualPos(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"ReadActualPos dead while\r\n");
 			break;
 		}
@@ -878,8 +894,10 @@ void ReadActualVel(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"ReadActualVel dead while\r\n");
 			break;
 		}
@@ -922,7 +940,7 @@ void ReadActualTemperature(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadActualTemperature dead while\r\n");
 			break;
@@ -966,7 +984,7 @@ void ReadCurrentLimitFlag(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadCurrentLimitFlag dead while\r\n");
 			break;
@@ -1010,7 +1028,7 @@ void ReadVelocityError(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadVelocityError dead while\r\n");
 			break;
@@ -1054,7 +1072,7 @@ void ReadCommandVelocity(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadCommandVelocity dead while\r\n");
 			break;
@@ -1099,7 +1117,7 @@ void ReadJoggingVelocity(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadJoggingVelocity dead while\r\n");
 			break;
@@ -1143,7 +1161,7 @@ void ReadUnitMode(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadUnitMode dead while\r\n");
 			break;
@@ -1188,7 +1206,7 @@ void ReadReferenceMode(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadReferenceMode dead while\r\n");
 			break;
@@ -1232,7 +1250,7 @@ void ReadMotorFailure(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
 				USART_OUT(DEBUG_USART,"ReadMotorFailure dead while\r\n");
 				break;

@@ -3,6 +3,8 @@
 #include "can.h"
 #include "shoot.h"
 #include "stm32f4xx_it.h"
+#include "timer.h"
+#include "iwdg.h"
 extern Robot_t gRobot;
 
 void PitchAngleMotion(float angle)
@@ -35,7 +37,85 @@ void GasMotion(float value)
   CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
 }
 
-
+void TalkToCamera(uint32_t command)
+{
+	int times=0;
+	switch(command)
+	{
+		case CAMERA_START:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT\r\n");
+				Delay_ms(500);
+				times++;
+				IWDG_Feed();
+//				if(times>100)
+//				{
+////					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+////					break;
+//				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+		case CAMERA_SHUT_ALL:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
+				Delay_ms(2);
+				times++;
+				IWDG_Feed();
+				if(times>100)
+				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+		case CAMERA_OPEN_NEAR:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
+				Delay_ms(2);
+				times++;
+				IWDG_Feed();
+				if(times>100)
+				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+		case CAMERA_OPEN_FAR:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
+				Delay_ms(2);
+				times++;
+				IWDG_Feed();
+				if(times>100)
+				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+	}
+}
 
 /* 动作执行函数
 * 
@@ -99,9 +179,7 @@ void MotionRead(void)
 	ReadActualPos(CAN2,6);
   /*将读航向角姿态的标志位归0*/
 	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
-	/*读取舵机状态*/
 	
-	ReadHoldBallSteerPos();
 	/*像平板发送气压值*/
 	//if(gRobot.isOpenGasReturn&&count==3)
 //	if(count==3)
@@ -174,11 +252,11 @@ void MotionStatusUpdate(void)
 	/*判断相机转台舵机是否到位*/
 	if(abs(gRobot.cameraAimAngle-gRobot.cameraAngle)<0.5f)
 	{
-		SetMotionFlag(AT_CAMERA_ROTATE_SUCCESS);
+		SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
 	}
 	else
 	{
-		SetMotionFlag(~AT_CAMERA_ROTATE_SUCCESS);
+		SetMotionFlag(~AT_CAMERA_RESPONSE_SUCCESS);
 	}
 	
 	if(abs(gRobot.gasAimValue-gRobot.gasValue)<0.01f)

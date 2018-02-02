@@ -16,7 +16,7 @@
 #include "motion.h"
 #include "timer.h"
 extern Robot_t gRobot;
-
+int flagggg=0;
 
 void USART3_IRQHandler(void)
 {
@@ -81,7 +81,11 @@ void USART3_IRQHandler(void)
       {
         gRobot.angle=posture.ActVal[0] ;
         gRobot.posY = -posture.ActVal[3];
-        gRobot.posX = -posture.ActVal[4];
+        gRobot.posX = -posture.ActVal[4];		
+//				flagggg=1;
+//				USART_OUT_F(gRobot.posY);
+//		USART_OUT_F(gRobot.posX);
+//		USART_Enter();
       }
       count = 0;
       break;
@@ -109,6 +113,9 @@ void USART3_IRQHandler(void)
 #define CAMERA	  			8
 #define STEER1 					9
 #define STEER2 					10
+#define BOOST 					11
+#define STAIR1 					12
+#define STAIR2 					13
 
 /*调试蓝牙中断*/
 static char buffer[20];
@@ -126,6 +133,8 @@ void AT_CMD_Judge(void);
 void USART2_IRQHandler(void)
 {
   uint8_t data;
+	static uint8_t step=0;
+	static uint16_t num;
   OS_CPU_SR  cpu_sr;
   OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
   OSIntNesting++;
@@ -134,7 +143,57 @@ void USART2_IRQHandler(void)
   {
     USART_ClearITPendingBit( USART2,USART_IT_RXNE);
     data=USART_ReceiveData(USART2);
-    data=data;
+		//0XFF 0XFF 0X01(ID) 0X03(LENGTH) 0X00(STATUS) 0X20(DATA) 0XDD
+		switch(step)
+		{
+			case 0:
+				if(data==0xff)
+					step++;
+				else 
+					step=0;
+				break;
+			case 1:
+				if(data==0xff)
+					step++;
+				else 
+					step=0;
+				break;
+			case 2:
+				if((data==0x01)||(data==0x02)||(data==0x03))
+				{
+					step++;
+					num=data;
+				}
+				else step=0;
+				break;
+			case 3:
+				//数据长度
+				step++;
+				break;	
+			case 4:
+				//错误状态
+				step++;
+				break;	
+			case 5:
+				gRobot.steerByte=data;
+				step++;
+				break;
+			case 6:
+				if(num==1)
+				{
+					SetMotionFlag(AT_HOLD_BALL1_RESPONSE_SUCCESS);
+				}else if(num==2)
+				{
+					SetMotionFlag(AT_HOLD_BALL2_RESPONSE_SUCCESS);
+				}else if(num==3)
+				{
+					SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
+				}
+				num=0;
+				step=0;
+				break;
+		}
+    
   }else{
     data=USART_ReceiveData(USART2);
   }
@@ -152,6 +211,7 @@ void USART6_IRQHandler(void)
   {
     USART_ClearITPendingBit( USART6,USART_IT_RXNE);
     data=USART_ReceiveData(USART6);
+		USART_SendData(DEBUG_USART,data);
     buffer[bufferI]=data;
     bufferI++;
     if(bufferI>=20)
@@ -201,6 +261,34 @@ void UART4_IRQHandler(void)
 }
 
 void AT_CMD_Judge(void){
+	
+  if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0)//AT    
+    atCommand=CLAW;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0)//AT    
+    atCommand=SHOOT;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+3", 4)==0)//AT    
+    atCommand=PITCH;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+4", 4)==0)//发射按钮   
+    atCommand=STEER;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+5", 4)==0)//发射按钮   
+    atCommand=GAS;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+6", 4)==0)//发射按钮   
+    atCommand=COURSE;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//发射按钮   
+    atCommand=TEST_GAS;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//发射按钮   
+    atCommand=CAMERA;
+  else if((bufferI >= 4) && strncmp(buffer, "AT+9", 4)==0)//发射按钮   
+    atCommand=STEER1;
+  else if((bufferI >= 5) && strncmp(buffer, "AT+12", 5)==0)//发射按钮   
+    atCommand=STEER2;
+  else if((bufferI >= 5) && strncmp(buffer, "AT+13", 5)==0)//发射按钮   
+    atCommand=BOOST;
+  else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0)//发射按钮   
+    atCommand=STAIR1;
+  else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//发射按钮   
+    atCommand=STAIR2;
+	
   if((bufferI >= 9) && strncmp(buffer, "AT+report", 9)==0)//AT    
   {
     StatusReport();
@@ -216,6 +304,7 @@ void AT_CMD_Judge(void){
   }
   else if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
   {
+		
 		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
     //摄像头连接成功
   }
@@ -239,29 +328,11 @@ void AT_CMD_Judge(void){
 //			a[i]=100;
   }
   
-  if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0)//AT    
-    atCommand=CLAW;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0)//AT    
-    atCommand=SHOOT;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+3", 4)==0)//AT    
-    atCommand=PITCH;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+4", 4)==0)//发射按钮   
-    atCommand=STEER;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+5", 4)==0)//发射按钮   
-    atCommand=GAS;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+6", 4)==0)//发射按钮   
-    atCommand=COURSE;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//发射按钮   
-    atCommand=TEST_GAS;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//发射按钮   
-    atCommand=CAMERA;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+9", 4)==0)//发射按钮   
-    atCommand=STEER1;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+12", 5)==0)//发射按钮   
-    atCommand=STEER2;
-  else 
-    atCommand=666;
-  
+  /*如果是及时处理的命令，就初始化*/
+	if(atCommand==0)
+	{
+		BufferInit();
+	}
 }
 
 
@@ -322,18 +393,6 @@ void AT_CMD_Handle(void){
     }
     break;
     
-  case STEER:
-    USART_OUT(DEBUG_USART,"OK\r\n");
-    value = atof(buffer + 4);
-		#ifdef TEST
-		gRobot.holdBallAimAngle[0]=gRobot.holdBallAimAngle[1]=value;
-		HoldBallPosCrl(gRobot.holdBallAimAngle[0],2000);
-		#else
-		gRobot.holdBallAimAngle=value;
-		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
-		#endif
-    break;
-    
   case GAS:
     USART_OUT(DEBUG_USART,"OK\r\n");
     //平板的值
@@ -370,6 +429,19 @@ void AT_CMD_Handle(void){
 		gRobot.cameraAimAngle=value;
 		CameraSteerPosCrl(gRobot.cameraAimAngle);
     break;
+    
+  case STEER:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    value = atof(buffer + 4);
+		#ifdef TEST
+		gRobot.holdBallAimAngle[0]=value;
+		gRobot.holdBallAimAngle[1]=value;
+		HoldBallPosCrl(gRobot.holdBallAimAngle[0],2000);
+		#else
+		gRobot.holdBallAimAngle=value;
+		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
+		#endif
+    break;
 		
 	case STEER1:
     USART_OUT(DEBUG_USART,"OK\r\n");
@@ -394,6 +466,39 @@ void AT_CMD_Handle(void){
 		HoldSteer2PosCrl(gRobot.holdBallAimAngle,2000);
 		#endif
 		break;
+  case BOOST:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    if(*(buffer + 5) == '1') 
+    {
+      BoostPolePush();
+    }
+    else if(*(buffer + 5) == '0') 
+    {
+      BoostPoleReturn();
+    } 
+    break;
+  case STAIR1:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    if(*(buffer + 5) == '1') 
+    {
+      GoldBallGraspStairOneOn();
+    }
+    else if(*(buffer + 5) == '0') 
+    {
+      GoldBallGraspStairOneOff();
+    } 
+    break;
+  case STAIR2:
+    USART_OUT(DEBUG_USART,"OK\r\n");
+    if(*(buffer + 5) == '1') 
+    {
+      GoldBallGraspStairTwoOn();
+    }
+    else if(*(buffer + 5) == '0') 
+    {
+      GoldBallGraspStairTwoOff();
+    } 
+    break;
 	
   default:
     break;
@@ -443,17 +548,17 @@ void SetMotionFlag(uint32_t status){
   case ~AT_HOLD_BALL2_SUCCESS:
     gRobot.AT_motionFlag&=~AT_HOLD_BALL2_SUCCESS;
     break;
-  case AT_HOLD_BALL1_READ_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL1_READ_SUCCESS;
+  case AT_HOLD_BALL1_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag|=AT_HOLD_BALL1_RESPONSE_SUCCESS;
     break;
-  case ~AT_HOLD_BALL1_READ_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL1_READ_SUCCESS;
+  case ~AT_HOLD_BALL1_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_HOLD_BALL1_RESPONSE_SUCCESS;
     break;
-  case AT_HOLD_BALL2_READ_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL2_READ_SUCCESS;
+  case AT_HOLD_BALL2_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag|=AT_HOLD_BALL2_RESPONSE_SUCCESS;
     break;
-  case ~AT_HOLD_BALL2_READ_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL2_READ_SUCCESS;
+  case ~AT_HOLD_BALL2_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_HOLD_BALL2_RESPONSE_SUCCESS;
     break;
   case AT_COURSE_READ_SUCCESS:
     gRobot.AT_motionFlag|=AT_COURSE_READ_SUCCESS;
@@ -491,11 +596,11 @@ void SetMotionFlag(uint32_t status){
   case ~AT_CAMERA_TALK_SUCCESS:
     gRobot.AT_motionFlag&=~AT_CAMERA_TALK_SUCCESS;
     break;
-  case AT_CAMERA_ROTATE_SUCCESS:
-    gRobot.AT_motionFlag|=AT_CAMERA_ROTATE_SUCCESS;
+  case AT_CAMERA_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag|=AT_CAMERA_RESPONSE_SUCCESS;
     break;
-  case ~AT_CAMERA_ROTATE_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_CAMERA_ROTATE_SUCCESS;
+  case ~AT_CAMERA_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_CAMERA_RESPONSE_SUCCESS;
     break;
   }
 }

@@ -22,6 +22,7 @@
 #include "cpu.h"
 #include "gpio.h"
 #include "usart.h"
+#include "iwdg.h"
 /**
   * @brief  Initialize the CANx as encoder
   * @param  CANx:  CANx, where x can be 1,2
@@ -446,8 +447,10 @@ uint8_t CAN_TxMsg(CAN_TypeDef* CANx,
 	while((CAN_TransmitStatus(CANx, mbox)!= CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"CAN Error in Elmo Init!!!!!!!!!\r\n");
 			break;
 		}
@@ -508,8 +511,10 @@ int OSCANSendCmd(CAN_TypeDef* CANx, CanTxMsg* TxMessage)
 	while(!(CAN_TransmitStatus(CANx,mailBox) == CAN_TxStatus_Ok))
 	{
 		timeout++;
-		if(timeout > 3001)
+		if(timeout > 5009)
 		{
+			if(timeout%1003==0)
+				IWDG_Feed();
 			USART_OUT(DEBUG_USART,"OSCANSend Error!!!!!!!\r\n");
 			break;
 		}

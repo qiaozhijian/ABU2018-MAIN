@@ -71,9 +71,9 @@
 
 #define AT_HOLD_BALL2_SUCCESS										0x20u
 
-#define AT_HOLD_BALL1_READ_SUCCESS							0x40u
+#define AT_HOLD_BALL1_RESPONSE_SUCCESS							0x40u
 
-#define AT_HOLD_BALL2_READ_SUCCESS							0x80u
+#define AT_HOLD_BALL2_RESPONSE_SUCCESS							0x80u
 
 #define AT_COURSE_READ_SUCCESS									0x200u
 
@@ -83,7 +83,7 @@
 
 #define AT_PITCH_SUCCESS												0x1000u
 
-#define AT_CAMERA_ROTATE_SUCCESS								0x2000u
+#define AT_CAMERA_RESPONSE_SUCCESS								0x2000u
 
 #define AT_CAMERA_TALK_SUCCESS									0x100u
 
@@ -210,6 +210,8 @@ typedef struct{
 	#endif
   /*持球舵机的位置*/
   float holdBallAngle[2];
+	/*舵机返回的一字节命令*/
+	uint8_t steerByte;
   
   /*相机舵机的目标位置*/
   float cameraAimAngle;

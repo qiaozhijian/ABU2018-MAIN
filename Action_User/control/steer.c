@@ -8,78 +8,107 @@
 #include "process.h"
 
 extern Robot_t gRobot;
-//打开舵机的扭力输出
-void Enable_ROBS(void)
-{
-  static int times;
-  while(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
-  {
-    USART_OUT(USART1,"#1 W 40,1,1\r\n");
-    Delay_ms(1);
-    times ++;
-    if(times >10)
-    {
-      USART_OUT(DEBUG_USART,"HOLD_BALL1_ENABLE_FAIL\r\n");
-      ErrorRecord(HOLD_BALL1_ENABLE_FAIL);
-      break;
-    }
-  }
-  SetMotionFlag(~AT_HOLD_BALL1_SUCCESS);
-
-  times =0;
-  //#1 W 40,1,1\r\n
-}
-
-
 
 //以vel的速度转到angle角度
 void HoldBallPosCrl(float angle,int vel)
 {
-	HoldSteer1PosCrl(angle,vel);
-	HoldSteer2PosCrl(angle,vel);
+  HoldSteer1PosCrl(angle,vel);
+  HoldSteer2PosCrl(angle,vel);
 }
 
 
 void HoldSteer1PosCrl(float angle,int vel)
-{
-  int pos=0.f;
-
-	if(angle>100.f)
-		angle=100.f;
-	if(angle<-100.f)
-		angle=-100.f;
-
-	/*1/4096.f*360.f=11.378*/
-	pos=(int)((180.f-(angle-3.4f))*11.378f);  
-	
-  USART_OUT(USART1,"#1 W 42,2,%d:46,2,%d\r\n",pos,vel);
+{  
+	int pos=0.f;
+  /*检测爪子是否闭合，张开时转动会有干涉*/
+  if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+  {
+    ClawShut();
+  }
+  if(angle>100.f)
+    angle=100.f;
+  if(angle<-100.f)
+    angle=-100.f;
+  
+  /*1/4096.f*360.f=11.378*/
+  pos=(int)((180.f-(angle-3.4f))*11.378f);  
+  
+  SteerPosCrlBy485(0x01,pos);
 }
 
 void HoldSteer2PosCrl(float angle,int vel)
 {
   int pos=0.f;
-	/*检测爪子是否闭合，张开时转动会有干涉*/
-	if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
-	{
-		ClawShut();
-	}
-	if(angle>100.f)
-		angle=100.f;
-	if(angle<-100.f)
-		angle=-100.f;
-
-	/*1/4096.f*360.f=11.378*/
-	pos=(int)(((angle-14.5f)/7.f*6.f+180.f)*11.378f);	 
-	
+  /*检测爪子是否闭合，张开时转动会有干涉*/
+  if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+  {
+    ClawShut();
+  }
+  if(angle>100.f)
+    angle=100.f;
+  if(angle<-100.f)
+    angle=-100.f;
+  
+  /*1/4096.f*360.f=11.378*/
+  pos=(int)(((angle-14.5f)/7.f*6.f+180.f)*11.378f);	 
+  
   SteerPosCrlBy485(0x02,pos);
 }
 
-
-void ReadHoldBallSteerPos(void)
+void CameraSteerPosCrl(float angle)
 {
-  USART_OUT(USART1,"#1 R 56,2,1\r\n");
-  USART_OUT(UART5,"#1 R 56,2,1\r\n");
+  int pos=0.f;
+  /*
+  *字头：0XFF, 0XFF 
+  *ID ： num
+  *长度：0x05 3+2 （1个数据长度 位置）
+  *指令：0x03 写指令
+  *地址：0x2A 储存ID的地址
+  *校验和：checkSum
+  */	
+  if(angle>45.f)
+    angle=45.f;
+  else if(angle<-45.f)
+    angle=-45.f;
+  /*减速比为2*/
+  angle=angle*2.f+259.7f;
+  
+  pos=angle*11.378f;
+  
+  SteerPosCrlBy485(0x03,pos);
+  
+  /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
 }
+
+
+void CameraAlign(void)
+{
+  float x=0.f;
+  float y=0.f;
+  float direction=0.f;
+  
+  x=gRobot.posX+CAMERA_TO_GYRO_X;
+  y=gRobot.posY-CAMERA_TO_GYRO_Y;
+  
+  if(gRobot.process>=TO_GET_BALL_1&&gRobot.process<TO_GET_BALL_3)
+  {
+    direction=atan2f(QUICK_MARK_X_1-x,y-QUICK_MARK_Y);
+  }else if(gRobot.process>=TO_GET_BALL_3)
+  {
+    direction=atan2f(QUICK_MARK_X_2-x,y-QUICK_MARK_Y);
+  }
+  
+  direction=RAD_TO_ANGLE(direction);
+  
+  if(direction>30.f)
+    direction=30.f;
+  else if(direction<-30.f)
+    direction=-30.f;
+  
+  CameraSteerPosCrl(direction);
+}
+
+
 
 void SteerPosCrlBy485(int num,int pos)
 {
@@ -94,6 +123,81 @@ void SteerPosCrlBy485(int num,int pos)
 }
 
 
+void SetSteerByte(uint8_t num,uint8_t address,uint8_t value)
+{
+	unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X03, address, value, 0x00};
+	unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+	checkSum=~checkSum;
+	command[7]=checkSum;
+	
+	while(ReadOneByte(num,address)!=value)
+		RS485_Send_Data(command,8);
+}
+
+
+/*设置回答等级*/
+uint8_t ReadOneByte(int num,int address)
+{
+  unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X02, address, 0x01, 0x00};
+  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+  checkSum=~checkSum;
+  command[7]=checkSum;
+	
+	if(num==0x01)
+	{
+		while(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_RESPONSE_SUCCESS))
+		{
+			RS485_Send_Data(command,8);
+			Delay_us(500);
+		};
+		SetMotionFlag(~AT_HOLD_BALL1_RESPONSE_SUCCESS);
+	}else if(num==0x02){
+
+		while(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_RESPONSE_SUCCESS))
+		{
+			RS485_Send_Data(command,8);
+			Delay_us(500);
+		};
+		SetMotionFlag(~AT_HOLD_BALL2_RESPONSE_SUCCESS);
+	}else if(num==0x03){
+		while(!(gRobot.AT_motionFlag&AT_CAMERA_RESPONSE_SUCCESS))
+		{
+			RS485_Send_Data(command,8);
+			Delay_us(500);
+		};
+		SetMotionFlag(~AT_CAMERA_RESPONSE_SUCCESS);
+	}
+	
+	return gRobot.steerByte;
+}
+
+void OpenSteerAll(void)
+{
+	SetSteerByte(0x01,TORQUE_SWITCH,0x01);
+	SetSteerByte(0x02,TORQUE_SWITCH,0x01);
+	SetSteerByte(0x03,TORQUE_SWITCH,0x01);
+}
+
+void ShutAllSteerResponse(void)
+{
+	SetSteerByte(0x01,RESPONSE_STAIR,0x00);
+	SetSteerByte(0x02,RESPONSE_STAIR,0x00);
+	SetSteerByte(0x03,RESPONSE_STAIR,0x00);
+}
+void SetSteerNum(uint8_t num)
+{
+	//解锁flash
+	SetSteerByte(0xfe,LOCK_SWITCH,0x00);
+	
+	unsigned char command[8]={0XFF, 0XFF, 0xfe, 0X04, 0X03, ID_AREA, num, 0x00};
+	unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+	checkSum=~checkSum;
+	command[7]=checkSum;
+	
+	RS485_Send_Data(command,8);
+}
+
+
 /*******DEFINE*******/
 #define INSTRUCTION_PING												0x01 
 #define INSTRUCTION_READ												0x02 
@@ -103,130 +207,6 @@ void SteerPosCrlBy485(int num,int pos)
 #define INSTRUCTION_SYNC_WRITE									0x83 
 #define INSTRUCTION_BULKWRITE_DATA							0x09 
 #define INSTRUCTION_RESET												0x06 
-
-
-
-
-/*不需要打开也可以转*/
-void OpenSteerTorque(unsigned char num)
-{
-  /*
-  *字头：0XFF, 0XFF 
-  *ID ： num
-  *长度：0x04 3+1 （1个数据长度 打开扭矩）
-  *指令：0x03 写指令
-  *地址：0x28 储存ID的地址
-  *校验和：checkSum
-  */
-  unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X03, 0X28, 0x01, 0x00};
-  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
-  checkSum=~checkSum;
-  command[7]=checkSum;
-  
-	RS485_Send_Data(command,8);
-  
-  /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
-}
-
-void SetNumber(unsigned char num)
-{
-  /*
-  *字头：0XFF, 0XFF 
-  *ID ： 0XFE(广播指令)
-  *长度：0x04 3+1 （1个数据长度 设置ID为num）
-  *指令：0x03 写指令
-  *地址：0x05 储存ID的地址
-  *校验和：checkSum
-  */
-	UnLockSteer(0xfe);
-  unsigned char command[8]={0XFF, 0XFF, 0XFE, 0X04, 0X03, 0X05, num, 0x00};
-  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
-  checkSum=~checkSum;
-  command[7]=checkSum;
-  
-	RS485_Send_Data(command,8);
-  
-  /*应答包 FF FF 01（ID） 03（数据长度） 00（错误状态） 01 FA（校验和） */
-}
-
-
-/*不需要打开也可以转*/
-void UnLockSteer(int num)
-{
-  /*
-  *字头：0XFF, 0XFF 
-  *ID ： num
-  *长度：0x04 3+1 （1个数据长度）
-  *指令：0x03 写指令
-  *地址：0x28 储存ID的地址
-  *校验和：checkSum
-  */
-  unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X03, 0X30, 0x00, 0x00};
-  unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
-  checkSum=~checkSum;
-  command[7]=checkSum;
-  
-	RS485_Send_Data(command,8);
-  
-  /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
-}
-
-
-void CameraSteerPosCrl(float angle)
-{
-	int pos=0.f;
-  /*
-  *字头：0XFF, 0XFF 
-  *ID ： num
-  *长度：0x05 3+2 （1个数据长度 位置）
-  *指令：0x03 写指令
-  *地址：0x2A 储存ID的地址
-  *校验和：checkSum
-  */	
-	if(angle>45.f)
-		angle=45.f;
-	else if(angle<-45.f)
-		angle=-45.f;
-	/*减速比为2*/
-	angle=angle*2.f+259.7f;
-	
-	pos=angle*11.378f;
-	
-	SteerPosCrlBy485(0x03,pos);
-
-  /*应答包 FF FF 01（ID） 02（数据长度） 00（错误状态） FA（校验和） */
-}
-
-
-
-
-void CameraAlign(void)
-{
-	float x=0.f;
-	float y=0.f;
-	float direction=0.f;
-	
-	x=gRobot.posX+CAMERA_TO_GYRO_X;
-	y=gRobot.posY-CAMERA_TO_GYRO_Y;
-	
-	if(gRobot.process>=TO_GET_BALL_1&&gRobot.process<TO_GET_BALL_3)
-	{
-		direction=atan2f(QUICK_MARK_X_1-x,y-QUICK_MARK_Y);
-	}else if(gRobot.process>=TO_GET_BALL_3)
-	{
-		direction=atan2f(QUICK_MARK_X_2-x,y-QUICK_MARK_Y);
-	}
-	
-	direction=RAD_TO_ANGLE(direction);
-	
-	if(direction>30.f)
-		direction=30.f;
-	else if(direction<-30.f)
-		direction=-30.f;
-	
-	CameraSteerPosCrl(direction);
-}
-
 
 void SteerResponseError(unsigned char errorWord)
 {
@@ -259,7 +239,7 @@ void USART1_IRQHandler(void)
   static uint8_t step;
   static unsigned char buffer[4]={0};
   static int i=0;
-	static float pos=0;
+  static float pos=0;
   OS_CPU_SR  cpu_sr;
   OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
   OSIntNesting++;
@@ -369,12 +349,12 @@ void USART1_IRQHandler(void)
           USART_OUT(DEBUG_USART,"steer1readbackvalueout\r\n");
           step=0;
         }else
-				{
-					gRobot.holdBallAngle[0]=180.f-pos/11.378f+3.3f;
-				}
+        {
+          gRobot.holdBallAngle[0]=180.f-pos/11.378f+3.3f;
+        }
         i=100;
       }
-			pos=0;
+      pos=0;
       if(i<4){
         buffer[i]=ch;
         i++;
@@ -384,7 +364,7 @@ void USART1_IRQHandler(void)
     case 14:
       if(ch=='\n')
       {
-        SetMotionFlag(AT_HOLD_BALL1_READ_SUCCESS);
+        SetMotionFlag(AT_HOLD_BALL1_RESPONSE_SUCCESS);
         step=0;
       }else
         step=0;
@@ -406,7 +386,7 @@ void UART5_IRQHandler(void)
   static unsigned char buffer[4]={0};
   static int i=0;
   static int pos=0;
-	
+  
   OS_CPU_SR  cpu_sr;
   OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
   OSIntNesting++;
@@ -515,13 +495,13 @@ void UART5_IRQHandler(void)
           USART_OUT(DEBUG_USART,"steer2readbackvalueout\r\n");
           step=0;
         }else
-				{
-					gRobot.holdBallAngle[1]=pos/11.378f-180.f;
-				}
+        {
+          gRobot.holdBallAngle[1]=pos/11.378f-180.f;
+        }
         i=100;
       }
-				pos=0;
-    
+      pos=0;
+      
       if(i<4){
         buffer[i]=ch;
         i++;
@@ -531,7 +511,7 @@ void UART5_IRQHandler(void)
     case 14:
       if(ch=='\n')
       {
-        SetMotionFlag(AT_HOLD_BALL2_READ_SUCCESS);
+        SetMotionFlag(AT_HOLD_BALL2_RESPONSE_SUCCESS);
         step=0;
       }else
         step=0;
