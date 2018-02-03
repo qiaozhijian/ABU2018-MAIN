@@ -72,11 +72,18 @@ void CAN1_RX0_IRQHandler(void)
       msg.data8[i] = buffer[i];
     //位置
     if(msg.data32[0]==1&&gRobot.process==TO_THE_AREA_1)
+		{
       gRobot.process=TO_THROW_BALL_1;
+			
+      PrepareShootBall(BALL_1);
+			SetMotionFlag(~AT_GAS_SUCCESS);
+		}
     if(msg.data32[0]==2&&gRobot.process==TO_THE_AREA_2)
       gRobot.process=TO_THROW_BALL_2;
     if(msg.data32[0]==3&&gRobot.process==TO_THE_AREA_3)
       gRobot.process=TO_THROW_BALL_3;
+    if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.process==ROBOT_PREPARE)
+      SetMotionFlag(AT_PREPARE_READY);
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
   }
   

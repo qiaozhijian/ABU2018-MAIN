@@ -47,7 +47,7 @@ void TalkToCamera(uint32_t command)
 			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
 			{
 				USART_OUT(CAMERA_USART,"AT\r\n");
-				Delay_ms(500);
+				Delay_ms(3);
 				times++;
 				IWDG_Feed();
 //				if(times>100)
@@ -65,7 +65,7 @@ void TalkToCamera(uint32_t command)
 			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
 			{
 				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
-				Delay_ms(2);
+				Delay_ms(3);
 				times++;
 				IWDG_Feed();
 				if(times>100)
@@ -83,7 +83,7 @@ void TalkToCamera(uint32_t command)
 			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
 			{
 				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
-				Delay_ms(2);
+				Delay_ms(3);
 				times++;
 				IWDG_Feed();
 				if(times>100)
@@ -101,7 +101,7 @@ void TalkToCamera(uint32_t command)
 			while(!(gRobot.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
 			{
 				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
-				Delay_ms(2);
+				Delay_ms(3);
 				times++;
 				IWDG_Feed();
 				if(times>100)
@@ -182,10 +182,10 @@ void MotionRead(void)
 	
 	/*像平板发送气压值*/
 	//if(gRobot.isOpenGasReturn&&count==3)
-//	if(count==3)
+	if(count==3)
 	{
 		count=0;
-		//USART_BLE_SEND(gRobot.gasValue);
+	//	USART_BLE_SEND(gRobot.gasValue);
 	}
 }
 
@@ -222,44 +222,44 @@ void MotionStatusUpdate(void)
 	}
 	
 	#ifndef TEST
-	/*判断持球舵机一是否到位*/
-	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
-	{
-		SetMotionFlag(AT_HOLD_BALL1_SUCCESS);
-		/*转到一定小角度就转不动了，干脆就不转了*/
-		if(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
-			gRobot.holdBallAimAngle=gRobot.holdBallAngle[0];
-	}	
-	else
-	{
-		SetMotionFlag(~AT_HOLD_BALL1_SUCCESS);
-	}
-	
-	/*判断持球舵机二是否到位*/
-	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[1])<0.5f)
-	{
-		SetMotionFlag(AT_HOLD_BALL2_SUCCESS);
-		/*转到一定小角度就转不动了，干脆就不转了*/
-		if(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
-			gRobot.holdBallAimAngle=gRobot.holdBallAngle[1];
-	}
-	else
-	{
-		SetMotionFlag(~AT_HOLD_BALL2_SUCCESS);
-	}
+//	/*判断持球舵机一是否到位*/
+//	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
+//	{
+//		SetMotionFlag(AT_HOLD_BALL1_SUCCESS);
+//		/*转到一定小角度就转不动了，干脆就不转了*/
+//		if(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+//			gRobot.holdBallAimAngle=gRobot.holdBallAngle[0];
+//	}	
+//	else
+//	{
+//		SetMotionFlag(~AT_HOLD_BALL1_SUCCESS);
+//	}
+//	
+//	/*判断持球舵机二是否到位*/
+//	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[1])<0.5f)
+//	{
+//		SetMotionFlag(AT_HOLD_BALL2_SUCCESS);
+//		/*转到一定小角度就转不动了，干脆就不转了*/
+//		if(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+//			gRobot.holdBallAimAngle=gRobot.holdBallAngle[1];
+//	}
+//	else
+//	{
+//		SetMotionFlag(~AT_HOLD_BALL2_SUCCESS);
+//	}
 	#endif
 	
-	/*判断相机转台舵机是否到位*/
-	if(abs(gRobot.cameraAimAngle-gRobot.cameraAngle)<0.5f)
-	{
-		SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
-	}
-	else
-	{
-		SetMotionFlag(~AT_CAMERA_RESPONSE_SUCCESS);
-	}
+//	/*判断相机转台舵机是否到位*/
+//	if(abs(gRobot.cameraAimAngle-gRobot.cameraAngle)<0.5f)
+//	{
+//		SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
+//	}
+//	else
+//	{
+//		SetMotionFlag(~AT_CAMERA_RESPONSE_SUCCESS);
+//	}
 	
-	if(abs(gRobot.gasAimValue-gRobot.gasValue)<0.01f)
+	if(abs(gRobot.gasAimValue-gRobot.gasValue)<0.004f)
 	{
 		SetMotionFlag(AT_GAS_SUCCESS);
 	}

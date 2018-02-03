@@ -4,7 +4,7 @@
 #include "stdint.h"
 #include "stm32f4xx_usart.h"
 
-#define DEBUG_USART		UART4
+#define DEBUG_USART		USART1
 
 #define RS485_TX_EN					GPIO_SetBits(GPIOC,GPIO_Pin_13);
 #define RS485_RX_EN					GPIO_ResetBits(GPIOC,GPIO_Pin_13);
@@ -17,12 +17,12 @@
 #define CAMERA_OPEN_NEAR												1
 #define CAMERA_OPEN_FAR													2
 
-void Steer1Init(uint32_t BaudRate);
-void Steer2Init(uint32_t BaudRate);
-void CameraSteerInit(uint32_t BaudRate);
-void GYRO_Init(uint32_t BaudRate);
 void DebugBLE_Init(uint32_t BaudRate);
-void CameraInit(uint32_t BaudRate);
+void Steer2Init(uint32_t BaudRate);
+void SteerInit(uint32_t BaudRate);
+void GYRO_Init(uint32_t BaudRate);
+void ControlBLE_Init(uint32_t BaudRate);
+void CameraTalkInit(uint32_t BaudRate);
 
 void RS485_Send_Data(unsigned char *buf,unsigned char len);
 void USART_OUT(USART_TypeDef* USARTx, const char *Data,...);

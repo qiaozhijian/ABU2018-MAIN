@@ -10,7 +10,7 @@
 #include "usart.h"
 /**************#define area**********/
 
-#define TEST
+//#define TEST
 
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f
@@ -89,6 +89,8 @@
 
 #define AT_GAS_SUCCESS													0x4000u
 
+#define AT_PREPARE_READY													0x8000u
+
 
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
@@ -135,10 +137,11 @@
 #define END_COMPETE												100
 
 /*比赛进程宏定义解释*/
-#define ROBOT_START							0
-#define COLORFUL_BALL_1					1
-#define COLORFUL_BALL_2					2
-#define GOLD_BALL								3
+#define ROBOT_PREPARE						0
+#define ROBOT_START							1
+#define COLORFUL_BALL_1					2
+#define COLORFUL_BALL_2					3
+#define GOLD_BALL								4
 
 /*控制卡通信解释*/
 //开始出发
@@ -170,6 +173,8 @@
 #define GET_MOTIONCARD_REACH_AREA3				3
 /*自检完成*/
 #define GET_MOTIONCARD_SELFTEST_FINISH		4
+/*控制卡初始化完成*/
+#define GET_MOTIONCARD_PREPARE_READY			5
 
 /*球编号*/
 #define READY															0
@@ -244,6 +249,7 @@ typedef struct{
   float angle;
   float posX;
   float posY;
+	uint32_t posSystemReady;
 	
 	/*系统复位有关变量*/
   /*{*/

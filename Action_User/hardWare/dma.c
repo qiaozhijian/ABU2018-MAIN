@@ -48,7 +48,7 @@ void UART5DMAInit(void)
 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
 
-	//DebugBLE_Init(115200);
+	//ControlBLE_Init(115200);
 
 	DMA_DeInit(DMA1_Stream7);
 	while (DMA_GetCmdStatus(DMA1_Stream7) != DISABLE){}

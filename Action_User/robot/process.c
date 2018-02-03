@@ -112,30 +112,30 @@ void FightForBall1(void)
       PrepareShootBall(BALL_1);
       
       gRobot.process=TO_THE_AREA_1;
+			
+			gRobot.gasAimValue=0.3f;
       
     }
     break;
     /*第一个球取球完毕，去投射区一*/
   case TO_THE_AREA_1:
-    if(!PE_FOR_THE_BALL)
-    {
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL1);
-    }
+			if(gRobot.AT_motionFlag&AT_GAS_SUCCESS)
+				ShootBigOpen();
     break;
     /*到达投射区一，射球*/
   case TO_THROW_BALL_1:
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-				&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
 					/*持球舵机到位*/
-					&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+				//	&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f))
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
 								/*气压到位*/
-							//	&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))||PE_FOR_THE_BALL)
+								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -209,15 +209,15 @@ void FightForBall2(void)
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-				&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+	//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
 					/*持球舵机到位*/
-					&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f))
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
 								/*气压到位*/
-						//		&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))||PE_FOR_THE_BALL)
+								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -280,12 +280,15 @@ void FightForGoldBall(void)
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
       
+			BoostPolePush();
+			
       PrepareShootBall(BALL_3);
       
     }
     break;
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
+		if(gRobot.posY>2500.f) BoostPoleReturn();
     if(!PE_FOR_THE_BALL)
     {
       MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL3);
@@ -296,15 +299,15 @@ void FightForGoldBall(void)
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-				&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
 					/*持球舵机到位*/
-					&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f))
+							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
 								/*气压到位*/
-							//	&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))||PE_FOR_THE_BALL)
+								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
     {
       /*射球*/
       ShootBall();

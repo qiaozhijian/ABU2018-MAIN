@@ -87,7 +87,7 @@ void Steer2Init(uint32_t BaudRate)
   /* Enable USART */
   USART_Cmd(UART5, ENABLE);
 }
-void Steer1Init(uint32_t BaudRate)
+void DebugBLE_Init(uint32_t BaudRate)
 {
   GPIO_InitTypeDef 	GPIO_InitStructure;
   USART_InitTypeDef   USART_InitStructure;
@@ -131,7 +131,7 @@ void Steer1Init(uint32_t BaudRate)
   USART_Cmd(USART1, ENABLE);  //使能串口1 	
   
 }
-void CameraSteerInit(uint32_t BaudRate)
+void SteerInit(uint32_t BaudRate)
 {
   GPIO_InitTypeDef 	GPIO_InitStructure;
   USART_InitTypeDef   USART_InitStructure;
@@ -250,7 +250,7 @@ void GYRO_Init(uint32_t BaudRate)
 }
 
 
-void CameraInit(uint32_t BaudRate)
+void CameraTalkInit(uint32_t BaudRate)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   USART_InitTypeDef USART_InitStructure;
@@ -295,7 +295,7 @@ void CameraInit(uint32_t BaudRate)
       
 }
 
-void DebugBLE_Init(uint32_t BaudRate)
+void ControlBLE_Init(uint32_t BaudRate)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   USART_InitTypeDef USART_InitStructure;

@@ -3,9 +3,9 @@
 #include "usart.h"
 
 /*延时大，不用了！*/
-#define THRESHOLD_TEMP 		 0.01f
+#define THRESHOLD_TEMP 		 5.f
 #define THRESHOLD_COUNT  	 100
-#define STD_VALUE					 0.2f
+#define STD_VALUE					 0.55f
 float LowPassFilter(float newValue)
 {
 	static uint8_t Dr_flagLst = { 0 };
@@ -26,10 +26,10 @@ float LowPassFilter(float newValue)
 	}		
   if (!(Dr_flag^Dr_flagLst))    //前后数据变化方向一致
 	{
-    F_count=F_count+2;
+    F_count=F_count+1;
     if (diffValue >= THRESHOLD_TEMP)
 		{
-			F_count=F_count+4;
+			F_count=F_count+5;
 		}
     if (F_count >= THRESHOLD_COUNT)
       F_count = THRESHOLD_COUNT;

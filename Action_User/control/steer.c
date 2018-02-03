@@ -31,7 +31,7 @@ void HoldSteer1PosCrl(float angle,int vel)
     angle=-100.f;
   
   /*1/4096.f*360.f=11.378*/
-  pos=(int)((180.f-(angle-3.4f))*11.378f);  
+  pos=(int)((180.f-(angle+3.2f))*11.378f);  
   
   SteerPosCrlBy485(0x01,pos);
 }
@@ -174,14 +174,14 @@ uint8_t ReadOneByte(int num,int address)
 void OpenSteerAll(void)
 {
 	SetSteerByte(0x01,TORQUE_SWITCH,0x01);
-	SetSteerByte(0x02,TORQUE_SWITCH,0x01);
+//	SetSteerByte(0x02,TORQUE_SWITCH,0x01);
 	SetSteerByte(0x03,TORQUE_SWITCH,0x01);
 }
 
 void ShutAllSteerResponse(void)
 {
 	SetSteerByte(0x01,RESPONSE_STAIR,0x00);
-	SetSteerByte(0x02,RESPONSE_STAIR,0x00);
+//	SetSteerByte(0x02,RESPONSE_STAIR,0x00);
 	SetSteerByte(0x03,RESPONSE_STAIR,0x00);
 }
 void SetSteerNum(uint8_t num)
@@ -231,151 +231,7 @@ void SteerResponseError(unsigned char errorWord)
     //成功
   }
 }
-/****************舵机一串口接收中断****start****************/
 
-void USART1_IRQHandler(void)
-{
-  static uint8_t ch;
-  static uint8_t step;
-  static unsigned char buffer[4]={0};
-  static int i=0;
-  static float pos=0;
-  OS_CPU_SR  cpu_sr;
-  OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
-  OSIntNesting++;
-  OS_EXIT_CRITICAL();
-  
-  if(USART_GetITStatus(USART1, USART_IT_RXNE)==SET)   
-  {
-    USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-    ch=USART_ReceiveData(USART1);
-    if(ch=='@') step=0;
-    
-    switch(step)
-    {
-    case 0:
-      if(ch=='@')
-        step++;
-      else
-        step=0;
-      break;
-    case 1:
-      if(ch=='1')
-        step++;
-      else
-        step=0;
-      break;
-    case 2:
-      if(ch==' ')
-        step++;
-      else
-        step=0;
-      break;
-    case 3:
-      if(ch=='A')
-        step++;
-      else
-        step=0;
-      break;
-    case 4:
-      if(ch=='C')
-        step++;
-      else
-        step=0;
-      break;
-    case 5:
-      if(ch=='K')
-        step++;
-      else
-        step=0;
-      break;
-    case 6:
-      if(ch=='\r')
-        step++;
-      else if(ch==' ')
-        step=8;
-      else
-        step=0;
-      break;
-    case 7:
-      if(ch=='\n')
-      {
-        SetMotionFlag(AT_HOLD_BALL1_SUCCESS);
-        step=0;
-      }else
-        step=0;
-      break;
-    case 8:
-      if(ch=='5')
-        step++;
-      else
-        step=0;
-      break;
-    case 9:
-      if(ch=='6')
-        step++;
-      else
-        step=0;
-      break;
-      //56,2,4095\r\n
-    case 10:
-      if(ch==',')
-        step++;
-      else
-        step=0;
-      break;
-    case 11:
-      if(ch=='2')
-        step++;
-      else
-        step=0;
-      break;
-    case 12:
-      if(ch==',')
-        step++;
-      else
-        step=0;
-      break;
-    case 13:
-      if(ch=='\r')
-      {
-        step++;
-        for(int j=0;j<i;j++)
-        {
-          pos+=(buffer[j]-'0')*pow(10,i-j-1);
-        }
-        if(pos>4095||pos<0)
-        {
-          USART_OUT(DEBUG_USART,"steer1readbackvalueout\r\n");
-          step=0;
-        }else
-        {
-          gRobot.holdBallAngle[0]=180.f-pos/11.378f+3.3f;
-        }
-        i=100;
-      }
-      pos=0;
-      if(i<4){
-        buffer[i]=ch;
-        i++;
-      }else
-        i=0;
-      break;
-    case 14:
-      if(ch=='\n')
-      {
-        SetMotionFlag(AT_HOLD_BALL1_RESPONSE_SUCCESS);
-        step=0;
-      }else
-        step=0;
-      break;
-    }
-    
-  }else{
-    USART_ReceiveData(USART1);
-  }
-  OSIntExit();
-}
 
 /****************舵机二串口接收中断****start****************/
 

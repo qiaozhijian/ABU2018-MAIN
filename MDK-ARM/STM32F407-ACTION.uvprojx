@@ -415,6 +415,11 @@
               <FileType>1</FileType>
               <FilePath>..\Action_User\robot\DataRecover.c</FilePath>
             </File>
+            <File>
+              <FileName>debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\robot\debug.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

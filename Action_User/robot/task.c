@@ -73,7 +73,7 @@ void ConfigTask(void)
   CPU_INT08U  os_err;
   os_err = os_err;  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-  /*调试蓝牙*/
+	/*持球上舵机初始化*/
   DebugBLE_Init(921600);
 	USART_OUT(DEBUG_USART,"START\r\n");
 	
@@ -113,7 +113,6 @@ void RobotTask(void)
 		#ifdef TEST
 		SelfTest();
 		#else		
-		
 		/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 		IWDG_Feed();
 		
@@ -132,36 +131,48 @@ void RobotTask(void)
 		/*运动状态更新*/
     MotionRead();
 		
-//		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
-//		USART_OUT_F(gRobot.gasValue);
-//		USART_OUT_F(gRobot.angle);
-//		USART_Enter();
+		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
+		USART_OUT_F(gRobot.gasValue);
+		USART_OUT_F(gRobot.angle);
+		USART_Enter();
 		
     switch(gRobot.robocon2018)
     {
-    case ROBOT_START:
-			if(gRobot.posX>100.f)
-			{
-				PrepareGetBall(BALL_1);			
-			}
-      if(gRobot.posX>4000.f)
-		  {
-				gRobot.process=TO_GET_BALL_1;
-		  	gRobot.robocon2018=COLORFUL_BALL_1;
-			}
-      break;
-    case COLORFUL_BALL_1:
-      /*完成彩球一的投射*/
-      FightForBall1();
-      break;
-    case COLORFUL_BALL_2:
-      /*完成彩球二的投射*/
-      FightForBall2();
-      break;
-    case GOLD_BALL:
-      /*完成金球的投射*/
-      FightForGoldBall();
-      break;
+			case ROBOT_PREPARE:
+				if(gRobot.AT_motionFlag&AT_PREPARE_READY)
+				{
+					BEEP_ON;
+					ShootLedOn();
+					Delay_ms(2000);
+					ShootLedOff();
+					BEEP_OFF;
+					SetMotionFlag(~AT_PREPARE_READY);
+					gRobot.robocon2018=ROBOT_START;
+				}
+				break;
+			case ROBOT_START:
+				if(gRobot.posX>100.f)
+				{
+					PrepareGetBall(BALL_1);			
+				}
+				if(gRobot.posX>4000.f)
+				{
+					gRobot.process=TO_GET_BALL_1;
+					gRobot.robocon2018=COLORFUL_BALL_1;
+				}
+				break;
+			case COLORFUL_BALL_1:
+				/*完成彩球一的投射*/
+				FightForBall1();
+				break;
+			case COLORFUL_BALL_2:
+				/*完成彩球二的投射*/
+				FightForBall2();
+				break;
+			case GOLD_BALL:
+				/*完成金球的投射*/
+				FightForGoldBall();
+				break;
     }	
 		#endif
   } 
@@ -178,19 +189,17 @@ void HardWareInit(void){
   /*初始化取球，射击参数结构体*/
   prepareMotionParaInit();
 	
-	/*持球上舵机初始化*/
-  Steer1Init(1000000);
-	/*持球下舵机初始化*/
-  Steer2Init(1000000);
   //摄像头转台初始化
-  CameraSteerInit(1000000);
+  SteerInit(1000000);
 	
 	/*与摄像头通信的串口初始化*/
-	CameraInit(256000);
+	CameraTalkInit(256000);
 	
 	/*接收定位系统数据的串口初始化*/
 	GYRO_Init(921600);
 	
+  /*调试蓝牙*/
+  ControlBLE_Init(921600);
 	
   /*光电初始化*/
   PhotoelectricityInit();
@@ -272,13 +281,7 @@ void statusInit(void)
 //	TalkToCamera(CAMERA_OPEN_FAR);
 	#endif
 	
-	BEEP_ON;
-	ShootLedOn();
-	Delay_ms(2000);
-	ShootLedOff();
-	BEEP_OFF;
-	
-  gRobot.robocon2018=ROBOT_START;
+  gRobot.robocon2018=ROBOT_PREPARE;
 }	
 
 

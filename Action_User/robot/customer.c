@@ -16,7 +16,6 @@
 #include "motion.h"
 #include "timer.h"
 extern Robot_t gRobot;
-int flagggg=0;
 
 void USART3_IRQHandler(void)
 {
@@ -81,11 +80,8 @@ void USART3_IRQHandler(void)
       {
         gRobot.angle=posture.ActVal[0] ;
         gRobot.posY = -posture.ActVal[3];
-        gRobot.posX = -posture.ActVal[4];		
-//				flagggg=1;
-//				USART_OUT_F(gRobot.posY);
-//		USART_OUT_F(gRobot.posX);
-//		USART_Enter();
+        gRobot.posX = -posture.ActVal[4];	
+				gRobot.posSystemReady=1;
       }
       count = 0;
       break;
@@ -289,45 +285,13 @@ void AT_CMD_Judge(void){
   else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//发射按钮   
     atCommand=STAIR2;
 	
-  if((bufferI >= 9) && strncmp(buffer, "AT+report", 9)==0)//AT    
-  {
-    StatusReport();
-  }
-  else if((bufferI >= 4) && strncmp(buffer, "AT+PE", 5)==0)//AT    
-  {
-    USART_OUT(DEBUG_USART,"PE\t%d\r\n",PE_FOR_THE_BALL);
-  }
-  else if((bufferI >= 4) && strncmp(buffer, "AT+init",7 )==0)//AT    
-  {
-    PhotoelectricityInit();
-    USART_OUT(DEBUG_USART,"OK\r\n");
-  }
-  else if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
+  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
   {
 		
 		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
     //摄像头连接成功
   }
-	//打开气阀返回
-  else if((bufferI == 9) && strncmp(buffer, "AT+OPST\r\n",9 )==0)
-  {
-		gRobot.isOpenGasReturn=1;
-    USART_OUT(DEBUG_USART,"OK\r\n");
-  }
-	//关闭气阀返回
-  else if((bufferI == 9) && strncmp(buffer, "AT+STST\r\n",9 )==0)
-  {
-		gRobot.isOpenGasReturn=0;
-    USART_OUT(DEBUG_USART,"OK\r\n");
-  }
-  else if((bufferI >= 12) && strncmp(buffer, "AT+HARDFAULT\r\n",12 )==0)
-  {
-//		int a[2];
-//    USART_OUT(DEBUG_USART,"hardfault\r\n");
-//		for(int i=10000;i<80000;i++)
-//			a[i]=100;
-  }
-  
+	
   /*如果是及时处理的命令，就初始化*/
 	if(atCommand==0)
 	{
@@ -601,6 +565,12 @@ void SetMotionFlag(uint32_t status){
     break;
   case ~AT_CAMERA_RESPONSE_SUCCESS:
     gRobot.AT_motionFlag&=~AT_CAMERA_RESPONSE_SUCCESS;
+    break;
+  case AT_PREPARE_READY:
+    gRobot.AT_motionFlag|=AT_PREPARE_READY;
+    break;
+  case ~AT_PREPARE_READY:
+    gRobot.AT_motionFlag&=~AT_PREPARE_READY;
     break;
   }
 }
