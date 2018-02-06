@@ -6,6 +6,10 @@
 #define RESPONSE_STAIR				0X08
 #define LOCK_SWITCH						0X30
 #define ID_AREA								0X05
+#define AIM_POS								0X2A
+#define P_STEER_ADDRESS				0X15
+#define AIM_VEL								0X2E
+#define AIM_TIME							0X2C
 
 void CameraSteerPosCrl(float angle);
 
@@ -19,7 +23,7 @@ void HoldBallPosCrl(float angle,int vel);
 void HoldSteer1PosCrl(float angle,int vel);
 
 void HoldSteer2PosCrl(float angle,int vel);
-	
+
 void OpenSteerAll(void);
 
 uint8_t ReadOneByte(int num,int address);
@@ -29,4 +33,10 @@ void SetSteerByte(uint8_t num,uint8_t address,uint8_t value);
 void SetSteerNum(uint8_t num);
 
 void ShutAllSteerResponse(void);
+
+void SetSteerWord(uint8_t num,uint8_t address,uint8_t value);
+
+void ReadSteerErrorAll(void);
+
+void SteerResponseError(uint8_t num, uint8_t errorWord);
 #endif

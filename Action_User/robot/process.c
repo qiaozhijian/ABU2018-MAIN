@@ -18,12 +18,28 @@ void SelfTest(void)
   CPU_INT08U  os_err;
   os_err = os_err;
 	
-	AT_CMD_Handle();
-	USART_BLE_SEND(gRobot.gasValue);
+	//AT_CMD_Handle();
+	//USART_BLE_SEND(gRobot.gasValue);
 	static int step=10;
+	static int count=0;
 	switch(step)
 	{
 		case 10:
+		if(PE_FOR_THE_BALL)
+		{
+			count++;
+		}else
+			count=0;
+		if(count>200)
+		{
+			BoostPolePush();
+			Delay_ms(2000);
+			OSSemSet(PeriodSem, 0, &os_err);
+			BoostPoleReturn();
+			count=0;
+		}
+	
+		
 //			SetResponseStair(0x01);
 //	HoldSteer1PosCrl(0.f,2000);		
 //	OpenSteerTorque(0xfe);
@@ -36,7 +52,6 @@ void SelfTest(void)
 //			step++;
 //		}
 //		
-
 			break;
 		case 0:
 			ShootSmallOpen();
@@ -66,7 +81,6 @@ void SelfTest(void)
 			break;
 		case 3:
 			//开小气阀
-		
 			ReadActualPos(CAN2,6);
 			if(gRobot.courseAngle>160.f)
 			{
@@ -112,24 +126,21 @@ void FightForBall1(void)
       PrepareShootBall(BALL_1);
       
       gRobot.process=TO_THE_AREA_1;
-			
-			gRobot.gasAimValue=0.3f;
       
     }
     break;
     /*第一个球取球完毕，去投射区一*/
   case TO_THE_AREA_1:
-			if(gRobot.AT_motionFlag&AT_GAS_SUCCESS)
-				ShootBigOpen();
+
     break;
     /*到达投射区一，射球*/
   case TO_THROW_BALL_1:
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
-				//	&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+				//	&&(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
@@ -152,21 +163,23 @@ void FightForBall1(void)
       /*进入下一状态*/
       gRobot.process=TO_GET_BALL_2;
       gRobot.robocon2018=COLORFUL_BALL_2;
+			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
 		{
+			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
-				USART_OUT_ONCE("!PE1\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
-				USART_OUT_ONCE("!HB11\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
-				USART_OUT_ONCE("!HB21\t");
+				USART_OUT(DEBUG_USART,"!PE1\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB11\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB21\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
-				USART_OUT_ONCE("!PITCH1\t");
+				USART_OUT(DEBUG_USART,"!PITCH1\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
-				USART_OUT_ONCE("!COURSE1\t");
+				USART_OUT(DEBUG_USART,"!COURSE1\t");
 			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
-				USART_OUT_ONCE("!GAS1\t");
+				USART_OUT(DEBUG_USART,"!GAS1\t");
 			USART_Enter();
 		}
     break;
@@ -209,9 +222,9 @@ void FightForBall2(void)
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-	//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+	//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
-		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
@@ -236,21 +249,23 @@ void FightForBall2(void)
       
       gRobot.process=TO_GET_BALL_3;
       gRobot.robocon2018=GOLD_BALL;
+			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
 		{
+			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
-				USART_OUT_ONCE("!PE2\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
-				USART_OUT_ONCE("!HB12\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
-				USART_OUT_ONCE("!HB22\t");
+				USART_OUT(DEBUG_USART,"!PE2\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB12\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB22\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
-				USART_OUT_ONCE("!PITCH2\t");
+				USART_OUT(DEBUG_USART,"!PITCH2\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
-				USART_OUT_ONCE("!COURSE2\t");
+				USART_OUT(DEBUG_USART,"!COURSE2\t");
 			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
-				USART_OUT_ONCE("!GAS2\t");
+				USART_OUT(DEBUG_USART,"!GAS2\t");
 			USART_Enter();
 		}
     break;
@@ -299,9 +314,9 @@ void FightForGoldBall(void)
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS)
+		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
-		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS)
+		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
 						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
@@ -320,21 +335,23 @@ void FightForGoldBall(void)
       ShootReset();
       
       gRobot.process=END_COMPETE;
+			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
 		{
+			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
-				USART_OUT_ONCE("!PE3\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL1_SUCCESS))
-				USART_OUT_ONCE("!HB13\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL2_SUCCESS))
-				USART_OUT_ONCE("!HB23\t");
+				USART_OUT(DEBUG_USART,"!PE3\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB13\t");
+			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+				USART_OUT(DEBUG_USART,"!HB23\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
-				USART_OUT_ONCE("!PITCH3\t");
+				USART_OUT(DEBUG_USART,"!PITCH3\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
-				USART_OUT_ONCE("!COURSE3\t");
+				USART_OUT(DEBUG_USART,"!COURSE3\t");
 			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
-				USART_OUT_ONCE("!GAS3\t");
+				USART_OUT(DEBUG_USART,"!GAS3\t");
 			USART_Enter();
 		}
     break;
@@ -409,47 +426,47 @@ void processReponse(void)
   {
   case TO_START:
     USART_OUT(DEBUG_USART,"TO_START");
-    USART_Enter();
+    
     break;
   case TO_GET_BALL_1:
     USART_OUT(DEBUG_USART,"TO_GET_BALL_1");
-    USART_Enter();
+    
     break;
   case TO_THE_AREA_1:
     USART_OUT(DEBUG_USART,"TO_THE_AREA_1");
-    USART_Enter();
+    
     break;
   case TO_THROW_BALL_1:
     USART_OUT(DEBUG_USART,"TO_THROW_BALL_1");
-    USART_Enter();
+    
     break;
   case TO_GET_BALL_2:
     USART_OUT(DEBUG_USART,"TO_GET_BALL_2");
-    USART_Enter();
+    
     break;
   case TO_THE_AREA_2:
     USART_OUT(DEBUG_USART,"TO_THE_AREA_2");
-    USART_Enter();
+    
     break;
   case TO_THROW_BALL_2:
     USART_OUT(DEBUG_USART,"TO_THROW_BALL_2");
-    USART_Enter();
+    
     break;
   case TO_GET_BALL_3:
     USART_OUT(DEBUG_USART,"TO_GET_BALL_3");
-    USART_Enter();
+    
     break;
   case TO_THE_AREA_3:
     USART_OUT(DEBUG_USART,"TO_THE_AREA_3");
-    USART_Enter();
+    
     break;
   case TO_THROW_BALL_3:
     USART_OUT(DEBUG_USART,"TO_THROW_BALL_3");
-    USART_Enter();
+    
     break;
   case END_COMPETE:
     USART_OUT(DEBUG_USART,"END_COMPETE");
-    USART_Enter();
+    
     break;
   }
 }
@@ -520,47 +537,46 @@ void processReport(void)
   switch(gRobot.process)
   {
   case TO_START:
-    USART_OUT(DEBUG_USART,"TO_START");
-    USART_Enter();
+    USART_OUT(DEBUG_USART,"TO_START\t");
     break;
   case TO_GET_BALL_1:
-    USART_OUT(DEBUG_USART,"TO_GET_BALL_1");
+    USART_OUT(DEBUG_USART,"TO_GET_BALL_1\t");
     USART_Enter();
     break;
   case TO_THE_AREA_1:
-    USART_OUT(DEBUG_USART,"TO_THE_AREA_1");
+    USART_OUT(DEBUG_USART,"TO_THE_AREA_1\t");
     USART_Enter();
     break;
   case TO_THROW_BALL_1:
-    USART_OUT(DEBUG_USART,"TO_THROW_BALL_1");
+    USART_OUT(DEBUG_USART,"TO_THROW_BALL_1\t");
     USART_Enter();
     break;
   case TO_GET_BALL_2:
-    USART_OUT(DEBUG_USART,"TO_GET_BALL_2");
+    USART_OUT(DEBUG_USART,"TO_GET_BALL_2\t");
     USART_Enter();
     break;
   case TO_THE_AREA_2:
-    USART_OUT(DEBUG_USART,"TO_THE_AREA_2");
+    USART_OUT(DEBUG_USART,"TO_THE_AREA_2\t");
     USART_Enter();
     break;
   case TO_THROW_BALL_2:
-    USART_OUT(DEBUG_USART,"TO_THROW_BALL_2");
+    USART_OUT(DEBUG_USART,"TO_THROW_BALL_2\t");
     USART_Enter();
     break;
   case TO_GET_BALL_3:
-    USART_OUT(DEBUG_USART,"TO_GET_BALL_3");
+    USART_OUT(DEBUG_USART,"TO_GET_BALL_3\t");
     USART_Enter();
     break;
   case TO_THE_AREA_3:
-    USART_OUT(DEBUG_USART,"TO_THE_AREA_3");
+    USART_OUT(DEBUG_USART,"TO_THE_AREA_3\t");
     USART_Enter();
     break;
   case TO_THROW_BALL_3:
-    USART_OUT(DEBUG_USART,"TO_THROW_BALL_3");
+    USART_OUT(DEBUG_USART,"TO_THROW_BALL_3\t");
     USART_Enter();
     break;
   case END_COMPETE:
-    USART_OUT(DEBUG_USART,"END_COMPETE");
+    USART_OUT(DEBUG_USART,"END_COMPETE\t");
     USART_Enter();
     break;
   }
@@ -575,23 +591,23 @@ void processReport(void)
 //  static int delayMs[DELAY_TASK_NUM]={0};
 //  
 //  /*检测舵机1的位置有没有到达*/
-//  if(gRobot.delayTask&DELAY_HOLD_BALL1_CHECK_POS)
+//  if(gRobot.delayTask&DELAY_HOLD_BALL_1_CHECK_POS)
 //  {
 //    ReadSteer1Pos();
 //    delayMs[0]++;
 //    if(delayMs[0]*PERIOD_COUNTER>gRobot.delayTaskMs[0])
 //    {
-//      DelayStop(DELAY_HOLD_BALL1_CHECK_POS);
+//      DelayStop(DELAY_HOLD_BALL_1_CHECK_POS);
 //      //4096/360=11.377
 //      if(abs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0])>2*11.377f)
 //      {
 //        Steer1HoldBallPosCrl(gRobot.steerAimPos[0][0],2000);
-//        //USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL1_CHECK_POS FAIL\r\n");
-//        ErrorRecord(HOLD_BALL1_ROTATE_FAIL);
+//        //USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL_1_CHECK_POS FAIL\r\n");
+//        ErrorRecord(HOLD_BALL_1_ROTATE_FAIL);
 //      }
 //      else
 //      {
-//        USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL1_CHECK_POS SUCCESS\r\n");
+//        USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL_1_CHECK_POS SUCCESS\r\n");
 //      }
 //      delayMs[0]=0;
 //    }
@@ -601,23 +617,23 @@ void processReport(void)
 //  }
 //  
 //  /*检测舵机2的位置有没有到达*/
-//  if(gRobot.delayTask&DELAY_HOLD_BALL2_CHECK_POS)
+//  if(gRobot.delayTask&DELAY_HOLD_BALL_2_CHECK_POS)
 //  {
 //    ReadSteer2Pos();
 //    delayMs[1]++;
 //    if(delayMs[1]*PERIOD_COUNTER>gRobot.delayTaskMs[1])
 //    {
-//      DelayStop(DELAY_HOLD_BALL2_CHECK_POS);
+//      DelayStop(DELAY_HOLD_BALL_2_CHECK_POS);
 //      //4096/360=11.377
 //      if(abs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1])>2*11.377f)
 //      {
 //        Steer2HoldBallPosCrl(gRobot.steerAimPos[1][0],2000);
-//        //USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL2_CHECK_POS FAIL\r\n");
-//        ErrorRecord(HOLD_BALL2_ROTATE_FAIL);
+//        //USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL_2_CHECK_POS FAIL\r\n");
+//        ErrorRecord(HOLD_BALL_2_ROTATE_FAIL);
 //      }
 //      else
 //      {
-//        USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL2_CHECK_POS SUCCESS\r\n");
+//        USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL_2_CHECK_POS SUCCESS\r\n");
 //      }
 //      delayMs[1]=0;
 //    }

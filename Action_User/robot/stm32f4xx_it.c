@@ -75,8 +75,8 @@ void CAN1_RX0_IRQHandler(void)
 		{
       gRobot.process=TO_THROW_BALL_1;
 			
-      PrepareShootBall(BALL_1);
-			SetMotionFlag(~AT_GAS_SUCCESS);
+//      PrepareShootBall(BALL_1);
+//			SetMotionFlag(~AT_GAS_SUCCESS);
 		}
     if(msg.data32[0]==2&&gRobot.process==TO_THE_AREA_2)
       gRobot.process=TO_THROW_BALL_2;

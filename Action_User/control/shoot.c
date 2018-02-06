@@ -25,13 +25,12 @@ void ShootBall(void)
   CPU_INT08U  os_err;
   os_err = os_err;
 	
-  ShootSmallOpen();
-  ShootBigShut();
+  /*进行适当延时保证夹子和球不干涉*/
+  Delay_ms(2000);
 	ShootLedOn();
   /*夹子打开*/
   ClawOpen();
-  /*进行适当延时保证夹子和球不干涉*/
-  Delay_ms(1000);
+  Delay_ms(300);
 	/*清除信号量*/
 	OSSemSet(PeriodSem, 0, &os_err);
   /*把两个发射气缸打开*/
@@ -51,51 +50,51 @@ void prepareMotionParaInit(void)
 	/*准备区动作*/
   PrepareCompete.courseAngle=0.0f;
   PrepareCompete.pitchAngle=-20.0f;
-  PrepareCompete.steerAngle=-90.f;
+  PrepareCompete.steerAngle=-80.f;
   PrepareCompete.steerSpeed=2000;
-  PrepareCompete.gasAim=0.3f;
+  PrepareCompete.gasAim=0.555f;
 	
   /*准备去拿第一个球的数据*/
   PrepareGetBall1.courseAngle=0.0f;
-  PrepareGetBall1.pitchAngle=0.0f;
-  PrepareGetBall1.steerAngle=0.f;
+  PrepareGetBall1.pitchAngle=2.6f;
+  PrepareGetBall1.steerAngle=0.0f;
   PrepareGetBall1.steerSpeed=2000;
-  PrepareGetBall1.gasAim=0.3f;
+  PrepareGetBall1.gasAim=0.555f;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=172.9f;
   PrepareShootBall1.pitchAngle=7.1f;
   PrepareShootBall1.steerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
-  PrepareShootBall1.gasAim=0.56f;
+  PrepareShootBall1.gasAim=0.555f;
 	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=90.f;
   PrepareGetBall2.pitchAngle=3.1f;
-  PrepareGetBall2.steerAngle=85.f;
+  PrepareGetBall2.steerAngle=90.f;
   PrepareGetBall2.steerSpeed=2000;
-  PrepareGetBall2.gasAim=0.56f;
+  PrepareGetBall2.gasAim=0.555f;
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=174.9f;
   PrepareShootBall2.pitchAngle=3.6f;
   PrepareShootBall2.steerAngle=0.f;
   PrepareShootBall2.steerSpeed=2000;
-  PrepareShootBall2.gasAim=0.56f;
+  PrepareShootBall2.gasAim=0.555f;
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=0.0f;
   PrepareGetBall3.pitchAngle=0.0f;
   PrepareGetBall3.steerAngle=0.f;
   PrepareGetBall3.steerSpeed=2000;
-  PrepareGetBall3.gasAim=0.57f;
+  PrepareGetBall3.gasAim=0.585f;
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=181.4f;
   PrepareShootBall3.pitchAngle=-1.4f;
   PrepareShootBall3.steerAngle=0.f;
   PrepareShootBall3.steerSpeed=2000;
-  PrepareShootBall3.gasAim=0.58f;
+  PrepareShootBall3.gasAim=0.585f;
   
 }
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)

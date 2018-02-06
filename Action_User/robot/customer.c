@@ -168,6 +168,16 @@ void USART2_IRQHandler(void)
 				break;	
 			case 4:
 				//´íÎó×´Ì¬
+				if(num==1)
+				{
+					gRobot.holdBall1Error=data;
+				}else if(num==2)
+				{
+					gRobot.holdBall2Error=data;
+				}else if(num==3)
+				{
+					gRobot.cameraSteerError=data;
+				}
 				step++;
 				break;	
 			case 5:
@@ -177,10 +187,10 @@ void USART2_IRQHandler(void)
 			case 6:
 				if(num==1)
 				{
-					SetMotionFlag(AT_HOLD_BALL1_RESPONSE_SUCCESS);
+					SetMotionFlag(AT_HOLD_BALL_1_RESPONSE_SUCCESS);
 				}else if(num==2)
 				{
-					SetMotionFlag(AT_HOLD_BALL2_RESPONSE_SUCCESS);
+					SetMotionFlag(AT_HOLD_BALL_2_RESPONSE_SUCCESS);
 				}else if(num==3)
 				{
 					SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
@@ -207,7 +217,6 @@ void USART6_IRQHandler(void)
   {
     USART_ClearITPendingBit( USART6,USART_IT_RXNE);
     data=USART_ReceiveData(USART6);
-		USART_SendData(DEBUG_USART,data);
     buffer[bufferI]=data;
     bufferI++;
     if(bufferI>=20)
@@ -500,29 +509,29 @@ void SetMotionFlag(uint32_t status){
   case ~AT_SHOOT_SMALL_ENABLE:
     gRobot.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
     break;
-  case AT_HOLD_BALL1_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL1_SUCCESS;
+  case AT_HOLD_BALL_1_SUCCESS:
+    gRobot.AT_motionFlag|=AT_HOLD_BALL_1_SUCCESS;
     break;
-  case ~AT_HOLD_BALL1_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL1_SUCCESS;
+  case ~AT_HOLD_BALL_1_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_HOLD_BALL_1_SUCCESS;
     break;
-  case AT_HOLD_BALL2_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL2_SUCCESS;
+  case AT_HOLD_BALL_2_SUCCESS:
+    gRobot.AT_motionFlag|=AT_HOLD_BALL_2_SUCCESS;
     break;
-  case ~AT_HOLD_BALL2_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL2_SUCCESS;
+  case ~AT_HOLD_BALL_2_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_HOLD_BALL_2_SUCCESS;
     break;
-  case AT_HOLD_BALL1_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL1_RESPONSE_SUCCESS;
+  case AT_HOLD_BALL_1_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag|=AT_HOLD_BALL_1_RESPONSE_SUCCESS;
     break;
-  case ~AT_HOLD_BALL1_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL1_RESPONSE_SUCCESS;
+  case ~AT_HOLD_BALL_1_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_HOLD_BALL_1_RESPONSE_SUCCESS;
     break;
-  case AT_HOLD_BALL2_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL2_RESPONSE_SUCCESS;
+  case AT_HOLD_BALL_2_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag|=AT_HOLD_BALL_2_RESPONSE_SUCCESS;
     break;
-  case ~AT_HOLD_BALL2_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL2_RESPONSE_SUCCESS;
+  case ~AT_HOLD_BALL_2_RESPONSE_SUCCESS:
+    gRobot.AT_motionFlag&=~AT_HOLD_BALL_2_RESPONSE_SUCCESS;
     break;
   case AT_COURSE_READ_SUCCESS:
     gRobot.AT_motionFlag|=AT_COURSE_READ_SUCCESS;
@@ -571,6 +580,12 @@ void SetMotionFlag(uint32_t status){
     break;
   case ~AT_PREPARE_READY:
     gRobot.AT_motionFlag&=~AT_PREPARE_READY;
+    break;
+  case AT_IS_SEND_DEBUG_DATA:
+    gRobot.AT_motionFlag|=AT_IS_SEND_DEBUG_DATA;
+    break;
+  case ~AT_IS_SEND_DEBUG_DATA:
+    gRobot.AT_motionFlag&=~AT_IS_SEND_DEBUG_DATA;
     break;
   }
 }

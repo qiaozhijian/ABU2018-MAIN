@@ -120,7 +120,7 @@ void RobotTask(void)
     AT_CMD_Handle();
 		
 		/*过程报告*/
-    processReport();
+    //processReport();
 		
 		/*运动状态标志位更新*/
 		MotionStatusUpdate();
@@ -131,10 +131,16 @@ void RobotTask(void)
 		/*运动状态更新*/
     MotionRead();
 		
-		USART_OUT(DEBUG_USART,"%d\t%d\t%d\t%d\t%d\t",PE_FOR_THE_BALL,gRobot.process,(int)(gRobot.courseAngle),(int)(gRobot.posX),(int)(gRobot.posY));
-		USART_OUT_F(gRobot.gasValue);
-		USART_OUT_F(gRobot.angle);
-		USART_Enter();
+		if(gRobot.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
+		{
+			processReponse();
+			USART_OUT_F(gRobot.posX);
+			USART_OUT_F(gRobot.posY);
+			USART_OUT_F(gRobot.angle);
+			USART_OUT(DEBUG_USART,"%d\t",PE_FOR_THE_BALL);
+			USART_OUT_F(gRobot.gasValue);
+			USART_Enter();
+		}
 		
     switch(gRobot.robocon2018)
     {
@@ -191,6 +197,8 @@ void HardWareInit(void){
 	
   //摄像头转台初始化
   SteerInit(1000000);
+	
+	Steer2Init(1000000);
 	
 	/*与摄像头通信的串口初始化*/
 	CameraTalkInit(256000);
@@ -279,9 +287,16 @@ void statusInit(void)
 //	TalkToCamera(CAMERA_OPEN_NEAR);
 //	TalkToCamera(CAMERA_SHUT_ALL);
 //	TalkToCamera(CAMERA_OPEN_FAR);
+			SetSteerByte(HOLD_BALL_1,P_STEER_ADDRESS,0X9);
+		BEEP_ON;
+		ShootLedOn();
+		Delay_ms(2000);
+		ShootLedOff();
+		BEEP_OFF;
 	#endif
 	
   gRobot.robocon2018=ROBOT_PREPARE;
+	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 }	
 
 

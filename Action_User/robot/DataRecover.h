@@ -73,11 +73,6 @@ typedef struct{
 	
 	uint32_t isOpenGasReturn;
   
-  /*错误发生的次数*/
-  uint32_t errorTime;
-  /*错误记录，第一个是错误类型，第二个是发生的过程*/
-  uint32_t error[ERROR_TIME][2];
-  
 }DataSave_t;
 
 

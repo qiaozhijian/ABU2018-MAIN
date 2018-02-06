@@ -117,16 +117,6 @@ void WriteFlashData(Robot_t robot,u32 resetTime)
   
 //	uint32_t isOpenGasReturn;
   dataSave.isOpenGasReturn=robot.isOpenGasReturn;
-	
-//  uint32_t errorTime;
-	dataSave.errorTime=robot.errorTime;
-  
-//  uint32_t error[ERROR_TIME][2];
-	for(int i=0;i<ERROR_TIME;i++)
-	{
-		dataSave.error[i][0]=robot.error[i][0];
-		dataSave.error[i][1]=robot.error[i][1];
-	}
   
   STMFLASH_Write(&dataSave,gRobot.resetTime);
 }
@@ -180,16 +170,6 @@ void STMFLASH_Read(DataSave_t* temp,uint32_t resetTime)
   
 //	uint32_t isOpenGasReturn;
   temp->isOpenGasReturn=STMFLASH_ReadWord(baseAdd+MAX_SIZE*9);
-	
-//  uint32_t errorTime;
-	temp->errorTime=STMFLASH_ReadWord(baseAdd+MAX_SIZE*10);
-  
-//  uint32_t error[ERROR_TIME][2];
-	for(int i=0;i<ERROR_TIME;i++)
-	{
-		(temp->error)[i][0]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*MAX_SIZE*2);
-		(temp->error)[i][1]=STMFLASH_ReadWord(baseAdd+MAX_SIZE*11+i*MAX_SIZE*2+MAX_SIZE);
-	}
 	
 }
 
@@ -267,13 +247,6 @@ void SoftWareReset(void)
 			
 			gRobot.isOpenGasReturn=dataSave.isOpenGasReturn;
 			
-			gRobot.errorTime=dataSave.errorTime;
-			
-			for(int i=0;i<ERROR_TIME;i++)
-			{
-				gRobot.error[i][0]=dataSave.error[i][0];
-				gRobot.error[i][1]=dataSave.error[i][1];
-			}
     }
     /*Ð´Ò»¸öreset=setµÄ*/
     dataSave.isReset=0;

@@ -10,7 +10,7 @@
 #include "usart.h"
 /**************#define area**********/
 
-//#define TEST
+#define TEST
 
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f
@@ -67,13 +67,13 @@
 
 #define AT_SHOOT_SMALL_ENABLE 			  					0x08u
 
-#define AT_HOLD_BALL1_SUCCESS										0x10u
+#define AT_HOLD_BALL_1_SUCCESS										0x10u
 
-#define AT_HOLD_BALL2_SUCCESS										0x20u
+#define AT_HOLD_BALL_2_SUCCESS										0x20u
 
-#define AT_HOLD_BALL1_RESPONSE_SUCCESS							0x40u
+#define AT_HOLD_BALL_1_RESPONSE_SUCCESS							0x40u
 
-#define AT_HOLD_BALL2_RESPONSE_SUCCESS							0x80u
+#define AT_HOLD_BALL_2_RESPONSE_SUCCESS							0x80u
 
 #define AT_COURSE_READ_SUCCESS									0x200u
 
@@ -91,6 +91,8 @@
 
 #define AT_PREPARE_READY													0x8000u
 
+#define AT_IS_SEND_DEBUG_DATA													0x10000u
+
 
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
@@ -104,23 +106,23 @@
 
 /**错误发生情况**/
 //初始化时舵机使能有问题
-#define HOLD_BALL1_ENABLE_FAIL														1
-#define HOLD_BALL2_ENABLE_FAIL														2
+#define HOLD_BALL_1_ENABLE_FAIL														1
+#define HOLD_BALL_2_ENABLE_FAIL														2
 //射球或者抓球时舵机没有转动到位
-#define HOLD_BALL1_ROTATE_FAIL														3
-#define HOLD_BALL2_ROTATE_FAIL														4
+#define HOLD_BALL_1_ROTATE_FAIL														3
+#define HOLD_BALL_2_ROTATE_FAIL														4
 //射球或者抓球时转台没有转动到位
 #define COURSE_ROTATE_FAIL																5
 //射球或者抓球时俯仰没有转动到位
 #define PITCH_ROTATE_FAIL																	6
-#define HOLD_BALL1_ROTATE_FAIL														3
-#define HOLD_BALL2_ROTATE_FAIL														4
+#define HOLD_BALL_1_ROTATE_FAIL														3
+#define HOLD_BALL_2_ROTATE_FAIL														4
 #define CAN1_FAIL																					5
 #define CAN2_FAIL																					6
 
 /*舵机号命名*/
-#define HOLD_BALL1														1
-#define HOLD_BALL2														2
+#define HOLD_BALL_1														1
+#define HOLD_BALL_2														2
 #define CAMERA_STEER													3
 
 /*状态量解释*/
@@ -184,8 +186,8 @@
 
 #define DELAY_TASK_NUM										2
 /*延时进行的任务*/
-#define DELAY_HOLD_BALL1_CHECK_POS										0x01
-#define DELAY_HOLD_BALL2_CHECK_POS										0x02
+#define DELAY_HOLD_BALL_1_CHECK_POS										0x01
+#define DELAY_HOLD_BALL_2_CHECK_POS										0x02
 
 #define ERROR_TIME										10
 
@@ -240,16 +242,16 @@ typedef struct{
   uint32_t delayTask;
   /*延时需要的时间*/
   uint32_t delayTaskMs[DELAY_TASK_NUM];
-  
-  /*错误记录，第一个是错误类型，第二个是发生的过程*/
-  uint32_t error[ERROR_TIME][2];
-  /*错误发生的次数*/
-  uint32_t errorTime;
 	
   float angle;
   float posX;
   float posY;
 	uint32_t posSystemReady;
+	
+	/*舵机错误指示*/
+	uint8_t holdBall1Error;
+	uint8_t holdBall2Error;
+	uint8_t cameraSteerError;
 	
 	/*系统复位有关变量*/
   /*{*/
