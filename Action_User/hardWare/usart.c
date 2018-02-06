@@ -339,13 +339,16 @@ void ControlBLE_Init(uint32_t BaudRate)
   NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器、
 }
 
+
 /*使用操作系统没有设置任务堆栈8字节对齐，直接使用sprintf会一直输出0*/
 void USART_OUT_F(float value)
 {
   char s[9]={0};
   int integer=( int )value;
-  sprintf( (char*)s, "%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
-  
+	if(value<0.f&&value>-1.f)
+		sprintf( (char*)s, "-%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
+	else
+		sprintf( (char*)s, "%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
   USART_OUT(DEBUG_USART,s);
 }
 void USART_Enter(void){
