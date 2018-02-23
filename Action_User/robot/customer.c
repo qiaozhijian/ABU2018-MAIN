@@ -265,6 +265,8 @@ void UART4_IRQHandler(void)
   OSIntExit();
 }
 
+
+
 void AT_CMD_Judge(void){
 	
   if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0)//AT    

@@ -73,7 +73,7 @@ void ConfigTask(void)
   CPU_INT08U  os_err;
   os_err = os_err;  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-	/*持球上舵机初始化*/
+	
   DebugBLE_Init(921600);
 	USART_OUT(DEBUG_USART,"START\r\n");
 	
@@ -94,7 +94,7 @@ void ConfigTask(void)
 	}
 	
 	#ifndef TEST
-	IWDG_Init(1,30); // 11ms-11.2ms
+	IWDG_Init(1,50); // 11ms-11.2ms
 	#endif
 	
   OSTaskSuspend(OS_PRIO_SELF);
@@ -109,6 +109,8 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
+		/*清除信号量*/
+		OSSemSet(PeriodSem, 0, &os_err);
 		
 		#ifdef TEST
 		SelfTest();
@@ -138,7 +140,6 @@ void RobotTask(void)
 			USART_OUT_F(gRobot.posY);
 			USART_OUT_F(gRobot.angle);
 			USART_OUT(DEBUG_USART,"%d\t",PE_FOR_THE_BALL);
-			USART_OUT_F(gRobot.gasValue);
 			USART_Enter();
 		}
 		
@@ -287,13 +288,14 @@ void statusInit(void)
 //	TalkToCamera(CAMERA_OPEN_NEAR);
 //	TalkToCamera(CAMERA_SHUT_ALL);
 //	TalkToCamera(CAMERA_OPEN_FAR);
-			SetSteerByte(HOLD_BALL_1,P_STEER_ADDRESS,0X9);
+	  SetSteerByte(HOLD_BALL_1,P_STEER_ADDRESS,0X9);
 		BEEP_ON;
 		ShootLedOn();
 		Delay_ms(2000);
 		ShootLedOff();
 		BEEP_OFF;
 	#endif
+	
 	
   gRobot.robocon2018=ROBOT_PREPARE;
 	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);

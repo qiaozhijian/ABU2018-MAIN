@@ -203,7 +203,7 @@ void MotionRead(void)
 void MotionStatusUpdate(void)
 {
 	/*判断航向角是否到位*/
-	if(abs(gRobot.courseAimAngle-gRobot.courseAngle)<0.01f)
+	if(fabs(gRobot.courseAimAngle-gRobot.courseAngle)<0.01f)
 	{
 		SetMotionFlag(AT_COURSE_SUCCESS);
 	}
@@ -213,7 +213,7 @@ void MotionStatusUpdate(void)
 	}
 	
 	/*判断俯仰角是否到位*/
-	if(abs(gRobot.pitchAimAngle-gRobot.pitchAngle)<0.01f)
+	if(fabs(gRobot.pitchAimAngle-gRobot.pitchAngle)<0.01f)
 	{
 		SetMotionFlag(AT_PITCH_SUCCESS);
 	}
@@ -222,9 +222,19 @@ void MotionStatusUpdate(void)
 		SetMotionFlag(~AT_PITCH_SUCCESS);
 	}
 	
+	
+	if(fabs(gRobot.gasAimValue-gRobot.gasValue)<0.001f)
+	{
+		SetMotionFlag(AT_GAS_SUCCESS);
+	}
+	else
+	{
+		SetMotionFlag(~AT_GAS_SUCCESS);
+	}
+	
 	#ifndef TEST
 //	/*判断持球舵机一是否到位*/
-//	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
+//	if(fabs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
 //	{
 //		SetMotionFlag(AT_HOLD_BALL_1_SUCCESS);
 //		/*转到一定小角度就转不动了，干脆就不转了*/
@@ -237,7 +247,7 @@ void MotionStatusUpdate(void)
 //	}
 //	
 //	/*判断持球舵机二是否到位*/
-//	if(abs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[1])<0.5f)
+//	if(fabs(gRobot.holdBallAimAngle-gRobot.holdBallAngle[1])<0.5f)
 //	{
 //		SetMotionFlag(AT_HOLD_BALL_2_SUCCESS);
 //		/*转到一定小角度就转不动了，干脆就不转了*/
@@ -251,7 +261,7 @@ void MotionStatusUpdate(void)
 	#endif
 	
 //	/*判断相机转台舵机是否到位*/
-//	if(abs(gRobot.cameraAimAngle-gRobot.cameraAngle)<0.5f)
+//	if(fabs(gRobot.cameraAimAngle-gRobot.cameraAngle)<0.5f)
 //	{
 //		SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
 //	}
@@ -259,16 +269,7 @@ void MotionStatusUpdate(void)
 //	{
 //		SetMotionFlag(~AT_CAMERA_RESPONSE_SUCCESS);
 //	}
-	
-	if(abs(gRobot.gasAimValue-gRobot.gasValue)<0.001f)
-	{
-		SetMotionFlag(AT_GAS_SUCCESS);
-	}
-	else
-	{
-		SetMotionFlag(~AT_GAS_SUCCESS);
-	}
-	
+
 	SteerResponseError(HOLD_BALL_1,gRobot.holdBall1Error);
 	SteerResponseError(HOLD_BALL_2,gRobot.holdBall2Error);
 	SteerResponseError(CAMERA_STEER,gRobot.cameraSteerError);

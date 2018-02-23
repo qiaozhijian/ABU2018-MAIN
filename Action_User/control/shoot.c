@@ -31,8 +31,6 @@ void ShootBall(void)
   /*夹子打开*/
   ClawOpen();
   Delay_ms(300);
-	/*清除信号量*/
-	OSSemSet(PeriodSem, 0, &os_err);
   /*把两个发射气缸打开*/
   ShootBigOpen();
 }
@@ -55,9 +53,9 @@ void prepareMotionParaInit(void)
   PrepareCompete.gasAim=0.555f;
 	
   /*准备去拿第一个球的数据*/
-  PrepareGetBall1.courseAngle=0.0f;
+  PrepareGetBall1.courseAngle=90.0f;
   PrepareGetBall1.pitchAngle=2.6f;
-  PrepareGetBall1.steerAngle=0.0f;
+  PrepareGetBall1.steerAngle=-90.0f;
   PrepareGetBall1.steerSpeed=2000;
   PrepareGetBall1.gasAim=0.555f;
   
@@ -174,8 +172,6 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
   CourseAngleMotion(PrepareShootBall_t.courseAngle);
   /*避免球乱晃*/
   Delay_ms(500);
-	/*清除信号量*/
-	OSSemSet(PeriodSem, 0, &os_err);
   /*提前打开发射装置小气缸*/
   ShootSmallOpen();
   /*舵机转向*/

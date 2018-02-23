@@ -8,19 +8,13 @@
 #include "motion.h"
 #include "includes.h"
 
-extern OS_EVENT *PeriodSem;
-
 extern Robot_t gRobot;
 extern int flagggg;
 void SelfTest(void)
 {
-	
-  CPU_INT08U  os_err;
-  os_err = os_err;
-	
-	//AT_CMD_Handle();
+	AT_CMD_Handle();
 	//USART_BLE_SEND(gRobot.gasValue);
-	static int step=10;
+	static int step=100;
 	static int count=0;
 	switch(step)
 	{
@@ -34,7 +28,6 @@ void SelfTest(void)
 		{
 			BoostPolePush();
 			Delay_ms(2000);
-			OSSemSet(PeriodSem, 0, &os_err);
 			BoostPoleReturn();
 			count=0;
 		}
@@ -71,12 +64,8 @@ void SelfTest(void)
 			{
 				step++;
 				Delay_ms(1000);
-				/*清除信号量*/
-				OSSemSet(PeriodSem, 0, &os_err);
 				CourseAngleMotion(180.f);
 				Delay_ms(1000);
-				/*清除信号量*/
-				OSSemSet(PeriodSem, 0, &os_err);
 			}
 			break;
 		case 3:
@@ -93,8 +82,6 @@ void SelfTest(void)
 			{
 				ShootBall();
 				Delay_ms(1000);
-				/*清除信号量*/
-				OSSemSet(PeriodSem, 0, &os_err);
 				ShootReset();
 				step=0;
 			}
@@ -115,15 +102,16 @@ void FightForBall1(void)
     
     if(PE_FOR_THE_BALL)
     {	
-      Delay_ms(500);
-			/*清除信号量*/
-			OSSemSet(PeriodSem, 0, &os_err);
-      
+      USART_OUT(DEBUG_USART,"123\r\n");
+			Delay_ms(500);
+      USART_OUT(DEBUG_USART,"456\r\n");
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
+      USART_OUT(DEBUG_USART,"789\r\n");
       
 			//TalkToCamera(CAMERA_OPEN_NEAR);
 			
       PrepareShootBall(BALL_1);
+      USART_OUT(DEBUG_USART,"1000\r\n");
       
       gRobot.process=TO_THE_AREA_1;
       
@@ -152,8 +140,6 @@ void FightForBall1(void)
       ShootBall();
       /*给延时使发射杆能执行到位*/
       Delay_ms(500);
-			/*清除信号量*/
-			OSSemSet(PeriodSem, 0, &os_err);
       /*通知控制卡*/
       MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
       /*射球机构复位*/
@@ -170,10 +156,10 @@ void FightForBall1(void)
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE1\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB11\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB21\t");
+//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+//				USART_OUT(DEBUG_USART,"!HB11\t");
+//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//				USART_OUT(DEBUG_USART,"!HB21\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
 				USART_OUT(DEBUG_USART,"!PITCH1\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
@@ -189,8 +175,6 @@ void FightForBall1(void)
 /*完成投射彩球二的任务*/
 void FightForBall2(void)
 {
-  CPU_INT08U  os_err;
-  os_err = os_err;
 	
   switch(gRobot.process)
   {
@@ -200,8 +184,6 @@ void FightForBall2(void)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
-			/*清除信号量*/
-			OSSemSet(PeriodSem, 0, &os_err);
       gRobot.process=TO_THE_AREA_2;
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
@@ -237,8 +219,6 @@ void FightForBall2(void)
       
       /*给延时使发射杆能执行到位*/
       Delay_ms(500);
-			/*清除信号量*/
-			OSSemSet(PeriodSem, 0, &os_err);
       MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
       
       /*射球机构复位*/
@@ -256,10 +236,10 @@ void FightForBall2(void)
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE2\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB12\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB22\t");
+//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+//				USART_OUT(DEBUG_USART,"!HB12\t");
+//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//				USART_OUT(DEBUG_USART,"!HB22\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
 				USART_OUT(DEBUG_USART,"!PITCH2\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
@@ -276,8 +256,6 @@ void FightForBall2(void)
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
-  CPU_INT08U  os_err;
-  os_err = os_err;
 	
   switch(gRobot.process)
   {
@@ -287,8 +265,6 @@ void FightForGoldBall(void)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
-			/*清除信号量*/
-			OSSemSet(PeriodSem, 0, &os_err);
 			//TalkToCamera(CAMERA_OPEN_FAR);
       
       gRobot.process=TO_THE_AREA_3;
@@ -329,8 +305,6 @@ void FightForGoldBall(void)
       
       /*给延时使发射杆能执行到位*/
       Delay_ms(500);
-			/*清除信号量*/
-			OSSemSet(PeriodSem, 0, &os_err);
       /*射球机构复位*/
       ShootReset();
       
@@ -342,10 +316,10 @@ void FightForGoldBall(void)
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE3\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB13\t");
-			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-				USART_OUT(DEBUG_USART,"!HB23\t");
+//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+//				USART_OUT(DEBUG_USART,"!HB13\t");
+//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//				USART_OUT(DEBUG_USART,"!HB23\t");
 			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
 				USART_OUT(DEBUG_USART,"!PITCH3\t");
 			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
@@ -599,7 +573,7 @@ void processReport(void)
 //    {
 //      DelayStop(DELAY_HOLD_BALL_1_CHECK_POS);
 //      //4096/360=11.377
-//      if(abs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0])>2*11.377f)
+//      if(fabs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0])>2*11.377f)
 //      {
 //        Steer1HoldBallPosCrl(gRobot.steerAimPos[0][0],2000);
 //        //USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL_1_CHECK_POS FAIL\r\n");
@@ -612,7 +586,7 @@ void processReport(void)
 //      delayMs[0]=0;
 //    }
 //    else{
-//      //			USART_OUT_F(abs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0]));
+//      //			USART_OUT_F(fabs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0]));
 //    }
 //  }
 //  
@@ -625,7 +599,7 @@ void processReport(void)
 //    {
 //      DelayStop(DELAY_HOLD_BALL_2_CHECK_POS);
 //      //4096/360=11.377
-//      if(abs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1])>2*11.377f)
+//      if(fabs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1])>2*11.377f)
 //      {
 //        Steer2HoldBallPosCrl(gRobot.steerAimPos[1][0],2000);
 //        //USART_OUT(DEBUG_USART,"DELAY_HOLD_BALL_2_CHECK_POS FAIL\r\n");
@@ -638,7 +612,7 @@ void processReport(void)
 //      delayMs[1]=0;
 //    }
 //    else{
-//      //			USART_OUT_F(abs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1]));
+//      //			USART_OUT_F(fabs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1]));
 //      //			USART_Enter();
 //    }
 //  }
