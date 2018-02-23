@@ -18,7 +18,7 @@ void HoldBallPosCrl(float angle,int vel)
 void Enable_ROBS(void)
 {
   static int times;
-  while(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+  while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
   {
     USART_OUT(UART5,"#1 W 40,1,1\r\n");
     Delay_ms(1);
@@ -56,7 +56,7 @@ void HoldSteer1PosCrl(float angle,int vel)
 {  
 	int pos=0.f;
   /*检测爪子是否闭合，张开时转动会有干涉*/
-  if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+  if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN)
   {
     ClawShut();
   }
@@ -75,7 +75,7 @@ void HoldSteer1PosCrl(float angle,int vel)
 //{
 //  int pos=0.f;
 //  /*检测爪子是否闭合，张开时转动会有干涉*/
-//  if(gRobot.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+//  if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN)
 //  {
 //    ClawShut();
 //  }
@@ -125,10 +125,10 @@ void CameraAlign(void)
   x=gRobot.posX+CAMERA_TO_GYRO_X;
   y=gRobot.posY-CAMERA_TO_GYRO_Y;
   
-  if(gRobot.process>=TO_GET_BALL_1&&gRobot.process<TO_GET_BALL_3)
+  if(gRobot.sDta.process>=TO_GET_BALL_1&&gRobot.sDta.process<TO_GET_BALL_3)
   {
     direction=atan2f(QUICK_MARK_X_1-x,y-QUICK_MARK_Y);
-  }else if(gRobot.process>=TO_GET_BALL_3)
+  }else if(gRobot.sDta.process>=TO_GET_BALL_3)
   {
     direction=atan2f(QUICK_MARK_X_2-x,y-QUICK_MARK_Y);
   }
@@ -225,7 +225,7 @@ uint8_t ReadOneByte(int num,int address)
 	
 	if(num==HOLD_BALL_1)
 	{
-		while(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_RESPONSE_SUCCESS))
+		while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_RESPONSE_SUCCESS))
 		{
 			RS485_Send_Data(command,8);
 			Delay_us(500);
@@ -233,14 +233,14 @@ uint8_t ReadOneByte(int num,int address)
 		SetMotionFlag(~AT_HOLD_BALL_1_RESPONSE_SUCCESS);
 	}else if(num==HOLD_BALL_2){
 
-		while(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_RESPONSE_SUCCESS))
+		while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_RESPONSE_SUCCESS))
 		{
 			RS485_Send_Data(command,8);
 			Delay_us(500);
 		};
 		SetMotionFlag(~AT_HOLD_BALL_2_RESPONSE_SUCCESS);
 	}else if(num==CAMERA_STEER){
-		while(!(gRobot.AT_motionFlag&AT_CAMERA_RESPONSE_SUCCESS))
+		while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_RESPONSE_SUCCESS))
 		{
 			RS485_Send_Data(command,8);
 			Delay_us(500);

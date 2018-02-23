@@ -22,6 +22,7 @@
 #include "motion.h"
 #include "iwdg.h"
 #include "DataRecover.h"
+#include "debug.h"
 /*
 ===============================================================
 信号量定义
@@ -111,76 +112,80 @@ void RobotTask(void)
     OSSemPend(PeriodSem, 0, &os_err);
 		/*清除信号量*/
 		OSSemSet(PeriodSem, 0, &os_err);
-		
-		#ifdef TEST
-		SelfTest();
-		#else		
-		/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
-		IWDG_Feed();
-		
-		/*蓝牙命令处理*/
-    AT_CMD_Handle();
-		
-		/*过程报告*/
-    //processReport();
-		
-		/*运动状态标志位更新*/
-		MotionStatusUpdate();
-		
-		/*运动参数执行*/
-		MotionExecute();
-		
-		/*运动状态更新*/
-    MotionRead();
-		
-		if(gRobot.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
-		{
-			processReponse();
-			USART_OUT_F(gRobot.posX);
-			USART_OUT_F(gRobot.posY);
-			USART_OUT_F(gRobot.angle);
-			USART_OUT(DEBUG_USART,"%d\t",PE_FOR_THE_BALL);
-			USART_Enter();
-		}
-		
-    switch(gRobot.robocon2018)
-    {
-			case ROBOT_PREPARE:
-				if(gRobot.AT_motionFlag&AT_PREPARE_READY)
+		#ifdef DEBUG
+			IWDG_Feed();
+			debugFunction();
+		#else
+			#ifdef TEST
+				SelfTest();
+			#else		
+				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
+				IWDG_Feed();
+				
+				/*蓝牙命令处理*/
+				AT_CMD_Handle();
+				
+				/*过程报告*/
+				//processReport();
+				
+				/*运动状态标志位更新*/
+				MotionStatusUpdate();
+				
+				/*运动参数执行*/
+				MotionExecute();
+				
+				/*运动状态更新*/
+				MotionRead();
+				
+				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
 				{
-					BEEP_ON;
-					ShootLedOn();
-					Delay_ms(2000);
-					ShootLedOff();
-					BEEP_OFF;
-					SetMotionFlag(~AT_PREPARE_READY);
-					gRobot.robocon2018=ROBOT_START;
+					processReponse();
+					USART_OUT_F(gRobot.posX);
+					USART_OUT_F(gRobot.posY);
+					USART_OUT_F(gRobot.angle);
+					USART_OUT(DEBUG_USART,"%d\t",PE_FOR_THE_BALL);
+					USART_Enter();
 				}
-				break;
-			case ROBOT_START:
-				if(gRobot.posX>100.f)
+				
+				switch(gRobot.sDta.robocon2018)
 				{
-					PrepareGetBall(BALL_1);			
-				}
-				if(gRobot.posX>4000.f)
-				{
-					gRobot.process=TO_GET_BALL_1;
-					gRobot.robocon2018=COLORFUL_BALL_1;
-				}
-				break;
-			case COLORFUL_BALL_1:
-				/*完成彩球一的投射*/
-				FightForBall1();
-				break;
-			case COLORFUL_BALL_2:
-				/*完成彩球二的投射*/
-				FightForBall2();
-				break;
-			case GOLD_BALL:
-				/*完成金球的投射*/
-				FightForGoldBall();
-				break;
-    }	
+					case ROBOT_PREPARE:
+						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
+						{
+							BEEP_ON;
+							ShootLedOn();
+							Delay_ms(2000);
+							ShootLedOff();
+							BEEP_OFF;
+							SetMotionFlag(~AT_PREPARE_READY);
+							gRobot.sDta.robocon2018=ROBOT_START;
+						}
+						break;
+					case ROBOT_START:
+						if(gRobot.posX>100.f)
+						{
+							PrepareGetBall(BALL_1);			
+						}
+						if(gRobot.posX>4000.f)
+						{
+							gRobot.sDta.process=TO_GET_BALL_1;
+							gRobot.sDta.robocon2018=COLORFUL_BALL_1;
+						}
+						break;
+					case COLORFUL_BALL_1:
+						/*完成彩球一的投射*/
+						FightForBall1();
+						break;
+					case COLORFUL_BALL_2:
+						/*完成彩球二的投射*/
+						FightForBall2();
+						break;
+					case GOLD_BALL:
+						/*完成金球的投射*/
+						FightForGoldBall();
+						break;
+				}	
+			#endif
 		#endif
   } 
 }
@@ -241,11 +246,13 @@ void statusInit(void)
 {	
   Delay_ms(3000);
 	
+	#ifndef DEBUG
 	//打开扭矩开关
   OpenSteerAll();
 	
  //设置回应等级（注意不要打开写开关，因为打开扭矩输出需要回答）
 	ShutAllSteerResponse();
+	#endif
 	
   /*运动控制状态初始化*/
   SetMotionFlag(~AT_CLAW_STATUS_OPEN);
@@ -288,7 +295,9 @@ void statusInit(void)
 //	TalkToCamera(CAMERA_OPEN_NEAR);
 //	TalkToCamera(CAMERA_SHUT_ALL);
 //	TalkToCamera(CAMERA_OPEN_FAR);
+		#ifndef DEBUG
 	  SetSteerByte(HOLD_BALL_1,P_STEER_ADDRESS,0X9);
+		#endif
 		BEEP_ON;
 		ShootLedOn();
 		Delay_ms(2000);
@@ -297,7 +306,7 @@ void statusInit(void)
 	#endif
 	
 	
-  gRobot.robocon2018=ROBOT_PREPARE;
+  gRobot.sDta.robocon2018=ROBOT_PREPARE;
 	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 }	
 

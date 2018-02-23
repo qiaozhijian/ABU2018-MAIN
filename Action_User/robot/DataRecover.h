@@ -43,38 +43,6 @@
 #define ADDR_FLASH_SECTOR_10    ((u32)0x080C0000) 	//扇区10起始地址,128 Kbytes  
 #define ADDR_FLASH_SECTOR_11    ((u32)0x080E0000) 	//扇区11起始地址,128 Kbytes  
 
-typedef struct{
-  
-  uint32_t isReset;
-  
-  /*关于控制命令执行的动作情况*/
-  uint32_t AT_motionFlag; 
-  
-  /*记录此时处于哪个步骤*/
-  uint32_t process;
-  
-  /*比赛进程*/
-  uint32_t robocon2018;
-  
-  /*持球舵机的目标位置*/
-  float holdBallAimAngle;
-  
-  /*相机舵机的目标位置*/
-  float cameraAimAngle;
-  
-  /*航向角*/
-  float courseAimAngle;
-  
-  /*横滚角*/
-  float pitchAimAngle;
-  
-  /*气压*/
-  float gasAimValue;
-	
-	uint32_t isOpenGasReturn;
-  
-}DataSave_t;
-
 
 void STMFLASH_ERASE(void);
 void WriteFlashData(Robot_t robot,u32 resetTime);

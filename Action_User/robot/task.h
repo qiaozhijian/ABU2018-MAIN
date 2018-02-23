@@ -11,6 +11,7 @@
 /**************#define area**********/
 
 //#define TEST
+//#define DEBUG
 
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f
@@ -191,14 +192,10 @@
 
 #define ERROR_TIME										10
 
-/**************typedef area**********/
 typedef struct{
   
-  /*激光的初始值*/
-  float laserInit;
-  
-  /*激光测得的值*/
-  float laser;
+	/*判断此次是否为看门狗复位*/
+  uint32_t isReset;
   
   /*关于控制命令执行的动作情况*/
   uint32_t AT_motionFlag; 
@@ -215,28 +212,47 @@ typedef struct{
 	#else
   float holdBallAimAngle[2];
 	#endif
-  /*持球舵机的位置*/
-  float holdBallAngle[2];
-	/*舵机返回的一字节命令*/
-	uint8_t steerByte;
   
   /*相机舵机的目标位置*/
   float cameraAimAngle;
+  
+  /*航向角*/
+  float courseAimAngle;
+  
+  /*横滚角*/
+  float pitchAimAngle;
+  
+  /*气压*/
+  float gasAimValue;
+}DataSave_t;
+
+/**************typedef area**********/
+typedef struct{
+  
+  /*激光的初始值*/
+  float laserInit;
+  
+  /*激光测得的值*/
+  float laser;
+  
+  /*持球舵机的位置*/
+  float holdBallAngle[2];
+	
+	/*舵机返回的一字节命令*/
+	uint8_t steerByte;
+  
   /*相机舵机的位置*/
   float cameraAngle;
   
   /*航向角*/
-  float courseAimAngle;
   float courseAngle;
   
   /*横滚角*/
-  float pitchAimAngle;
   float pitchAngle;
   
   /*气压*/
   float gasValue;
   float gasAimValue;
-	uint32_t isOpenGasReturn;
   
   /*延时类型*/
   uint32_t delayTask;
@@ -254,16 +270,15 @@ typedef struct{
 	uint8_t cameraSteerError;
 	
 	/*系统复位有关变量*/
-  /*{*/
-	/*判断此次是否为看门狗复位*/
-	uint32_t isReset;
+	uint32_t isOpenGasReturn;
+	
+	DataSave_t sDta;
 	
 	/*重启次数*/
 	uint32_t resetTime;
 	
 	/*重启后可以选择性执行程序*/
 	uint32_t resetFlag;
-	/*}*/
   
 }Robot_t ;
 

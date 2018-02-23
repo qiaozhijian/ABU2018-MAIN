@@ -3,6 +3,25 @@
 #include "includes.h"
 #include "process.h"
 #include "gpio.h"
+
+extern Robot_t gRobot;
+void debugFunction(void)
+{
+	
+	USART_OUT_F(gRobot.sDta.cameraAimAngle++);
+	USART_OUT_F(gRobot.sDta.AT_motionFlag--);
+	USART_OUT_F(gRobot.sDta.courseAimAngle++);
+	USART_OUT_F(gRobot.sDta.gasAimValue++);
+	USART_OUT_F(gRobot.sDta.holdBallAimAngle++);
+	USART_OUT_F(gRobot.sDta.isReset);
+	USART_OUT_F(gRobot.sDta.pitchAimAngle++);
+	USART_OUT_F(gRobot.sDta.process++);
+	USART_OUT_F(gRobot.sDta.robocon2018++);
+	USART_Enter();
+}
+
+
+
 /*µ÷ÊÔÀ¶ÑÀÖÐ¶Ï*/
 static char buffer[20];
 static int bufferI=0;
@@ -61,10 +80,11 @@ void AT_DEBUG_Judge(void){
   }
   else if((bufferI >= 12) && strncmp(buffer, "AT+HARDFAULT\r\n",12 )==0)
   {
-//		int a[2];
-//    USART_OUT(DEBUG_USART,"hardfault\r\n");
-//		for(int i=10000;i<80000;i++)
-//			a[i]=100;
+		int a[2];
+    USART_OUT(DEBUG_USART,"hardfault\r\n");
+		for(int i=10000;i<80000;i++)
+			a[i]=100;
+		a[1]=a[0];
   }
 
 	BufferDebugInit();

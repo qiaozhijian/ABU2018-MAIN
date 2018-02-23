@@ -45,6 +45,20 @@ uint16_t STMFLASH_GetFlashSector(u32 addr)
 }
 
 
+//读取指定地址的半字(16位数据) 
+//faddr:读地址 
+//返回值:对应数据.
+u32 STMFLASH_ReadWord(u32 faddr)
+{
+  return *(vu32*)faddr; 
+}  
+
+float STMFLASH_ReadFloat(u32 faddr)
+{
+  return *(volatile float*)faddr; 
+}  
+
+
 void STMFLASH_ERASE(void)	
 { 
   FLASH_Unlock();									//解锁 
@@ -61,7 +75,6 @@ void STMFLASH_ERASE(void)
 
 void STMFLASH_Write(DataSave_t *pBuffer,u32 resetTime)	
 { 
-  
   u32* address=(u32*)pBuffer;
   u32 WriteAddr=FLASH_SAVE_ADDR+resetTime*sizeof(DataSave_t);
   u32 endaddr=WriteAddr+sizeof(DataSave_t);
@@ -75,6 +88,7 @@ void STMFLASH_Write(DataSave_t *pBuffer,u32 resetTime)
     { 
       address=address;	//写入异常
     }
+		/*WriteAddr是整数，要加4，address是指针只用加一*/
     WriteAddr+=MAX_SIZE;
     address++;
   }
@@ -83,57 +97,40 @@ void STMFLASH_Write(DataSave_t *pBuffer,u32 resetTime)
   FLASH_Lock();//上锁
 } 
 
+void copyDataSave_tFromOther(DataSave_t* copy,DataSave_t* const reality)
+{
+	u32* address=(u32*)reality;
+  u32* WriteAddr=(u32*)copy;
+  u32* endaddr=WriteAddr+sizeof(DataSave_t)/MAX_SIZE;
+	
+  while(WriteAddr<endaddr)//写数据
+  {
+    *WriteAddr=*address;
+    WriteAddr++;
+    address++;
+  }
+}
+
+void copyDataSave_tAlongAddress(DataSave_t* copy,uint32_t address)
+{
+  u32* WriteAddr=(u32*)copy;
+  u32* endaddr=WriteAddr+sizeof(DataSave_t)/MAX_SIZE;
+	
+  while(WriteAddr<endaddr)//写数据
+  {
+    *WriteAddr=STMFLASH_ReadWord(address);
+    WriteAddr++;
+    address+=MAX_SIZE;
+  }
+}
+
 /*把传入的机器人结构体的参数保存到“flash写入结构体”里*/
 void WriteFlashData(Robot_t robot,u32 resetTime)
 {
-//  uint32_t isReset;
-  dataSave.isReset=robot.isReset;
-  
-//  uint32_t AT_motionFlag; 
-  dataSave.AT_motionFlag=robot.AT_motionFlag;
-  
-//  uint32_t process;
-  dataSave.process=robot.process;
-  
-//  uint32_t robocon2018;
-  dataSave.robocon2018=robot.robocon2018;
-  
-//  float holdBallAimAngle;
-	#ifndef TEST
-  dataSave.holdBallAimAngle=robot.holdBallAimAngle;
-	#endif
-  
-//  float cameraAimAngle;
-  dataSave.cameraAimAngle=robot.cameraAimAngle;
-  
-//  float courseAimAngle;
-  dataSave.courseAimAngle=robot.courseAimAngle;
-  
-//  float pitchAimAngle;
-  dataSave.pitchAimAngle=robot.pitchAimAngle;
-  
-//  float gasAimValue;
-  dataSave.gasAimValue=robot.gasAimValue;
-  
-//	uint32_t isOpenGasReturn;
-  dataSave.isOpenGasReturn=robot.isOpenGasReturn;
+	copyDataSave_tFromOther(&dataSave,&robot.sDta);
   
   STMFLASH_Write(&dataSave,gRobot.resetTime);
 }
-
-
-//读取指定地址的半字(16位数据) 
-//faddr:读地址 
-//返回值:对应数据.
-u32 STMFLASH_ReadWord(u32 faddr)
-{
-  return *(vu32*)faddr; 
-}  
-
-float STMFLASH_ReadFloat(u32 faddr)
-{
-  return *(volatile float*)faddr; 
-}  
 
 
 /*读出第resetTime个结构体的值，resetTime取0 1 2 3*/
@@ -141,36 +138,7 @@ void STMFLASH_Read(DataSave_t* temp,uint32_t resetTime)
 {
   uint32_t baseAdd=FLASH_SAVE_ADDR+resetTime*sizeof(DataSave_t);
   
-//  uint32_t isReset;
-  temp->isReset=STMFLASH_ReadWord(baseAdd);
-  
-//  uint32_t AT_motionFlag; 
-  temp->AT_motionFlag=STMFLASH_ReadWord(baseAdd+MAX_SIZE);
-  
-//  uint32_t process;
-  temp->process=STMFLASH_ReadWord(baseAdd+MAX_SIZE*2);
-  
-//  uint32_t robocon2018;
-  temp->robocon2018=STMFLASH_ReadWord(baseAdd+MAX_SIZE*3);
-  
-//  float holdBallAimAngle;
-  temp->holdBallAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*4);
-  
-//  float cameraAimAngle;
-  temp->cameraAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*5);
-  
-//  float courseAimAngle;
-  temp->courseAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*6);
-  
-//  float pitchAimAngle;
-  temp->pitchAimAngle=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*7);
-  
-//  float gasAimValue;
-  temp->gasAimValue=STMFLASH_ReadFloat(baseAdd+MAX_SIZE*8);
-  
-//	uint32_t isOpenGasReturn;
-  temp->isOpenGasReturn=STMFLASH_ReadWord(baseAdd+MAX_SIZE*9);
-	
+	copyDataSave_tAlongAddress(temp,baseAdd);
 }
 
 /*  
@@ -182,6 +150,7 @@ void FindResetTime(void)
   gRobot.resetTime=0;
   
   DataSave_t flashdata;
+	
   STMFLASH_Read(&flashdata,gRobot.resetTime);
   
   while(flashdata.isReset!=0xffffffff)
@@ -200,7 +169,7 @@ void FindResetTime(void)
 /*************
 softReset
 
-第一次上电→flash为空→刷新flash（gRobot.resetTime为0）→出故障→在hardfault写flash第一个结构体（gRobot.resetTime为0，flashdata.isReset=1）
+第一次上电→flash为空→刷新flash（gRobot.resetTime为0）→出故障→在hardfault写flash第一个结构体（gRobot.resetTime为0，flashdata.sDta.isReset=1）
 →重启→gRobot.resetTime为1→得到第0个结构体的值保存到flashdata（永远最新）→把flashdata的内容拷贝给gRobot→flashdata的isReset为0，把flash写给第gRobot.resetTime个结构体，为下次开电做准备（下次可以识别到flashdata的isReset为位0）
 →如果再发生中断，在gRobot.resetTime写保存数据的结构体（此时gRobot.resetTime已加一）
 ************/
@@ -228,26 +197,8 @@ void SoftWareReset(void)
   else
   {
     //将进硬件中断前的数据恢复
-    {
-			gRobot.AT_motionFlag=dataSave.AT_motionFlag;
-			
-			gRobot.process=dataSave.process;
-			
-			gRobot.robocon2018=dataSave.robocon2018;
-			
-			gRobot.holdBallAimAngle=dataSave.holdBallAimAngle;
-			
-			gRobot.cameraAimAngle=dataSave.cameraAimAngle;
-			
-			gRobot.courseAimAngle=dataSave.courseAimAngle;
-			
-			gRobot.pitchAimAngle=dataSave.pitchAimAngle;
-			
-			gRobot.gasAimValue=dataSave.gasAimValue;
-			
-			gRobot.isOpenGasReturn=dataSave.isOpenGasReturn;
-			
-    }
+		copyDataSave_tFromOther(&gRobot.sDta,&dataSave);
+		
     /*写一个reset=set的*/
     dataSave.isReset=0;
     //再往下一个空位写一个结构体，便于下次开电识别

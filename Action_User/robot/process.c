@@ -95,7 +95,7 @@ void FightForBall1(void)
   CPU_INT08U  os_err;
   os_err = os_err;
 	
-  switch(gRobot.process)
+  switch(gRobot.sDta.process)
   {
     /*去取第一个球*/
   case TO_GET_BALL_1:
@@ -113,7 +113,7 @@ void FightForBall1(void)
       PrepareShootBall(BALL_1);
       USART_OUT(DEBUG_USART,"1000\r\n");
       
-      gRobot.process=TO_THE_AREA_1;
+      gRobot.sDta.process=TO_THE_AREA_1;
       
     }
     break;
@@ -126,15 +126,15 @@ void FightForBall1(void)
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
-				//	&&(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+				//	&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
-						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
+						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
 								/*气压到位*/
-								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+								&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -147,8 +147,8 @@ void FightForBall1(void)
       /*准备接球二*/
       PrepareGetBall(BALL_2);
       /*进入下一状态*/
-      gRobot.process=TO_GET_BALL_2;
-      gRobot.robocon2018=COLORFUL_BALL_2;
+      gRobot.sDta.process=TO_GET_BALL_2;
+      gRobot.sDta.robocon2018=COLORFUL_BALL_2;
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
@@ -156,15 +156,15 @@ void FightForBall1(void)
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE1\t");
-//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB11\t");
-//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB21\t");
-			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				USART_OUT(DEBUG_USART,"!PITCH1\t");
-			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				USART_OUT(DEBUG_USART,"!COURSE1\t");
-			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 				USART_OUT(DEBUG_USART,"!GAS1\t");
 			USART_Enter();
 		}
@@ -176,7 +176,7 @@ void FightForBall1(void)
 void FightForBall2(void)
 {
 	
-  switch(gRobot.process)
+  switch(gRobot.sDta.process)
   {
     /*去取第二个球*/
   case TO_GET_BALL_2:
@@ -184,7 +184,7 @@ void FightForBall2(void)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
-      gRobot.process=TO_THE_AREA_2;
+      gRobot.sDta.process=TO_THE_AREA_2;
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
       
@@ -204,15 +204,15 @@ void FightForBall2(void)
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-	//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+	//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
-		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
-						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
+						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
 								/*气压到位*/
-								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+								&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -227,8 +227,8 @@ void FightForBall2(void)
       /*准备接球三*/
       PrepareGetBall(BALL_3);
       
-      gRobot.process=TO_GET_BALL_3;
-      gRobot.robocon2018=GOLD_BALL;
+      gRobot.sDta.process=TO_GET_BALL_3;
+      gRobot.sDta.robocon2018=GOLD_BALL;
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
@@ -236,15 +236,15 @@ void FightForBall2(void)
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE2\t");
-//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB12\t");
-//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB22\t");
-			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				USART_OUT(DEBUG_USART,"!PITCH2\t");
-			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				USART_OUT(DEBUG_USART,"!COURSE2\t");
-			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 				USART_OUT(DEBUG_USART,"!GAS2\t");
 			USART_Enter();
 		}
@@ -257,7 +257,7 @@ void FightForBall2(void)
 void FightForGoldBall(void)
 {
 	
-  switch(gRobot.process)
+  switch(gRobot.sDta.process)
   {
     /*去取第三个球*/
   case TO_GET_BALL_3:
@@ -267,7 +267,7 @@ void FightForGoldBall(void)
       Delay_ms(500);
 			//TalkToCamera(CAMERA_OPEN_FAR);
       
-      gRobot.process=TO_THE_AREA_3;
+      gRobot.sDta.process=TO_THE_AREA_3;
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
       
@@ -290,15 +290,15 @@ void FightForGoldBall(void)
 		/*光电到位*/
     if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
-		//		&&(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
-		//			&&(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
-						&&(gRobot.AT_motionFlag&AT_PITCH_SUCCESS)
+						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
 								/*气压到位*/
-								&&(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+								&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
       /*射球*/
       ShootBall();
@@ -308,7 +308,7 @@ void FightForGoldBall(void)
       /*射球机构复位*/
       ShootReset();
       
-      gRobot.process=END_COMPETE;
+      gRobot.sDta.process=END_COMPETE;
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
@@ -316,15 +316,15 @@ void FightForGoldBall(void)
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE3\t");
-//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB13\t");
-//			if(!(gRobot.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB23\t");
-			if(!(gRobot.AT_motionFlag&AT_PITCH_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				USART_OUT(DEBUG_USART,"!PITCH3\t");
-			if(!(gRobot.AT_motionFlag&AT_COURSE_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				USART_OUT(DEBUG_USART,"!COURSE3\t");
-			if(!(gRobot.AT_motionFlag&AT_GAS_SUCCESS))
+			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 				USART_OUT(DEBUG_USART,"!GAS3\t");
 			USART_Enter();
 		}
@@ -339,28 +339,28 @@ void MotionStatus(void)
 	#ifdef TEST
 	/*返回舵机一的状态*/
   USART_OUT(DEBUG_USART,"steer 1 aimAngle ");
-	USART_OUT_F(gRobot.holdBallAimAngle[0]);
+	USART_OUT_F(gRobot.sDta.holdBallAimAngle[0]);
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.holdBallAngle[0]);
 	USART_Enter();
 	
 	/*返回舵机二的状态*/
   USART_OUT(DEBUG_USART,"steer 2 aimAngle ");
-	USART_OUT_F(gRobot.holdBallAimAngle[1]);
+	USART_OUT_F(gRobot.sDta.holdBallAimAngle[1]);
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.holdBallAngle[1]);
 	USART_Enter();
 	#else
 	/*返回舵机一的状态*/
   USART_OUT(DEBUG_USART,"steer 1 aimAngle ");
-	USART_OUT_F(gRobot.holdBallAimAngle);
+	USART_OUT_F(gRobot.sDta.holdBallAimAngle);
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.holdBallAngle[0]);
 	USART_Enter();
 	
 	/*返回舵机二的状态*/
   USART_OUT(DEBUG_USART,"steer 2 aimAngle ");
-	USART_OUT_F(gRobot.holdBallAimAngle);
+	USART_OUT_F(gRobot.sDta.holdBallAimAngle);
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.holdBallAngle[1]);
 	USART_Enter();
@@ -368,27 +368,27 @@ void MotionStatus(void)
 	
 	/*返回舵机三的状态*/
   USART_OUT(DEBUG_USART,"steer 3 aimAngle ");
-	USART_OUT_F(gRobot.cameraAimAngle);
+	USART_OUT_F(gRobot.sDta.cameraAimAngle);
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.cameraAngle);
 	USART_Enter();
 	
 	/*返回航向角的状态*/
   USART_OUT(DEBUG_USART,"course aimAngle ");
-	USART_OUT_F(gRobot.courseAimAngle);
+	USART_OUT_F(gRobot.sDta.courseAimAngle);
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.courseAngle);
 	USART_Enter();
 	
 	/*返回俯仰角的状态*/
   USART_OUT(DEBUG_USART,"course aimAngle ");
-	USART_OUT_F(gRobot.pitchAimAngle);
+	USART_OUT_F(gRobot.sDta.pitchAimAngle);
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.pitchAngle);
 	USART_Enter();
   
   USART_OUT(DEBUG_USART,"gasValue aim ");
-  USART_OUT_F(gRobot.gasAimValue);
+  USART_OUT_F(gRobot.sDta.gasAimValue);
   USART_OUT(DEBUG_USART,"\treal ");
   USART_OUT_F(gRobot.gasValue);
   USART_OUT(DEBUG_USART,"\r\n");
@@ -396,7 +396,7 @@ void MotionStatus(void)
 
 void processReponse(void)
 {
-  switch(gRobot.process)
+  switch(gRobot.sDta.process)
   {
   case TO_START:
     USART_OUT(DEBUG_USART,"TO_START");
@@ -505,10 +505,10 @@ void processReport(void)
 {
   static uint8_t processLast=99;
   
-  if(gRobot.process==processLast)
+  if(gRobot.sDta.process==processLast)
     return;
   
-  switch(gRobot.process)
+  switch(gRobot.sDta.process)
   {
   case TO_START:
     USART_OUT(DEBUG_USART,"TO_START\t");
@@ -554,7 +554,7 @@ void processReport(void)
     USART_Enter();
     break;
   }
-  processLast=gRobot.process;
+  processLast=gRobot.sDta.process;
 }
 
 

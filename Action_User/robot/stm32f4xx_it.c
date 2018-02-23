@@ -71,18 +71,18 @@ void CAN1_RX0_IRQHandler(void)
     for(i = 0; i < 4; i++)
       msg.data8[i] = buffer[i];
     //位置
-    if(msg.data32[0]==1&&gRobot.process==TO_THE_AREA_1)
+    if(msg.data32[0]==1&&gRobot.sDta.process==TO_THE_AREA_1)
 		{
-      gRobot.process=TO_THROW_BALL_1;
+      gRobot.sDta.process=TO_THROW_BALL_1;
 			
 //      PrepareShootBall(BALL_1);
 //			SetMotionFlag(~AT_GAS_SUCCESS);
 		}
-    if(msg.data32[0]==2&&gRobot.process==TO_THE_AREA_2)
-      gRobot.process=TO_THROW_BALL_2;
-    if(msg.data32[0]==3&&gRobot.process==TO_THE_AREA_3)
-      gRobot.process=TO_THROW_BALL_3;
-    if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.process==ROBOT_PREPARE)
+    if(msg.data32[0]==2&&gRobot.sDta.process==TO_THE_AREA_2)
+      gRobot.sDta.process=TO_THROW_BALL_2;
+    if(msg.data32[0]==3&&gRobot.sDta.process==TO_THE_AREA_3)
+      gRobot.sDta.process=TO_THROW_BALL_3;
+    if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.process==ROBOT_PREPARE)
       SetMotionFlag(AT_PREPARE_READY);
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
   }
@@ -402,7 +402,7 @@ void HardFault_Handler(void)
 		/*确定要写的结构体*/
 		FindResetTime();
 		
-		gRobot.isReset=1;
+		gRobot.sDta.isReset=1;
 		
 		WriteFlashData(gRobot,gRobot.resetTime);
 	}
@@ -432,7 +432,7 @@ void HardFault_Handler(void)
   while (1)
   {
 		//方便打断点，无意义
-    gRobot.isReset=gRobot.isReset;
+    gRobot.sDta.isReset=gRobot.sDta.isReset;
   }
 }
 

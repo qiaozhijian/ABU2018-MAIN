@@ -99,13 +99,13 @@ void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
 {
 	
 	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
-	gRobot.courseAimAngle=PrepareGetBall_t.courseAngle;
-	gRobot.pitchAimAngle=PrepareGetBall_t.pitchAngle;
-	gRobot.gasAimValue=PrepareGetBall_t.gasAim;
+	gRobot.sDta.courseAimAngle=PrepareGetBall_t.courseAngle;
+	gRobot.sDta.pitchAimAngle=PrepareGetBall_t.pitchAngle;
+	gRobot.sDta.gasAimValue=PrepareGetBall_t.gasAim;
 	#ifdef TEST
-	gRobot.holdBallAimAngle[0]=gRobot.holdBallAimAngle[1]=PrepareGetBall_t.steerAngle;
+	gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall_t.steerAngle;
 	#else
-	gRobot.holdBallAimAngle=PrepareGetBall_t.steerAngle;
+	gRobot.sDta.holdBallAimAngle=PrepareGetBall_t.steerAngle;
 	#endif
 	
   //设置气压
@@ -155,13 +155,13 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
   os_err = os_err;
 	
 	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
-	gRobot.courseAimAngle=PrepareShootBall_t.courseAngle;
-	gRobot.pitchAimAngle=PrepareShootBall_t.pitchAngle;
-	gRobot.gasAimValue=PrepareShootBall_t.gasAim;
+	gRobot.sDta.courseAimAngle=PrepareShootBall_t.courseAngle;
+	gRobot.sDta.pitchAimAngle=PrepareShootBall_t.pitchAngle;
+	gRobot.sDta.gasAimValue=PrepareShootBall_t.gasAim;
 	#ifdef TEST
-	gRobot.holdBallAimAngle[0]=gRobot.holdBallAimAngle[1]=PrepareShootBall_t.steerAngle;
+	gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=PrepareShootBall_t.steerAngle;
 	#else
-	gRobot.holdBallAimAngle=PrepareShootBall_t.steerAngle;
+	gRobot.sDta.holdBallAimAngle=PrepareShootBall_t.steerAngle;
 	#endif
 	
   //设置气压

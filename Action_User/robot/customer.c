@@ -341,7 +341,7 @@ void AT_CMD_Handle(void){
     USART_OUT(DEBUG_USART,"OK\r\n");
     if(*(buffer + 4) == '1')
     {
-      if(gRobot.AT_motionFlag&(AT_CLAW_STATUS_OPEN|AT_STEER_READY))
+      if(gRobot.sDta.AT_motionFlag&(AT_CLAW_STATUS_OPEN|AT_STEER_READY))
       {
         ShootSmallOpen();
         ShootBigOpen();
@@ -351,7 +351,7 @@ void AT_CMD_Handle(void){
     }
     else if(*(buffer + 4) == '0') 
     {
-      if(gRobot.AT_motionFlag&(AT_SHOOT_BIG_ENABLE|AT_SHOOT_SMALL_ENABLE))
+      if(gRobot.sDta.AT_motionFlag&(AT_SHOOT_BIG_ENABLE|AT_SHOOT_SMALL_ENABLE))
       {
         ShootSmallShut();
 				ShootBigShut();
@@ -378,18 +378,18 @@ void AT_CMD_Handle(void){
   case PITCH:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-		gRobot.pitchAimAngle=value;
+		gRobot.sDta.pitchAimAngle=value;
 		#ifdef TEST
-		PitchAngleMotion(gRobot.pitchAimAngle);
+		PitchAngleMotion(gRobot.sDta.pitchAimAngle);
 		#endif
     break;
     
   case COURSE:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-		gRobot.courseAimAngle=value;
+		gRobot.sDta.courseAimAngle=value;
 		#ifdef TEST
-		CourseAngleMotion(gRobot.courseAimAngle);
+		CourseAngleMotion(gRobot.sDta.courseAimAngle);
 		#endif
     break;
    
@@ -401,20 +401,20 @@ void AT_CMD_Handle(void){
   case CAMERA:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-		gRobot.cameraAimAngle=value;
-		CameraSteerPosCrl(gRobot.cameraAimAngle);
+		gRobot.sDta.cameraAimAngle=value;
+		CameraSteerPosCrl(gRobot.sDta.cameraAimAngle);
     break;
     
   case STEER:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
 		#ifdef TEST
-		gRobot.holdBallAimAngle[0]=value;
-		gRobot.holdBallAimAngle[1]=value;
-		HoldBallPosCrl(gRobot.holdBallAimAngle[0],2000);
+		gRobot.sDta.holdBallAimAngle[0]=value;
+		gRobot.sDta.holdBallAimAngle[1]=value;
+		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
 		#else
-		gRobot.holdBallAimAngle=value;
-		HoldBallPosCrl(gRobot.holdBallAimAngle,2000);
+		gRobot.sDta.holdBallAimAngle=value;
+		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle,2000);
 		#endif
     break;
 		
@@ -422,11 +422,11 @@ void AT_CMD_Handle(void){
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
 		#ifdef TEST
-		gRobot.holdBallAimAngle[0]=value;
-		HoldSteer1PosCrl(gRobot.holdBallAimAngle[0],2000);
+		gRobot.sDta.holdBallAimAngle[0]=value;
+		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
 		#else
-		gRobot.holdBallAimAngle=value;
-		HoldSteer1PosCrl(gRobot.holdBallAimAngle,2000);
+		gRobot.sDta.holdBallAimAngle=value;
+		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle,2000);
 		#endif
 		break;
 		
@@ -434,11 +434,11 @@ void AT_CMD_Handle(void){
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 5);
 		#ifdef TEST
-		gRobot.holdBallAimAngle[1]=value;
-		HoldSteer2PosCrl(gRobot.holdBallAimAngle[1],2000);
+		gRobot.sDta.holdBallAimAngle[1]=value;
+		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1],2000);
 		#else
-		gRobot.holdBallAimAngle=value;
-		HoldSteer2PosCrl(gRobot.holdBallAimAngle,2000);
+		gRobot.sDta.holdBallAimAngle=value;
+		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle,2000);
 		#endif
 		break;
   case BOOST:
@@ -488,106 +488,106 @@ void SetMotionFlag(uint32_t status){
   
   switch(status){
   case AT_CLAW_STATUS_OPEN:
-    gRobot.AT_motionFlag|=AT_CLAW_STATUS_OPEN;
+    gRobot.sDta.AT_motionFlag|=AT_CLAW_STATUS_OPEN;
     break;
   case ~AT_CLAW_STATUS_OPEN:
-    gRobot.AT_motionFlag&=~AT_CLAW_STATUS_OPEN;
+    gRobot.sDta.AT_motionFlag&=~AT_CLAW_STATUS_OPEN;
     break;
   case AT_STEER_READY:
-    gRobot.AT_motionFlag|=AT_STEER_READY;
+    gRobot.sDta.AT_motionFlag|=AT_STEER_READY;
     break;
   case ~AT_STEER_READY:
-    gRobot.AT_motionFlag&=~AT_STEER_READY;
+    gRobot.sDta.AT_motionFlag&=~AT_STEER_READY;
     break;
   case AT_SHOOT_BIG_ENABLE:
-    gRobot.AT_motionFlag|=AT_SHOOT_BIG_ENABLE;
+    gRobot.sDta.AT_motionFlag|=AT_SHOOT_BIG_ENABLE;
     break;
   case ~AT_SHOOT_BIG_ENABLE:
-    gRobot.AT_motionFlag&=~AT_SHOOT_BIG_ENABLE;
+    gRobot.sDta.AT_motionFlag&=~AT_SHOOT_BIG_ENABLE;
     break;
   case AT_SHOOT_SMALL_ENABLE:
-    gRobot.AT_motionFlag|=AT_SHOOT_SMALL_ENABLE;
+    gRobot.sDta.AT_motionFlag|=AT_SHOOT_SMALL_ENABLE;
     break;
   case ~AT_SHOOT_SMALL_ENABLE:
-    gRobot.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
+    gRobot.sDta.AT_motionFlag&=~AT_SHOOT_SMALL_ENABLE;
     break;
   case AT_HOLD_BALL_1_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL_1_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_1_SUCCESS;
     break;
   case ~AT_HOLD_BALL_1_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL_1_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_1_SUCCESS;
     break;
   case AT_HOLD_BALL_2_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL_2_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_2_SUCCESS;
     break;
   case ~AT_HOLD_BALL_2_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL_2_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_2_SUCCESS;
     break;
   case AT_HOLD_BALL_1_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL_1_RESPONSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_1_RESPONSE_SUCCESS;
     break;
   case ~AT_HOLD_BALL_1_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL_1_RESPONSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_1_RESPONSE_SUCCESS;
     break;
   case AT_HOLD_BALL_2_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag|=AT_HOLD_BALL_2_RESPONSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_2_RESPONSE_SUCCESS;
     break;
   case ~AT_HOLD_BALL_2_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_HOLD_BALL_2_RESPONSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_2_RESPONSE_SUCCESS;
     break;
   case AT_COURSE_READ_SUCCESS:
-    gRobot.AT_motionFlag|=AT_COURSE_READ_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_COURSE_READ_SUCCESS;
     break;
   case ~AT_COURSE_READ_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_COURSE_READ_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_COURSE_READ_SUCCESS;
     break;
   case AT_PITCH_READ_SUCCESS:
-    gRobot.AT_motionFlag|=AT_PITCH_READ_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_PITCH_READ_SUCCESS;
     break;
   case ~AT_PITCH_READ_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_PITCH_READ_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_PITCH_READ_SUCCESS;
     break;
   case AT_COURSE_SUCCESS:
-    gRobot.AT_motionFlag|=AT_COURSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_COURSE_SUCCESS;
     break;
   case ~AT_COURSE_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_COURSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_COURSE_SUCCESS;
     break;
   case AT_PITCH_SUCCESS:
-    gRobot.AT_motionFlag|=AT_PITCH_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_PITCH_SUCCESS;
     break;
   case ~AT_PITCH_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_PITCH_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_PITCH_SUCCESS;
     break;
   case AT_GAS_SUCCESS:
-    gRobot.AT_motionFlag|=AT_GAS_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_GAS_SUCCESS;
     break;
   case ~AT_GAS_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_GAS_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_GAS_SUCCESS;
     break;
   case AT_CAMERA_TALK_SUCCESS:
-    gRobot.AT_motionFlag|=AT_CAMERA_TALK_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_CAMERA_TALK_SUCCESS;
     break;
   case ~AT_CAMERA_TALK_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_CAMERA_TALK_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_CAMERA_TALK_SUCCESS;
     break;
   case AT_CAMERA_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag|=AT_CAMERA_RESPONSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag|=AT_CAMERA_RESPONSE_SUCCESS;
     break;
   case ~AT_CAMERA_RESPONSE_SUCCESS:
-    gRobot.AT_motionFlag&=~AT_CAMERA_RESPONSE_SUCCESS;
+    gRobot.sDta.AT_motionFlag&=~AT_CAMERA_RESPONSE_SUCCESS;
     break;
   case AT_PREPARE_READY:
-    gRobot.AT_motionFlag|=AT_PREPARE_READY;
+    gRobot.sDta.AT_motionFlag|=AT_PREPARE_READY;
     break;
   case ~AT_PREPARE_READY:
-    gRobot.AT_motionFlag&=~AT_PREPARE_READY;
+    gRobot.sDta.AT_motionFlag&=~AT_PREPARE_READY;
     break;
   case AT_IS_SEND_DEBUG_DATA:
-    gRobot.AT_motionFlag|=AT_IS_SEND_DEBUG_DATA;
+    gRobot.sDta.AT_motionFlag|=AT_IS_SEND_DEBUG_DATA;
     break;
   case ~AT_IS_SEND_DEBUG_DATA:
-    gRobot.AT_motionFlag&=~AT_IS_SEND_DEBUG_DATA;
+    gRobot.sDta.AT_motionFlag&=~AT_IS_SEND_DEBUG_DATA;
     break;
   }
 }
