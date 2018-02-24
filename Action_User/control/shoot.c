@@ -95,6 +95,7 @@ void prepareMotionParaInit(void)
   PrepareShootBall3.gasAim=0.585f;
   
 }
+//
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
 {
 	

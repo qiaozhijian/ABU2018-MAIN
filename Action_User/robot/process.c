@@ -99,7 +99,7 @@ void FightForBall1(void)
   {
     /*去取第一个球*/
   case TO_GET_BALL_1:
-    
+		//光电是否被扫到
     if(PE_FOR_THE_BALL)
     {	
       USART_OUT(DEBUG_USART,"123\r\n");
@@ -119,7 +119,7 @@ void FightForBall1(void)
     break;
     /*第一个球取球完毕，去投射区一*/
   case TO_THE_AREA_1:
-
+		//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
     break;
     /*到达投射区一，射球*/
   case TO_THROW_BALL_1:
