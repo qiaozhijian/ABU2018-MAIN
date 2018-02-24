@@ -79,8 +79,8 @@ void USART3_IRQHandler(void)
       if (ch == 0x0d)
       {
         gRobot.angle=posture.ActVal[0] ;
-        gRobot.posY = -posture.ActVal[3];
-        gRobot.posX = -posture.ActVal[4];	
+        gRobot.posX = -posture.ActVal[3];
+        gRobot.posY = posture.ActVal[4];	
 				gRobot.posSystemReady=1;
       }
       count = 0;

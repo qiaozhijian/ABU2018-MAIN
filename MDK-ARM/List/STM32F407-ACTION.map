@@ -1,4 +1,4 @@
-Component: ARM Compiler 5.06 update 3 (build 300) Tool: armlink [4d35c9]
+Component: ARM Compiler 5.06 update 4 (build 422) Tool: armlink [4d35d2]
 
 ==============================================================================
 
@@ -1527,13 +1527,13 @@ Image Symbol Table
     DelayMsRun                               0x08001559   Thumb Code    34  process.o(.text)
     DelayStop                                0x0800157b   Thumb Code    34  process.o(.text)
     processReport                            0x0800159d   Thumb Code   746  process.o(.text)
-    USART3_IRQHandler                        0x080018a5   Thumb Code   330  customer.o(.text)
-    BufferInit                               0x080019ef   Thumb Code    28  customer.o(.text)
-    SetMotionFlag                            0x08001a0b   Thumb Code   784  customer.o(.text)
-    USART2_IRQHandler                        0x08001d1b   Thumb Code   324  customer.o(.text)
-    AT_CMD_Judge                             0x08001e5f   Thumb Code   404  customer.o(.text)
-    USART6_IRQHandler                        0x08001ff3   Thumb Code   154  customer.o(.text)
-    UART4_IRQHandler                         0x0800208d   Thumb Code   308  customer.o(.text)
+    USART3_IRQHandler                        0x080018a5   Thumb Code   326  customer.o(.text)
+    BufferInit                               0x080019eb   Thumb Code    28  customer.o(.text)
+    SetMotionFlag                            0x08001a07   Thumb Code   786  customer.o(.text)
+    USART2_IRQHandler                        0x08001d19   Thumb Code   324  customer.o(.text)
+    AT_CMD_Judge                             0x08001e5d   Thumb Code   404  customer.o(.text)
+    USART6_IRQHandler                        0x08001ff1   Thumb Code   154  customer.o(.text)
+    UART4_IRQHandler                         0x0800208b   Thumb Code   310  customer.o(.text)
     AT_CMD_Handle                            0x080021c1   Thumb Code   746  customer.o(.text)
     ErrorReport                              0x080024d5   Thumb Code     2  errorreport.o(.text)
     ErrorRecord                              0x080024d7   Thumb Code     2  errorreport.o(.text)
@@ -2664,52 +2664,52 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-      1432         90          0          1          0       3851   can.o
-      3120        262          0         14         44       4510   customer.o
-       560         52          0          0         36       9389   datarecover.o
-       712        106          0          5         20       1966   debug.o
-       836         26          0          2        800      14750   dma.o
-      5340        770        224          2          0      13873   elmo.o
-         4          0          0          0          0        682   errorreport.o
-       276          6          0          0          0       2479   gasvalvecontrol.o
-       332         20          0          0          0       1666   gpio.o
-        44          0          0          0          0        694   iwdg.o
-       116         18          0          0       1024     229954   main.o
-       224         20          0          0          0       1949   misc.o
-      1000         68          0          1          0       1928   motion.o
-        18          0          0          0          0       1515   os_apphooks.o
-      3408        290        256         96       7048      19395   os_core.o
-       184         32          0          0          0        308   os_cpu_a.o
-       712         28          0          6        512      12359   os_cpu_c.o
-       348        230        116          0          0       3366   os_dbg.o
-      2148         44          0          0          0       7320   os_flag.o
-       600         16          0          0          0       3488   os_mem.o
-      1612         50          0          0          0       4690   os_mutex.o
-      1620         34          0          0          0       5997   os_q.o
-       992         22          0          0          0       4150   os_sem.o
-      2316         76          0          0          0       8469   os_task.o
-       468         28          0          0          0       1926   os_time.o
-      1760        132          0          0          0       5869   os_tmr.o
-      2740        732          0          9          0       2952   process.o
-       888        144          0          0        140       2404   shoot.o
+      1432         90          0          1          0       3859   can.o
+      3120        264          0         14         44       4522   customer.o
+       560         52          0          0         36       9401   datarecover.o
+       712        106          0          5         20       1978   debug.o
+       836         26          0          2        800      14762   dma.o
+      5340        770        224          2          0      13881   elmo.o
+         4          0          0          0          0        686   errorreport.o
+       276          6          0          0          0       2483   gasvalvecontrol.o
+       332         20          0          0          0       1674   gpio.o
+        44          0          0          0          0        698   iwdg.o
+       116         18          0          0       1024     229974   main.o
+       224         20          0          0          0       1957   misc.o
+      1000         68          0          1          0       1932   motion.o
+        18          0          0          0          0       1519   os_apphooks.o
+      3408        290        256         96       7048      19411   os_core.o
+       184         32          0          0          0        312   os_cpu_a.o
+       712         28          0          6        512      12375   os_cpu_c.o
+       348        230        116          0          0       3378   os_dbg.o
+      2148         44          0          0          0       7328   os_flag.o
+       600         16          0          0          0       3496   os_mem.o
+      1612         50          0          0          0       4698   os_mutex.o
+      1620         34          0          0          0       6005   os_q.o
+       992         22          0          0          0       4158   os_sem.o
+      2316         76          0          0          0       8477   os_task.o
+       468         28          0          0          0       1930   os_time.o
+      1760        132          0          0          0       5877   os_tmr.o
+      2740        732          0          9          0       2956   process.o
+       888        144          0          0        140       2412   shoot.o
         80         32        392          0      25600        868   startup_stm32f4xx.o
-      2808        456          0         24          0       5495   steer.o
-      2544         38          0          0          0       8272   stm32f4xx_can.o
-       936         32          0          0          0       6525   stm32f4xx_dma.o
-      1212         26          0          0          0       7205   stm32f4xx_flash.o
-       604         36          0          0          0       4253   stm32f4xx_gpio.o
-      1976        356          0         21          0       5658   stm32f4xx_it.o
-        64          6          0          0          0       1389   stm32f4xx_iwdg.o
-      1416         48          0         16          0      11187   stm32f4xx_rcc.o
-      3234         60          0          0          0      23140   stm32f4xx_tim.o
-      1086         26          0          0          0       8052   stm32f4xx_usart.o
-       528         46          0         20          0       1843   system_stm32f4xx.o
-       888        100          0          8       5240      61929   task.o
-      1816         30          0          0          0       4073   timer.o
+      2808        456          0         24          0       5499   steer.o
+      2544         38          0          0          0       8280   stm32f4xx_can.o
+       936         32          0          0          0       6533   stm32f4xx_dma.o
+      1212         26          0          0          0       7213   stm32f4xx_flash.o
+       604         36          0          0          0       4261   stm32f4xx_gpio.o
+      1976        356          0         21          0       5666   stm32f4xx_it.o
+        64          6          0          0          0       1393   stm32f4xx_iwdg.o
+      1416         48          0         16          0      11199   stm32f4xx_rcc.o
+      3234         60          0          0          0      23148   stm32f4xx_tim.o
+      1086         26          0          0          0       8060   stm32f4xx_usart.o
+       528         46          0         20          0       1855   system_stm32f4xx.o
+       888        100          0          8       5240      61969   task.o
+      1816         30          0          0          0       4081   timer.o
       2496        186          0         12       1600       8185   usart.o
 
     ----------------------------------------------------------------------
-     55504       4774       1020        252      42064     529973   Object Totals
+     55504       4776       1020        252      42064     530349   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          6          0          0         15          0          0   (incl. Padding)
 
@@ -2834,9 +2834,9 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     70824       5806       1640        252      42164     525741   Grand Totals
-     70824       5806       1640        252      42164     525741   ELF Image Totals
-     70824       5806       1640        252          0          0   ROM Totals
+     70824       5808       1640        252      42164     526117   Grand Totals
+     70824       5808       1640        252      42164     526117   ELF Image Totals
+     70824       5808       1640        252          0          0   ROM Totals
 
 ==============================================================================
 
