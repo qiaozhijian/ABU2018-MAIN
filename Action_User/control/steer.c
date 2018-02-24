@@ -9,7 +9,7 @@
 
 extern Robot_t gRobot;
 
-//以vel的速度转到angle角度
+//以vel的速度转到angle角度,但由于现在给定一直都是最大加速度所以就没用到vel
 void HoldBallPosCrl(float angle,int vel)
 {
   HoldSteer1PosCrl(angle,vel);
