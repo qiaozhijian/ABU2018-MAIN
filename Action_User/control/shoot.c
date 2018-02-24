@@ -4,6 +4,7 @@
 #include "steer.h"
 #include "motion.h"
 #include "includes.h"
+#include "process.h"
 
 extern OS_EVENT *PeriodSem;
 
@@ -46,9 +47,9 @@ void ShootReset(void)
 void prepareMotionParaInit(void)
 {
 	/*准备区动作*/
-  PrepareCompete.courseAngle=0.0f;
+  PrepareCompete.courseAngle=90.0f;
   PrepareCompete.pitchAngle=-20.0f;
-  PrepareCompete.steerAngle=-80.f;
+  PrepareCompete.steerAngle=-90.f;
   PrepareCompete.steerSpeed=2000;
   PrepareCompete.gasAim=0.555f;
 	
@@ -98,7 +99,6 @@ void prepareMotionParaInit(void)
 //
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
 {
-	
 	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
 	gRobot.sDta.courseAimAngle=PrepareGetBall_t.courseAngle;
 	gRobot.sDta.pitchAimAngle=PrepareGetBall_t.pitchAngle;
@@ -129,6 +129,7 @@ void PrepareGetBall(int index)
   switch(index)
   {
   case READY:
+		PrepareWork();
     //传入准备区的参数
     PrepareGetBallMotion(PrepareCompete);
     break;
@@ -202,4 +203,65 @@ void PrepareShootBall(int index)
     USART_OUT(DEBUG_USART,"PrepareShootBall error\r\n");
     break;
   }	
+}
+
+
+/*初始化动作 先下降再旋转*/
+void PrepareWork(void)
+{
+	int cnt=0;
+	#ifndef TEST
+		/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
+	gRobot.sDta.courseAimAngle=PrepareCompete.courseAngle;
+	gRobot.sDta.pitchAimAngle=PrepareCompete.pitchAngle;
+	gRobot.sDta.gasAimValue=PrepareCompete.gasAim;
+	gRobot.sDta.holdBallAimAngle=PrepareCompete.steerAngle;
+	
+  /*关闭下方限位爪*/
+  ClawShut();
+  //设置气压
+  GasMotion(PrepareCompete.gasAim);
+  /*舵机转向*/
+	while(1)
+	{
+		Delay_ms(5);
+		cnt++;
+		//确保一定转向了
+		if(cnt>50)
+			break;
+		HoldBallPosCrl(PrepareCompete.steerAngle, PrepareCompete.steerSpeed);
+	}
+	/*设置俯仰角度*/
+	PitchAngleMotion(PrepareCompete.pitchAngle);
+	while(1)
+	{
+		Delay_ms(5);
+		/*读取俯仰角*/
+		ReadActualPos(CAN2,5);
+			/*判断俯仰角是否到位*/
+		if(fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<0.01f)
+		{
+			SetMotionFlag(AT_PITCH_SUCCESS);
+			break;
+		}
+	}
+	Delay_ms(2000);
+  /*设置航向角度*/
+  CourseAngleMotion(PrepareCompete.courseAngle);
+	/*等待慢转动状态完成*/
+  while(1)
+	{
+		Delay_ms(5);
+		/*读取俯仰角*/
+		ReadActualPos(CAN2,6);
+			/*判断俯仰角是否到位*/
+		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.01f)
+		{
+			SetMotionFlag(AT_COURSE_SUCCESS);
+			break;
+		}
+	}
+	
+	
+	#endif
 }

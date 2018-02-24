@@ -283,9 +283,7 @@ void statusInit(void)
 
 	
   PrepareGetBall(READY);
-  
-	/*等待慢转动状态完成*/
-  Delay_ms(5000);
+	Delay_ms(1000);
 	
 	#endif
 	/*恢复快速转动状态*/

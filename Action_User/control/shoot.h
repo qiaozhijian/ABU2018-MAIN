@@ -26,5 +26,7 @@ void PrepareGetBall(int index);
 void PrepareShootBall(int index);
 
 void prepareMotionParaInit(void);
+
+void PrepareWork(void);
 #endif
 
