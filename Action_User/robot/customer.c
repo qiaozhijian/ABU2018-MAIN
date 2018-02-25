@@ -21,8 +21,8 @@ void USART3_IRQHandler(void)
 {
   static uint8_t ch;
   static union {
-    uint8_t data[24];
-    float ActVal[6];
+    uint8_t data[72];
+    float ActVal[18];
   } posture;
   static uint8_t count = 0;
   static uint8_t i = 0;
@@ -61,7 +61,7 @@ void USART3_IRQHandler(void)
     case 2:
       posture.data[i] = ch;
       i++;
-      if (i >= 24)
+      if (i >= 72)
       {
         i = 0;
         count++;
@@ -78,10 +78,11 @@ void USART3_IRQHandler(void)
     case 4:
       if (ch == 0x0d)
       {
-        gRobot.angle=posture.ActVal[0] ;
-        gRobot.posX = -posture.ActVal[3];
-        gRobot.posY = posture.ActVal[4];	
+
 				gRobot.posSystemReady=1;
+				for(int i=0;i<18;i++)
+					USART_OUT_F(posture.ActVal[i]);
+				USART_Enter();
       }
       count = 0;
       break;

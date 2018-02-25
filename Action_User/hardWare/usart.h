@@ -4,7 +4,7 @@
 #include "stdint.h"
 #include "stm32f4xx_usart.h"
 
-#define DEBUG_USART		USART1
+#define DEBUG_USART		UART4
 
 #define RS485_TX_EN					GPIO_SetBits(GPIOC,GPIO_Pin_13);
 #define RS485_RX_EN					GPIO_ResetBits(GPIOC,GPIO_Pin_13);
