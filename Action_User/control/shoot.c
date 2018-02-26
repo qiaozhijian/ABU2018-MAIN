@@ -53,10 +53,10 @@ void prepareMotionParaInit(void)
   PrepareCompete.steerSpeed=2000;
   PrepareCompete.gasAim=0.555f;
 	
-  /*准备去拿第一个球的数据*/
-  PrepareGetBall1.courseAngle=56.0f;
+  /*准备去拿第一个球的数据*/ 
+  PrepareGetBall1.courseAngle=63.5f;
   PrepareGetBall1.pitchAngle=3.7f;
-  PrepareGetBall1.steerAngle=-48.4f;
+  PrepareGetBall1.steerAngle=-65.4f;
   PrepareGetBall1.steerSpeed=2000;
   PrepareGetBall1.gasAim=0.555f;
   

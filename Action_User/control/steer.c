@@ -46,7 +46,7 @@ void HoldSteer2PosCrl(float angle,int vel)
 		angle=-100.f;
 
 	/*1/4096.f*360.f=11.378*/
-	pos=(int)(((angle-4.2f)*6.f/7.f+180.f)*11.378f);  
+	pos=(int)(((angle-6.8f)*6.f/7.f+180.f)*11.378f);  
 	
   USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n",pos,vel);
 }
