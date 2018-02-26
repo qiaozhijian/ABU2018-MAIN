@@ -4,9 +4,16 @@
 #include "ucos_ii.h"
 #include "stm32f4xx_usart.h"
 #include "customer.h"
+#include <stdio.h>
+#include <string.h>
+#include "robot.h"
+#include "task.h"
 
 static char buffer[20];
 static int bufferI=0;
+
+void AT_CAMEARA_CMD_Judge(void);
+void CameraBufferInit(void);
 
 /*摄像头蓝牙接收中断*/
 void USART6_IRQHandler(void)
@@ -25,10 +32,10 @@ void USART6_IRQHandler(void)
     if(bufferI>=20)
       bufferI=0;
     if(bufferI>1&&buffer[bufferI-1]=='\n'&&buffer[bufferI-2]=='\r'){
-      AT_CMD_Judge();
+      AT_CAMEARA_CMD_Judge();
     }else{
       if(buffer[0]!='A'){
-        BufferInit();
+        CameraBufferInit();
         //USART_OUT(USART6,"NOT START WITH 'A'\r\n");
       }
     }
@@ -37,3 +44,24 @@ void USART6_IRQHandler(void)
   }
   OSIntExit();
 }
+
+//对buffer数据进行清除
+void CameraBufferInit(void){
+  bufferI=0;
+  for(int i=0;i<20;i++)
+    buffer[i]=0;
+}
+
+/* 原本为AT_CAMEARA_CMD_Judge() */
+void AT_CAMEARA_CMD_Judge(void){
+	
+  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
+  {
+		
+		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
+    //摄像头连接成功
+  }
+}
+
+
+

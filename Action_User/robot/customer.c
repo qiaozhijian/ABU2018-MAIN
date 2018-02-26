@@ -39,6 +39,8 @@ static char buffer[20];
 static int bufferI=0;
 static int atCommand=0;
 
+void AT_CMD_Judge(void);
+	
 void BufferInit(void){
   bufferI=0;
 	atCommand=0;
@@ -107,12 +109,12 @@ void AT_CMD_Judge(void){
   else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//发射按钮   
     atCommand=STAIR2;
 	
-  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
-  {
-		
-		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
-    //摄像头连接成功
-  }
+//  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
+//  {
+//		
+//		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
+//    //摄像头连接成功
+//  }
 	
   /*如果是及时处理的命令，就初始化*/
 	if(atCommand==0)
