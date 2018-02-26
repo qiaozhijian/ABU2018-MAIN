@@ -40,6 +40,7 @@
 #include "elmo.h"
 #include "task.h"
 #include "DataRecover.h"
+#include "robot.h"
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */

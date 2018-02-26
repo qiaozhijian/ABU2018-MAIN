@@ -7,6 +7,7 @@
 #include "customer.h"
 #include "motion.h"
 #include "includes.h"
+#include "robot.h"
 
 extern Robot_t gRobot;
 extern int flagggg;
@@ -333,6 +334,8 @@ void FightForGoldBall(void)
 }
 
 
+
+//motion¡£c
 void MotionStatus(void)
 {
 	
@@ -446,7 +449,7 @@ void processReponse(void)
 }
 
 
-
+//»úÆ÷ÈË¡£c
 void StatusReport(void)
 {
   processReponse();

@@ -23,6 +23,7 @@
 #include "iwdg.h"
 #include "DataRecover.h"
 #include "debug.h"
+#include "robot.h"
 /*
 ===============================================================
 信号量定义
@@ -168,7 +169,7 @@ void RobotTask(void)
 						{
 							PrepareGetBall(BALL_1);			
 						}
-						if(gRobot.posX>4000.f)
+						if(gRobot.posX>2000.f)
 						{
 							gRobot.sDta.process=TO_GET_BALL_1;
 							gRobot.sDta.robocon2018=COLORFUL_BALL_1;
@@ -314,7 +315,7 @@ void statusInit(void)
 		BEEP_OFF;
 	#endif
 	
-	
+	/*准备工作完毕*/
   gRobot.sDta.robocon2018=ROBOT_PREPARE;
 	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 }	

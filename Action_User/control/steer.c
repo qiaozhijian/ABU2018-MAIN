@@ -6,6 +6,7 @@
 #include "task.h"
 #include "timer.h"
 #include "process.h"
+#include "robot.h"
 
 extern Robot_t gRobot;
 
@@ -331,6 +332,88 @@ void SteerResponseError(uint8_t num, uint8_t errorWord)
 	USART_Enter();
 }
 
+/****************舵机一 和摄像头舵机串口接收中断********************/
+
+void USART2_IRQHandler(void)
+{
+  uint8_t data;
+	static uint8_t step=0;
+	static uint16_t num;
+  OS_CPU_SR  cpu_sr;
+  OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  if(USART_GetITStatus(USART2,USART_IT_RXNE)==SET)
+  {
+    USART_ClearITPendingBit( USART2,USART_IT_RXNE);
+    data=USART_ReceiveData(USART2);
+		//0XFF 0XFF 0X01(ID) 0X03(LENGTH) 0X00(STATUS) 0X20(DATA) 0XDD
+		switch(step)
+		{
+			case 0:
+				if(data==0xff)
+					step++;
+				else 
+					step=0;
+				break;
+			case 1:
+				if(data==0xff)
+					step++;
+				else 
+					step=0;
+				break;
+			case 2:
+				if((data==0x01)||(data==0x02)||(data==0x03))
+				{
+					step++;
+					num=data;
+				}
+				else step=0;
+				break;
+			case 3:
+				//数据长度
+				step++;
+				break;	
+			case 4:
+				//错误状态
+				if(num==1)
+				{
+					gRobot.holdBall1Error=data;
+				}else if(num==2)
+				{
+					gRobot.holdBall2Error=data;
+				}else if(num==3)
+				{
+					gRobot.cameraSteerError=data;
+				}
+				step++;
+				break;	
+			case 5:
+				gRobot.steerByte=data;
+				step++;
+				break;
+			case 6:
+				if(num==1)
+				{
+					SetMotionFlag(AT_HOLD_BALL_1_RESPONSE_SUCCESS);
+				}else if(num==2)
+				{
+					SetMotionFlag(AT_HOLD_BALL_2_RESPONSE_SUCCESS);
+				}else if(num==3)
+				{
+					SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
+				}
+				num=0;
+				step=0;
+				break;
+		}
+    
+  }else{
+    data=USART_ReceiveData(USART2);
+  }
+  OSIntExit();
+}
+
 
 /****************舵机二串口接收中断****start****************/
 
@@ -478,7 +561,4 @@ void UART5_IRQHandler(void)
   }
   OSIntExit();
 }
-
-
-
 
