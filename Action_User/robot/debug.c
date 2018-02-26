@@ -12,7 +12,7 @@ void debugFunction(void)
 	USART_OUT_F(gRobot.sDta.AT_motionFlag--);
 	USART_OUT_F(gRobot.sDta.courseAimAngle++);
 	USART_OUT_F(gRobot.sDta.gasAimValue++);
-	USART_OUT_F(gRobot.sDta.holdBallAimAngle++);
+	//USART_OUT_F(gRobot.sDta.holdBallAimAngle++);
 	USART_OUT_F(gRobot.sDta.isReset);
 	USART_OUT_F(gRobot.sDta.pitchAimAngle++);
 	USART_OUT_F(gRobot.sDta.process++);
