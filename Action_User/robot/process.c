@@ -7,9 +7,30 @@
 #include "customer.h"
 #include "motion.h"
 #include "includes.h"
+#include "robot.h"
+#include "gpio.h"
 
 extern Robot_t gRobot;
 extern int flagggg;
+
+#define IS_A_BaLL 1
+#define NOT_Ball  0
+
+int PrepareForTheBall(void){
+	static int IsBall=0;
+	if(PE_FOR_THE_BALL){
+		IsBall++;
+	}else{
+		IsBall=0;
+	}
+	if(IsBall>=5){
+		IsBall=0;
+		USART_OUT(DEBUG_USART,"PE\t%d\r\n",PE_FOR_THE_BALL);
+		return IS_A_BaLL;
+	}
+	return NOT_Ball;
+}
+
 void SelfTest(void)
 {
 	AT_CMD_Handle();
@@ -19,7 +40,7 @@ void SelfTest(void)
 	switch(step)
 	{
 		case 10:
-		if(PE_FOR_THE_BALL)
+		if(PrepareForTheBall())
 		{
 			count++;
 		}else
@@ -60,7 +81,7 @@ void SelfTest(void)
 			step++;
 			break;
 		case 2:
-			if(PE_FOR_THE_BALL)
+			if(PrepareForTheBall())
 			{
 				step++;
 				Delay_ms(1000);
@@ -100,7 +121,7 @@ void FightForBall1(void)
     /*去取第一个球*/
   case TO_GET_BALL_1:
 		//光电是否被扫到
-    if(PE_FOR_THE_BALL)
+    if(PrepareForTheBall())
     {	
       USART_OUT(DEBUG_USART,"123\r\n");
 			Delay_ms(500);
@@ -124,7 +145,7 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
   case TO_THROW_BALL_1:
 		/*光电到位*/
-    if(PE_FOR_THE_BALL
+    if(PrepareForTheBall()
 				/*持球舵机到位*/
 		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
@@ -154,7 +175,7 @@ void FightForBall1(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PE_FOR_THE_BALL)
+			if(!PrepareForTheBall())
 				USART_OUT(DEBUG_USART,"!PE1\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB11\t");
@@ -180,7 +201,7 @@ void FightForBall2(void)
   {
     /*去取第二个球*/
   case TO_GET_BALL_2:
-    if(PE_FOR_THE_BALL&&gRobot.posY<1600.f)
+    if(PrepareForTheBall()&&gRobot.posY<1600.f)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
@@ -194,7 +215,7 @@ void FightForBall2(void)
     break;
     /*第二个球取球完毕，去投射区二*/
   case TO_THE_AREA_2:
-    if(!PE_FOR_THE_BALL)
+    if(!PrepareForTheBall())
     {
       MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL2);
     }
@@ -202,7 +223,7 @@ void FightForBall2(void)
     /*到达投射区二，射球*/
   case TO_THROW_BALL_2:
 		/*光电到位*/
-    if(PE_FOR_THE_BALL
+    if(PrepareForTheBall()
 				/*持球舵机到位*/
 	//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
@@ -234,7 +255,7 @@ void FightForBall2(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PE_FOR_THE_BALL)
+			if(!PrepareForTheBall())
 				USART_OUT(DEBUG_USART,"!PE2\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB12\t");
@@ -261,7 +282,7 @@ void FightForGoldBall(void)
   {
     /*去取第三个球*/
   case TO_GET_BALL_3:
-    if(PE_FOR_THE_BALL&&gRobot.posY<1600.f)
+    if(PrepareForTheBall()&&gRobot.posY<1600.f)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
@@ -280,7 +301,7 @@ void FightForGoldBall(void)
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
 		if(gRobot.posY>2500.f) BoostPoleReturn();
-    if(!PE_FOR_THE_BALL)
+    if(!PrepareForTheBall())
     {
       MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL3);
     }
@@ -288,7 +309,7 @@ void FightForGoldBall(void)
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
 		/*光电到位*/
-    if(PE_FOR_THE_BALL
+    if(PrepareForTheBall()
 				/*持球舵机到位*/
 		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
@@ -314,7 +335,7 @@ void FightForGoldBall(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PE_FOR_THE_BALL)
+			if(!PrepareForTheBall())
 				USART_OUT(DEBUG_USART,"!PE3\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB13\t");
@@ -333,6 +354,8 @@ void FightForGoldBall(void)
 }
 
 
+
+//motion。c
 void MotionStatus(void)
 {
 	
@@ -446,7 +469,7 @@ void processReponse(void)
 }
 
 
-
+//机器人。c
 void StatusReport(void)
 {
   processReponse();

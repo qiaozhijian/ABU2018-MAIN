@@ -5,6 +5,7 @@
 #include "motion.h"
 #include "includes.h"
 #include "process.h"
+#include "robot.h"
 
 extern OS_EVENT *PeriodSem;
 
@@ -262,6 +263,6 @@ void PrepareWork(void)
 		}
 	}
 	
-	
-	#endif
+		#endif
+
 }

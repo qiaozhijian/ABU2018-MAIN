@@ -6,6 +6,7 @@
 #include "task.h"
 #include "timer.h"
 #include "process.h"
+#include "robot.h"
 
 extern Robot_t gRobot;
 
@@ -147,7 +148,7 @@ void CameraAlign(void)
 
 void SteerPosCrlBy485(int num,int pos)
 {
-
+	/*此时0x01,0x01都是value 此时这个value是16位的，先输入低字节，再输入高字节*/
   u8 command[9]={0XFF, 0XFF, num, 0X05, 0X03, AIM_POS, 0x01,0x01,0x00};
   command[6]=pos&0xFF;
   command[7]=(pos>>8)&0xFF;
@@ -156,7 +157,7 @@ void SteerPosCrlBy485(int num,int pos)
   command[8]=checkSum;
   
   RS485_Send_Data(command,9);
-	
+	/*设置舵机转动为最大转动速度*/
 	SetSteerWord(num,AIM_TIME,0x0000);
 }
 
@@ -173,20 +174,23 @@ void SetSteerWord(uint8_t num,uint8_t address,uint8_t value)
   RS485_Send_Data(command,9);
 }
 
-
+//舵机发送OCS指令包
 void SetSteerByte(uint8_t num,uint8_t address,uint8_t value)
 {
+	/*八位分别代表 第0,1位字头 第2位舵机ID号 第3位数据长度 第4位指令 第5，6位参数    第7位校验和*/
 	unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X03, address, value, 0x00};
 	unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+	/*校验和 Check Sum = ~ (ID + Length + Instruction + Parameter1 + ... Parameter N)*/
 	checkSum=~checkSum;
 	command[7]=checkSum;
-	
+	/*ReadOneByte函数里面也存在对扭矩开关打开的发数，现在一个周期发两次，一次是ReadOneByte里面的扭矩开关打开，和自定义的while的发数*/
 	while(ReadOneByte(num,address)!=value)
 		RS485_Send_Data(command,8);
 }
 
 void ReadSteerError(int num)
 {
+	/*写入对舵机的 RAM的ID进行写入  为了获取错误状态*/
   unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X02, ID_AREA, 0x01, 0x00};
   unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
   checkSum=~checkSum;
@@ -215,7 +219,7 @@ void ReadSteerErrorAll(void)
 }
 	
 
-/*设置回答等级*/
+/*设置回答等级*//*在串口2中断中读取舵机OCS模式应答包，如果舵机不能回复那就在while中反复问询,直到舵机回复为止*//*注意485是半双工*/
 uint8_t ReadOneByte(int num,int address)
 {
   unsigned char command[8]={0XFF, 0XFF, num, 0X04, 0X02, address, 0x01, 0x00};
@@ -253,9 +257,13 @@ uint8_t ReadOneByte(int num,int address)
 
 void OpenSteerAll(void)
 {
+	/*485 版本的舵机
+	通过写入舵机的内存控制表,TORQUE_SWITCH-0x28是扭矩开关所位于的地址写入1将其打开*/
 	SetSteerByte(HOLD_BALL_1,TORQUE_SWITCH,0x01);
+	/*ttl版本的舵机*/
 	Enable_ROBS();
 //	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
+	/*485 版本的舵机*/
 	SetSteerByte(CAMERA_STEER,TORQUE_SWITCH,0x01);
 }
 
@@ -322,6 +330,88 @@ void SteerResponseError(uint8_t num, uint8_t errorWord)
     //成功
   }
 	USART_Enter();
+}
+
+/****************舵机一 和摄像头舵机串口接收中断********************/
+
+void USART2_IRQHandler(void)
+{
+  uint8_t data;
+	static uint8_t step=0;
+	static uint16_t num;
+  OS_CPU_SR  cpu_sr;
+  OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
+  OSIntNesting++;
+  OS_EXIT_CRITICAL();
+  if(USART_GetITStatus(USART2,USART_IT_RXNE)==SET)
+  {
+    USART_ClearITPendingBit( USART2,USART_IT_RXNE);
+    data=USART_ReceiveData(USART2);
+		//0XFF 0XFF 0X01(ID) 0X03(LENGTH) 0X00(STATUS) 0X20(DATA) 0XDD
+		switch(step)
+		{
+			case 0:
+				if(data==0xff)
+					step++;
+				else 
+					step=0;
+				break;
+			case 1:
+				if(data==0xff)
+					step++;
+				else 
+					step=0;
+				break;
+			case 2:
+				if((data==0x01)||(data==0x02)||(data==0x03))
+				{
+					step++;
+					num=data;
+				}
+				else step=0;
+				break;
+			case 3:
+				//数据长度
+				step++;
+				break;	
+			case 4:
+				//错误状态
+				if(num==1)
+				{
+					gRobot.holdBall1Error=data;
+				}else if(num==2)
+				{
+					gRobot.holdBall2Error=data;
+				}else if(num==3)
+				{
+					gRobot.cameraSteerError=data;
+				}
+				step++;
+				break;	
+			case 5:
+				gRobot.steerByte=data;
+				step++;
+				break;
+			case 6:
+				if(num==1)
+				{
+					SetMotionFlag(AT_HOLD_BALL_1_RESPONSE_SUCCESS);
+				}else if(num==2)
+				{
+					SetMotionFlag(AT_HOLD_BALL_2_RESPONSE_SUCCESS);
+				}else if(num==3)
+				{
+					SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
+				}
+				num=0;
+				step=0;
+				break;
+		}
+    
+  }else{
+    data=USART_ReceiveData(USART2);
+  }
+  OSIntExit();
 }
 
 
@@ -471,7 +561,4 @@ void UART5_IRQHandler(void)
   }
   OSIntExit();
 }
-
-
-
 
