@@ -179,7 +179,7 @@ void MotionRead(void)
 	ReadActualPos(CAN2,6);
   /*将读航向角姿态的标志位归0*/
 	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
-	
+	/*读取当前舵机的状态是否发生错误*/
 	ReadSteerErrorAll();
 	/*像平板发送气压值*/
 	//if(gRobot.isOpenGasReturn&&count==3)

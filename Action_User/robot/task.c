@@ -228,14 +228,14 @@ void HardWareInit(void){
 }
 void MotorInit(void){
 	
-  //电机初始化及使能
+  //电机初始化
   ElmoInit(CAN2);
   
   //电机位置环
   PosLoopCfg(CAN2, 5, 100000, 100000,100000);
   //电机位置环
   PosLoopCfg(CAN2, 6, 100000, 100000,100000);
-  
+   //电机使能
   MotorOn(CAN2,5); 
   MotorOn(CAN2,6); 
 	
@@ -257,17 +257,26 @@ void statusInit(void)
 	#endif
 	
   /*运动控制状态初始化*/
+	/*爪子标志位关闭*/
   SetMotionFlag(~AT_CLAW_STATUS_OPEN);
+	/*舵机准备标志位打开*/
   SetMotionFlag(AT_STEER_READY);
+	/*射球时的助力大气阀标志位关闭*/
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   
+	/*爪子关闭*/
 	ClawShut();
+	/*去投第三个球时的助推气阀重置*/
 	BoostPoleReturn();
+	/*射球完毕时的归位小气阀重置*/
 	ShootSmallShut();
+	/*射球时的助力大气阀重置*/
 	ShootBigShut();
 	ShootLedOff();
+	/*金球架抓取一级气阀打开*/
 	GoldBallGraspStairOneOn();
+	/*金球架抓取二级气阀打开*/
 	GoldBallGraspStairTwoOn();
 	
 	#ifndef TEST
