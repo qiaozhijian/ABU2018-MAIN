@@ -135,6 +135,13 @@ Section Cross References
     motion.o(.text) refers to dleqf.o(x$fpl$dleqf) for __aeabi_cdcmple
     motion.o(.text) refers to task.o(.bss) for gRobot
     motion.o(.text) refers to motion.o(.data) for count
+    pps.o(.text) refers to os_cpu_a.o(.text) for OS_CPU_SR_Save
+    pps.o(.text) refers to stm32f4xx_usart.o(.text) for USART_GetITStatus
+    pps.o(.text) refers to os_core.o(.text) for OSIntExit
+    pps.o(.text) refers to os_core.o(.data) for OSIntNesting
+    pps.o(.text) refers to pps.o(.data) for ch
+    pps.o(.text) refers to pps.o(.bss) for posture
+    pps.o(.text) refers to task.o(.bss) for gRobot
     camera.o(.text) refers to strncmp.o(.text) for strncmp
     camera.o(.text) refers to robot.o(.text) for SetMotionFlag
     camera.o(.text) refers to os_cpu_a.o(.text) for OS_CPU_SR_Save
@@ -143,13 +150,6 @@ Section Cross References
     camera.o(.text) refers to camera.o(.data) for bufferI
     camera.o(.text) refers to camera.o(.bss) for buffer
     camera.o(.text) refers to os_core.o(.data) for OSIntNesting
-    pps.o(.text) refers to os_cpu_a.o(.text) for OS_CPU_SR_Save
-    pps.o(.text) refers to stm32f4xx_usart.o(.text) for USART_GetITStatus
-    pps.o(.text) refers to os_core.o(.text) for OSIntExit
-    pps.o(.text) refers to os_core.o(.data) for OSIntNesting
-    pps.o(.text) refers to pps.o(.data) for ch
-    pps.o(.text) refers to pps.o(.bss) for posture
-    pps.o(.text) refers to task.o(.bss) for gRobot
     can.o(.text) refers to stm32f4xx_rcc.o(.text) for RCC_APB1PeriphClockCmd
     can.o(.text) refers to stm32f4xx_gpio.o(.text) for GPIO_PinAFConfig
     can.o(.text) refers to stm32f4xx_can.o(.text) for CAN_DeInit
@@ -763,12 +763,12 @@ Removing Unused input sections from the image.
     Removing motion.o(.rev16_text), (4 bytes).
     Removing motion.o(.revsh_text), (4 bytes).
     Removing motion.o(.rrx_text), (6 bytes).
-    Removing camera.o(.rev16_text), (4 bytes).
-    Removing camera.o(.revsh_text), (4 bytes).
-    Removing camera.o(.rrx_text), (6 bytes).
     Removing pps.o(.rev16_text), (4 bytes).
     Removing pps.o(.revsh_text), (4 bytes).
     Removing pps.o(.rrx_text), (6 bytes).
+    Removing camera.o(.rev16_text), (4 bytes).
+    Removing camera.o(.revsh_text), (4 bytes).
+    Removing camera.o(.rrx_text), (6 bytes).
     Removing can.o(.rev16_text), (4 bytes).
     Removing can.o(.revsh_text), (4 bytes).
     Removing can.o(.rrx_text), (6 bytes).
@@ -863,9 +863,9 @@ Image Symbol Table
 
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
-    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
-    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit1.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit2.o ABSOLUTE
+    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit1.o ABSOLUTE
+    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardshut.o ABSOLUTE
     ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_copy.o ABSOLUTE
     ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_zi.o ABSOLUTE
@@ -875,23 +875,23 @@ Image Symbol Table
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtexit2.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry4.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_locale_intlibspace.o ABSOLUTE
-    ../clib/angel/rt.s                       0x00000000   Number         0  rt_errno_addr_intlibspace.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_locale.o ABSOLUTE
+    ../clib/angel/rt.s                       0x00000000   Number         0  rt_errno_addr.o ABSOLUTE
+    ../clib/angel/rt.s                       0x00000000   Number         0  rt_errno_addr_intlibspace.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_raise.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_ctype_table.o ABSOLUTE
-    ../clib/angel/rt.s                       0x00000000   Number         0  rt_errno_addr.o ABSOLUTE
     ../clib/angel/scatter.s                  0x00000000   Number         0  __scatter.o ABSOLUTE
     ../clib/angel/startup.s                  0x00000000   Number         0  __main.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  indicate_semi.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  sys_stackheap_outer.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  libspace.o ABSOLUTE
+    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_command.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_wrch.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_exit.o ABSOLUTE
-    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_command.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  no_argv.o ABSOLUTE
-    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  _get_argv_nomalloc.o ABSOLUTE
+    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
     ../clib/bigflt.c                         0x00000000   Number         0  bigflt0.o ABSOLUTE
     ../clib/btod.s                           0x00000000   Number         0  btod.o ABSOLUTE
@@ -900,27 +900,27 @@ Image Symbol Table
     ../clib/heapalloc.c                      0x00000000   Number         0  hrguard.o ABSOLUTE
     ../clib/heapaux.c                        0x00000000   Number         0  heapauxi.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libinit2.o ABSOLUTE
-    ../clib/libinit.s                        0x00000000   Number         0  libshutdown2.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libinit.o ABSOLUTE
+    ../clib/libinit.s                        0x00000000   Number         0  libshutdown2.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libshutdown.o ABSOLUTE
     ../clib/locale.s                         0x00000000   Number         0  lc_numeric_c.o ABSOLUTE
     ../clib/locale.s                         0x00000000   Number         0  lc_ctype_c.o ABSOLUTE
     ../clib/longlong.s                       0x00000000   Number         0  llshl.o ABSOLUTE
+    ../clib/memcpset.s                       0x00000000   Number         0  rt_memcpy_v6.o ABSOLUTE
     ../clib/memcpset.s                       0x00000000   Number         0  strcmpv7m.o ABSOLUTE
     ../clib/memcpset.s                       0x00000000   Number         0  rt_memcpy_w.o ABSOLUTE
-    ../clib/memcpset.s                       0x00000000   Number         0  rt_memcpy_v6.o ABSOLUTE
     ../clib/misc.s                           0x00000000   Number         0  printf_stubs.o ABSOLUTE
-    ../clib/printf.c                         0x00000000   Number         0  _printf_pad.o ABSOLUTE
-    ../clib/printf.c                         0x00000000   Number         0  __printf.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __printf_wp.o ABSOLUTE
+    ../clib/printf.c                         0x00000000   Number         0  __printf_flags_ss_wp.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  _sputc.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __2sprintf.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __printf_flags_wp.o ABSOLUTE
-    ../clib/printf.c                         0x00000000   Number         0  _printf_char_common.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __printf_ss_wp.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  noretval__2sprintf.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __printf_nopercent.o ABSOLUTE
-    ../clib/printf.c                         0x00000000   Number         0  __printf_flags_ss_wp.o ABSOLUTE
+    ../clib/printf.c                         0x00000000   Number         0  _printf_pad.o ABSOLUTE
+    ../clib/printf.c                         0x00000000   Number         0  __printf.o ABSOLUTE
+    ../clib/printf.c                         0x00000000   Number         0  _printf_char_common.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __printf_flags_ss.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __printf_ss.o ABSOLUTE
     ../clib/printf.c                         0x00000000   Number         0  __printf_flags.o ABSOLUTE
@@ -929,26 +929,26 @@ Image Symbol Table
     ../clib/printf_percent.s                 0x00000000   Number         0  _printf_percent.o ABSOLUTE
     ../clib/printf_percent.s                 0x00000000   Number         0  _printf_percent_end.o ABSOLUTE
     ../clib/printf_percent.s                 0x00000000   Number         0  _printf_d.o ABSOLUTE
+    ../clib/scanf.c                          0x00000000   Number         0  _chval.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  scanf_hexfp.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  scanf_fp.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  strtod.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  _sgetc.o ABSOLUTE
     ../clib/scanf.c                          0x00000000   Number         0  scanf_infnan.o ABSOLUTE
-    ../clib/scanf.c                          0x00000000   Number         0  _chval.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_exit.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  __raise.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_abrt_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_formal.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_rtred_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_abrt_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_stak_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_outer.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_formal.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_exit.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_pvfn_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_segv_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_other.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_outer.o ABSOLUTE
     ../clib/signal.s                         0x00000000   Number         0  defsig.o ABSOLUTE
     ../clib/stdlib.c                         0x00000000   Number         0  exit.o ABSOLUTE
     ../clib/string.c                         0x00000000   Number         0  strcpy.o ABSOLUTE
@@ -1164,8 +1164,8 @@ Image Symbol Table
     .text                                    0x08002c54   Section        0  gasvalvecontrol.o(.text)
     .text                                    0x08002d68   Section        0  steer.o(.text)
     .text                                    0x080039b8   Section        0  motion.o(.text)
-    .text                                    0x08003da0   Section        0  camera.o(.text)
-    .text                                    0x08003e8c   Section        0  pps.o(.text)
+    .text                                    0x08003da0   Section        0  pps.o(.text)
+    .text                                    0x08003f04   Section        0  camera.o(.text)
     .text                                    0x08003ff0   Section        0  can.o(.text)
     .text                                    0x08004588   Section        0  dma.o(.text)
     .text                                    0x080048cc   Section        0  elmo.o(.text)
@@ -1398,18 +1398,18 @@ Image Symbol Table
     pos                                      0x20000054   Data           4  steer.o(.data)
     .data                                    0x20000058   Section        1  motion.o(.data)
     count                                    0x20000058   Data           1  motion.o(.data)
+    .data                                    0x20000059   Section        3  pps.o(.data)
+    ch                                       0x20000059   Data           1  pps.o(.data)
+    count                                    0x2000005a   Data           1  pps.o(.data)
+    i                                        0x2000005b   Data           1  pps.o(.data)
     .data                                    0x2000005c   Section        4  camera.o(.data)
     bufferI                                  0x2000005c   Data           4  camera.o(.data)
-    .data                                    0x20000060   Section        3  pps.o(.data)
-    ch                                       0x20000060   Data           1  pps.o(.data)
-    count                                    0x20000061   Data           1  pps.o(.data)
-    i                                        0x20000062   Data           1  pps.o(.data)
-    .data                                    0x20000063   Section        1  can.o(.data)
-    mailBox                                  0x20000063   Data           1  can.o(.data)
-    .data                                    0x20000064   Section        2  dma.o(.data)
-    sendBufferCnt                            0x20000064   Data           2  dma.o(.data)
-    .data                                    0x20000066   Section        2  elmo.o(.data)
-    timeout                                  0x20000066   Data           2  elmo.o(.data)
+    .data                                    0x20000060   Section        1  can.o(.data)
+    mailBox                                  0x20000060   Data           1  can.o(.data)
+    .data                                    0x20000062   Section        2  dma.o(.data)
+    sendBufferCnt                            0x20000062   Data           2  dma.o(.data)
+    .data                                    0x20000064   Section        2  elmo.o(.data)
+    timeout                                  0x20000064   Data           2  elmo.o(.data)
     .data                                    0x20000068   Section        4  gpio.o(.data)
     IsBall                                   0x20000068   Data           4  gpio.o(.data)
     .data                                    0x2000006c   Section       12  usart.o(.data)
@@ -1433,10 +1433,10 @@ Image Symbol Table
     .bss                                     0x200019b4   Section       20  debug.o(.bss)
     buffer                                   0x200019b4   Data          20  debug.o(.bss)
     .bss                                     0x200019c8   Section      140  shoot.o(.bss)
-    .bss                                     0x20001a54   Section       20  camera.o(.bss)
-    buffer                                   0x20001a54   Data          20  camera.o(.bss)
-    .bss                                     0x20001a68   Section       24  pps.o(.bss)
-    posture                                  0x20001a68   Data          24  pps.o(.bss)
+    .bss                                     0x20001a54   Section       24  pps.o(.bss)
+    posture                                  0x20001a54   Data          24  pps.o(.bss)
+    .bss                                     0x20001a6c   Section       20  camera.o(.bss)
+    buffer                                   0x20001a6c   Data          20  camera.o(.bss)
     .bss                                     0x20001a80   Section      800  dma.o(.bss)
     UART5SendBuf                             0x20001a80   Data         400  dma.o(.bss)
     UART5DMASendBuf                          0x20001c10   Data         400  dma.o(.bss)
@@ -1651,10 +1651,10 @@ Image Symbol Table
     MotionExecute                            0x08003b75   Thumb Code   124  motion.o(.text)
     MotionRead                               0x08003bf1   Thumb Code    64  motion.o(.text)
     MotionStatusUpdate                       0x08003c31   Thumb Code   300  motion.o(.text)
-    CameraBufferInit                         0x08003da1   Thumb Code    24  camera.o(.text)
-    AT_CAMEARA_CMD_Judge                     0x08003db9   Thumb Code    32  camera.o(.text)
-    USART6_IRQHandler                        0x08003dd9   Thumb Code   154  camera.o(.text)
-    USART3_IRQHandler                        0x08003e8d   Thumb Code   326  pps.o(.text)
+    USART3_IRQHandler                        0x08003da1   Thumb Code   326  pps.o(.text)
+    CameraBufferInit                         0x08003f05   Thumb Code    24  camera.o(.text)
+    AT_CAMEARA_CMD_Judge                     0x08003f1d   Thumb Code    32  camera.o(.text)
+    USART6_IRQHandler                        0x08003f3d   Thumb Code   154  camera.o(.text)
     CAN_Config                               0x08003ff1   Thumb Code  1022  can.o(.text)
     CAN_TxMsg                                0x080043ef   Thumb Code   134  can.o(.text)
     CAN_RxMsg                                0x08004475   Thumb Code    72  can.o(.text)
@@ -2518,8 +2518,8 @@ Memory Map of the image
     0x08002c54   0x00000114   Code   RO          457    .text               gasvalvecontrol.o
     0x08002d68   0x00000c50   Code   RO          482    .text               steer.o
     0x080039b8   0x000003e8   Code   RO          508    .text               motion.o
-    0x08003da0   0x000000ec   Code   RO          534    .text               camera.o
-    0x08003e8c   0x00000164   Code   RO          568    .text               pps.o
+    0x08003da0   0x00000164   Code   RO          534    .text               pps.o
+    0x08003f04   0x000000ec   Code   RO          564    .text               camera.o
     0x08003ff0   0x00000598   Code   RO          598    .text               can.o
     0x08004588   0x00000344   Code   RO          630    .text               dma.o
     0x080048cc   0x000014dc   Code   RO          660    .text               elmo.o
@@ -2690,12 +2690,13 @@ Memory Map of the image
     0x20000039   0x00000003   PAD
     0x2000003c   0x0000001c   Data   RW          483    .data               steer.o
     0x20000058   0x00000001   Data   RW          509    .data               motion.o
-    0x20000059   0x00000003   PAD
-    0x2000005c   0x00000004   Data   RW          536    .data               camera.o
-    0x20000060   0x00000003   Data   RW          570    .data               pps.o
-    0x20000063   0x00000001   Data   RW          599    .data               can.o
-    0x20000064   0x00000002   Data   RW          632    .data               dma.o
-    0x20000066   0x00000002   Data   RW          662    .data               elmo.o
+    0x20000059   0x00000003   Data   RW          536    .data               pps.o
+    0x2000005c   0x00000004   Data   RW          566    .data               camera.o
+    0x20000060   0x00000001   Data   RW          599    .data               can.o
+    0x20000061   0x00000001   PAD
+    0x20000062   0x00000002   Data   RW          632    .data               dma.o
+    0x20000064   0x00000002   Data   RW          662    .data               elmo.o
+    0x20000066   0x00000002   PAD
     0x20000068   0x00000004   Data   RW          687    .data               gpio.o
     0x2000006c   0x0000000c   Data   RW          737    .data               usart.o
     0x20000078   0x00000014   Data   RW          842    .data               system_stm32f4xx.o
@@ -2709,8 +2710,8 @@ Memory Map of the image
     0x20001990   0x00000024   Zero   RW          346    .bss                datarecover.o
     0x200019b4   0x00000014   Zero   RW          377    .bss                debug.o
     0x200019c8   0x0000008c   Zero   RW          430    .bss                shoot.o
-    0x20001a54   0x00000014   Zero   RW          535    .bss                camera.o
-    0x20001a68   0x00000018   Zero   RW          569    .bss                pps.o
+    0x20001a54   0x00000018   Zero   RW          535    .bss                pps.o
+    0x20001a6c   0x00000014   Zero   RW          565    .bss                camera.o
     0x20001a80   0x00000320   Zero   RW          631    .bss                dma.o
     0x20001da0   0x00000640   Zero   RW          736    .bss                usart.o
     0x200023e0   0x00000200   Zero   RW          879    .bss                os_cpu_c.o
