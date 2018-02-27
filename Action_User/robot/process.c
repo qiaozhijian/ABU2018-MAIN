@@ -373,8 +373,6 @@ void FightForGoldBall(void)
 //motion。c
 void MotionStatus(void)
 {
-	
-	#ifdef TEST
 	/*返回舵机一的状态*/
   USART_OUT(DEBUG_USART,"steer 1 aimAngle ");
 	USART_OUT_F(gRobot.sDta.holdBallAimAngle[0]);
@@ -388,21 +386,6 @@ void MotionStatus(void)
   USART_OUT(DEBUG_USART,"realpos ");
 	USART_OUT_F(gRobot.holdBallAngle[1]);
 	USART_Enter();
-	#else
-	/*返回舵机一的状态*/
-  USART_OUT(DEBUG_USART,"steer 1 aimAngle ");
-	USART_OUT_F(gRobot.sDta.holdBallAimAngle[0]);
-  USART_OUT(DEBUG_USART,"realpos ");
-	USART_OUT_F(gRobot.holdBallAngle[0]);
-	USART_Enter();
-	
-	/*返回舵机二的状态*/
-  USART_OUT(DEBUG_USART,"steer 2 aimAngle ");
-	USART_OUT_F(gRobot.sDta.holdBallAimAngle[1]);
-  USART_OUT(DEBUG_USART,"realpos ");
-	USART_OUT_F(gRobot.holdBallAngle[1]);
-	USART_Enter();
-	#endif
 	
 	/*返回舵机三的状态*/
   USART_OUT(DEBUG_USART,"steer 3 aimAngle ");
