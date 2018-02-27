@@ -83,6 +83,7 @@ void CAN1_RX0_IRQHandler(void)
       SetMotionFlag(AT_REACH_SECOND_PLACE);
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA3&&(gRobot.sDta.process==TO_THE_AREA_3||gRobot.sDta.process==TO_GET_BALL_3))
       SetMotionFlag(AT_REACH_THIRD_PLACE);
+
     if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.process==ROBOT_PREPARE)
       SetMotionFlag(AT_PREPARE_READY);
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
@@ -417,7 +418,6 @@ void HardFault_Handler(void)
 //  /*因为经历中断函数入栈之后，堆栈指针会减小0x10，所以平移回来（可能不具有普遍性）*/
 //  r_sp = r_sp+0x10;
 //  /*串口发数通知*/
-//  USART_OUT(DEBUG_USART,"\r\nHardFault");
 //  char sPoint[2]={0};
 //  USART_OUT(DEBUG_USART,"%s","0x");
 //  /*获取出现异常时程序的地址*/
@@ -434,6 +434,7 @@ void HardFault_Handler(void)
   {
 		//方便打断点，无意义
     gRobot.sDta.isReset=gRobot.sDta.isReset;
+		USART_OUT(DEBUG_USART,"\r\nHardFault");
   }
 }
 
