@@ -79,6 +79,7 @@ void CAN1_RX0_IRQHandler(void)
 //      PrepareShootBall(BALL_1);
 //			SetMotionFlag(~AT_GAS_SUCCESS);
 		}
+		
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA2&&gRobot.sDta.process==TO_THE_AREA_2)
       gRobot.sDta.process=TO_THROW_BALL_2;
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA3&&gRobot.sDta.process==TO_THE_AREA_3)
@@ -417,7 +418,6 @@ void HardFault_Handler(void)
 //  /*因为经历中断函数入栈之后，堆栈指针会减小0x10，所以平移回来（可能不具有普遍性）*/
 //  r_sp = r_sp+0x10;
 //  /*串口发数通知*/
-//  USART_OUT(DEBUG_USART,"\r\nHardFault");
 //  char sPoint[2]={0};
 //  USART_OUT(DEBUG_USART,"%s","0x");
 //  /*获取出现异常时程序的地址*/
@@ -434,6 +434,7 @@ void HardFault_Handler(void)
   {
 		//方便打断点，无意义
     gRobot.sDta.isReset=gRobot.sDta.isReset;
+		USART_OUT(DEBUG_USART,"\r\nHardFault");
   }
 }
 
