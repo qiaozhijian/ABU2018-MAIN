@@ -21,5 +21,7 @@ void BeepInit(void);
 
 void PhotoelectricityInit(void);
 
+int PrepareForTheBall(void);
+
 
 #endif

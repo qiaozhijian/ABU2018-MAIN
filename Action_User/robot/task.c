@@ -144,6 +144,9 @@ void RobotTask(void)
 					USART_OUT_F(gRobot.posX);
 					USART_OUT_F(gRobot.posY);
 					USART_OUT_F(gRobot.angle);
+					USART_OUT_F(gRobot.courseAngle);
+					USART_OUT_F(gRobot.pitchAngle);
+					USART_OUT_F(gRobot.gasValue);
 					USART_OUT(DEBUG_USART,"%d\t",PE_FOR_THE_BALL);
 					USART_Enter();
 				}

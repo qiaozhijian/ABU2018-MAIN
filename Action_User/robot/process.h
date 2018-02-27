@@ -12,8 +12,6 @@ void SelfTest(void);
 
 void processReponse(void);
 
-int PrepareForTheBall(void);
-
 //void DelayMsRun(char task,short ms);
 //void DelayStop(char task);
 //void DelayTaskRun(void);

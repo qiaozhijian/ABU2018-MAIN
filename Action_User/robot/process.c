@@ -13,24 +13,6 @@
 extern Robot_t gRobot;
 extern int flagggg;
 
-#define IS_A_BaLL 1
-#define NOT_Ball  0
-
-int PrepareForTheBall(void){
-	static int IsBall=0;
-	if(PE_FOR_THE_BALL){
-		IsBall++;
-	}else{
-		IsBall=0;
-	}
-	if(IsBall>=5){
-		IsBall=0;
-		USART_OUT(DEBUG_USART,"PE\t%d\r\n",PE_FOR_THE_BALL);
-		return IS_A_BaLL;
-	}
-	return NOT_Ball;
-}
-
 void SelfTest(void)
 {
 	AT_CMD_Handle();
@@ -140,6 +122,8 @@ void FightForBall1(void)
     break;
     /*第一个球取球完毕，去投射区一*/
   case TO_THE_AREA_1:
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
+			gRobot.sDta.process=TO_THROW_BALL_1;
 		//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
     break;
     /*到达投射区一，射球*/
@@ -175,18 +159,27 @@ void FightForBall1(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PrepareForTheBall())
+			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE1\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB11\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB21\t");
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!PITCH1\t");
+				USART_OUT_F(gRobot.pitchAngle);
+			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!COURSE1\t");
+				USART_OUT_F(gRobot.courseAngle);
+			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!GAS1\t");
+				USART_OUT_F(gRobot.gasValue);
+			}
 			USART_Enter();
 		}
     break;
@@ -215,6 +208,8 @@ void FightForBall2(void)
     break;
     /*第二个球取球完毕，去投射区二*/
   case TO_THE_AREA_2:
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
+			gRobot.sDta.process=TO_THROW_BALL_2;
     if(!PrepareForTheBall())
     {
       MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL2);
@@ -255,18 +250,27 @@ void FightForBall2(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PrepareForTheBall())
+			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE2\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB12\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB22\t");
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!PITCH2\t");
+				USART_OUT_F(gRobot.pitchAngle);
+			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!COURSE2\t");
+				USART_OUT_F(gRobot.courseAngle);
+			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!GAS2\t");
+				USART_OUT_F(gRobot.gasValue);
+			}
 			USART_Enter();
 		}
     break;
@@ -300,6 +304,8 @@ void FightForGoldBall(void)
     break;
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)
+			gRobot.sDta.process=TO_THROW_BALL_3;
 		if(gRobot.posY>2500.f) BoostPoleReturn();
     if(!PrepareForTheBall())
     {
@@ -335,18 +341,27 @@ void FightForGoldBall(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PrepareForTheBall())
+			if(!PE_FOR_THE_BALL)
 				USART_OUT(DEBUG_USART,"!PE3\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB13\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUT(DEBUG_USART,"!HB23\t");
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!PITCH3\t");
+				USART_OUT_F(gRobot.pitchAngle);
+			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!COURSE3\t");
+				USART_OUT_F(gRobot.courseAngle);
+			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+			{
 				USART_OUT(DEBUG_USART,"!GAS3\t");
+				USART_OUT_F(gRobot.gasValue);
+			}
 			USART_Enter();
 		}
     break;
@@ -419,50 +434,59 @@ void MotionStatus(void)
 
 void processReponse(void)
 {
+	
+  switch(gRobot.sDta.robocon2018)
+  {
+  case ROBOT_PREPARE:
+    USART_OUT(DEBUG_USART,"ROBOT_PREPARE\t");
+	
+  case ROBOT_START:
+    USART_OUT(DEBUG_USART,"ROBOT_START\t");
+	}
   switch(gRobot.sDta.process)
   {
   case TO_START:
-    USART_OUT(DEBUG_USART,"TO_START");
+    USART_OUT(DEBUG_USART,"TO_START\t");
     
     break;
   case TO_GET_BALL_1:
-    USART_OUT(DEBUG_USART,"TO_GET_BALL_1");
+    USART_OUT(DEBUG_USART,"TO_GET_BALL_1\t");
     
     break;
   case TO_THE_AREA_1:
-    USART_OUT(DEBUG_USART,"TO_THE_AREA_1");
+    USART_OUT(DEBUG_USART,"TO_THE_AREA_1\t");
     
     break;
   case TO_THROW_BALL_1:
-    USART_OUT(DEBUG_USART,"TO_THROW_BALL_1");
+    USART_OUT(DEBUG_USART,"TO_THROW_BALL_1\t");
     
     break;
   case TO_GET_BALL_2:
-    USART_OUT(DEBUG_USART,"TO_GET_BALL_2");
+    USART_OUT(DEBUG_USART,"TO_GET_BALL_2\t");
     
     break;
   case TO_THE_AREA_2:
-    USART_OUT(DEBUG_USART,"TO_THE_AREA_2");
+    USART_OUT(DEBUG_USART,"TO_THE_AREA_2\t");
     
     break;
   case TO_THROW_BALL_2:
-    USART_OUT(DEBUG_USART,"TO_THROW_BALL_2");
+    USART_OUT(DEBUG_USART,"TO_THROW_BALL_2\t");
     
     break;
   case TO_GET_BALL_3:
-    USART_OUT(DEBUG_USART,"TO_GET_BALL_3");
+    USART_OUT(DEBUG_USART,"TO_GET_BALL_3\t");
     
     break;
   case TO_THE_AREA_3:
-    USART_OUT(DEBUG_USART,"TO_THE_AREA_3");
+    USART_OUT(DEBUG_USART,"TO_THE_AREA_3\t");
     
     break;
   case TO_THROW_BALL_3:
-    USART_OUT(DEBUG_USART,"TO_THROW_BALL_3");
+    USART_OUT(DEBUG_USART,"TO_THROW_BALL_3\t");
     
     break;
   case END_COMPETE:
-    USART_OUT(DEBUG_USART,"END_COMPETE");
+    USART_OUT(DEBUG_USART,"END_COMPETE\t");
     
     break;
   }

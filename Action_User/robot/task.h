@@ -94,6 +94,12 @@
 
 #define AT_IS_SEND_DEBUG_DATA													0x10000u
 
+#define AT_REACH_FIRST_PLACE													0x20000u
+
+#define AT_REACH_SECOND_PLACE													0x40000u
+
+#define AT_REACH_THIRD_PLACE													0x80000u
+
 
 //×´Ì¬Á¿½âÊÍ
 #define CAN_CLAW_STATUS_OPEN 										0x01u

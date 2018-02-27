@@ -72,17 +72,17 @@ void CAN1_RX0_IRQHandler(void)
     for(i = 0; i < 4; i++)
       msg.data8[i] = buffer[i];
     //位置//机器人已经到了投掷彩球1的区域
-    if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA1&&gRobot.sDta.process==TO_THE_AREA_1)
+    if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA1&&(gRobot.sDta.process==TO_THE_AREA_1||gRobot.sDta.process==TO_GET_BALL_1))
 		{
-      gRobot.sDta.process=TO_THROW_BALL_1;
+      SetMotionFlag(AT_REACH_FIRST_PLACE);
 			
 //      PrepareShootBall(BALL_1);
 //			SetMotionFlag(~AT_GAS_SUCCESS);
 		}
-    if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA2&&gRobot.sDta.process==TO_THE_AREA_2)
-      gRobot.sDta.process=TO_THROW_BALL_2;
-    if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA3&&gRobot.sDta.process==TO_THE_AREA_3)
-      gRobot.sDta.process=TO_THROW_BALL_3;
+    if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA2&&(gRobot.sDta.process==TO_THE_AREA_2||gRobot.sDta.process==TO_GET_BALL_2))
+      SetMotionFlag(AT_REACH_SECOND_PLACE);
+    if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA3&&(gRobot.sDta.process==TO_THE_AREA_3||gRobot.sDta.process==TO_GET_BALL_3))
+      SetMotionFlag(AT_REACH_THIRD_PLACE);
     if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.process==ROBOT_PREPARE)
       SetMotionFlag(AT_PREPARE_READY);
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);

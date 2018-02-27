@@ -131,4 +131,21 @@ void PhotoelectricityInit(void)
 	GPIO_ResetBits(GPIOB, GPIO_Pin_15);
 }
 
+/*光电25ms触发说明拿到球*/
+#define IS_A_BaLL 1
+#define NOT_Ball  0
+
+int PrepareForTheBall(void){
+	static int IsBall=0;
+	if(PE_FOR_THE_BALL){
+		IsBall++;
+	}else{
+		IsBall=0;
+	}
+	if(IsBall>=5){
+		IsBall=0;
+		return IS_A_BaLL;
+	}
+	return NOT_Ball;
+}
 

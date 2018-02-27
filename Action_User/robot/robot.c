@@ -114,6 +114,24 @@ void SetMotionFlag(uint32_t status){
   case ~AT_IS_SEND_DEBUG_DATA:
     gRobot.sDta.AT_motionFlag&=~AT_IS_SEND_DEBUG_DATA;
     break;
+  case AT_REACH_FIRST_PLACE:
+    gRobot.sDta.AT_motionFlag|=AT_REACH_FIRST_PLACE;
+    break;
+  case ~AT_REACH_FIRST_PLACE:
+    gRobot.sDta.AT_motionFlag&=~AT_REACH_FIRST_PLACE;
+    break;
+  case AT_REACH_SECOND_PLACE:
+    gRobot.sDta.AT_motionFlag|=AT_REACH_SECOND_PLACE;
+    break;
+  case ~AT_REACH_SECOND_PLACE:
+    gRobot.sDta.AT_motionFlag&=~AT_REACH_SECOND_PLACE;
+    break;
+  case AT_REACH_THIRD_PLACE:
+    gRobot.sDta.AT_motionFlag|=AT_REACH_THIRD_PLACE;
+    break;
+  case ~AT_REACH_THIRD_PLACE:
+    gRobot.sDta.AT_motionFlag&=~AT_REACH_THIRD_PLACE;
+    break;
   }
 }
 
