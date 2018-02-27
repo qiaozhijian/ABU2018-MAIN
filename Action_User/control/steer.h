@@ -24,6 +24,9 @@ void HoldSteer1PosCrl(float angle,int vel);
 
 void HoldSteer2PosCrl(float angle,int vel);
 
+//舵机1，2分开控制
+void HoldBallPosCrlSeparate(float angle0,float angle1,int vel);
+
 void OpenSteerAll(void);
 
 uint8_t ReadOneByte(int num,int address);

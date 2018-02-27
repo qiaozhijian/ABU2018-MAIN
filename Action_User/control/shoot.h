@@ -7,8 +7,10 @@ typedef struct{
   float courseAngle;
   /*俯仰角*/
   float pitchAngle;
-  /*舵机角*/
-  float steerAngle;
+  /*上舵机角*/
+  float upSteerAngle;
+	/*下舵机角*/
+  float downSteerAngle;
   /*舵机旋转的速度*/
   int steerSpeed;
   /*气压值*/

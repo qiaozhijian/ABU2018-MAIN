@@ -16,6 +16,12 @@ void HoldBallPosCrl(float angle,int vel)
   HoldSteer1PosCrl(angle,vel);
   HoldSteer2PosCrl(angle,vel);
 }
+/*vel1 为舵机1的速度上舵机  vel2为下舵机的速度*///两个舵机分开控制
+void HoldBallPosCrlSeparate(float angle0,float angle1,int vel)
+{
+  HoldSteer1PosCrl(angle0,vel);
+  HoldSteer2PosCrl(angle1,vel);
+}
 void Enable_ROBS(void)
 {
   static int times;

@@ -213,11 +213,11 @@ typedef struct{
   uint32_t robocon2018;
   
   /*持球舵机的目标位置*/
-	#ifndef TEST
-  float holdBallAimAngle;
-	#else
+//	#ifndef TEST
+//  float holdBallAimAngle;
+//	#else
   float holdBallAimAngle[2];
-	#endif
+//	#endif
   
   /*相机舵机的目标位置*/
   float cameraAimAngle;
