@@ -23,10 +23,7 @@ motionPara_t PrepareShootBall3;
 
 
 void ShootBall(void)
-{				
-  CPU_INT08U  os_err;
-  os_err = os_err;
-	
+{					
   /*进行适当延时保证夹子和球不干涉*/
   Delay_ms(2000);
 	ShootLedOn();
@@ -155,9 +152,6 @@ void PrepareGetBall(int index)
 
 void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
 {
-  CPU_INT08U  os_err;
-  os_err = os_err;
-	
 	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
 	gRobot.sDta.courseAimAngle=PrepareShootBall_t.courseAngle;
 	gRobot.sDta.pitchAimAngle=PrepareShootBall_t.pitchAngle;

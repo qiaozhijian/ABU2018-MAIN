@@ -95,9 +95,6 @@ void SelfTest(void)
 /*完成投射彩球一的任务*/
 void FightForBall1(void)
 {
-  CPU_INT08U  os_err;
-  os_err = os_err;
-	
   switch(gRobot.sDta.process)
   {
     /*去取第一个球*/
