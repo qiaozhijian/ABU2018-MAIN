@@ -50,7 +50,7 @@ void prepareMotionParaInit(void)
   PrepareCompete.upSteerAngle=-90.f;
 	PrepareCompete.downSteerAngle=-90.f;
   PrepareCompete.steerSpeed=2000;
-  PrepareCompete.gasAim=0.555f;
+  PrepareCompete.gasAim=0.500f;
 	
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=73.0f;
@@ -58,7 +58,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall1.upSteerAngle=-63.4f;
 	PrepareGetBall1.downSteerAngle=-61.0f;
   PrepareGetBall1.steerSpeed=2000;
-  PrepareGetBall1.gasAim=0.555f;
+  PrepareGetBall1.gasAim=0.500f;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=168.1f;
@@ -66,7 +66,7 @@ void prepareMotionParaInit(void)
   PrepareShootBall1.upSteerAngle=1.3f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
-  PrepareShootBall1.gasAim=0.555f;
+  PrepareShootBall1.gasAim=0.500f;
 	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=92.f;
@@ -74,15 +74,15 @@ void prepareMotionParaInit(void)
   PrepareGetBall2.upSteerAngle=85.f;
 	PrepareGetBall2.downSteerAngle=82.f;
   PrepareGetBall2.steerSpeed=2000;
-  PrepareGetBall2.gasAim=0.555f;
+  PrepareGetBall2.gasAim=0.420f;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=174.9f;
-  PrepareShootBall2.pitchAngle=3.6f;
-  PrepareShootBall2.upSteerAngle=0.f;
+  PrepareShootBall2.courseAngle=175.9f;
+  PrepareShootBall2.pitchAngle=10.2f;
+  PrepareShootBall2.upSteerAngle=1.3f;
 	PrepareShootBall2.downSteerAngle=0.f;
   PrepareShootBall2.steerSpeed=2000;
-  PrepareShootBall2.gasAim=0.555f;
+  PrepareShootBall2.gasAim=0.420f;
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=0.0f;
@@ -90,15 +90,15 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.upSteerAngle=0.f;
 	PrepareGetBall3.downSteerAngle=0.f;
   PrepareGetBall3.steerSpeed=2000;
-  PrepareGetBall3.gasAim=0.585f;
+  PrepareGetBall3.gasAim=0.480f;
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=179.0f;
-  PrepareShootBall3.pitchAngle=5.1f;
-	PrepareShootBall3.upSteerAngle=3.0f;
-  PrepareShootBall3.downSteerAngle=-5.0f;
+  PrepareShootBall3.pitchAngle=2.2f;
+	PrepareShootBall3.upSteerAngle=1.3f;
+  PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.steerSpeed=2000;
-  PrepareShootBall3.gasAim=0.585f;
+  PrepareShootBall3.gasAim=0.480f;
   
 }
 //

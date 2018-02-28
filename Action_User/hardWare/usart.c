@@ -354,13 +354,16 @@ void USART_OUT_F(float value)
 void USART_Enter(void){
   USART_OUT(DEBUG_USART,"\r\n");
 }
+void USART_Enter1(void){
+  USART_OUT(UART4,"\r\n");
+}
 void USART_BLE_SEND(float value)
 {
   char s[9]={0};
   int integer=( int )value;
   sprintf( (char*)s, "AT+5%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
-  USART_OUT(DEBUG_USART,s);
-	USART_Enter();
+  USART_OUT(UART4,s);
+	USART_Enter1();
 }
 
 /*字符串长度不能超出20个字符，调试信息内容不能超出20个*/
