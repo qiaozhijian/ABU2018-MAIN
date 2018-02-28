@@ -77,6 +77,9 @@ void ConfigTask(void)
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
   DebugBLE_Init(921600);
+	/*dma初始化*/
+	//USARTDMASendInit(USART1,USART1DMASendBuf,&DebugBLE_Init,921600);
+	
 	USART_OUT(DEBUG_USART,"START\r\n");
 	
 	#ifndef TEST
