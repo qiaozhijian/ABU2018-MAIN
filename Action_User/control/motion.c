@@ -132,11 +132,7 @@ void MotionExecute(void)
 	if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 		||!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 	{
-		#ifdef TEST
-		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
-		#else
-		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle,2000);
-		#endif
+		HoldBallPosCrlSeparate(gRobot.sDta.holdBallAimAngle[0],gRobot.sDta.holdBallAimAngle[1],2000);
 	}
 	
 	if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))

@@ -23,10 +23,7 @@ motionPara_t PrepareShootBall3;
 
 
 void ShootBall(void)
-{				
-  CPU_INT08U  os_err;
-  os_err = os_err;
-	
+{					
   /*进行适当延时保证夹子和球不干涉*/
   Delay_ms(2000);
 	ShootLedOn();
@@ -50,49 +47,56 @@ void prepareMotionParaInit(void)
 	/*准备区动作*/
   PrepareCompete.courseAngle=90.0f;
   PrepareCompete.pitchAngle=-20.0f;
-  PrepareCompete.steerAngle=-90.f;
+  PrepareCompete.upSteerAngle=-90.f;
+	PrepareCompete.downSteerAngle=-90.f;
   PrepareCompete.steerSpeed=2000;
   PrepareCompete.gasAim=0.555f;
 	
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=73.0f;
   PrepareGetBall1.pitchAngle=3.7f;
-  PrepareGetBall1.steerAngle=-63.4f;
+  PrepareGetBall1.upSteerAngle=-63.4f;
+	PrepareGetBall1.downSteerAngle=-61.0f;
   PrepareGetBall1.steerSpeed=2000;
   PrepareGetBall1.gasAim=0.555f;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=172.9f;
   PrepareShootBall1.pitchAngle=7.1f;
-  PrepareShootBall1.steerAngle=0.f;
+  PrepareShootBall1.upSteerAngle=0.f;
+	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
   PrepareShootBall1.gasAim=0.555f;
 	
   /*准备去拿第二个球的数据*/
-  PrepareGetBall2.courseAngle=95.f;
-  PrepareGetBall2.pitchAngle=6.2f;
-  PrepareGetBall2.steerAngle=85.f;
+  PrepareGetBall2.courseAngle=92.f;
+  PrepareGetBall2.pitchAngle=4.7f;
+  PrepareGetBall2.upSteerAngle=85.f;
+	PrepareGetBall2.downSteerAngle=82.f;
   PrepareGetBall2.steerSpeed=2000;
   PrepareGetBall2.gasAim=0.555f;
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=174.9f;
   PrepareShootBall2.pitchAngle=3.6f;
-  PrepareShootBall2.steerAngle=0.f;
+  PrepareShootBall2.upSteerAngle=0.f;
+	PrepareShootBall2.downSteerAngle=0.f;
   PrepareShootBall2.steerSpeed=2000;
   PrepareShootBall2.gasAim=0.555f;
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=0.0f;
   PrepareGetBall3.pitchAngle=0.0f;
-  PrepareGetBall3.steerAngle=0.f;
+  PrepareGetBall3.upSteerAngle=0.f;
+	PrepareGetBall3.downSteerAngle=0.f;
   PrepareGetBall3.steerSpeed=2000;
   PrepareGetBall3.gasAim=0.585f;
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=181.4f;
   PrepareShootBall3.pitchAngle=-1.4f;
-  PrepareShootBall3.steerAngle=0.f;
+	PrepareShootBall3.upSteerAngle=0.f;
+  PrepareShootBall3.downSteerAngle=0.f;
   PrepareShootBall3.steerSpeed=2000;
   PrepareShootBall3.gasAim=0.585f;
   
@@ -104,12 +108,10 @@ void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
 	gRobot.sDta.courseAimAngle=PrepareGetBall_t.courseAngle;
 	gRobot.sDta.pitchAimAngle=PrepareGetBall_t.pitchAngle;
 	gRobot.sDta.gasAimValue=PrepareGetBall_t.gasAim;
-	#ifdef TEST
-	gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall_t.steerAngle;
-	#else
-	gRobot.sDta.holdBallAimAngle=PrepareGetBall_t.steerAngle;
-	#endif
-	
+//	gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall_t.steerAngle;
+	gRobot.sDta.holdBallAimAngle[0]=PrepareGetBall_t.upSteerAngle;
+	gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall_t.downSteerAngle;
+
   //设置气压
   GasMotion(PrepareGetBall_t.gasAim);
   /*设置俯仰角度*/
@@ -119,11 +121,7 @@ void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
   /*关闭下方限位爪*/
   ClawShut();
   /*舵机转向*/
-	#ifdef TEST
-  HoldBallPosCrl(PrepareGetBall_t.steerAngle, PrepareGetBall_t.steerSpeed);
-	#else
-  HoldBallPosCrl(PrepareGetBall_t.steerAngle, PrepareGetBall_t.steerSpeed);
-	#endif
+  HoldBallPosCrlSeparate(PrepareGetBall_t.upSteerAngle, PrepareGetBall_t.downSteerAngle, PrepareGetBall_t.steerSpeed);
 }
 void PrepareGetBall(int index)
 {
@@ -154,18 +152,13 @@ void PrepareGetBall(int index)
 
 void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
 {
-  CPU_INT08U  os_err;
-  os_err = os_err;
-	
 	/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
 	gRobot.sDta.courseAimAngle=PrepareShootBall_t.courseAngle;
 	gRobot.sDta.pitchAimAngle=PrepareShootBall_t.pitchAngle;
 	gRobot.sDta.gasAimValue=PrepareShootBall_t.gasAim;
-	#ifdef TEST
-	gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=PrepareShootBall_t.steerAngle;
-	#else
-	gRobot.sDta.holdBallAimAngle=PrepareShootBall_t.steerAngle;
-	#endif
+	
+	gRobot.sDta.holdBallAimAngle[0]=PrepareShootBall_t.upSteerAngle;
+	gRobot.sDta.holdBallAimAngle[1]=PrepareShootBall_t.downSteerAngle;
 	
   //设置气压
   GasMotion(PrepareShootBall_t.gasAim);
@@ -178,11 +171,7 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
   /*提前打开发射装置小气缸*/
   ShootSmallOpen();
   /*舵机转向*/
-	#ifdef TEST
-  HoldBallPosCrl( PrepareShootBall_t.steerAngle, PrepareShootBall_t.steerSpeed);
-	#else
-  HoldBallPosCrl( PrepareShootBall_t.steerAngle, PrepareShootBall_t.steerSpeed);
-	#endif
+  HoldBallPosCrlSeparate( PrepareShootBall_t.upSteerAngle, PrepareShootBall_t.downSteerAngle, PrepareShootBall_t.steerSpeed);
 }
 void PrepareShootBall(int index)
 {
@@ -216,7 +205,8 @@ void PrepareWork(void)
 	gRobot.sDta.courseAimAngle=PrepareCompete.courseAngle;
 	gRobot.sDta.pitchAimAngle=PrepareCompete.pitchAngle;
 	gRobot.sDta.gasAimValue=PrepareCompete.gasAim;
-	gRobot.sDta.holdBallAimAngle=PrepareCompete.steerAngle;
+	gRobot.sDta.holdBallAimAngle[0]=PrepareCompete.upSteerAngle;
+	gRobot.sDta.holdBallAimAngle[1]=PrepareCompete.downSteerAngle;
 	
   /*关闭下方限位爪*/
   ClawShut();
@@ -230,7 +220,7 @@ void PrepareWork(void)
 		//确保一定转向了
 		if(cnt>50)
 			break;
-		HoldBallPosCrl(PrepareCompete.steerAngle, PrepareCompete.steerSpeed);
+		HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle ,PrepareCompete.steerSpeed);
 	}
 	/*设置俯仰角度*/
 	PitchAngleMotion(PrepareCompete.pitchAngle);

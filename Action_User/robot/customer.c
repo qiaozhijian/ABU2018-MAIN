@@ -221,38 +221,23 @@ void AT_CMD_Handle(void){
   case STEER:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-		#ifdef TEST
 		gRobot.sDta.holdBallAimAngle[0]=value;
 		gRobot.sDta.holdBallAimAngle[1]=value;
 		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
-		#else
-		gRobot.sDta.holdBallAimAngle=value;
-		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle,2000);
-		#endif
     break;
 		
 	case STEER1:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 4);
-		#ifdef TEST
 		gRobot.sDta.holdBallAimAngle[0]=value;
 		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
-		#else
-		gRobot.sDta.holdBallAimAngle=value;
-		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle,2000);
-		#endif
 		break;
 		
 	case STEER2:
     USART_OUT(DEBUG_USART,"OK\r\n");
     value = atof(buffer + 5);
-		#ifdef TEST
 		gRobot.sDta.holdBallAimAngle[1]=value;
 		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1],2000);
-		#else
-		gRobot.sDta.holdBallAimAngle=value;
-		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle,2000);
-		#endif
 		break;
   case BOOST:
     USART_OUT(DEBUG_USART,"OK\r\n");
