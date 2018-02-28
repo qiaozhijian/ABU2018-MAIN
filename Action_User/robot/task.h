@@ -268,6 +268,10 @@ typedef struct{
   float angle;
   float posX;
   float posY;
+	float speedX;
+	float speedY;
+	int posSystemCode[2];
+	
 	uint32_t posSystemReady;
 	
 	/*¶æ»ú´íÎóÖ¸Ê¾*/

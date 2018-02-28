@@ -420,6 +420,11 @@
               <FileType>1</FileType>
               <FilePath>..\Action_User\robot\debug.c</FilePath>
             </File>
+            <File>
+              <FileName>robot.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\robot\robot.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -444,6 +449,16 @@
               <FileName>motion.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Action_User\control\motion.c</FilePath>
+            </File>
+            <File>
+              <FileName>camera.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\control\camera.c</FilePath>
+            </File>
+            <File>
+              <FileName>pps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Action_User\control\pps.c</FilePath>
             </File>
           </Files>
         </Group>
