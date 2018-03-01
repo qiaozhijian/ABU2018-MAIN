@@ -16,6 +16,9 @@
 /* Includes -------------------------------------------------------------------------------------------*/
 #include <stdarg.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include "stm32f4xx_dma.h"
 #include "stm32f4xx_rcc.h"
 #include "misc.h"
@@ -395,15 +398,29 @@ void USARTDMAOUT(USART_TypeDef* USARTx,uint8_t *buffAddr,uint16_t *buffPointer ,
 	va_end(ap);
 }
 
+///*使用操作系统没有设置任务堆栈8字节对齐，直接使用sprintf会一直输出0*/
+//void USART_OUT_F(float value)
+//{
+//  char s[9]={0};
+//  int integer=( int )value;
+//	if(value<0.f&&value>-1.f)
+//		sprintf( (char*)s, "-%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
+//	else
+//		sprintf( (char*)s, "%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
+//  USART_OUT(DEBUG_USART,s);
+//}
+
 
 /*通过DMA发数*/
 void USART_OUTByDMA(const uint8_t *Data, ...)
 { 
 	const char *s;
     int d;
+		float f;
     char buf[16];
-    va_list ap;
-    va_start(ap, Data);
+		char String[20]={0};
+    va_list ap;//初始化指向可变参数列表的指针
+    va_start(ap, Data);//将第一个可变参数的地址付给ap，即ap指向可变参数列表的开始
 
 	while(*Data != 0)				                          //判断是否到达字符串结束符
 	{
@@ -431,22 +448,39 @@ void USART_OUTByDMA(const uint8_t *Data, ...)
 			switch (*++Data)				
 			{
 				case 's':										  //字符串
-                	s = va_arg(ap, const char *);
-                	for (; *s; s++) 
+            s = va_arg(ap, const char *);
+            for (; *s; s++) 
 				    {
-						USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
-                	}
-					Data++;
-                	break;
-            	case 'd':										  //十进制
-                	d = va_arg(ap, int);
-                	itoa(d, buf, 10);
-                	for (s = buf; *s; s++) 
+							USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+            }
+						Data++;
+         break;
+            	
+				case 'd':										  //十进制
+						d = va_arg(ap, int);
+						itoa(d, buf, 10);
+						for (s = buf; *s; s++) 
 				    {
-						USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
-                	}
-					Data++;
-                	break;
+							USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+            }
+						Data++;
+            break;
+						
+				case 'f':										  //小数点后四位
+						f = (float)va_arg(ap, double);
+						int Integer = (int) f;
+						if(f<0.f&&f>-1.f)
+							sprintf( (char*)String, "-%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs(Integer))  * 10000));
+						else
+							sprintf( (char*)String, "%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs(Integer))  * 10000));
+						for (s=String; *s; s++) 
+				    {
+							USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+            }
+						Data++;
+            break;
+						
+						
 				default:
 					Data++;
 				    break;
