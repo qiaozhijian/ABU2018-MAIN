@@ -468,11 +468,10 @@ void USART_OUTByDMA(const uint8_t *Data, ...)
 						
 				case 'f':										  //小数点后四位
 						f = (float)va_arg(ap, double);
-						int Integer = (int) f;
 						if(f<0.f&&f>-1.f)
-							sprintf( (char*)String, "-%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs(Integer))  * 10000));
+							sprintf( (char*)String, "-%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs((int) f))  * 10000));
 						else
-							sprintf( (char*)String, "%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs(Integer))  * 10000));
+							sprintf( (char*)String, "%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs((int) f))  * 10000));
 						for (s=String; *s; s++) 
 				    {
 							USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
