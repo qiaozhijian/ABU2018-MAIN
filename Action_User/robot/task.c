@@ -77,30 +77,31 @@ void ConfigTask(void)
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
   DebugBLE_Init(921600);
-	/*dma初始化*/
-	//USARTDMASendInit(USART1,USART1DMASendBuf,&DebugBLE_Init,921600);
+  /*dma初始化*/
+//USARTDMASendInit(USART1,USART1DMASendBuf,&DebugBLE_Init,921600);
 	
-	USART_OUT(DEBUG_USART,"START\r\n");
-	
-	#ifndef TEST
-	SoftWareReset();
-	#endif
+  USART_OUT(DEBUG_USART,"START\r\n");
+
+  #ifndef TEST
+  USART_OUT(DEBUG_USART,"SoftWareReset\r\n");
+  SoftWareReset();
+  #endif
 	
   
   HardWareInit();
-	if(!gRobot.resetFlag)
+  if(!gRobot.resetFlag)
   {
-		//给航向，俯仰电机上电初始化时间
-		Delay_ms(100);
-		/*电机初始化*/
-		MotorInit();
-		/*状态初始化*/
-		statusInit();
-	}
+	//给航向，俯仰电机上电初始化时间
+	Delay_ms(100);
+	/*电机初始化*/
+	MotorInit();
+	/*状态初始化*/
+	statusInit();
+  }
 	
-	#ifndef TEST
-	IWDG_Init(1,50); // 11ms-11.2ms
-	#endif
+  #ifndef TEST
+  IWDG_Init(1,50); // 11ms-11.2ms
+  #endif
 	
   OSTaskSuspend(OS_PRIO_SELF);
 }
@@ -114,8 +115,8 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
-		/*清除信号量*/
-		OSSemSet(PeriodSem, 0, &os_err);
+	/*清除信号量*/
+	OSSemSet(PeriodSem, 0, &os_err);
 		#ifdef DEBUG
 			IWDG_Feed();
 			debugFunction();
@@ -201,6 +202,7 @@ void RobotTask(void)
 }
 
 void HardWareInit(void){
+  USART_OUT(DEBUG_USART,"HardWareInit\r\n");
   //定时器初始化
   TIM_Init(TIM2, 99, 839, 0, 0);   //1ms主定时器
 	
@@ -214,13 +216,13 @@ void HardWareInit(void){
   //摄像头转台初始化
   SteerInit(1000000);
 	
-	Steer2Init(1000000);
+  Steer2Init(1000000);
 	
-	/*与摄像头通信的串口初始化*/
-	CameraTalkInit(256000);
+  /*与摄像头通信的串口初始化*/
+  CameraTalkInit(256000);
 	
-	/*接收定位系统数据的串口初始化*/
-	GYRO_Init(921600);
+  /*接收定位系统数据的串口初始化*/
+  GYRO_Init(921600);
 	
   /*调试蓝牙*/
   ControlBLE_Init(921600);
@@ -235,6 +237,8 @@ void HardWareInit(void){
   
 }
 void MotorInit(void){
+  /*准备工作完毕*/
+  gRobot.sDta.robocon2018=ROBOT_PREPARE;
 	
   //电机初始化
   ElmoInit(CAN2);
@@ -255,14 +259,15 @@ void MotorInit(void){
 void statusInit(void)
 {	
   Delay_ms(3000);
-	
-	#ifndef DEBUG
+  USART_OUT(DEBUG_USART,"statusInit start\r\n");
+  #ifndef DEBUG
 	//打开扭矩开关
   OpenSteerAll();
-	
+  USART_OUT(DEBUG_USART,"statusInit OpenSteerAll\r\n");
  //设置回应等级（注意不要打开写开关，因为打开扭矩输出需要回答）
-	ShutAllSteerResponse();
-	#endif
+  ShutAllSteerResponse();
+  USART_OUT(DEBUG_USART,"statusInit step 3\r\n");
+  #endif
 	
   /*运动控制状态初始化*/
 	/*爪子标志位关闭*/
@@ -287,9 +292,11 @@ void statusInit(void)
 	/*金球架抓取二级气阀打开*/
 	GoldBallGraspStairTwoOn();
 	
+	USART_OUT(DEBUG_USART,"statusInit step 4\r\n");
 	#ifndef TEST
 	Delay_ms(3000);
   
+	USART_OUT(DEBUG_USART,"statusInit step 5\r\n");
   /*与上一次的调试数据区分开*/
   USART_Enter();
   USART_Enter();
@@ -300,6 +307,7 @@ void statusInit(void)
 
 	
   PrepareGetBall(READY);
+	USART_OUT(DEBUG_USART,"statusInit step 6\r\n");
 	Delay_ms(1000);
 	
 	#endif
@@ -322,9 +330,8 @@ void statusInit(void)
 		BEEP_OFF;
 	#endif
 	
-	/*准备工作完毕*/
-  gRobot.sDta.robocon2018=ROBOT_PREPARE;
 	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+	USART_OUT(DEBUG_USART,"statusInit step finish\r\n");
 }	
 
 

@@ -75,17 +75,27 @@ void CAN1_RX0_IRQHandler(void)
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA1&&(gRobot.sDta.process==TO_THE_AREA_1||gRobot.sDta.process==TO_GET_BALL_1))
 		{
       SetMotionFlag(AT_REACH_FIRST_PLACE);
-			
+			USART_OUT(DEBUG_USART,"GET_MOTIONCARD_REACH_AREA1\r\n");
 //      PrepareShootBall(BALL_1);
 //			SetMotionFlag(~AT_GAS_SUCCESS);
 		}
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA2&&(gRobot.sDta.process==TO_THE_AREA_2||gRobot.sDta.process==TO_GET_BALL_2))
-      SetMotionFlag(AT_REACH_SECOND_PLACE);
+		{
+			SetMotionFlag(AT_REACH_SECOND_PLACE);
+			USART_OUT(DEBUG_USART,"GET_MOTIONCARD_REACH_AREA2\r\n");
+		} 
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA3&&(gRobot.sDta.process==TO_THE_AREA_3||gRobot.sDta.process==TO_GET_BALL_3))
-      SetMotionFlag(AT_REACH_THIRD_PLACE);
+		{
+			SetMotionFlag(AT_REACH_THIRD_PLACE);
+			USART_OUT(DEBUG_USART,"GET_MOTIONCARD_REACH_AREA3\r\n");
+		} 
 
-    if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.process==ROBOT_PREPARE)
-      SetMotionFlag(AT_PREPARE_READY);
+    if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.robocon2018==ROBOT_PREPARE)
+		{
+			SetMotionFlag(AT_PREPARE_READY);
+			USART_OUT(DEBUG_USART,"GET_MOTIONCARD_PREPARE_READY\r\n");
+		}
+      
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
   }
   
@@ -168,7 +178,7 @@ void CAN2_RX0_IRQHandler(void)
     if(msg.data32[0]==0x00005850)
     {
       gRobot.courseAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.courseAngle=gRobot.courseAngle-10.6f;
+			gRobot.courseAngle=gRobot.courseAngle-3.f;
       SetMotionFlag(AT_COURSE_READ_SUCCESS);
     }
     //速度

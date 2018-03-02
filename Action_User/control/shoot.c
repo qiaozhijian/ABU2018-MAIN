@@ -230,7 +230,7 @@ void PrepareWork(void)
 		/*读取俯仰角*/
 		ReadActualPos(CAN2,5);
 			/*判断俯仰角是否到位*/
-		if(fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<0.01f)
+		if(fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<0.1f)
 		{
 			SetMotionFlag(AT_PITCH_SUCCESS);
 			break;
@@ -240,16 +240,22 @@ void PrepareWork(void)
   /*设置航向角度*/
   CourseAngleMotion(PrepareCompete.courseAngle);
 	/*等待慢转动状态完成*/
+	cnt=0;
   while(1)
 	{
 		Delay_ms(5);
-		/*读取俯仰角*/
+			/*读取航向角*/
 		ReadActualPos(CAN2,6);
-			/*判断俯仰角是否到位*/
-		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.01f)
+			/*判断航向角是否到位*/
+		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.1f)
 		{
 			SetMotionFlag(AT_COURSE_SUCCESS);
 			break;
+		}else if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.2f)
+		{
+			cnt++;
+			if(cnt>50)
+				break;
 		}
 	}
 	
