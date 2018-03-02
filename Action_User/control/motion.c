@@ -28,7 +28,7 @@ void CourseAngleMotion(float angle)
   else if(angle>190.f)
     angle=190.f;
 	
-	angle=angle+10.6f;
+	angle=angle+3.f;
 	
   PosCrl(CAN2, 6,ABSOLUTE_MODE,COURSE_ANGLE_TO_CODE(angle));
 }

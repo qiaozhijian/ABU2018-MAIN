@@ -56,7 +56,7 @@
 #define PITCH_ANGLE_TO_CODE(angle)												((int)((angle)*8738.1333f))//((angle)*20.0f*19.2f*8192.f/360.f)
 
 #define COURSE_CODE_TO_ANGLE(code)												((code)/6116.693f)
-#define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle))*6116.693f))//((angle-5.6f)*14.0f*19.2f*8192.f/360.f)
+#define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle))*6116.693f))//((angle)*14.0f*19.2f*8192.f/360.f)
 
 
 //×´Ì¬Á¿½âÊÍ
