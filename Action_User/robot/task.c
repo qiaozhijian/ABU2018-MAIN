@@ -162,6 +162,7 @@ void RobotTask(void)
 							//灯亮两秒，蜂鸣器响两秒，表示准备完成
 							BEEP_ON;
 							ShootLedOn();
+							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							Delay_ms(2000);
 							ShootLedOff();
 							BEEP_OFF;

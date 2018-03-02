@@ -173,6 +173,8 @@
 #define NOTIFY_MOTIONCARD_LOSE_BALL3			9
 //通知控制卡开始自检										
 #define NOTIFY_MOTIONCARD_START_SELFTEST	10
+//通知控制卡自动车主控准备完成									
+#define NOTIFY_MOTIONCARD_PREPARE_FINISH	11
 
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1				1
