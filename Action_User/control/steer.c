@@ -42,21 +42,34 @@ void Enable_ROBS(void)
   //#1 W 40,1,1\r\n
 }
 
-
 void HoldSteer2PosCrl(float angle,int vel)
 {
   int pos=0.f;
 
-	if(angle>100.f)
-		angle=100.f;
-	if(angle<-100.f)
-		angle=-100.f;
-
+  if(angle>100.f)
+    angle=100.f;
+  if(angle<-100.f)
+    angle=-100.f;
+ 
 	/*1/4096.f*360.f=11.378*/
-	pos=(int)(((angle-1)*6.f/7.f+180.f)*11.378f);  
-	
-  USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n",pos,vel);
+	pos=(int)(((angle)*6.f/7.f+180.f)*11.378f);  
+  
+  SteerPosCrlBy485(HOLD_BALL_2,pos);
 }
+//void HoldSteer2PosCrl(float angle,int vel)
+//{
+//  int pos=0.f;
+
+//	if(angle>100.f)
+//		angle=100.f;
+//	if(angle<-100.f)
+//		angle=-100.f;
+
+//	/*1/4096.f*360.f=11.378*/
+//	pos=(int)(((angle-1)*6.f/7.f+180.f)*11.378f);  
+//	
+//  USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n",pos,vel);
+//}
 
 
 void HoldSteer1PosCrl(float angle,int vel)
@@ -267,7 +280,9 @@ void OpenSteerAll(void)
 	通过写入舵机的内存控制表,TORQUE_SWITCH-0x28是扭矩开关所位于的地址写入1将其打开*/
 	SetSteerByte(HOLD_BALL_1,TORQUE_SWITCH,0x01);
 	/*ttl版本的舵机*/
-	Enable_ROBS();
+	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
+
+//	Enable_ROBS();
 //	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
 	/*485 版本的舵机*/
 	SetSteerByte(CAMERA_STEER,TORQUE_SWITCH,0x01);
