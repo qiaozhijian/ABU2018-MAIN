@@ -42,4 +42,6 @@ void SetSteerWord(uint8_t num,uint8_t address,uint8_t value);
 void ReadSteerErrorAll(void);
 
 void SteerResponseError(uint8_t num, uint8_t errorWord);
+
+void LetSteerRound(int num,float angle);
 #endif

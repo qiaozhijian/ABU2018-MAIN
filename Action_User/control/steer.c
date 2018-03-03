@@ -52,7 +52,7 @@ void HoldSteer2PosCrl(float angle,int vel)
     angle=-100.f;
  
 	/*1/4096.f*360.f=11.378*/
-	pos=(int)(((angle+24.f)*6.f/7.f+180.f)*11.378f);  
+	pos=(int)(((angle+39.f)+180.f)*11.378f);  
   
   SteerPosCrlBy485(HOLD_BALL_2,pos);
 }
@@ -285,15 +285,38 @@ void OpenSteerAll(void)
 //	Enable_ROBS();
 //	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
 	/*485 版本的舵机*/
-	SetSteerByte(CAMERA_STEER,TORQUE_SWITCH,0x01);
+	//SetSteerByte(CAMERA_STEER,TORQUE_SWITCH,0x01);
+}
+
+void LetSteerRound(int num,float angle){
+	static int cnt=5;
+	unsigned char command[8]={0XFF, 0XFF, 0xfe, 0X04, 0X03, TORQUE_SWITCH, 0x01, 0x00};
+	unsigned char checkSum = (command[2]+command[3]+command[4]+command[5]+command[6])&0xFF;
+	while(cnt--)
+	{
+		checkSum=~checkSum;
+	  command[7]=checkSum;
+		RS485_Send_Data(command,8);
+		Delay_ms(100);
+	}
+	Delay_ms(500);
+	cnt=5;
+	while(cnt--)
+	{
+		int pos=(int)((180.f+angle)*11.378f);
+		SteerPosCrlBy485(num,pos);
+		Delay_ms(10);
+	}
 }
 
 void ShutAllSteerResponse(void)
 {
 	SetSteerByte(HOLD_BALL_1,RESPONSE_STAIR,0x00);
 	SetSteerByte(HOLD_BALL_2,RESPONSE_STAIR,0x00);
-	SetSteerByte(CAMERA_STEER,RESPONSE_STAIR,0x00);
+	//SetSteerByte(CAMERA_STEER,RESPONSE_STAIR,0x00);
 }
+
+
 void SetSteerNum(uint8_t num)
 {
 	//解锁flash
@@ -583,4 +606,5 @@ void UART5_IRQHandler(void)
   }
   OSIntExit();
 }
+
 
