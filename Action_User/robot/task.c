@@ -321,7 +321,7 @@ void statusInit(void)
 //	TalkToCamera(CAMERA_SHUT_ALL);
 //	TalkToCamera(CAMERA_OPEN_FAR);
 		#ifndef DEBUG
-	  SetSteerByte(HOLD_BALL_1,P_STEER_ADDRESS,0X9);
+	  SetSteerByte(HOLD_BALL_2,P_STEER_ADDRESS,0X9);
 		#endif
 		BEEP_ON;
 		ShootLedOn();
