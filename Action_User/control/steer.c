@@ -52,7 +52,7 @@ void HoldSteer2PosCrl(float angle,int vel)
     angle=-100.f;
  
 	/*1/4096.f*360.f=11.378*/
-	pos=(int)(((angle)*6.f/7.f+180.f)*11.378f);  
+	pos=(int)(((angle+24.f)*6.f/7.f+180.f)*11.378f);  
   
   SteerPosCrlBy485(HOLD_BALL_2,pos);
 }
@@ -86,7 +86,7 @@ void HoldSteer1PosCrl(float angle,int vel)
     angle=-100.f;
   
   /*1/4096.f*360.f=11.378*//*¼õËÙ±È25/16*/
-  pos=(int)((180.f-(angle-5.0f)*25/16)*11.378f);  
+  pos=(int)((180.f-(angle+25.0f)*25/16)*11.378f);  
   
   SteerPosCrlBy485(HOLD_BALL_1,pos);
 }
@@ -291,7 +291,7 @@ void OpenSteerAll(void)
 void ShutAllSteerResponse(void)
 {
 	SetSteerByte(HOLD_BALL_1,RESPONSE_STAIR,0x00);
-//	SetSteerByte(HOLD_BALL_2,RESPONSE_STAIR,0x00);
+	SetSteerByte(HOLD_BALL_2,RESPONSE_STAIR,0x00);
 	SetSteerByte(CAMERA_STEER,RESPONSE_STAIR,0x00);
 }
 void SetSteerNum(uint8_t num)
