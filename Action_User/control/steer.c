@@ -309,6 +309,7 @@ void SetSteerNum(uint8_t num)
 
 
 /*******DEFINE*******/
+/*485舵机的各种错误状态*/
 #define VOLTAGE_ERROR														0x01 
 #define ANGLE_ERROR															0x02 
 #define TEMPERATURE_ERROR												0x04

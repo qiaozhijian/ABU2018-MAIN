@@ -115,8 +115,8 @@ void RobotTask(void)
   while(1)
   {
     OSSemPend(PeriodSem, 0, &os_err);
-	/*清除信号量*/
-	OSSemSet(PeriodSem, 0, &os_err);
+		/*清除信号量*/
+		OSSemSet(PeriodSem, 0, &os_err);
 		#ifdef DEBUG
 			IWDG_Feed();
 			debugFunction();

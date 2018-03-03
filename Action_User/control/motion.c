@@ -197,8 +197,7 @@ void MotionRead(void)
 * 控制发射架俯仰角的电机
 * 控制气压的气阀板
 *
-*//*新增假如没有到位之后，由于状态标志位会置位，然后MotionExecute()
-中给出舵机指令，这时候应该开始计时，因为调节指令已经给出，我们可以认为它已接近达到目标在规定时间内没到达就会发射*/
+*/
 void MotionStatusUpdate(void)
 {
 	/*判断航向角是否到位*/
@@ -231,7 +230,6 @@ void MotionStatusUpdate(void)
 		SetMotionFlag(~AT_GAS_SUCCESS);
 	}
 	
-	#ifndef TEST
 //	/*判断持球舵机一是否到位*/
 //	if(fabs(gRobot.sDta.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
 //	{
@@ -257,7 +255,6 @@ void MotionStatusUpdate(void)
 //	{
 //		SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
 //	}
-	#endif
 	
 //	/*判断相机转台舵机是否到位*/
 //	if(fabs(gRobot.sDta.cameraAimAngle-gRobot.cameraAngle)<0.5f)
@@ -268,7 +265,7 @@ void MotionStatusUpdate(void)
 //	{
 //		SetMotionFlag(~AT_CAMERA_RESPONSE_SUCCESS);
 //	}
-
+	/*将舵机的各种错误发送出来，如果不发送证明舵机没有出问题*/
 	SteerResponseError(HOLD_BALL_1,gRobot.holdBall1Error);
 	SteerResponseError(HOLD_BALL_2,gRobot.holdBall2Error);
 	SteerResponseError(CAMERA_STEER,gRobot.cameraSteerError);

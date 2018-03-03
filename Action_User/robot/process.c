@@ -283,27 +283,37 @@ void FightForGoldBall(void)
   {
     /*去取第三个球*/
   case TO_GET_BALL_3:
-    if(PrepareForTheBall()&&gRobot.posY<1600.f)
+    if(PrepareForTheBall()&&(gRobot.posY<1600.f/*||gRobot.posY符合第二个金球交接的坐标*/))
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
       Delay_ms(500);
 			//TalkToCamera(CAMERA_OPEN_FAR);
+			
+			//这之后应该向金球架抓取气阀发数抓取金球架
       
+			
       gRobot.sDta.process=TO_THE_AREA_3;
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
-      
+      //通过助推气阀把车助推开，加速
 			BoostPolePush();
 			
       PrepareShootBall(BALL_3);
       
     }
+		else{
+			if(gRobot.posY<1600.f){
+					USART_OUT(DEBUG_USART,"posY!<1600\t");
+			}
+		}
     break;
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
 		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)
 			gRobot.sDta.process=TO_THROW_BALL_3;
+		//在y大于2500的时候将助推气阀归位
 		if(gRobot.posY>2500.f) BoostPoleReturn();
+		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
     if(!PrepareForTheBall())
     {
       MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL3);
@@ -332,6 +342,7 @@ void FightForGoldBall(void)
       /*射球机构复位*/
       ShootReset();
       
+			/*射完金球进程停止了，这时候看看需要再投掷，那就把 gRobot.sDta.process改为取金球同时更改第一个金球到的判读坐标条件*/
       gRobot.sDta.process=END_COMPETE;
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }

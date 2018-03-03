@@ -97,7 +97,7 @@ void ShootLedOff(void)
 	GasValveControl(LED_BOARD_ID , SHOOT_LED_ID , 0);
 }
 
-/*去投第三个球时的助推气阀*/
+/*去投第三个球时的,自动车助推气阀*/
 void BoostPolePush(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID , BOOST_POLE_ID , 1);
