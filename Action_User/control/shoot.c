@@ -46,7 +46,7 @@ void prepareMotionParaInit(void)
 {
 	/*准备区动作*/
   PrepareCompete.courseAngle=90.0f;
-  PrepareCompete.pitchAngle=-20.0f;
+  PrepareCompete.pitchAngle=1.0f;
   PrepareCompete.upSteerAngle=-90.f;
 	PrepareCompete.downSteerAngle=-90.f;
   PrepareCompete.steerSpeed=2000;
