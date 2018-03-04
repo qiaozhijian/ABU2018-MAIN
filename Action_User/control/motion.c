@@ -11,12 +11,12 @@ extern Robot_t gRobot;
 void PitchAngleMotion(float angle)
 {
   /*控制的为-20°-10°实际给电机的是30°-0°*/
-  if(angle>10.f)
-    angle=10.f;
+  if(angle>20.f)
+    angle=20.f;
   else if(angle<-20.f)
     angle=-20.f;
 	
-	angle=10.f-angle;
+	angle=20.f-angle;
 	
   PosCrl(CAN2, 5,ABSOLUTE_MODE,PITCH_ANGLE_TO_CODE(angle));
 }
