@@ -160,7 +160,7 @@ void CAN2_RX0_IRQHandler(void)
     if(msg.data32[0]==0x00005850)
     {
       gRobot.pitchAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.pitchAngle=10.f-gRobot.pitchAngle;
+			gRobot.pitchAngle=20.f-gRobot.pitchAngle;
       SetMotionFlag(AT_PITCH_READ_SUCCESS);
     }
     //速度
