@@ -84,18 +84,18 @@ void GPIO_Init_Pins(GPIO_TypeDef * GPIOx,
 		
 	GPIO_Init(GPIOx, &GPIO_InitStructure);	
 }
-//行程开关 PA0
+//行程开关 PD7
 void KeyInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOE, &GPIO_InitStructure);	
+	GPIO_Init(GPIOD, &GPIO_InitStructure);	
 }
 
 //LED

@@ -659,3 +659,24 @@ void processReport(void)
 //  }
 //}
 
+void RobotSelfTest(void){
+	
+	static int selfTestStep=0;
+	ShootLedOn();
+	Delay_ms(1000);
+	ShootLedOff();
+	switch(selfTestStep){
+		case 0:
+			
+		break;
+		
+		case 1:
+			
+		break;
+	}
+	
+	
+	
+	
+	
+}

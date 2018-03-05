@@ -150,6 +150,7 @@
 #define COLORFUL_BALL_1					2
 #define COLORFUL_BALL_2					3
 #define GOLD_BALL								4
+#define ROBOT_SELF_TEST         9
 
 /*控制卡通信解释*/
 //开始出发
