@@ -95,27 +95,24 @@ void SelfTest(void)
 /*完成投射彩球一的任务*/
 void FightForBall1(void)
 {
+	static float PE_GotX=0.f;
   switch(gRobot.sDta.process)
   {
     /*去取第一个球*/
   case TO_GET_BALL_1:
 		//光电是否被扫到
-    if(PrepareForTheBall())
+    if(PrepareForTheBall()&&PE_GotX==0.f)
     {	
-      USART_OUT(DEBUG_USART,"123\r\n");
-			Delay_ms(500);
-      USART_OUT(DEBUG_USART,"456\r\n");
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
-      USART_OUT(DEBUG_USART,"789\r\n");
-      
-			//TalkToCamera(CAMERA_OPEN_NEAR);
-			
-      PrepareShootBall(BALL_1);
-      USART_OUT(DEBUG_USART,"1000\r\n");
-      
-      gRobot.sDta.process=TO_THE_AREA_1;
-      
+			PE_GotX=gRobot.posX;
     }
+		if((gRobot.posX>4054.f&&PE_GotX<3754.f)||(gRobot.posY>2000.f))
+		{
+			USART_OUT(DEBUG_USART,"IntoTheArea\r\n");
+      MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
+			//TalkToCamera(CAMERA_OPEN_NEAR);
+      PrepareShootBall(BALL_1);
+      gRobot.sDta.process=TO_THE_AREA_1;
+		}
     break;
     /*第一个球取球完毕，去投射区一*/
   case TO_THE_AREA_1:
@@ -186,15 +183,19 @@ void FightForBall1(void)
 /*完成投射彩球二的任务*/
 void FightForBall2(void)
 {
-	
+	static float PE_GotX=0.f;
   switch(gRobot.sDta.process)
   {
     /*去取第二个球*/
   case TO_GET_BALL_2:
-    if(PrepareForTheBall()&&gRobot.posY<1600.f)
+		//光电是否被扫到
+    if(PrepareForTheBall()&&gRobot.posY<1600.f&&PE_GotX==0.f)
+    {	
+			PE_GotX=gRobot.posX;
+    }
+		if(fabs(gRobot.posX-PE_GotX)>200.f&&gRobot.posX>6000.f)
     {	
       /*扫到光电后，为了更稳地接到球而给的延时*/
-      Delay_ms(500);
       gRobot.sDta.process=TO_THE_AREA_2;
       
       MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
@@ -278,33 +279,35 @@ void FightForBall2(void)
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
-	
+	static uint8_t isGetBall=0;
   switch(gRobot.sDta.process)
   {
     /*去取第三个球*/
   case TO_GET_BALL_3:
-    if(PrepareForTheBall()&&(gRobot.posY<1600.f/*||gRobot.posY符合第二个金球交接的坐标*/))
-    {	
-      /*扫到光电后，为了更稳地接到球而给的延时*/
-      Delay_ms(500);
-			//TalkToCamera(CAMERA_OPEN_FAR);
-			
-			//这之后应该向金球架抓取气阀发数抓取金球架
-      
-			
-      gRobot.sDta.process=TO_THE_AREA_3;
-      
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
-      //通过助推气阀把车助推开，加速
-			BoostPolePush();
-			
-      PrepareShootBall(BALL_3);
-      
-    }
-		else{
-			if(gRobot.posY<1600.f){
-					USART_OUT(DEBUG_USART,"posY!<1600\t");
-			}
+		switch(isGetBall)
+		{
+			case 0:
+				if(PrepareForTheBall()&&gRobot.posY<1600.f)
+					isGetBall++;
+				break;
+			case 1:
+				Delay_ms(3000);
+				BoostPolePush();
+				isGetBall++;
+				break;
+			case 2:
+				if(gRobot.posY>2500.f)
+				{
+					//TalkToCamera(CAMERA_OPEN_FAR);
+					
+					//这之后应该向金球架抓取气阀发数抓取金球架
+					gRobot.sDta.process=TO_THE_AREA_3;
+					
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
+					
+					PrepareShootBall(BALL_3);
+				}
+				break;
 		}
     break;
     /*第三个球取球完毕，去投射区三*/

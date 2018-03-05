@@ -76,9 +76,9 @@ void ConfigTask(void)
   os_err = os_err;  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
-  DebugBLE_Init(921600);
+ DebugBLE_Init(921600);
   /*dma初始化*/
-//USARTDMASendInit(USART1,USART1DMASendBuf,&DebugBLE_Init,921600);
+//  USARTDMASendInit(USART1,USART1DMASendBuf,&DebugBLE_Init,921600);
 	
   USART_OUT(DEBUG_USART,"START\r\n");
 
@@ -148,6 +148,9 @@ void RobotTask(void)
 					USART_OUT_F(gRobot.posX);
 					USART_OUT_F(gRobot.posY);
 					USART_OUT_F(gRobot.angle);
+					USART_OUT_F(gRobot.sDta.courseAimAngle);
+					USART_OUT_F(gRobot.sDta.pitchAimAngle);
+					USART_OUT_F(gRobot.sDta.holdBallAimAngle[0]);
 					USART_OUT_F(gRobot.courseAngle);
 					USART_OUT_F(gRobot.pitchAngle);
 					USART_OUT_F(gRobot.gasValue);

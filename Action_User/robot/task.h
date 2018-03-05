@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include "usart.h"
 /**************#define area**********/
-
 //#define TEST
 //#define DEBUG
 
