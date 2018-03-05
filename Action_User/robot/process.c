@@ -292,14 +292,15 @@ void FightForGoldBall(void)
 				break;
 			case 1:
 				Delay_ms(3000);
-				BoostPolePush();
+				USART_OUT(DEBUG_USART,"TuiTUiTUi\r\n");
+//				BoostPolePush();
 				isGetBall++;
 				break;
 			case 2:
-				if(gRobot.posY>2500.f)
+				if(gRobot.posY>800.f)
 				{
 					//TalkToCamera(CAMERA_OPEN_FAR);
-					
+					USART_OUT(DEBUG_USART,"YOU should shoot\r\n");
 					//这之后应该向金球架抓取气阀发数抓取金球架
 					gRobot.sDta.process=TO_THE_AREA_3;
 					
