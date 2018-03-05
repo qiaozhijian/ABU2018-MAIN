@@ -99,7 +99,7 @@
 
 #define AT_REACH_THIRD_PLACE													0x80000u
 
-
+#define AT_REACH_THIRD_PLACE													0x80000u
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
 
@@ -150,6 +150,7 @@
 #define COLORFUL_BALL_1					2
 #define COLORFUL_BALL_2					3
 #define GOLD_BALL								4
+#define INTO_HARDFAULT					9
 
 /*控制卡通信解释*/
 //开始出发
@@ -185,6 +186,8 @@
 #define GET_MOTIONCARD_SELFTEST_FINISH		4
 /*控制卡初始化完成*/
 #define GET_MOTIONCARD_PREPARE_READY			5
+/*控制卡通知进入硬件中断*/
+#define GET_MOTIONCARD_INTO_HARDFAULT			44
 
 /*球编号*/
 #define READY															0

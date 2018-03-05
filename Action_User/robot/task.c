@@ -198,6 +198,12 @@ void RobotTask(void)
 						/*完成金球的投射*/
 						FightForGoldBall();
 						break;
+					
+					case INTO_HARDFAULT:
+						ShootLedOn();
+						BEEP_ON;
+					  USART_OUT(DEBUG_USART,"INTO_HARDFAULT!!!\r\n");
+					break;
 				}	
 			#endif
 		#endif

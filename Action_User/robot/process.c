@@ -294,6 +294,7 @@ void FightForGoldBall(void)
 				Delay_ms(1000);
 				USART_OUT(DEBUG_USART,"TuiTUiTUi\r\n");
 				BoostPolePush();
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 				isGetBall++;
 				break;
 			case 2:
@@ -303,8 +304,6 @@ void FightForGoldBall(void)
 					USART_OUT(DEBUG_USART,"YOU should shoot\r\n");
 					//这之后应该向金球架抓取气阀发数抓取金球架
 					gRobot.sDta.process=TO_THE_AREA_3;
-					
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					
 					PrepareShootBall(BALL_3);
 				}
