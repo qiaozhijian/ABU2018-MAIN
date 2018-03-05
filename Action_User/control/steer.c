@@ -86,7 +86,7 @@ void HoldSteer1PosCrl(float angle,int vel)
     angle=-100.f;
   
   /*1/4096.f*360.f=11.378*//*¼õËÙ±È25/16*/
-  pos=(int)((180.f-(angle-8)*25/16)*11.378f);  
+  pos=(int)((180.f-(angle-5)*25/16)*11.378f);  
   
   SteerPosCrlBy485(HOLD_BALL_1,pos);
 }
