@@ -96,18 +96,23 @@ void CAN1_RX0_IRQHandler(void)
 	}
 	if(msg.data32[0]==GET_MOTIONCARD_SELFTEST_WHEEL_OVER&&gRobot.sDta.robocon2018==ROBOT_SELF_TEST)
 	{
-		SetMotionFlag(AT_PREPARE_READY);
+		SetMotionFlag(AT_THE_WHEEL_SELFTEST_OVER);
 	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_SELFTEST_WHEEL_OVER\r\n");	
 	}
-	if(msg.data8[0]==0&&msg.data8[2]=='S'&&msg.data8[3]=='L')
+	if(msg.data8[3]==0&&msg.data8[1]=='S'&&msg.data8[0]=='L')
 	{
-		if(msg.data8[1]=='A'){
+		if(msg.data8[2]=='A'){
 			gRobot.laser[0]=msg.data32[1];
-		}else if(msg.data8[1]=='B'){
+		}else if(msg.data8[2]=='B'){
 			gRobot.laser[1]=msg.data32[1];
-		}else if(msg.data8[1]=='D'){
+		}else if(msg.data8[2]=='D'){
 			gRobot.laser[2]=msg.data32[1];
 		}
+	}
+	if(msg.data32[0]==GET_MOTIONCARD_INTO_HARDFAULT)
+	{
+	  gRobot.sDta.robocon2018=INTO_HARDFAULT;
+	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_INTO_HARDFAULT\r\n");
 	}
    
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);

@@ -56,6 +56,25 @@ void HoldSteer2PosCrl(float angle,int vel)
   
   SteerPosCrlBy485(HOLD_BALL_2,pos);
 }
+void HoldSteer1PosCrl(float angle,int vel)
+{
+  int pos=0.f;
+
+	if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+  {
+    ClawShut();
+  }
+	if(angle>100.f)
+		angle=100.f;
+	if(angle<-100.f)
+		angle=-100.f;
+
+	/*1/4096.f*360.f=11.378*//*减速比25/16*/
+  pos=(int)((180.f-(angle+9.f)*25/16)*11.378f);  
+	
+  USART_OUT(UART5,"#254 W 42,2,%d:46,2,%d\r\n",pos,vel);
+}
+
 //void HoldSteer2PosCrl(float angle,int vel)
 //{
 //  int pos=0.f;
@@ -70,30 +89,9 @@ void HoldSteer2PosCrl(float angle,int vel)
 //	
 //  USART_OUT(UART5,"#1 W 42,2,%d:46,2,%d\r\n",pos,vel);
 //}
-
-
-void HoldSteer1PosCrl(float angle,int vel)
-{  
-	int pos=0.f;
-  /*检测爪子是否闭合，张开时转动会有干涉*/
-  if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN)
-  {
-    ClawShut();
-  }
-  if(angle>100.f)
-    angle=100.f;
-  if(angle<-100.f)
-    angle=-100.f;
-  
-  /*1/4096.f*360.f=11.378*//*减速比25/16*/
-  pos=(int)((180.f-(angle+10.f)*25/16)*11.378f);  
-  
-  SteerPosCrlBy485(HOLD_BALL_1,pos);
-}
-
-//void HoldSteer2PosCrl(float angle,int vel)
-//{
-//  int pos=0.f;
+//void HoldSteer1PosCrl(float angle,int vel)
+//{  
+//	int pos=0.f;
 //  /*检测爪子是否闭合，张开时转动会有干涉*/
 //  if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN)
 //  {
@@ -104,11 +102,12 @@ void HoldSteer1PosCrl(float angle,int vel)
 //  if(angle<-100.f)
 //    angle=-100.f;
 //  
-//  /*1/4096.f*360.f=11.378*/
-//  pos=(int)(((angle-14.5f)/7.f*6.f+180.f)*11.378f);	 
+//  /*1/4096.f*360.f=11.378*//*减速比25/16*/
+//  pos=(int)((180.f-(angle)*25/16)*11.378f);  
 //  
-//  SteerPosCrlBy485(0x02,pos);
+//  SteerPosCrlBy485(HOLD_BALL_1,pos);
 //}
+
 
 void CameraSteerPosCrl(float angle)
 {
@@ -279,13 +278,13 @@ void OpenSteerAll(void)
 	/*485 版本的舵机
 	通过写入舵机的内存控制表,TORQUE_SWITCH-0x28是扭矩开关所位于的地址写入1将其打开*/
 //	SetSteerByte(HOLD_BALL_1,TORQUE_SWITCH,0x01);
-	/*ttl版本的舵机*/
+	/*485 版本的舵机*/
 	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
-
+	/*ttl版本的舵机*/
 	Enable_ROBS();
 //	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
-	/*485 版本的舵机*/
-	//SetSteerByte(CAMERA_STEER,TORQUE_SWITCH,0x01);
+
+
 }
 
 void LetSteerRound(int num,float angle){
@@ -311,7 +310,7 @@ void LetSteerRound(int num,float angle){
 
 void ShutAllSteerResponse(void)
 {
-	SetSteerByte(HOLD_BALL_1,RESPONSE_STAIR,0x00);
+//	SetSteerByte(HOLD_BALL_1,RESPONSE_STAIR,0x00);
 	SetSteerByte(HOLD_BALL_2,RESPONSE_STAIR,0x00);
 	//SetSteerByte(CAMERA_STEER,RESPONSE_STAIR,0x00);
 }

@@ -291,19 +291,19 @@ void FightForGoldBall(void)
 					isGetBall++;
 				break;
 			case 1:
-				Delay_ms(3000);
+				Delay_ms(1000);
+				USART_OUT(DEBUG_USART,"TuiTUiTUi\r\n");
 				BoostPolePush();
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 				isGetBall++;
 				break;
 			case 2:
-				if(gRobot.posY>2500.f)
+				if(gRobot.posY>1000.f)
 				{
 					//TalkToCamera(CAMERA_OPEN_FAR);
-					
+					USART_OUT(DEBUG_USART,"YOU should shoot\r\n");
 					//这之后应该向金球架抓取气阀发数抓取金球架
 					gRobot.sDta.process=TO_THE_AREA_3;
-					
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					
 					PrepareShootBall(BALL_3);
 				}
@@ -315,7 +315,7 @@ void FightForGoldBall(void)
 		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//在y大于2500的时候将助推气阀归位
-		if(gRobot.posY>2500.f) BoostPoleReturn();
+		if(fabs(gRobot.posY)>3000.f) BoostPoleReturn();
 		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
     if(!PrepareForTheBall())
     {
@@ -660,7 +660,7 @@ void processReport(void)
 //}
 
 void RobotSelfTest(void){
-	
+	static int sendWheelFlag=0;
 	MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST);
 	static int selfTestStep=0;
 	ShootLedOn();
@@ -670,6 +670,7 @@ void RobotSelfTest(void){
 	ShootLedOn();
 	Delay_ms(500);
 	ShootLedOff();
+	Delay_ms(500);
 	switch(selfTestStep){
 		//对电机，舵机的自检
 		case 0:
@@ -683,11 +684,8 @@ void RobotSelfTest(void){
 			PitchAngleMotion(0.f);
 			Delay_ms(1500);
 		
-			//航向90度
-			CourseAngleMotion(90.f);
-			Delay_ms(1500);
 			CourseAngleMotion(180.f);
-			Delay_ms(1500);
+			Delay_ms(3000);
 			CourseAngleMotion(0.f);
 			Delay_ms(2500);
 		
@@ -711,12 +709,15 @@ void RobotSelfTest(void){
 			Delay_ms(1000);
 		
 		  //射球两个气阀
+			BoostPoleReturn();
 			ShootSmallOpen();
-      ShootBigOpen();
 			Delay_ms(1000);
+      ShootBigOpen();
+			Delay_ms(2000);	
 			ShootSmallShut();
       ShootBigShut();
 			Delay_ms(1000);
+
 		
 			//助推车的气阀
 			BoostPolePush();
@@ -758,7 +759,10 @@ void RobotSelfTest(void){
 		//自动车轮子检测
 		case 3:
 			USART_OUT(DEBUG_USART,"WHEEL_TEST\r\n");
-			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
+			if(!sendWheelFlag){
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
+				sendWheelFlag=1;
+			}
 			if(gRobot.sDta.AT_motionFlag&AT_THE_WHEEL_SELFTEST_OVER){
 				selfTestStep++;
 				USART_OUT(DEBUG_USART,"WHEEL_TEST_OVER\r\n");
@@ -767,8 +771,9 @@ void RobotSelfTest(void){
 		
 		//激光检测
 		case 4:
+			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_LASER);
 			USART_OUT(DEBUG_USART,"LASER_TEST\r\n");
-			USART_OUT(DEBUG_USART,"A%d/t B%d/t D%d \t\r\n",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
+			USART_OUT(DEBUG_USART,"A%d\t B%d\t D%d \t\r\n",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
 			if(gRobot.laser[0]>20&&gRobot.laser[0]<400){
 				BEEP_ON;
 				Delay_ms(gRobot.laser[0]/10);

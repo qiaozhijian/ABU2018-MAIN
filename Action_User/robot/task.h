@@ -151,6 +151,7 @@
 #define COLORFUL_BALL_2					3
 #define GOLD_BALL								4
 #define ROBOT_SELF_TEST         9
+#define INTO_HARDFAULT					10
 
 /*控制卡通信解释*/
 //开始出发
@@ -193,6 +194,8 @@
 #define GET_MOTIONCARD_SELFTEST_FINISH		4
 /*控制卡初始化完成*/
 #define GET_MOTIONCARD_PREPARE_READY			5
+/*控制卡通知进入硬件中断*/
+#define GET_MOTIONCARD_INTO_HARDFAULT			44
 
 #define GET_MOTIONCARD_SELFTEST_WHEEL_OVER 66
 
