@@ -673,6 +673,7 @@ void RobotSelfTest(void){
 	switch(selfTestStep){
 		//对电机，舵机的自检
 		case 0:
+			USART_OUT(DEBUG_USART,"STEER_MOTION_TEST\r\n");
 			//俯仰角到-15度
 			PitchAngleMotion(-15.f);
 			Delay_ms(1500);
@@ -702,6 +703,7 @@ void RobotSelfTest(void){
 		
 		//对各个气阀的自检
 		case 1:
+			USART_OUT(DEBUG_USART,"GAS_BAORD_TEST\r\n");
 			//爪子张开
 			ClawOpen();
 			Delay_ms(1000);
@@ -735,6 +737,7 @@ void RobotSelfTest(void){
 		
 		//气压检测
 		case 2:
+			USART_OUT(DEBUG_USART,"GAS_TEST\r\n");
 			GasMotion(0.500);
 			USART_OUT(DEBUG_USART,"gasValue\t");
 			USART_OUT_F(gRobot.gasValue);
@@ -754,14 +757,18 @@ void RobotSelfTest(void){
 		
 		//自动车轮子检测
 		case 3:
+			USART_OUT(DEBUG_USART,"WHEEL_TEST\r\n");
 			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
-			if(){
+			if(gRobot.sDta.AT_motionFlag&AT_THE_WHEEL_SELFTEST_OVER){
 				selfTestStep++;
 			}
 		break;
 		
+		//激光检测
 		case 4:
-			selfTestStep++;
+			USART_OUT(DEBUG_USART,"LASER_TEST\r\n");
+			USART_OUT(DEBUG_USART,"A%d B%d D%d\r\n",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
+			if(gRobot.laser[0]<)
 		break;
 		
 		

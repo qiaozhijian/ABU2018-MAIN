@@ -99,7 +99,7 @@
 
 #define AT_REACH_THIRD_PLACE													0x80000u
 
-
+#define AT_THE_WHEEL_SELFTEST_OVER										0x100000u
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
 
@@ -250,7 +250,7 @@ typedef struct{
   float laserInit;
   
   /*激光测得的值*/
-  float laser;
+  uint16_t laser[3];
   
   /*持球舵机的位置*/
   float holdBallAngle[2];

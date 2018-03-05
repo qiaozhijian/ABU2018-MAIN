@@ -69,7 +69,7 @@ void CAN1_RX0_IRQHandler(void)
   if(StdId==GET_FROM_MOTIONCARD)     //get speed value
   {
     //fix me, if length not 8
-    for(i = 0; i < 4; i++)
+    for(i = 0; i < 8; i++)
       msg.data8[i] = buffer[i];
     //位置//机器人已经到了投掷彩球1的区域
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA1&&(gRobot.sDta.process==TO_THE_AREA_1||gRobot.sDta.process==TO_GET_BALL_1))
@@ -96,7 +96,18 @@ void CAN1_RX0_IRQHandler(void)
 	}
 	if(msg.data32[0]==GET_MOTIONCARD_SELFTEST_WHEEL_OVER&&gRobot.sDta.robocon2018==ROBOT_SELF_TEST)
 	{
-			
+		SetMotionFlag(AT_PREPARE_READY);
+	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_SELFTEST_WHEEL_OVER\r\n");	
+	}
+	if(msg.data8[0]==0&&msg.data8[2]=='S'&&msg.data8[3]=='L')
+	{
+		if(msg.data8[1]=='A'){
+			gRobot.laser[0]=msg.data32[1];
+		}else if(msg.data8[1]=='B'){
+			gRobot.laser[1]=msg.data32[1];
+		}else if(msg.data8[1]=='D'){
+			gRobot.laser[2]=msg.data32[1];
+		}
 	}
    
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
