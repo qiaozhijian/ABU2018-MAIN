@@ -49,7 +49,7 @@ void prepareMotionParaInit(void)
   PrepareCompete.pitchAngle=19.0f;
   PrepareCompete.upSteerAngle=-90.f;
 	PrepareCompete.downSteerAngle=-90.f;
-  PrepareCompete.steerSpeed=2000;
+  PrepareCompete.steerSpeed=1000;
   PrepareCompete.gasAim=0.400f;
 	
   /*准备去拿第一个球的数据*/ 
@@ -57,7 +57,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall1.pitchAngle=3.0f;
   PrepareGetBall1.upSteerAngle=-64.0f;
 	PrepareGetBall1.downSteerAngle=-67.0f;
-  PrepareGetBall1.steerSpeed=2000;
+  PrepareGetBall1.steerSpeed=1000;
   PrepareGetBall1.gasAim=0.400f;
   
   /*准备射第一个球的数据*/
@@ -65,7 +65,7 @@ void prepareMotionParaInit(void)
   PrepareShootBall1.pitchAngle=9.7f;
   PrepareShootBall1.upSteerAngle=1.3f;
 	PrepareShootBall1.downSteerAngle=0.f;
-  PrepareShootBall1.steerSpeed=2000;
+  PrepareShootBall1.steerSpeed=1000;
   PrepareShootBall1.gasAim=0.400f;
 	
   /*准备去拿第二个球的数据*/
@@ -73,7 +73,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall2.pitchAngle=2.5f;
   PrepareGetBall2.upSteerAngle=97.f;
 	PrepareGetBall2.downSteerAngle=97.f;
-  PrepareGetBall2.steerSpeed=2000;
+  PrepareGetBall2.steerSpeed=1000;
   PrepareGetBall2.gasAim=0.480;
   
   /*准备射第二个球的数据*/
@@ -81,7 +81,7 @@ void prepareMotionParaInit(void)
   PrepareShootBall2.pitchAngle=9.2f;
   PrepareShootBall2.upSteerAngle=1.3f;
 	PrepareShootBall2.downSteerAngle=0.0f;
-  PrepareShootBall2.steerSpeed=2000;
+  PrepareShootBall2.steerSpeed=1000;
   PrepareShootBall2.gasAim=0.480f;
   
   /*准备去拿第三个球的数据*/
@@ -89,7 +89,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.pitchAngle=0.0f;
   PrepareGetBall3.upSteerAngle=-90.f;
 	PrepareGetBall3.downSteerAngle=-90.f;
-  PrepareGetBall3.steerSpeed=2000;
+  PrepareGetBall3.steerSpeed=1000;
   PrepareGetBall3.gasAim=0.480f;
   
   /*准备射第三个球的数据*/
@@ -97,7 +97,7 @@ void prepareMotionParaInit(void)
   PrepareShootBall3.pitchAngle=2.2f;
 	PrepareShootBall3.upSteerAngle=1.3f;
   PrepareShootBall3.downSteerAngle=0.0f;
-  PrepareShootBall3.steerSpeed=2000;
+  PrepareShootBall3.steerSpeed=1000;
   PrepareShootBall3.gasAim=0.480f;
   
 }
