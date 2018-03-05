@@ -661,65 +661,110 @@ void processReport(void)
 
 void RobotSelfTest(void){
 	
+	MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST);
 	static int selfTestStep=0;
 	ShootLedOn();
-	Delay_ms(3000);
+	Delay_ms(500);
+	ShootLedOff();
+	Delay_ms(500);
+	ShootLedOn();
+	Delay_ms(500);
 	ShootLedOff();
 	switch(selfTestStep){
 		//对电机，舵机的自检
 		case 0:
-			BEEP_ON;
-			//俯仰角到0度
+			//俯仰角到-15度
+			PitchAngleMotion(-15.f);
+			Delay_ms(1500);
+			//俯仰角到20度
+			PitchAngleMotion(15.f);
+			Delay_ms(1500);
 			PitchAngleMotion(0.f);
+			Delay_ms(1500);
+		
 			//航向90度
 			CourseAngleMotion(90.f);
+			Delay_ms(1500);
+			CourseAngleMotion(180.f);
+			Delay_ms(1500);
+			CourseAngleMotion(0.f);
+			Delay_ms(2500);
+		
 		  //上下两个舵机到0
 			HoldBallPosCrlSeparate(0.f,0.f,1000);
-			Delay_ms(3000);
-			//俯仰角到-10度
-			PitchAngleMotion(-10.f);
-			//航向180度
-			CourseAngleMotion(180.f);
-			//上下两个舵机到-90
-		  HoldBallPosCrlSeparate(-90.f,-90.f,1000);
-			Delay_ms(3000);
+			Delay_ms(1500);
+			HoldBallPosCrlSeparate(90.f,90.f,1000);
+			Delay_ms(1500);
+			HoldBallPosCrlSeparate(-90.f,-90.f,1000);
+			
 			selfTestStep++;
-			BEEP_OFF;
 		break;
 		
 		//对各个气阀的自检
 		case 1:
 			//爪子张开
 			ClawOpen();
+			Delay_ms(1000);
+			ClawShut();
+			Delay_ms(1000);
+		
 		  //射球两个气阀
 			ShootSmallOpen();
       ShootBigOpen();
+			Delay_ms(1000);
+			ShootSmallShut();
+      ShootBigShut();
+			Delay_ms(1000);
+		
 			//助推车的气阀
 			BoostPolePush();
+			Delay_ms(1000);
+			//助推车的气阀
+			BoostPoleReturn();
+		
 			//金球架抓取气阀
 			GoldBallGraspStairOneOn();
 			GoldBallGraspStairTwoOn();
 			Delay_ms(1500);
-		
-			ClawShut();
-		  //射球两个气阀
-			ShootSmallShut();
-      ShootBigShut();
-			//助推车的气阀
-			BoostPoleReturn();
 			//金球架抓取气阀
 			GoldBallGraspStairOneOff();
 			GoldBallGraspStairTwoOff();
+		  Delay_ms(1500);
 		  selfTestStep++;
 		break;
 		
+		//气压检测
 		case 2:
+			GasMotion(0.500);
+			USART_OUT(DEBUG_USART,"gasValue\t");
+			USART_OUT_F(gRobot.gasValue);
+			USART_Enter();
+			Delay_ms(3000);
+			USART_OUT(DEBUG_USART,"gasValue\t");
+			USART_OUT_F(gRobot.gasValue);
+			USART_Enter();
+			GasMotion(0.430);
+			Delay_ms(3000);
+			USART_OUT(DEBUG_USART,"gasValue\t");
+			USART_OUT_F(gRobot.gasValue);
+			USART_Enter();
 			
+			selfTestStep++;
 		break;
 		
+		//自动车轮子检测
 		case 3:
-			
+			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
+			if(){
+				selfTestStep++;
+			}
 		break;
+		
+		case 4:
+			selfTestStep++;
+		break;
+		
+		
 	}
 	
 }

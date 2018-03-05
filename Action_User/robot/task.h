@@ -176,6 +176,13 @@
 //通知控制卡自动车主控准备完成									
 #define NOTIFY_MOTIONCARD_PREPARE_FINISH	11
 
+//通知控制卡进行自检
+#define NOTIFY_MOTIONCARD_SELFTEST	12
+//通知控制卡进行轮子自检
+#define NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL	13
+//通知控制卡进行激光自检
+#define NOTIFY_MOTIONCARD_SELFTEST_THE_LASER	14
+
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1				1
 /*已到达区域二，可以投球*/
@@ -186,6 +193,8 @@
 #define GET_MOTIONCARD_SELFTEST_FINISH		4
 /*控制卡初始化完成*/
 #define GET_MOTIONCARD_PREPARE_READY			5
+
+#define GET_MOTIONCARD_SELFTEST_WHEEL_OVER 66
 
 /*球编号*/
 #define READY															0

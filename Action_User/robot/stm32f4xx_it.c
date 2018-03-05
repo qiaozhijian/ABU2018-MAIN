@@ -94,6 +94,10 @@ void CAN1_RX0_IRQHandler(void)
 	  SetMotionFlag(AT_PREPARE_READY);
 	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_PREPARE_READY\r\n");
 	}
+	if(msg.data32[0]==GET_MOTIONCARD_SELFTEST_WHEEL_OVER&&gRobot.sDta.robocon2018==ROBOT_SELF_TEST)
+	{
+			
+	}
    
     USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
   }
