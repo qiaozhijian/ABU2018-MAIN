@@ -13,6 +13,8 @@
 #include "stm32f4xx_gpio.h"
 #include "gasvalveControl.h"
 #include "timer.h"
+#include "usart.h"
+#include "task.h"
 /**
   * @brief  set the pins of a specific GPIO group to be input or output driver pin.
   * @param  GPIOx: where x can be A-I.
@@ -148,4 +150,25 @@ int PrepareForTheBall(void){
 	}
 	return NOT_Ball;
 }
-
+extern Robot_t gRobot;
+//行程开关触发时间
+static int keyOpenTime=0;
+//行程开关计数进入自检
+void KeySwitchCheck(void){
+	static int cntTime=6;
+	while(cntTime--){
+		if(KEYSWITCH){
+			keyOpenTime++;
+		}
+		else{
+			keyOpenTime=0;
+		}
+		if(keyOpenTime>=3){
+			keyOpenTime=0;
+			gRobot.sDta.robocon2018=ROBOT_SELF_TEST;
+			USART_OUT(DEBUG_USART,"In the RobotSelfTest");
+		}
+		Delay_ms(500);
+  }
+	//
+}

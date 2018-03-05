@@ -255,23 +255,7 @@ void CAN2_SCE_IRQHandler(void)
 //每1ms调用一次
 
 extern  OS_EVENT 		*PeriodSem;
-//行程开关触发时间
-static int keyOpenTime=0;
-//行程开关计数进入自检
-void KeySwitchCheck(void){
-	if(KEYSWITCH){
-		keyOpenTime++;
-	}
-	else{
-		keyOpenTime=0;
-	}
-	//
-	if(keyOpenTime>2000){
-		keyOpenTime=0;
-		gRobot.sDta.robocon2018=ROBOT_SELF_TEST;
-		USART_OUT(DEBUG_USART,"In the RobotSelfTest");
-	}
-}
+
 
 void TIM2_IRQHandler(void)
 {
@@ -285,7 +269,6 @@ void TIM2_IRQHandler(void)
   
   if(TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
   {
-		KeySwitchCheck();
     //实现10ms 发送1次信号量
     periodCounter--;
     if (periodCounter == 0)

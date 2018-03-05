@@ -27,7 +27,7 @@ void Enable_ROBS(void)
   static int times;
   while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
   {
-    USART_OUT(UART5,"#1 W 40,1,1\r\n");
+    USART_OUT(UART5,"#254 W 40,1,1\r\n");
     Delay_ms(1);
     times ++;
     if(times >10)
@@ -278,11 +278,11 @@ void OpenSteerAll(void)
 {
 	/*485 版本的舵机
 	通过写入舵机的内存控制表,TORQUE_SWITCH-0x28是扭矩开关所位于的地址写入1将其打开*/
-	SetSteerByte(HOLD_BALL_1,TORQUE_SWITCH,0x01);
+//	SetSteerByte(HOLD_BALL_1,TORQUE_SWITCH,0x01);
 	/*ttl版本的舵机*/
 	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
 
-//	Enable_ROBS();
+	Enable_ROBS();
 //	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
 	/*485 版本的舵机*/
 	//SetSteerByte(CAMERA_STEER,TORQUE_SWITCH,0x01);

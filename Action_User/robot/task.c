@@ -246,8 +246,6 @@ void HardWareInit(void){
   
 }
 void MotorInit(void){
-  /*准备工作完毕*/
-  gRobot.sDta.robocon2018=ROBOT_PREPARE;
 	
   //电机初始化
   ElmoInit(CAN2);
@@ -340,6 +338,12 @@ void statusInit(void)
 	#endif
 	
 	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+	KeySwitchCheck();
+	if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
+	  /*准备工作完毕*/
+		gRobot.sDta.robocon2018=ROBOT_PREPARE;
+	}
+	
 	USART_OUT(DEBUG_USART,"statusInit step finish\r\n");
 }	
 

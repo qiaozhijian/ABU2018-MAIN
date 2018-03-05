@@ -25,5 +25,5 @@ void PhotoelectricityInit(void);
 
 int PrepareForTheBall(void);
 
-
+void KeySwitchCheck(void);
 #endif
