@@ -291,13 +291,13 @@ void FightForGoldBall(void)
 					isGetBall++;
 				break;
 			case 1:
-				Delay_ms(3000);
+				Delay_ms(1000);
 				USART_OUT(DEBUG_USART,"TuiTUiTUi\r\n");
-//				BoostPolePush();
+				BoostPolePush();
 				isGetBall++;
 				break;
 			case 2:
-				if(gRobot.posY>800.f)
+				if(gRobot.posY>1000.f)
 				{
 					//TalkToCamera(CAMERA_OPEN_FAR);
 					USART_OUT(DEBUG_USART,"YOU should shoot\r\n");
@@ -316,7 +316,7 @@ void FightForGoldBall(void)
 		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//在y大于2500的时候将助推气阀归位
-		if(gRobot.posY>2500.f) BoostPoleReturn();
+		if(fabs(gRobot.posY)>3000.f) BoostPoleReturn();
 		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
     if(!PrepareForTheBall())
     {
