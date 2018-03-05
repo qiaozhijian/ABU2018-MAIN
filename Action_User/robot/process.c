@@ -761,17 +761,32 @@ void RobotSelfTest(void){
 			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
 			if(gRobot.sDta.AT_motionFlag&AT_THE_WHEEL_SELFTEST_OVER){
 				selfTestStep++;
+				USART_OUT(DEBUG_USART,"WHEEL_TEST_OVER\r\n");
 			}
 		break;
 		
 		//¼¤¹â¼ì²â
 		case 4:
 			USART_OUT(DEBUG_USART,"LASER_TEST\r\n");
-			USART_OUT(DEBUG_USART,"A%d B%d D%d\r\n",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
-			if(gRobot.laser[0]<)
+			USART_OUT(DEBUG_USART,"A%d/t B%d/t D%d \t\r\n",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
+			if(gRobot.laser[0]>20&&gRobot.laser[0]<400){
+				BEEP_ON;
+				Delay_ms(gRobot.laser[0]/10);
+				BEEP_OFF;
+				Delay_ms(gRobot.laser[0]/10);
+			}else if(gRobot.laser[1]>20&&gRobot.laser[1]<400){
+				BEEP_ON;
+				Delay_ms(gRobot.laser[1]/10);
+				BEEP_OFF;
+				Delay_ms(gRobot.laser[1]/10);
+			}else if(gRobot.laser[2]>20&&gRobot.laser[2]<400){
+				BEEP_ON;
+				Delay_ms(gRobot.laser[2]/10&&gRobot.laser[2]<400);
+				BEEP_OFF;
+				Delay_ms(gRobot.laser[2]/10&&gRobot.laser[2]<400);
+			}
 		break;
 		
 		
 	}
-	
 }
