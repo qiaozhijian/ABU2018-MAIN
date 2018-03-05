@@ -5,6 +5,8 @@ void FightForBall1(void);
 void FightForBall2(void);
 void FightForGoldBall(void);
 
+void RobotSelfTest(void);
+
 void StatusReport(void);
 void processReport(void);
 

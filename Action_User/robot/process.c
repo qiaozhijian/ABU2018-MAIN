@@ -663,20 +663,63 @@ void RobotSelfTest(void){
 	
 	static int selfTestStep=0;
 	ShootLedOn();
-	Delay_ms(1000);
+	Delay_ms(3000);
 	ShootLedOff();
 	switch(selfTestStep){
+		//对电机，舵机的自检
 		case 0:
+			BEEP_ON;
+			//俯仰角到0度
+			PitchAngleMotion(0.f);
+			//航向90度
+			CourseAngleMotion(90.f);
+		  //上下两个舵机到0
+			HoldBallPosCrlSeparate(0.f,0.f,1000);
+			Delay_ms(3000);
+			//俯仰角到-10度
+			PitchAngleMotion(-10.f);
+			//航向180度
+			CourseAngleMotion(180.f);
+			//上下两个舵机到-90
+		  HoldBallPosCrlSeparate(-90.f,-90.f,1000);
+			Delay_ms(3000);
+			selfTestStep++;
+			BEEP_OFF;
+		break;
+		
+		//对各个气阀的自检
+		case 1:
+			//爪子张开
+			ClawOpen();
+		  //射球两个气阀
+			ShootSmallOpen();
+      ShootBigOpen();
+			//助推车的气阀
+			BoostPolePush();
+			//金球架抓取气阀
+			GoldBallGraspStairOneOn();
+			GoldBallGraspStairTwoOn();
+			Delay_ms(1500);
+		
+			ClawShut();
+		  //射球两个气阀
+			ShootSmallShut();
+      ShootBigShut();
+			//助推车的气阀
+			BoostPoleReturn();
+			//金球架抓取气阀
+			GoldBallGraspStairOneOff();
+			GoldBallGraspStairTwoOff();
+		  selfTestStep++;
+		break;
+		
+		case 2:
 			
 		break;
 		
-		case 1:
+		case 3:
 			
 		break;
 	}
-	
-	
-	
-	
 	
 }

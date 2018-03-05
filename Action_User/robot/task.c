@@ -91,12 +91,12 @@ void ConfigTask(void)
   HardWareInit();
   if(!gRobot.resetFlag)
   {
-		//给航向，俯仰电机上电初始化时间
-		Delay_ms(100);
-		/*电机初始化*/
-		MotorInit();
-		if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
-		/*状态初始化*/
+			//给航向，俯仰电机上电初始化时间
+			Delay_ms(100);
+			/*电机初始化*/
+			MotorInit();
+			if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
+			/*状态初始化*/
 			statusInit();
 		}
   }
@@ -163,9 +163,8 @@ void RobotTask(void)
 				switch(gRobot.sDta.robocon2018)
 				{
 					case ROBOT_SELF_TEST:
-						
+						 RobotSelfTest();
 					break;
-					
 					
 					case ROBOT_PREPARE:
 						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
