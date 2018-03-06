@@ -292,6 +292,11 @@ void FightForGoldBall(void)
 				break;
 			case 1:
 				Delay_ms(1000);
+//				if(GoldRackInto()){
+//
+//					USART_OUT(DEBUG_USART,"GoldballRackInto Tui\r\n");
+//					BoostPolePush();
+//				}
 				USART_OUT(DEBUG_USART,"TuiTUiTUi\r\n");
 				BoostPolePush();
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);

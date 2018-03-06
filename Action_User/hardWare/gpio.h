@@ -5,6 +5,8 @@
 
 #define KEYSWITCH		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_7))
 
+#define KEYSWITCH_CHECK_GOLD		    	(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_12))
+
 #define BEEP_ON          		 GPIO_SetBits(GPIOC, GPIO_Pin_3)
 
 #define BEEP_OFF         		 GPIO_ResetBits(GPIOC, GPIO_Pin_3)
@@ -23,7 +25,11 @@ void BeepInit(void);
 
 void PhotoelectricityInit(void);
 
+void PhotoelectricityCheckGoldBallInit(void);
+
 int PrepareForTheBall(void);
+
+int GoldRackInto(void);
 
 void KeySwitchCheck(void);
 #endif

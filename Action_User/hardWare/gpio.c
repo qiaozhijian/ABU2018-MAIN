@@ -122,7 +122,7 @@ void PhotoelectricityInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -133,6 +133,37 @@ void PhotoelectricityInit(void)
 	GPIO_ResetBits(GPIOB, GPIO_Pin_15);
 }
 
+//光电检测金球架进入，然后控制助推气阀推
+void PhotoelectricityCheckGoldBallInit(void)        
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);
+	
+	GPIO_ResetBits(GPIOE, GPIO_Pin_12);
+}
+
+static int IsBallRack=0;
+#define IS_A_BaLL_RACK 1
+#define NOT_A_Ball_RACK  0
+int GoldRackInto(void){
+	if(KEYSWITCH_CHECK_GOLD){
+		IsBallRack++;
+	}else{
+		IsBallRack=0;
+	}
+	if(IsBallRack>=5){
+		IsBallRack=0;
+		return IS_A_BaLL_RACK;
+	}
+	return NOT_A_Ball_RACK;
+}
 /*光电25ms触发说明拿到球*/
 #define IS_A_BaLL 1
 #define NOT_Ball  0
