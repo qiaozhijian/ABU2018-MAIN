@@ -166,7 +166,7 @@ void KeySwitchCheck(void){
 		if(keyOpenTime>=3){
 			keyOpenTime=0;
 			gRobot.sDta.robocon2018=ROBOT_SELF_TEST;
-			USART_OUT(DEBUG_USART,"In the RobotSelfTest");
+			USART_OUT(DEBUG_USART,"In the RobotSelfTest\r\n");
 		}
 		Delay_ms(500);
   }

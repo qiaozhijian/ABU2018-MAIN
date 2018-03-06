@@ -659,48 +659,72 @@ void processReport(void)
 //  }
 //}
 
+
+
+
+static int ShootLEDShineOnce=1;
+void ShootLEDShine(void){
+	ShootLedOn();
+	Delay_ms(500);
+	ShootLedOff();
+	Delay_ms(500);
+	ShootLedOn();
+	Delay_ms(500);
+	ShootLedOff();
+	Delay_ms(500);
+}
 void RobotSelfTest(void){
+	static int GasTestTime=0;
 	static int sendWheelFlag=0;
 	MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST);
 	static int selfTestStep=0;
-	ShootLedOn();
-	Delay_ms(500);
-	ShootLedOff();
-	Delay_ms(500);
-	ShootLedOn();
-	Delay_ms(500);
-	ShootLedOff();
-	Delay_ms(500);
 	switch(selfTestStep){
 		//对电机，舵机的自检
 		case 0:
+			ShootLEDShine();
 			USART_OUT(DEBUG_USART,"STEER_MOTION_TEST\r\n");
 			//俯仰角到-15度
 			PitchAngleMotion(-15.f);
+			gRobot.sDta.pitchAimAngle=-15.f;
 			Delay_ms(1500);
 			//俯仰角到20度
+			gRobot.sDta.pitchAimAngle=15.f;
 			PitchAngleMotion(15.f);
 			Delay_ms(1500);
+			gRobot.sDta.pitchAimAngle=0.f;
 			PitchAngleMotion(0.f);
 			Delay_ms(1500);
 		
-			CourseAngleMotion(180.f);
-			Delay_ms(3000);
+			gRobot.sDta.courseAimAngle=0.f;//防止参数更新，MotionExceute里面会执行
+			CourseAngleMotion(0.f);
+			Delay_ms(2000);
+			gRobot.sDta.courseAimAngle=180.f;//防止参数更新，MotionExceute里面会执行
+			CourseAngleMotion(90.f);
+			Delay_ms(2000);
+			gRobot.sDta.courseAimAngle=0.f;
 			CourseAngleMotion(0.f);
 			Delay_ms(2500);
 		
 		  //上下两个舵机到0
-			HoldBallPosCrlSeparate(0.f,0.f,1000);
-			Delay_ms(1500);
-			HoldBallPosCrlSeparate(90.f,90.f,1000);
-			Delay_ms(1500);
-			HoldBallPosCrlSeparate(-90.f,-90.f,1000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+			HoldBallPosCrlSeparate(0.f,0.f,1500);
+			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=90.f;
+			HoldBallPosCrlSeparate(90.f,90.f,1500);
+			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=-90.f;
+			HoldBallPosCrlSeparate(-90.f,-90.f,1500);
+			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+			HoldBallPosCrlSeparate(0.f,0.f,1500);
 			
 			selfTestStep++;
 		break;
 		
 		//对各个气阀的自检
 		case 1:
+			ShootLEDShine();
+		
 			USART_OUT(DEBUG_USART,"GAS_BAORD_TEST\r\n");
 			//爪子张开
 			ClawOpen();
@@ -738,26 +762,31 @@ void RobotSelfTest(void){
 		
 		//气压检测
 		case 2:
-			USART_OUT(DEBUG_USART,"GAS_TEST\r\n");
-			GasMotion(0.500);
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+				USART_OUT(DEBUG_USART,"GAS_TEST\r\n");
+			}
+			GasTestTime++;
 			USART_OUT(DEBUG_USART,"gasValue\t");
 			USART_OUT_F(gRobot.gasValue);
 			USART_Enter();
-			Delay_ms(3000);
-			USART_OUT(DEBUG_USART,"gasValue\t");
-			USART_OUT_F(gRobot.gasValue);
-			USART_Enter();
-			GasMotion(0.430);
-			Delay_ms(3000);
-			USART_OUT(DEBUG_USART,"gasValue\t");
-			USART_OUT_F(gRobot.gasValue);
-			USART_Enter();
-			
-			selfTestStep++;
+			if(GasTestTime<=600){
+				GasMotion(0.500);
+			}else if(GasTestTime>600&&GasTestTime<=1200){
+				GasMotion(0.430);
+			}else if(GasTestTime>1200){
+				ShootLEDShineOnce=1;
+				selfTestStep++;
+			}
 		break;
 		
 		//自动车轮子检测
 		case 3:
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
 			USART_OUT(DEBUG_USART,"WHEEL_TEST\r\n");
 			if(!sendWheelFlag){
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
@@ -765,33 +794,37 @@ void RobotSelfTest(void){
 			}
 			if(gRobot.sDta.AT_motionFlag&AT_THE_WHEEL_SELFTEST_OVER){
 				selfTestStep++;
+				ShootLEDShineOnce=1;
 				USART_OUT(DEBUG_USART,"WHEEL_TEST_OVER\r\n");
 			}
 		break;
 		
 		//激光检测
 		case 4:
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
 			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_LASER);
 			USART_OUT(DEBUG_USART,"LASER_TEST\r\n");
 			USART_OUT(DEBUG_USART,"A%d\t B%d\t D%d \t\r\n",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
-			if(gRobot.laser[0]>20&&gRobot.laser[0]<400){
+			if(gRobot.laser[0]>20&&gRobot.laser[0]<600){
 				BEEP_ON;
-				Delay_ms(gRobot.laser[0]/10);
+				Delay_ms(gRobot.laser[0]/10*5);
 				BEEP_OFF;
-				Delay_ms(gRobot.laser[0]/10);
-			}else if(gRobot.laser[1]>20&&gRobot.laser[1]<400){
+				Delay_ms(gRobot.laser[0]/10*5);
+			}else if(gRobot.laser[1]>20&&gRobot.laser[1]<600){
 				BEEP_ON;
-				Delay_ms(gRobot.laser[1]/10);
+				Delay_ms(gRobot.laser[1]/10*5);
 				BEEP_OFF;
-				Delay_ms(gRobot.laser[1]/10);
-			}else if(gRobot.laser[2]>20&&gRobot.laser[2]<400){
+				Delay_ms(gRobot.laser[1]/10*5);
+			}else if(gRobot.laser[2]>20&&gRobot.laser[2]<600){
 				BEEP_ON;
-				Delay_ms(gRobot.laser[2]/10&&gRobot.laser[2]<400);
+				Delay_ms(gRobot.laser[2]/10*5);
 				BEEP_OFF;
-				Delay_ms(gRobot.laser[2]/10&&gRobot.laser[2]<400);
+				Delay_ms(gRobot.laser[2]/10*5);
 			}
 		break;
-		
 		
 	}
 }
