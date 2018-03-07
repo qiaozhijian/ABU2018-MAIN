@@ -291,16 +291,17 @@ void FightForGoldBall(void)
 					isGetBall++;
 				break;
 			case 1:
-				Delay_ms(1000);
-//				if(GoldRackInto()){
-//
-//					USART_OUT(DEBUG_USART,"GoldballRackInto Tui\r\n");
-//					BoostPolePush();
-//				}
-				USART_OUT(DEBUG_USART,"TuiTUiTUi\r\n");
-				BoostPolePush();
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
-				isGetBall++;
+				
+				if(GoldRackInto()){
+					GoldBallGraspStairTwoOn();
+					USART_OUT(DEBUG_USART,"GoldballRackInto Tui\r\n");
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
+					BoostPolePush();
+					isGetBall++;
+				}
+				USART_OUT(DEBUG_USART,"BallRack %d\r\n",KEYSWITCH_CHECK_GOLD);
+//				USART_OUT(DEBUG_USART,"TuiTUiTUi\r\n");
+//				BoostPolePush();
 				break;
 			case 2:
 				if(gRobot.posY>1000.f)
@@ -738,6 +739,7 @@ void RobotSelfTest(void){
 			Delay_ms(1000);
 		
 		  //ÉäÇòÁ½¸öÆø·§
+			ClawOpen();
 			BoostPoleReturn();
 			ShootSmallOpen();
 			Delay_ms(1000);
@@ -745,6 +747,7 @@ void RobotSelfTest(void){
 			Delay_ms(2000);	
 			ShootSmallShut();
       ShootBigShut();
+			ClawShut();
 			Delay_ms(1000);
 
 		

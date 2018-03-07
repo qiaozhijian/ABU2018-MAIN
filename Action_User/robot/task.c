@@ -246,7 +246,7 @@ void HardWareInit(void){
   PhotoelectricityInit();
 	
 	/*检测到金球架进来就推助推气阀的光电*/
-//  PhotoelectricityCheckGoldBallInit();
+  PhotoelectricityCheckGoldBallInit();
 	
   //蜂鸣器PE7
   GPIO_Init_Pins(GPIOC, GPIO_Pin_3, GPIO_Mode_OUT);
