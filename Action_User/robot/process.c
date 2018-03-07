@@ -295,6 +295,8 @@ void FightForGoldBall(void)
 				if(GoldRackInto()){
 					GoldBallGraspStairTwoOn();
 					USART_OUT(DEBUG_USART,"GoldballRackInto Tui\r\n");
+					//提前将两个舵机转到0度
+					gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					BoostPolePush();
 					isGetBall++;
