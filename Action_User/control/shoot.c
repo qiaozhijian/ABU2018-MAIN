@@ -166,8 +166,8 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
   PitchAngleMotion(PrepareShootBall_t.pitchAngle);
   /*设置航向角度*/
   CourseAngleMotion(PrepareShootBall_t.courseAngle);
-  /*避免球乱晃*/
-  Delay_ms(500);
+//  /*避免球乱晃*/
+//  Delay_ms(500);
   /*提前打开发射装置小气缸*/
   ShootSmallOpen();
   /*舵机转向*/

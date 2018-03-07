@@ -284,6 +284,7 @@ typedef struct{
   float posY;
 	float speedX;
 	float speedY;
+	float AngularVelocity;
 	int posSystemCode[2];
 	
 	uint32_t posSystemReady;
