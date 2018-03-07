@@ -3,7 +3,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "iwdg.h"
-
+#include "dma.h"
 /*******************************控制驱动器命令************************************/
 /**
 * @brief  Elmo驱动器初始化
@@ -62,11 +62,11 @@ void MotorOn(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"MotorOn dead while\r\n");
+			USART_OUTByDMA("MotorOn dead while\r\n");
 			break;
 		}
 	}
-//	USART_OUT(DEBUG_USART,"%d\r\n",timeout);
+//	USART_OUTByDMA("%d\r\n",timeout);
 //	timeout=0;
 }
 
@@ -110,7 +110,7 @@ void MotorOff(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"MotorOff dead while\r\n");
+			USART_OUTByDMA("MotorOff dead while\r\n");
 			break;
 		}
 	}
@@ -238,7 +238,7 @@ void SetUnitMode(CAN_TypeDef* CANx, uint8_t ElmoNum, uint8_t unitMode)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"SetUnitMode dead while\r\n");
+			USART_OUTByDMA("SetUnitMode dead while\r\n");
 			break;
 		}
 	}
@@ -288,7 +288,7 @@ void SetSmoothFactor(CAN_TypeDef* CANx, uint8_t ElmoNum, uint8_t smoothFactor)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"SetSmoothFactor dead while\r\n");
+			USART_OUTByDMA("SetSmoothFactor dead while\r\n");
 			break;
 		}
 	}
@@ -343,7 +343,7 @@ void SetAccAndDec(CAN_TypeDef* CANx, uint8_t ElmoNum, uint32_t acc, uint32_t dec
 			{
 			if(timeout%1003==0)
 				IWDG_Feed();
-				USART_OUT(DEBUG_USART,"SetAccAndDec dead while\r\n");
+				USART_OUTByDMA("SetAccAndDec dead while\r\n");
 			break;
 			}
 		}
@@ -399,7 +399,7 @@ void SetVelLimit(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit, int32_t
 			{
 			if(timeout%1003==0)
 				IWDG_Feed();
-				USART_OUT(DEBUG_USART,"SetVelLimit dead while\r\n");
+				USART_OUTByDMA("SetVelLimit dead while\r\n");
 				break;
 			}
 		}
@@ -453,7 +453,7 @@ void SetPosLimit(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit, int32_t
 			timeout++;
 			if(timeout > 5009)
 			{
-				USART_OUT(DEBUG_USART,"SetPosLimit dead while\r\n");
+				USART_OUTByDMA("SetPosLimit dead while\r\n");
 				break;
 			}
 		}
@@ -507,7 +507,7 @@ void SetPosCountingRange(CAN_TypeDef* CANx, uint8_t ElmoNum, int32_t upperLimit,
 			timeout++;
 			if(timeout > 5009)
 			{
-				USART_OUT(DEBUG_USART,"SetPosCountingRange dead while\r\n");
+				USART_OUTByDMA("SetPosCountingRange dead while\r\n");
 				break;
 			}
 		}
@@ -556,7 +556,7 @@ void SetPosLoopVel(CAN_TypeDef* CANx, uint8_t ElmoNum,int32_t vel)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"SetPosLoopVel dead while\r\n");
+				USART_OUTByDMA("SetPosLoopVel dead while\r\n");
 				break;
 		}
 	}
@@ -604,7 +604,7 @@ void SetJoggingVel(CAN_TypeDef* CANx, uint8_t ElmoNum,int32_t vel)
 		timeout++;
 		if(timeout > 5009)
 		{
-			USART_OUT(DEBUG_USART,"SetJoggingVel dead while\r\n");
+			USART_OUTByDMA("SetJoggingVel dead while\r\n");
 			break;
 		}
 	}
@@ -666,7 +666,7 @@ void SendPosCmd(CAN_TypeDef* CANx, uint8_t ElmoNum,uint8_t posMode,int32_t pos)
 		timeout++;
 		if(timeout > 5009)
 		{
-			USART_OUT(DEBUG_USART,"SendPosCmd dead while\r\n");
+			USART_OUTByDMA("SendPosCmd dead while\r\n");
 			break;
 		}
 	}
@@ -712,7 +712,7 @@ void BeginMotion(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"BeginMotion dead while\r\n");
+				USART_OUTByDMA("BeginMotion dead while\r\n");
 			break;
 		}
 	}
@@ -760,7 +760,7 @@ void ReadActualVoltage(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-				USART_OUT(DEBUG_USART,"ReadActualVoltage dead while\r\n");
+				USART_OUTByDMA("ReadActualVoltage dead while\r\n");
 			break;
 		}
 	}
@@ -804,7 +804,7 @@ void ReadActualCurrent(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadActualCurrent dead while\r\n");
+				USART_OUTByDMA("ReadActualCurrent dead while\r\n");
 			break;
 		}
 	} 
@@ -850,11 +850,11 @@ void ReadActualPos(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"ReadActualPos dead while\r\n");
+			USART_OUTByDMA("ReadActualPos dead while\r\n");
 			break;
 		}
 	} 
-//	USART_OUT(DEBUG_USART,"%d\r\n",timeout);
+//	USART_OUTByDMA("%d\r\n",timeout);
 //	timeout=0;
  }
 
@@ -898,7 +898,7 @@ void ReadActualVel(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"ReadActualVel dead while\r\n");
+			USART_OUTByDMA("ReadActualVel dead while\r\n");
 			break;
 		}
 	}
@@ -942,7 +942,7 @@ void ReadActualTemperature(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadActualTemperature dead while\r\n");
+				USART_OUTByDMA("ReadActualTemperature dead while\r\n");
 			break;
 		}
 	}
@@ -986,7 +986,7 @@ void ReadCurrentLimitFlag(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadCurrentLimitFlag dead while\r\n");
+				USART_OUTByDMA("ReadCurrentLimitFlag dead while\r\n");
 			break;
 		}
 	}
@@ -1030,7 +1030,7 @@ void ReadVelocityError(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadVelocityError dead while\r\n");
+				USART_OUTByDMA("ReadVelocityError dead while\r\n");
 			break;
 		}
 	}
@@ -1074,7 +1074,7 @@ void ReadCommandVelocity(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadCommandVelocity dead while\r\n");
+				USART_OUTByDMA("ReadCommandVelocity dead while\r\n");
 			break;
 		}
 	}
@@ -1119,7 +1119,7 @@ void ReadJoggingVelocity(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadJoggingVelocity dead while\r\n");
+				USART_OUTByDMA("ReadJoggingVelocity dead while\r\n");
 			break;
 		}
 	}
@@ -1163,7 +1163,7 @@ void ReadUnitMode(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadUnitMode dead while\r\n");
+				USART_OUTByDMA("ReadUnitMode dead while\r\n");
 			break;
 		}
 	}
@@ -1208,7 +1208,7 @@ void ReadReferenceMode(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadReferenceMode dead while\r\n");
+				USART_OUTByDMA("ReadReferenceMode dead while\r\n");
 			break;
 		}
 	}
@@ -1252,7 +1252,7 @@ void ReadMotorFailure(CAN_TypeDef* CANx, uint8_t ElmoNum)
 		timeout++;
 		if(timeout > 5009)
 		{
-				USART_OUT(DEBUG_USART,"ReadMotorFailure dead while\r\n");
+				USART_OUTByDMA("ReadMotorFailure dead while\r\n");
 				break;
 		}
 	}

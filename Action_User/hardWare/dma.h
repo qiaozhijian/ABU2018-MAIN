@@ -85,7 +85,7 @@ void USARTDMASendData(USART_TypeDef* USARTx,uint8_t data,uint8_t *buffAddr,uint1
 void USARTDMAOUT(USART_TypeDef* USARTx,uint8_t *buffAddr,uint16_t *buffPointer ,uint8_t *sendBufAddr,uint16_t bufferSize,const uint8_t *Data, ...);
 	 
 	 
-void USART_OUTByDMA(const uint8_t *Data,...); 
+void USART_OUTByDMA(const char *Data,...); 
 
 #ifdef __cplusplus
 }

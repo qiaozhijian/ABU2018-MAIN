@@ -7,7 +7,7 @@
 #include "timer.h"
 #include "process.h"
 #include "robot.h"
-
+#include "dma.h"
 extern Robot_t gRobot;
 
 //以vel的速度转到angle角度,但由于现在给定一直都是最大加速度所以就没用到vel
@@ -32,7 +32,7 @@ void Enable_ROBS(void)
     times ++;
     if(times >10)
     {
-      USART_OUT(DEBUG_USART,"HOLD_BALL_2_ENABLE_FAIL\r\n");
+      USART_OUTByDMA("HOLD_BALL_2_ENABLE_FAIL\r\n");
       break;
     }
   }
@@ -344,30 +344,30 @@ void SteerResponseError(uint8_t num, uint8_t errorWord)
 	switch(num)
 	{
 		case HOLD_BALL_1:
-			USART_OUT(DEBUG_USART,"HOLD_BALL_1\t");
+			USART_OUTByDMA("HOLD_BALL_1\t");
 			break;
 		case HOLD_BALL_2:
-			USART_OUT(DEBUG_USART,"HOLD_BALL_2\t");
+			USART_OUTByDMA("HOLD_BALL_2\t");
 			break;
 		case CAMERA_STEER:
-			USART_OUT(DEBUG_USART,"CAMERA_STEER\t");
+			USART_OUTByDMA("CAMERA_STEER\t");
 			break;
 	}
   if(errorWord&VOLTAGE_ERROR)
   {
-		USART_OUT(DEBUG_USART,"VOLTAGE_ERROR\t");
+		USART_OUTByDMA("VOLTAGE_ERROR\t");
   }else if(errorWord&ANGLE_ERROR)
   {
-		USART_OUT(DEBUG_USART,"ANGLE_ERROR\t");
+		USART_OUTByDMA("ANGLE_ERROR\t");
   }else if(errorWord&TEMPERATURE_ERROR)
   {
-		USART_OUT(DEBUG_USART,"TEMPERATURE_ERROR\t");
+		USART_OUTByDMA("TEMPERATURE_ERROR\t");
   }else if(errorWord&CURRENT_ERROR)
   {
-		USART_OUT(DEBUG_USART,"CURRENT_ERROR\t");
+		USART_OUTByDMA("CURRENT_ERROR\t");
   }else if(errorWord&OVERLOAD_ERROR)
   {
-		USART_OUT(DEBUG_USART,"OVERLOAD_ERROR\t");
+		USART_OUTByDMA("OVERLOAD_ERROR\t");
   }
   else
   {
@@ -574,7 +574,7 @@ void UART5_IRQHandler(void)
         }
         if(pos>4095||pos<0)
         {
-          USART_OUT(DEBUG_USART,"steer2readbackvalueout\r\n");
+          USART_OUTByDMA("steer2readbackvalueout\r\n");
           step=0;
         }else
         {

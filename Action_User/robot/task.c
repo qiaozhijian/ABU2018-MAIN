@@ -76,14 +76,16 @@ void ConfigTask(void)
   os_err = os_err;  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
- DebugBLE_Init(921600);
+// DebugBLE_Init(921600);
   /*dma初始化*/
-//  USARTDMASendInit(USART1,USART1DMASendBuf,&DebugBLE_Init,921600);
+  USARTDMASendInit(DEBUG_USART,USART1DMASendBuf,&DebugBLE_Init,921600);
 	
-  USART_OUT(DEBUG_USART,"START\r\n");
+	USART_OUTByDMA("START\r\n");
+//  USART_OUTByDMA("START\r\n");
 
   #ifndef TEST
-  USART_OUT(DEBUG_USART,"SoftWareReset\r\n");
+	USART_OUTByDMA("SoftWareReset\r\n");
+//  USART_OUTByDMA("SoftWareReset\r\n");
   SoftWareReset();
   #endif
 	
@@ -156,7 +158,7 @@ void RobotTask(void)
 					USART_OUT_F(gRobot.courseAngle);
 					USART_OUT_F(gRobot.pitchAngle);
 					USART_OUT_F(gRobot.gasValue);
-					USART_OUT(DEBUG_USART,"%d\t",PE_FOR_THE_BALL);
+					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
 					USART_Enter();
 				}
 				
@@ -208,7 +210,7 @@ void RobotTask(void)
 					case INTO_HARDFAULT:
 						ShootLedOn();
 						BEEP_ON;
-					  USART_OUT(DEBUG_USART,"INTO_HARDFAULT!!!\r\n");
+					  USART_OUTByDMA("INTO_HARDFAULT!!!\r\n");
 					break;
 				}	
 			#endif
@@ -217,7 +219,7 @@ void RobotTask(void)
 }
 
 void HardWareInit(void){
-  USART_OUT(DEBUG_USART,"HardWareInit\r\n");
+  USART_OUTByDMA("HardWareInit\r\n");
   //定时器初始化
   TIM_Init(TIM2, 99, 839, 0, 0);   //1ms主定时器
 	
@@ -275,14 +277,14 @@ void MotorInit(void){
 void statusInit(void)
 {	
   Delay_ms(3000);
-  USART_OUT(DEBUG_USART,"statusInit start\r\n");
+  USART_OUTByDMA("statusInit start\r\n");
   #ifndef DEBUG
 	//打开扭矩开关
   OpenSteerAll();
-  USART_OUT(DEBUG_USART,"statusInit OpenSteerAll\r\n");
+  USART_OUTByDMA("statusInit OpenSteerAll\r\n");
  //设置回应等级（注意不要打开写开关，因为打开扭矩输出需要回答）
   ShutAllSteerResponse();
-  USART_OUT(DEBUG_USART,"statusInit step 3\r\n");
+  USART_OUTByDMA("statusInit step 3\r\n");
   #endif
 	
   /*运动控制状态初始化*/
@@ -308,11 +310,11 @@ void statusInit(void)
 	/*金球架抓取二级气阀打开*/
 	GoldBallGraspStairTwoOn();
 	
-	USART_OUT(DEBUG_USART,"statusInit step 4\r\n");
+	USART_OUTByDMA("statusInit step 4\r\n");
 	#ifndef TEST
 	Delay_ms(3000);
   
-	USART_OUT(DEBUG_USART,"statusInit step 5\r\n");
+	USART_OUTByDMA("statusInit step 5\r\n");
   /*与上一次的调试数据区分开*/
   USART_Enter();
   USART_Enter();
@@ -323,7 +325,7 @@ void statusInit(void)
 
 	
   PrepareGetBall(READY);
-	USART_OUT(DEBUG_USART,"statusInit step 6\r\n");
+	USART_OUTByDMA("statusInit step 6\r\n");
 	Delay_ms(1000);
 	
 	#endif
@@ -353,7 +355,7 @@ void statusInit(void)
 		gRobot.sDta.robocon2018=ROBOT_PREPARE;
 	}
 	
-	USART_OUT(DEBUG_USART,"statusInit step finish\r\n");
+	USART_OUTByDMA("statusInit step finish\r\n");
 }	
 
 

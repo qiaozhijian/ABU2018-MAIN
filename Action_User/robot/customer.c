@@ -16,6 +16,7 @@
 #include "motion.h"
 #include "timer.h"
 #include "robot.h"
+#include "dma.h"
 
 
 #define CLAW 						1
@@ -133,7 +134,7 @@ void AT_CMD_Handle(void){
     break;
     /*控制张爪*/
   case CLAW:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     if(*(buffer + 4) == '1') 
     {
       ClawShut();
@@ -151,7 +152,7 @@ void AT_CMD_Handle(void){
     
     /*控制是否射击*/
   case SHOOT:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     if(*(buffer + 4) == '1')
     {
       if(gRobot.sDta.AT_motionFlag&(AT_CLAW_STATUS_OPEN|AT_STEER_READY))
@@ -182,14 +183,14 @@ void AT_CMD_Handle(void){
     break;
     
   case GAS:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     //平板的值
     value = atof(buffer + 4);
     CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
     break;
     
   case PITCH:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.pitchAimAngle=value;
 		#ifdef TEST
@@ -198,7 +199,7 @@ void AT_CMD_Handle(void){
     break;
     
   case COURSE:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.courseAimAngle=value;
 		#ifdef TEST
@@ -207,19 +208,19 @@ void AT_CMD_Handle(void){
     break;
    
 	case TEST_GAS:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
 		//GasValveControl(GASVALVE_BOARD_ID,*(buffer+4)-'0',*(buffer+5)-'0');
 		break;
 	
   case CAMERA:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.cameraAimAngle=value;
 		CameraSteerPosCrl(gRobot.sDta.cameraAimAngle);
     break;
     
   case STEER:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.holdBallAimAngle[0]=value;
 		gRobot.sDta.holdBallAimAngle[1]=value;
@@ -227,20 +228,20 @@ void AT_CMD_Handle(void){
     break;
 		
 	case STEER1:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.holdBallAimAngle[0]=value;
 		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
 		break;
 		
 	case STEER2:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 5);
 		gRobot.sDta.holdBallAimAngle[1]=value;
 		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1],2000);
 		break;
   case BOOST:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     if(*(buffer + 5) == '1') 
     {
       BoostPolePush();
@@ -251,7 +252,7 @@ void AT_CMD_Handle(void){
     } 
     break;
   case STAIR1:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     if(*(buffer + 5) == '1') 
     {
       GoldBallGraspStairOneOn();
@@ -262,7 +263,7 @@ void AT_CMD_Handle(void){
     } 
     break;
   case STAIR2:
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
     if(*(buffer + 5) == '1') 
     {
       GoldBallGraspStairTwoOn();

@@ -23,6 +23,7 @@
 #include "gpio.h"
 #include "usart.h"
 #include "iwdg.h"
+#include "dma.h"
 /**
   * @brief  Initialize the CANx as encoder
   * @param  CANx:  CANx, where x can be 1,2
@@ -451,7 +452,7 @@ uint8_t CAN_TxMsg(CAN_TypeDef* CANx,
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"CAN Error in Elmo Init!!!!!!!!!\r\n");
+			USART_OUTByDMA("CAN Error in Elmo Init!!!!!!!!!\r\n");
 			break;
 		}
 	}
@@ -515,11 +516,11 @@ int OSCANSendCmd(CAN_TypeDef* CANx, CanTxMsg* TxMessage)
 		{
 			if(timeout%1003==0)
 				IWDG_Feed();
-			USART_OUT(DEBUG_USART,"OSCANSend Error!!!!!!!\r\n");
+			USART_OUTByDMA("OSCANSend Error!!!!!!!\r\n");
 			break;
 		}
 	}
-//	USART_OUT(DEBUG_USART,"%d\r\n",timeout);
+//	USART_OUTByDMA("%d\r\n",timeout);
 //	timeout=0;
 	OSMutexPost(CANSendMutex);
 	return CAN_SEND_OK;

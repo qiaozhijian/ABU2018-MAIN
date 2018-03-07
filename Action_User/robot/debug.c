@@ -3,7 +3,7 @@
 #include "includes.h"
 #include "process.h"
 #include "gpio.h"
-
+#include "dma.h"
 extern Robot_t gRobot;
 void debugFunction(void)
 {
@@ -71,17 +71,17 @@ void AT_DEBUG_Judge(void){
   }
   else if((bufferI >= 4) && strncmp(buffer, "AT+PE", 5)==0)//AT    
   {
-    USART_OUT(DEBUG_USART,"PE\t%d\r\n",PE_FOR_THE_BALL);
+    USART_OUTByDMA("PE\t%d\r\n",PE_FOR_THE_BALL);
   }
   else if((bufferI >= 4) && strncmp(buffer, "AT+init",7 )==0)//AT    
   {
     PhotoelectricityInit();
-    USART_OUT(DEBUG_USART,"OK\r\n");
+    USART_OUTByDMA("OK\r\n");
   }
   else if((bufferI >= 12) && strncmp(buffer, "AT+HARDFAULT\r\n",12 )==0)
   {
 		int a[2];
-    USART_OUT(DEBUG_USART,"hardfault\r\n");
+    USART_OUTByDMA("hardfault\r\n");
 		for(int i=10000;i<80000;i++)
 			a[i]=100;
 		a[1]=a[0];

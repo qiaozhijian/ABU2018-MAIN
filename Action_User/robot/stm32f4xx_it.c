@@ -41,7 +41,7 @@
 #include "task.h"
 #include "DataRecover.h"
 #include "robot.h"
-
+#include "dma.h"
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
@@ -75,29 +75,29 @@ void CAN1_RX0_IRQHandler(void)
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA1&&(gRobot.sDta.process==TO_THE_AREA_1||gRobot.sDta.process==TO_GET_BALL_1))
 	{
       SetMotionFlag(AT_REACH_FIRST_PLACE);
-	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_REACH_AREA1\r\n");
+	  USART_OUTByDMA("GET_MOTIONCARD_REACH_AREA1\r\n");
 //      PrepareShootBall(BALL_1);
 //			SetMotionFlag(~AT_GAS_SUCCESS);
 	}
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA2&&(gRobot.sDta.process==TO_THE_AREA_2||gRobot.sDta.process==TO_GET_BALL_2))
 	{
 	  SetMotionFlag(AT_REACH_SECOND_PLACE);
-	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_REACH_AREA2\r\n");
+	  USART_OUTByDMA("GET_MOTIONCARD_REACH_AREA2\r\n");
 	} 
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA3&&(gRobot.sDta.process==TO_THE_AREA_3||gRobot.sDta.process==TO_GET_BALL_3))
 	{
 	  SetMotionFlag(AT_REACH_THIRD_PLACE);
-	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_REACH_AREA3\r\n");
+	  USART_OUTByDMA("GET_MOTIONCARD_REACH_AREA3\r\n");
 	} 
     if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.robocon2018==ROBOT_PREPARE)
 	{
 	  SetMotionFlag(AT_PREPARE_READY);
-	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_PREPARE_READY\r\n");
+	  USART_OUTByDMA("GET_MOTIONCARD_PREPARE_READY\r\n");
 	}
 	if(msg.data32[0]==GET_MOTIONCARD_SELFTEST_WHEEL_OVER&&gRobot.sDta.robocon2018==ROBOT_SELF_TEST)
 	{
 		SetMotionFlag(AT_THE_WHEEL_SELFTEST_OVER);
-	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_SELFTEST_WHEEL_OVER\r\n");	
+	  USART_OUTByDMA("GET_MOTIONCARD_SELFTEST_WHEEL_OVER\r\n");	
 	}
 	if(msg.data8[3]==0&&msg.data8[1]=='S'&&msg.data8[0]=='L')
 	{
@@ -112,10 +112,10 @@ void CAN1_RX0_IRQHandler(void)
 	if(msg.data32[0]==GET_MOTIONCARD_INTO_HARDFAULT)
 	{
 	  gRobot.sDta.robocon2018=INTO_HARDFAULT;
-	  USART_OUT(DEBUG_USART,"GET_MOTIONCARD_INTO_HARDFAULT\r\n");
+	  USART_OUTByDMA("GET_MOTIONCARD_INTO_HARDFAULT\r\n");
 	}
    
-    USART_OUT(DEBUG_USART,"GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
+    USART_OUTByDMA("GET_FROM_MOTIONCARD %d\r\n",msg.data32[0]);
   }
   
   CAN_ClearFlag(CAN1, CAN_FLAG_EWG);
@@ -144,7 +144,7 @@ void CAN1_SCE_IRQHandler(void)
   OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
   OSIntNesting++;
   OS_EXIT_CRITICAL();
-  USART_OUT(DEBUG_USART,"CAN1 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN1));
+  USART_OUTByDMA("CAN1 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN1));
   BEEP_ON;
   CAN_ClearFlag(CAN1, CAN_FLAG_BOF);
   OSIntExit();
@@ -250,7 +250,7 @@ void CAN2_SCE_IRQHandler(void)
   OS_ENTER_CRITICAL();                         /* Tell uC/OS-II that we are starting an ISR          */
   OSIntNesting++;
   OS_EXIT_CRITICAL();
-  USART_OUT(DEBUG_USART,"CAN2 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN2));
+  USART_OUTByDMA("CAN2 BUS OFF %d!!\r\n" ,CAN_GetLastErrorCode(CAN2));
   BEEP_ON;
   CAN_ClearFlag(CAN2, CAN_FLAG_BOF);
   OSIntExit();
@@ -300,7 +300,7 @@ void TIM7_IRQHandler(void)
 		if(startCnt==1)
 		{
 			Cnt++;
-			//USART_OUT(DEBUG_USART,"%d\r\n",Cnt*100);
+			//USART_OUTByDMA("%d\r\n",Cnt*100);
 		}
 		//printf("%d\r\n",Cnt);
 		//IWDG_Feed();
@@ -322,7 +322,7 @@ uint32_t returnEndUs(void)
 	end=Cnt*100;
 	Cnt=0;
 	startCnt=0;
-	USART_OUT(DEBUG_USART,"%d\r\n",end);
+	USART_OUTByDMA("%d\r\n",end);
 	return end;
 }	
 
@@ -401,7 +401,7 @@ void NMI_Handler(void)
 {
   while (1)
   {
-    USART_OUT(DEBUG_USART,"NMI exception !!!!!!!!!!!!!\r\n");
+    USART_OUTByDMA("NMI exception !!!!!!!!!!!!!\r\n");
   }
 }
 void Hex_To_Str(uint8_t * pHex,char * s,float num)
@@ -448,11 +448,11 @@ void HardFault_Handler(void)
 //  r_sp = r_sp+0x10;
 //  /*串口发数通知*/
 //  char sPoint[2]={0};
-//  USART_OUT(DEBUG_USART,"%s","0x");
+//  USART_OUTByDMA("%s","0x");
 //  /*获取出现异常时程序的地址*/
 //  for(int i=3;i>=-28;i--){
 //    Hex_To_Str((uint8_t*)(r_sp+i+28),sPoint,2);
-//    USART_OUT(DEBUG_USART,"%s",sPoint);
+//    USART_OUTByDMA("%s",sPoint);
 //    if(i%4==0)
 //      USART_Enter();
 //  }
@@ -463,7 +463,7 @@ void HardFault_Handler(void)
   {
 		//方便打断点，无意义
     gRobot.sDta.isReset=gRobot.sDta.isReset;
-		USART_OUT(DEBUG_USART,"\r\nHardFault");
+		USART_OUTByDMA("\r\nHardFault");
   }
 }
 
@@ -477,7 +477,7 @@ void MemManage_Handler(void)
   /* Go to infinite loop when Memory Manage exception occurs */
   while (1)
   {
-    USART_OUT(DEBUG_USART,"Memory Manage exception occurs!!!!!!!!!\r\n");
+    USART_OUTByDMA("Memory Manage exception occurs!!!!!!!!!\r\n");
   }
 }
 
@@ -492,7 +492,7 @@ void BusFault_Handler(void)
   /* Go to infinite loop when Bus Fault exception occurs */
   while (1)
   {
-    USART_OUT(DEBUG_USART,"Bus Fault exception!!!!!!!!\r\n");
+    USART_OUTByDMA("Bus Fault exception!!!!!!!!\r\n");
   }
 }
 
@@ -507,7 +507,7 @@ void UsageFault_Handler(void)
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)
   {
-    USART_OUT(DEBUG_USART,"Usage Fault exception!!!!!!!!!\r\n");
+    USART_OUTByDMA("Usage Fault exception!!!!!!!!!\r\n");
   }
 }
 

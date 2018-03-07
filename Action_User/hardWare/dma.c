@@ -412,7 +412,7 @@ void USARTDMAOUT(USART_TypeDef* USARTx,uint8_t *buffAddr,uint16_t *buffPointer ,
 
 
 /*通过DMA发数*/
-void USART_OUTByDMA(const uint8_t *Data, ...)
+void USART_OUTByDMA(const char *Data, ...)
 { 
 	const char *s;
     int d;
@@ -429,12 +429,12 @@ void USART_OUTByDMA(const uint8_t *Data, ...)
 			switch (*++Data)
 			{
 				case 'r':							          //回车符	   
-					USARTDMASendData(USART1,0x0d,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+					USARTDMASendData(DEBUG_USART,0x0d,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
 					Data++;
 					break;
 				case 'n':	
 					//换行符
-					USARTDMASendData(USART1,0x0a,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+					USARTDMASendData(DEBUG_USART,0x0a,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
 					Data++;
 					break;
 				
@@ -451,7 +451,7 @@ void USART_OUTByDMA(const uint8_t *Data, ...)
             s = va_arg(ap, const char *);
             for (; *s; s++) 
 				    {
-							USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+							USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
             }
 						Data++;
          break;
@@ -461,7 +461,7 @@ void USART_OUTByDMA(const uint8_t *Data, ...)
 						itoa(d, buf, 10);
 						for (s = buf; *s; s++) 
 				    {
-							USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+							USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
             }
 						Data++;
             break;
@@ -474,7 +474,7 @@ void USART_OUTByDMA(const uint8_t *Data, ...)
 							sprintf( (char*)String, "%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs((int) f))  * 10000));
 						for (s=String; *s; s++) 
 				    {
-							USARTDMASendData(USART1,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+							USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
             }
 						Data++;
             break;
@@ -487,7 +487,7 @@ void USART_OUTByDMA(const uint8_t *Data, ...)
 		}
 		else
 		{
-			USARTDMASendData(USART1,*Data++,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+			USARTDMASendData(DEBUG_USART,*Data++,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
 		}
 	}
 	va_end(ap);
