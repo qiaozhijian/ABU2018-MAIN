@@ -373,7 +373,7 @@ void SteerResponseError(uint8_t num, uint8_t errorWord)
   {
     //成功
   }
-	USART_Enter();
+	USART_OUTByDMA("\r\n");
 }
 
 /****************舵机一 和摄像头舵机串口接收中断********************/

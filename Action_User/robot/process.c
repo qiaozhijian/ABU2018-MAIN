@@ -17,7 +17,8 @@ extern int flagggg;
 void SelfTest(void)
 {
 	AT_CMD_Handle();
-	USART_BLE_SEND(gRobot.gasValue);
+//	USART_BLE_SEND(gRobot.gasValue);
+	USART_OUTByDMA("%f",gRobot.gasValue);
 	static int step=100;
 	static int count=0;
 	switch(step)
@@ -163,19 +164,19 @@ void FightForBall1(void)
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 			{
 				USART_OUTByDMA("!PITCH1\t");
-				USART_OUT_F(gRobot.pitchAngle);
+				USART_OUTByDMA("%f",gRobot.pitchAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 			{
 				USART_OUTByDMA("!COURSE1\t");
-				USART_OUT_F(gRobot.courseAngle);
+				USART_OUTByDMA("%f",gRobot.courseAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				USART_OUTByDMA("!GAS1\t");
-				USART_OUT_F(gRobot.gasValue);
+				USART_OUTByDMA("%f",gRobot.gasValue);
 			}
-			USART_Enter();
+			USART_OUTByDMA("\r\n");
 		}
     break;
   }
@@ -258,19 +259,19 @@ void FightForBall2(void)
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 			{
 				USART_OUTByDMA("!PITCH2\t");
-				USART_OUT_F(gRobot.pitchAngle);
+				USART_OUTByDMA("%f",gRobot.pitchAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 			{
 				USART_OUTByDMA("!COURSE2\t");
-				USART_OUT_F(gRobot.courseAngle);
+				USART_OUTByDMA("%f",gRobot.courseAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				USART_OUTByDMA("!GAS2\t");
-				USART_OUT_F(gRobot.gasValue);
+				USART_OUTByDMA("%f",gRobot.gasValue);
 			}
-			USART_Enter();
+			USART_OUTByDMA("\r\n");
 		}
     break;
   }
@@ -370,19 +371,19 @@ void FightForGoldBall(void)
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 			{
 				USART_OUTByDMA("!PITCH3\t");
-				USART_OUT_F(gRobot.pitchAngle);
+				USART_OUTByDMA("%f",gRobot.pitchAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 			{
 				USART_OUTByDMA("!COURSE3\t");
-				USART_OUT_F(gRobot.courseAngle);
+				USART_OUTByDMA("%f",gRobot.courseAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				USART_OUTByDMA("!GAS3\t");
-				USART_OUT_F(gRobot.gasValue);
+				USART_OUTByDMA("%f",gRobot.gasValue);
 			}
-			USART_Enter();
+			USART_OUTByDMA("\r\n");
 		}
     break;
   }
@@ -395,43 +396,43 @@ void MotionStatus(void)
 {
 	/*返回舵机一的状态*/
   USART_OUTByDMA("steer 1 aimAngle ");
-	USART_OUT_F(gRobot.sDta.holdBallAimAngle[0]);
+	USART_OUTByDMA("%f",gRobot.sDta.holdBallAimAngle[0]);
   USART_OUTByDMA("realpos ");
-	USART_OUT_F(gRobot.holdBallAngle[0]);
-	USART_Enter();
+	USART_OUTByDMA("%f",gRobot.holdBallAngle[0]);
+	USART_OUTByDMA("\r\n");
 	
 	/*返回舵机二的状态*/
   USART_OUTByDMA("steer 2 aimAngle ");
-	USART_OUT_F(gRobot.sDta.holdBallAimAngle[1]);
+	USART_OUTByDMA("%f",gRobot.sDta.holdBallAimAngle[1]);
   USART_OUTByDMA("realpos ");
-	USART_OUT_F(gRobot.holdBallAngle[1]);
-	USART_Enter();
+	USART_OUTByDMA("%f",gRobot.holdBallAngle[1]);
+	USART_OUTByDMA("\r\n");
 	
 	/*返回舵机三的状态*/
   USART_OUTByDMA("steer 3 aimAngle ");
-	USART_OUT_F(gRobot.sDta.cameraAimAngle);
+	USART_OUTByDMA("%f",gRobot.sDta.cameraAimAngle);
   USART_OUTByDMA("realpos ");
-	USART_OUT_F(gRobot.cameraAngle);
-	USART_Enter();
+	USART_OUTByDMA("%f",gRobot.cameraAngle);
+	USART_OUTByDMA("\r\n");
 	
 	/*返回航向角的状态*/
   USART_OUTByDMA("course aimAngle ");
-	USART_OUT_F(gRobot.sDta.courseAimAngle);
+	USART_OUTByDMA("%f",gRobot.sDta.courseAimAngle);
   USART_OUTByDMA("realpos ");
-	USART_OUT_F(gRobot.courseAngle);
-	USART_Enter();
+	USART_OUTByDMA("%f",gRobot.courseAngle);
+	USART_OUTByDMA("\r\n");
 	
 	/*返回俯仰角的状态*/
   USART_OUTByDMA("course aimAngle ");
-	USART_OUT_F(gRobot.sDta.pitchAimAngle);
+	USART_OUTByDMA("%f",gRobot.sDta.pitchAimAngle);
   USART_OUTByDMA("realpos ");
-	USART_OUT_F(gRobot.pitchAngle);
-	USART_Enter();
+	USART_OUTByDMA("%f",gRobot.pitchAngle);
+	USART_OUTByDMA("\r\n");
   
   USART_OUTByDMA("gasValue aim ");
-  USART_OUT_F(gRobot.sDta.gasAimValue);
+  USART_OUTByDMA("%f",gRobot.sDta.gasAimValue);
   USART_OUTByDMA("\treal ");
-  USART_OUT_F(gRobot.gasValue);
+  USART_OUTByDMA("%f",gRobot.gasValue);
   USART_OUTByDMA("\r\n");
 }
 
@@ -565,43 +566,43 @@ void processReport(void)
     break;
   case TO_GET_BALL_1:
     USART_OUTByDMA("TO_GET_BALL_1\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_THE_AREA_1:
     USART_OUTByDMA("TO_THE_AREA_1\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_THROW_BALL_1:
     USART_OUTByDMA("TO_THROW_BALL_1\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_GET_BALL_2:
     USART_OUTByDMA("TO_GET_BALL_2\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_THE_AREA_2:
     USART_OUTByDMA("TO_THE_AREA_2\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_THROW_BALL_2:
     USART_OUTByDMA("TO_THROW_BALL_2\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_GET_BALL_3:
     USART_OUTByDMA("TO_GET_BALL_3\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_THE_AREA_3:
     USART_OUTByDMA("TO_THE_AREA_3\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case TO_THROW_BALL_3:
     USART_OUTByDMA("TO_THROW_BALL_3\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   case END_COMPETE:
     USART_OUTByDMA("END_COMPETE\t");
-    USART_Enter();
+    USART_OUTByDMA("\r\n");
     break;
   }
   processLast=gRobot.sDta.process;
@@ -636,7 +637,7 @@ void processReport(void)
 //      delayMs[0]=0;
 //    }
 //    else{
-//      //			USART_OUT_F(fabs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0]));
+//      //			USART_OUTByDMA("%f",fabs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0]));
 //    }
 //  }
 //  
@@ -662,8 +663,8 @@ void processReport(void)
 //      delayMs[1]=0;
 //    }
 //    else{
-//      //			USART_OUT_F(fabs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1]));
-//      //			USART_Enter();
+//      //			USART_OUTByDMA("%f",fabs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1]));
+//      //			USART_OUTByDMA("\r\n");
 //    }
 //  }
 //}
@@ -780,8 +781,8 @@ void RobotSelfTest(void){
 			}
 			GasTestTime++;
 			USART_OUTByDMA("gasValue\t");
-			USART_OUT_F(gRobot.gasValue);
-			USART_Enter();
+			USART_OUTByDMA("%f",gRobot.gasValue);
+			USART_OUTByDMA("\r\n");
 			if(GasTestTime<=600){
 				GasMotion(0.500);
 			}else if(GasTestTime>600&&GasTestTime<=1200){

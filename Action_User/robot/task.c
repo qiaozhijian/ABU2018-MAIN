@@ -149,17 +149,17 @@ void RobotTask(void)
 				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
 				{
 					processReponse();
-					USART_OUT_F(gRobot.posX);
-					USART_OUT_F(gRobot.posY);
-					USART_OUT_F(gRobot.angle);
-					USART_OUT_F(gRobot.sDta.courseAimAngle);
-					USART_OUT_F(gRobot.sDta.pitchAimAngle);
-					USART_OUT_F(gRobot.sDta.holdBallAimAngle[0]);
-					USART_OUT_F(gRobot.courseAngle);
-					USART_OUT_F(gRobot.pitchAngle);
-					USART_OUT_F(gRobot.gasValue);
+					USART_OUTByDMA("%f",gRobot.posX);
+					USART_OUTByDMA("%f",gRobot.posY);
+					USART_OUTByDMA("%f",gRobot.angle);
+					USART_OUTByDMA("%f",gRobot.sDta.courseAimAngle);
+					USART_OUTByDMA("%f",gRobot.sDta.pitchAimAngle);
+					USART_OUTByDMA("%f",gRobot.sDta.holdBallAimAngle[0]);
+					USART_OUTByDMA("%f",gRobot.courseAngle);
+					USART_OUTByDMA("%f",gRobot.pitchAngle);
+					USART_OUTByDMA("%f",gRobot.gasValue);
 					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
-					USART_Enter();
+					USART_OUTByDMA("\r\n");
 				}
 				
 				switch(gRobot.sDta.robocon2018)
@@ -316,12 +316,12 @@ void statusInit(void)
   
 	USART_OUTByDMA("statusInit step 5\r\n");
   /*与上一次的调试数据区分开*/
-  USART_Enter();
-  USART_Enter();
-  USART_Enter();
-  USART_Enter();
-  USART_Enter();
-  USART_Enter();
+  USART_OUTByDMA("\r\n");
+  USART_OUTByDMA("\r\n");
+  USART_OUTByDMA("\r\n");
+  USART_OUTByDMA("\r\n");
+  USART_OUTByDMA("\r\n");
+  USART_OUTByDMA("\r\n");
 
 	
   PrepareGetBall(READY);
