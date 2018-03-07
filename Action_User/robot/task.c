@@ -81,11 +81,10 @@ void ConfigTask(void)
   USARTDMASendInit(DEBUG_USART,USART1DMASendBuf,&DebugBLE_Init,921600);
 	
 	USART_OUTByDMA("START\r\n");
-//  USART_OUTByDMA("START\r\n");
 
   #ifndef TEST
 	USART_OUTByDMA("SoftWareReset\r\n");
-//  USART_OUTByDMA("SoftWareReset\r\n");
+
   SoftWareReset();
   #endif
 	
@@ -265,9 +264,13 @@ void MotorInit(void){
   PosLoopCfg(CAN2, 5, 100000, 100000,100000);
   //电机位置环
   PosLoopCfg(CAN2, 6, 100000, 100000,100000);
-   //电机使能
+	
+	PosLoopCfg(CAN2, 7, 10000000, 10000000,20000000);
+  
+	//电机使能
   MotorOn(CAN2,5); 
   MotorOn(CAN2,6); 
+	MotorOn(CAN2,7);
 	
 }	
 

@@ -22,25 +22,25 @@ void HoldBallPosCrlSeparate(float angle0,float angle1,int vel)
   HoldSteer1PosCrl(angle0,vel);
   HoldSteer2PosCrl(angle1,vel);
 }
-void Enable_ROBS(void)
-{
-  static int times;
-  while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-  {
-    USART_OUT(UART5,"#254 W 40,1,1\r\n");
-    Delay_ms(1);
-    times ++;
-    if(times >10)
-    {
-      USART_OUTByDMA("HOLD_BALL_2_ENABLE_FAIL\r\n");
-      break;
-    }
-  }
-  SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
+//void Enable_ROBS(void)
+//{
+//  static int times;
+//  while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//  {
+//    USART_OUT(UART5,"#254 W 40,1,1\r\n");
+//    Delay_ms(1);
+//    times ++;
+//    if(times >10)
+//    {
+//      USART_OUTByDMA("HOLD_BALL_2_ENABLE_FAIL\r\n");
+//      break;
+//    }
+//  }
+//  SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
 
-  times =0;
-  //#1 W 40,1,1\r\n
-}
+//  times =0;
+//  //#1 W 40,1,1\r\n
+//}
 
 void HoldSteer2PosCrl(float angle,int vel)
 {
@@ -60,20 +60,18 @@ void HoldSteer1PosCrl(float angle,int vel)
 {
   int pos=0.f;
 
-	if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN)
-  {
-    ClawShut();
-  }
 	if(angle>100.f)
 		angle=100.f;
 	if(angle<-100.f)
 		angle=-100.f;
 
 	/*1/4096.f*360.f=11.378*//*减速比25/16*/
-  pos=(int)((180.f-(angle-7.f)*25.f/16.f)*11.378f);  
+  /*((angle)*25.f/16.f*36.f*8192.f/360.f)*/
+	pos=(int)(angle+120.f)*1280;
 	
-  USART_OUT(UART5,"#254 W 42,2,%d:46,2,%d\r\n",pos,vel);
+	PosCrl(CAN2, 7,ABSOLUTE_MODE,pos);
 }
+
 
 //void HoldSteer2PosCrl(float angle,int vel)
 //{
@@ -280,11 +278,6 @@ void OpenSteerAll(void)
 //	SetSteerByte(HOLD_BALL_1,TORQUE_SWITCH,0x01);
 	/*485 版本的舵机*/
 	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
-	/*ttl版本的舵机*/
-	Enable_ROBS();
-//	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
-
-
 }
 
 void LetSteerRound(int num,float angle){
@@ -375,7 +368,16 @@ void SteerResponseError(uint8_t num, uint8_t errorWord)
   }
 	USART_OUTByDMA("\r\n");
 }
-
+//舵机2读取
+void ReadSteerPosition(int num){
+	unsigned char checkSum=0;
+	unsigned char command[8]={0xFF,0xFF,num,0x04,0x02,0x38,0x02,0};
+	checkSum = command[2]+command[3]+command[4]+command[5]+command[6];
+	checkSum=~checkSum;
+	command[7]=checkSum;
+	
+	RS485_Send_Data(command,8);
+}
 /****************舵机一 和摄像头舵机串口接收中断********************/
 
 void USART2_IRQHandler(void)
@@ -459,7 +461,8 @@ void USART2_IRQHandler(void)
 }
 
 
-/****************舵机二串口接收中断****start****************/
+/****************舵机串口接收中断****start****************/
+/*ttl舵机*/
 
 void UART5_IRQHandler(void)
 {

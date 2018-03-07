@@ -175,17 +175,12 @@ void MotionRead(void)
 	SetMotionFlag(~AT_PITCH_READ_SUCCESS);
 	/*读取航向角角*/
 	ReadActualPos(CAN2,6);
+	/*向上电机发送读取指令*/
+	ReadActualPos(CAN2,7);
   /*将读航向角姿态的标志位归0*/
 	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
 	/*向舵机发送指令，从串口中断读取的状态是否发生错误，在MotionStatusUpdate（）对外发数*/
 	ReadSteerErrorAll();
-	/*像平板发送气压值*/
-	//if(gRobot.isOpenGasReturn&&count==3)
-	if(count==3)
-	{
-		count=0;
-	//	USART_BLE_SEND(gRobot.gasValue);
-	}
 }
 
 
