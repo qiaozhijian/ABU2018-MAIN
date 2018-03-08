@@ -22,25 +22,25 @@ void HoldBallPosCrlSeparate(float angle0,float angle1,int vel)
   HoldSteer1PosCrl(angle0,vel);
   HoldSteer2PosCrl(angle1,vel);
 }
-void Enable_ROBS(void)
-{
-  static int times;
-  while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-  {
-    USART_OUT(UART5,"#254 W 40,1,1\r\n");
-    Delay_ms(1);
-    times ++;
-    if(times >10)
-    {
-      USART_OUTByDMA("HOLD_BALL_2_ENABLE_FAIL\r\n");
-      break;
-    }
-  }
-  SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
+//void Enable_ROBS(void)
+//{
+//  static int times;
+//  while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//  {
+//    USART_OUT(UART5,"#254 W 40,1,1\r\n");
+//    Delay_ms(1);
+//    times ++;
+//    if(times >10)
+//    {
+//      USART_OUTByDMA("HOLD_BALL_2_ENABLE_FAIL\r\n");
+//      break;
+//    }
+//  }
+//  SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
 
-  times =0;
-  //#1 W 40,1,1\r\n
-}
+//  times =0;
+//  //#1 W 40,1,1\r\n
+//}
 
 void HoldSteer2PosCrl(float angle,int vel)
 {
@@ -69,10 +69,10 @@ void HoldSteer1PosCrl(float angle,int vel)
 	if(angle<-100.f)
 		angle=-100.f;
 
-	/*1/4096.f*360.f=11.378*//*减速比25/16*/
-  pos=(int)((180.f-(angle-7.f)*25.f/16.f)*11.378f);  
+	/*angle*25/16*36*8192.f/360*/
+  pos=(int)(angle +120.f)*1280;
 	
-  USART_OUT(UART5,"#254 W 42,2,%d:46,2,%d\r\n",pos,vel);
+  PosCrl(CAN2,7,ABSOLUTE_MODE,pos);
 }
 
 //void HoldSteer2PosCrl(float angle,int vel)
@@ -277,13 +277,7 @@ void OpenSteerAll(void)
 {
 	/*485 版本的舵机
 	通过写入舵机的内存控制表,TORQUE_SWITCH-0x28是扭矩开关所位于的地址写入1将其打开*/
-//	SetSteerByte(HOLD_BALL_1,TORQUE_SWITCH,0x01);
-	/*485 版本的舵机*/
 	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
-	/*ttl版本的舵机*/
-	Enable_ROBS();
-//	SetSteerByte(HOLD_BALL_2,TORQUE_SWITCH,0x01);
-
 
 }
 
@@ -312,7 +306,6 @@ void ShutAllSteerResponse(void)
 {
 //	SetSteerByte(HOLD_BALL_1,RESPONSE_STAIR,0x00);
 	SetSteerByte(HOLD_BALL_2,RESPONSE_STAIR,0x00);
-	//SetSteerByte(CAMERA_STEER,RESPONSE_STAIR,0x00);
 }
 
 

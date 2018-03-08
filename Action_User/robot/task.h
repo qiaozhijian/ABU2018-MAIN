@@ -57,6 +57,7 @@
 #define COURSE_CODE_TO_ANGLE(code)												((code)/6116.693f)
 #define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle))*6116.693f))//((angle)*14.0f*19.2f*8192.f/360.f)
 
+#define UPSTEER_CODE_TO_ANGLE(code)                       ((code)/1280.f)
 
 //×´Ì¬Á¿½âÊÍ
 #define AT_CLAW_STATUS_OPEN 										0x01u
