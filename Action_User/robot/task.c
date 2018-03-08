@@ -126,7 +126,7 @@ void RobotTask(void)
 			debugFunction();
 		#else
 			#ifdef TEST
-				SelfTest();
+			  SelfTest();
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
@@ -311,7 +311,8 @@ void statusInit(void)
 	GoldBallGraspStairOneOn();
 	/*金球架抓取二级气阀打开*/
 	GoldBallGraspStairTwoOn();
-	
+	/*下爪手臂向上抬*/
+	LowerClawStairOff();
 	USART_OUTByDMA("statusInit step 4\r\n");
 	#ifndef TEST
 	Delay_ms(3000);

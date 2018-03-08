@@ -96,183 +96,211 @@ void SelfTest(void)
 /*完成投射彩球一的任务*/
 void FightForBall1(void)
 {
-	static float PE_GotX=0.f;
+	static int getBallStep=0;
   switch(gRobot.sDta.process)
   {
     /*去取第一个球*/
-  case TO_GET_BALL_1:
-		//光电是否被扫到
-    if(PrepareForTheBall()&&PE_GotX==0.f)
-    {	
-			PE_GotX=gRobot.posX;
-    }
-		if((gRobot.posX>4054.f&&PE_GotX<3754.f)||(gRobot.posY>2000.f))
-		{
-			USART_OUTByDMA("IntoTheArea\r\n");
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
-			//TalkToCamera(CAMERA_OPEN_NEAR);
-      PrepareShootBall(BALL_1);
-      gRobot.sDta.process=TO_THE_AREA_1;
-		}
-    break;
+		case TO_GET_BALL_1:
+			//光电是否被扫到
+				switch(getBallStep){
+				//第一步对光电进行扫描
+						case 0:
+							if(PrepareForTheBall()){
+								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
+								getBallStep++;
+								Delay_ms(50);
+							}
+						break;
+					
+						case 1:
+							//让球被取出来才能下爪的手臂向下撑
+							LowerClawStairOn();
+							getBallStep++;
+						break;
+
+						case 2:
+							if((gRobot.posX>4054.f)||(gRobot.posY>2000.f))
+							{
+								USART_OUTByDMA("IntoTheArea\r\n");
+								//TalkToCamera(CAMERA_OPEN_NEAR);
+								PrepareShootBall(BALL_1);
+								gRobot.sDta.process=TO_THE_AREA_1;
+							}
+						break;
+			}
+			break;
+			
     /*第一个球取球完毕，去投射区一*/
-  case TO_THE_AREA_1:
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
-			gRobot.sDta.process=TO_THROW_BALL_1;
-		//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
-    break;
+		case TO_THE_AREA_1:
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
+				gRobot.sDta.process=TO_THROW_BALL_1;
+			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
+			break;
+			
     /*到达投射区一，射球*/
-  case TO_THROW_BALL_1:
-		/*光电到位*/
-    if(PrepareForTheBall()
-				/*持球舵机到位*/
-		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
-					/*持球舵机到位*/
-				//	&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
-						/*俯仰到位，*/
-						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
-							/*航向到位*/
-							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
-								/*气压到位*/
-								&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
-    {
-      /*射球*/
-      ShootBall();
-      /*给延时使发射杆能执行到位*/
-      Delay_ms(500);
-      /*通知控制卡*/
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
-      /*射球机构复位*/
-      ShootReset();
-      /*准备接球二*/
-      PrepareGetBall(BALL_2);
-      /*进入下一状态*/
-      gRobot.sDta.process=TO_GET_BALL_2;
-      gRobot.sDta.robocon2018=COLORFUL_BALL_2;
-			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
-    }
-		else
-		{
-			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PE_FOR_THE_BALL)
-				USART_OUTByDMA("!PE1\t");
-//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
-//				USART_OUTByDMA("!HB11\t");
-//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-//				USART_OUTByDMA("!HB21\t");
-			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+		case TO_THROW_BALL_1:
+			/*光电到位*/
+			if(/*持球舵机到位*/
+			//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+						/*持球舵机到位*/
+					//	&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+							/*俯仰到位，*/
+							(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+								/*航向到位*/
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
+									/*气压到位*/
+									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
-				USART_OUTByDMA("!PITCH1\t");
-				USART_OUTByDMA("%f",gRobot.pitchAngle);
+				/*射球*/
+				ShootBall();
+				/*给延时使发射杆能执行到位*/
+				Delay_ms(500);
+				/*通知控制卡*/
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
+				/*射球机构复位*/
+				ShootReset();
+				/*准备接球二*/
+				PrepareGetBall(BALL_2);
+				/*进入下一状态*/
+				gRobot.sDta.process=TO_GET_BALL_2;
+				gRobot.sDta.robocon2018=COLORFUL_BALL_2;
+				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 			}
-			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+			else
 			{
-				USART_OUTByDMA("!COURSE1\t");
-				USART_OUTByDMA("%f",gRobot.courseAngle);
+				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+				if(!PE_FOR_THE_BALL)
+					USART_OUTByDMA("!PE1\t");
+		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+		//				USART_OUTByDMA("!HB11\t");
+		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+		//				USART_OUTByDMA("!HB21\t");
+				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+				{
+					USART_OUTByDMA("!PITCH1\t");
+					USART_OUTByDMA("%f",gRobot.pitchAngle);
+				}
+				if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+				{
+					USART_OUTByDMA("!COURSE1\t");
+					USART_OUTByDMA("%f",gRobot.courseAngle);
+				}
+				if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+				{
+					USART_OUTByDMA("!GAS1\t");
+					USART_OUTByDMA("%f",gRobot.gasValue);
+				}
+				USART_OUTByDMA("\r\n");
 			}
-			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
-			{
-				USART_OUTByDMA("!GAS1\t");
-				USART_OUTByDMA("%f",gRobot.gasValue);
-			}
-			USART_OUTByDMA("\r\n");
+			break;
 		}
-    break;
-  }
 }
 
 /*完成投射彩球二的任务*/
 void FightForBall2(void)
 {
-	static float PE_GotX=0.f;
+	static int getBallStep=0;
   switch(gRobot.sDta.process)
   {
     /*去取第二个球*/
-  case TO_GET_BALL_2:
-		//光电是否被扫到
-    if(PrepareForTheBall()&&gRobot.posY<1600.f&&PE_GotX==0.f)
-    {	
-			PE_GotX=gRobot.posX;
-    }
-		if(fabs(gRobot.posX-PE_GotX)>200.f&&gRobot.posX>6000.f)
-    {	
-      /*扫到光电后，为了更稳地接到球而给的延时*/
-      gRobot.sDta.process=TO_THE_AREA_2;
-      
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
-      
-      PrepareShootBall(BALL_2);
-      
-    }
-    break;
-    /*第二个球取球完毕，去投射区二*/
-  case TO_THE_AREA_2:
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
-			gRobot.sDta.process=TO_THROW_BALL_2;
-    if(!PrepareForTheBall())
-    {
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL2);
-    }
-    break;
-    /*到达投射区二，射球*/
-  case TO_THROW_BALL_2:
-		/*光电到位*/
-    if(PrepareForTheBall()
-				/*持球舵机到位*/
-	//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
-					/*持球舵机到位*/
-		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
-						/*俯仰到位，*/
-						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
-							/*航向到位*/
-							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
-								/*气压到位*/
-								&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
-    {
-      /*射球*/
-      ShootBall();
-      
-      /*给延时使发射杆能执行到位*/
-      Delay_ms(500);
-      MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
-      
-      /*射球机构复位*/
-      ShootReset();
-      
-      /*准备接球三*/
-      PrepareGetBall(BALL_3);
-      
-      gRobot.sDta.process=TO_GET_BALL_3;
-      gRobot.sDta.robocon2018=GOLD_BALL;
-			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
-    }
-		else
-		{
-			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			if(!PE_FOR_THE_BALL)
-				USART_OUTByDMA("!PE2\t");
-//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
-//				USART_OUTByDMA("!HB12\t");
-//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-//				USART_OUTByDMA("!HB22\t");
-			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+		case TO_GET_BALL_2:
+			//光电是否被扫到
+			switch(getBallStep){
+					//第一步对光电进行扫描
+				case 0:
+					if(PrepareForTheBall()){
+						MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
+						getBallStep++;
+						Delay_ms(50);
+					}
+				break;
+						
+				case 1:
+					//让球被取出来才能下爪的手臂向下撑
+					LowerClawStairOn();
+					getBallStep++;
+				break;
+
+				case 2:
+					if(gRobot.posX>6000.f)
+					{	
+						USART_OUTByDMA("IntoTheArea\r\n");
+						gRobot.sDta.process=TO_THE_AREA_2;
+						
+						PrepareShootBall(BALL_2);
+					}
+					break;
+				}
+		break;
+				
+			/*第二个球取球完毕，去投射区二*/
+		case TO_THE_AREA_2:
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
+				gRobot.sDta.process=TO_THROW_BALL_2;
+//			if(!PrepareForTheBall())
+//			{
+//				MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL2);
+//			}
+			break;
+			
+			/*到达投射区二，射球*/
+		case TO_THROW_BALL_2:
+			/*光电到位*/
+			if(/*持球舵机到位*/
+		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+						/*持球舵机到位*/
+			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+							/*俯仰到位，*/
+							(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+								/*航向到位*/
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
+									/*气压到位*/
+									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
-				USART_OUTByDMA("!PITCH2\t");
-				USART_OUTByDMA("%f",gRobot.pitchAngle);
+				/*射球*/
+				ShootBall();
+				
+				/*给延时使发射杆能执行到位*/
+				Delay_ms(500);
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
+				
+				/*射球机构复位*/
+				ShootReset();
+				
+				/*准备接球三*/
+				PrepareGetBall(BALL_3);
+				
+				gRobot.sDta.process=TO_GET_BALL_3;
+				gRobot.sDta.robocon2018=GOLD_BALL;
+				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 			}
-			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+			else
 			{
-				USART_OUTByDMA("!COURSE2\t");
-				USART_OUTByDMA("%f",gRobot.courseAngle);
+				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+				if(!PE_FOR_THE_BALL)
+					USART_OUTByDMA("!PE2\t");
+		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+		//				USART_OUTByDMA("!HB12\t");
+		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+		//				USART_OUTByDMA("!HB22\t");
+				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+				{
+					USART_OUTByDMA("!PITCH2\t");
+					USART_OUTByDMA("%f",gRobot.pitchAngle);
+				}
+				if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+				{
+					USART_OUTByDMA("!COURSE2\t");
+					USART_OUTByDMA("%f",gRobot.courseAngle);
+				}
+				if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+				{
+					USART_OUTByDMA("!GAS2\t");
+					USART_OUTByDMA("%f",gRobot.gasValue);
+				}
+				USART_OUTByDMA("\r\n");
 			}
-			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
-			{
-				USART_OUTByDMA("!GAS2\t");
-				USART_OUTByDMA("%f",gRobot.gasValue);
-			}
-			USART_OUTByDMA("\r\n");
-		}
-    break;
+			break;
   }
   
 }
@@ -288,27 +316,36 @@ void FightForGoldBall(void)
 		switch(isGetBall)
 		{
 			case 0:
-				if(PrepareForTheBall()&&gRobot.posY<1600.f)
-					isGetBall++;
-				break;
-			case 1:
-				
 				if(GoldRackInto()){
 					GoldBallGraspStairTwoOn();
-					USART_OUTByDMA("GoldballRackInto Tui\r\n");
-					//提前将两个舵机转到0度
-					gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
-					BoostPolePush();
 					isGetBall++;
 				}
 				USART_OUTByDMA("BallRack %d\r\n",KEYSWITCH_CHECK_GOLD);
-//				USART_OUTByDMA("TuiTUiTUi\r\n");
-//				BoostPolePush();
-				break;
+			break;
+				
+			case 1:
+				if(PrepareForTheBall())
+				{
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
+					//提前将两个舵机转到0度
+					gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+					isGetBall++;
+				}
+			break;
+				
 			case 2:
+				if((fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f){
+					USART_OUTByDMA("GoldballRackInto Tui\r\n");
+					BoostPolePush();
+					isGetBall++;
+				}
+			break;
+				
+			case 3:
 				if(gRobot.posY>1000.f)
 				{
+					/*将下爪手臂向下撑*/
+			    LowerClawStairOn();
 					//TalkToCamera(CAMERA_OPEN_FAR);
 					USART_OUTByDMA("YOU should shoot\r\n");
 					//这之后应该向金球架抓取气阀发数抓取金球架

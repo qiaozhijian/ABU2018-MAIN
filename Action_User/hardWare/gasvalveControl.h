@@ -3,6 +3,7 @@
 #include  "can.h"
 
 #define GASVALVE_BOARD_ID 				0
+#define GASVALVE_BOARD_ID_DOWN    1
 
 #define SHOOT_LED_ID							1
 
@@ -45,4 +46,8 @@ void GoldBallGraspStairOneOff(void);
 void GoldBallGraspStairTwoOn(void);
 
 void GoldBallGraspStairTwoOff(void);
+
+void LowerClawStairOn(void);
+
+void LowerClawStairOff(void);
 #endif

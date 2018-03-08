@@ -14,6 +14,7 @@
 #define GOLD_GET_STAIR1_ID								6
 #define BOOST_POLE_ID											8
 
+#define LOW_CLAW_ID                       2
 
 /*
 车底两个助力气阀，一个气阀
@@ -128,4 +129,14 @@ void GoldBallGraspStairTwoOn(void)
 void GoldBallGraspStairTwoOff(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR2_ID , 1);
+}
+/*下爪手臂向下撑*/
+void LowerClawStairOn(void)
+{
+	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 0);
+}
+/*下爪手臂向上抬*/
+void LowerClawStairOff(void)
+{
+	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 1);
 }

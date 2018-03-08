@@ -213,7 +213,6 @@ void CAN2_RX0_IRQHandler(void)
     {
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0]-120.f;
-      SetMotionFlag(AT_COURSE_READ_SUCCESS);
     }
 		
 		
