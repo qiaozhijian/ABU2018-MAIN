@@ -282,10 +282,10 @@ void statusInit(void)
   USART_OUTByDMA("statusInit start\r\n");
   #ifndef DEBUG
 	//打开扭矩开关
-//  OpenSteerAll();
+  OpenSteerAll();
   USART_OUTByDMA("statusInit OpenSteerAll\r\n");
  //设置回应等级（注意不要打开写开关，因为打开扭矩输出需要回答）
-//  ShutAllSteerResponse();
+  ShutAllSteerResponse();
   USART_OUTByDMA("statusInit step 3\r\n");
   #endif
 	

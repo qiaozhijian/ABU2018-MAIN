@@ -159,7 +159,7 @@ int GoldRackInto(void){
 	}else{
 		IsBallRack=0;
 	}
-	if(IsBallRack>=10){
+	if(IsBallRack>=4){
 		IsBallRack=0;
 		return IS_A_BaLL_RACK;
 	}
