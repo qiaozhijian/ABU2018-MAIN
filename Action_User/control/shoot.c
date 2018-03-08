@@ -25,7 +25,7 @@ motionPara_t PrepareShootBall3;
 void ShootBall(void)
 {					
   /*进行适当延时保证夹子和球不干涉*/
-  Delay_ms(2000);
+  Delay_ms(1000);
 	ShootLedOn();
   /*夹子打开*/
   ClawOpen();
@@ -62,7 +62,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=172.5f;
-  PrepareShootBall1.pitchAngle=10.3f;
+  PrepareShootBall1.pitchAngle=12.f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
@@ -78,7 +78,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=175.5f;
-  PrepareShootBall2.pitchAngle=3.8f;
+  PrepareShootBall2.pitchAngle=5.8f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.steerSpeed=2000;
