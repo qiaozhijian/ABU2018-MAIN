@@ -113,9 +113,11 @@ void FightForBall1(void)
 						break;
 					
 						case 1:
+							if(PrepareForTheBall()){
 							//让球被取出来才能下爪的手臂向下撑
-							LowerClawStairOn();
-							getBallStep++;
+								LowerClawStairOn();
+								getBallStep++;
+							}
 						break;
 
 						case 2:
@@ -211,14 +213,16 @@ void FightForBall2(void)
 					if(PrepareForTheBall()){
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
 						getBallStep++;
-						Delay_ms(50);
+						Delay_ms(100);
 					}
 				break;
 						
 				case 1:
-					//让球被取出来才能下爪的手臂向下撑
-					LowerClawStairOn();
-					getBallStep++;
+					if(PrepareForTheBall()){
+						//让球被取出来才能下爪的手臂向下撑
+						LowerClawStairOn();
+						getBallStep++;
+					}
 				break;
 
 				case 2:
@@ -342,7 +346,7 @@ void FightForGoldBall(void)
 			break;
 				
 			case 3:
-				if(gRobot.posY>1000.f)
+				if(gRobot.posY>1000&&PrepareForTheBall())
 				{
 					BoostPoleReturn();
 					/*将下爪手臂向下撑*/
