@@ -64,10 +64,10 @@ void HoldSteer1PosCrl(float angle,int vel)
   {
     ClawShut();
   }
-	if(angle>100.f)
-		angle=100.f;
-	if(angle<-100.f)
-		angle=-100.f;
+	if(angle>120.f)
+		angle=120.f;
+	if(angle<-120.f)
+		angle=-120.f;
 
 	/*angle*25/16*36*8192.f/360*/
   pos=(int)(angle +120.f)*1280;
