@@ -134,7 +134,7 @@ void FightForBall1(void)
 			
     /*第一个球取球完毕，去投射区一*/
 		case TO_THE_AREA_1:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(fabs(4573.f-gRobot.posX)<50&&fabs(2127.f-gRobot.posY)<50))
 				gRobot.sDta.process=TO_THROW_BALL_1;
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
@@ -213,7 +213,7 @@ void FightForBall2(void)
 					if(PrepareForTheBall()){
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
 						getBallStep++;
-						Delay_ms(100);
+						Delay_ms(300);
 					}
 				break;
 						
@@ -239,7 +239,7 @@ void FightForBall2(void)
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(fabs(6574.f-gRobot.posX)<50&&fabs(2192.f-gRobot.posY)<50))
 				gRobot.sDta.process=TO_THROW_BALL_2;
 //			if(!PrepareForTheBall())
 //			{
@@ -270,6 +270,7 @@ void FightForBall2(void)
 				
 				/*射球机构复位*/
 				ShootReset();
+				
 				
 				/*准备接球三*/
 				PrepareGetBall(BALL_3);
@@ -312,6 +313,7 @@ void FightForBall2(void)
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
+	static int timeCnt=0;
 	static uint8_t isGetBall=0;
   switch(gRobot.sDta.process)
   {
@@ -333,6 +335,7 @@ void FightForGoldBall(void)
 			case 1:
 				if(PrepareForTheBall())
 				{
+					Delay_ms(1000);
 					//提前将两个舵机转到0度
 					gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
 					isGetBall++;
@@ -341,6 +344,8 @@ void FightForGoldBall(void)
 				
 			case 2:
 				if((fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f){
+					Delay_ms(500);
+					BoostPoleReturn();
 					isGetBall++;
 				}
 			break;
@@ -349,21 +354,31 @@ void FightForGoldBall(void)
 				if(gRobot.posY>1000&&PrepareForTheBall())
 				{
 					BoostPoleReturn();
-					/*将下爪手臂向下撑*/
-			    LowerClawStairOn();
 					//TalkToCamera(CAMERA_OPEN_FAR);
 					USART_OUTByDMA("YOU should shoot\r\n");
 					//这之后应该向金球架抓取气阀发数抓取金球架
-					gRobot.sDta.process=TO_THE_AREA_3;
+					isGetBall++;
 					
 					PrepareShootBall(BALL_3);
 				}
-				break;
+			break;
+				
+			case 4:
+				timeCnt++;
+				if(timeCnt>20){
+					//等到航向转到一定角度，下爪的手臂向下撑
+					 timeCnt=0;
+					 LowerClawStairOn();
+					 gRobot.sDta.process=TO_THE_AREA_3;
+				}
+			break;
+				
 		}
     break;
+		
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE||(fabs(6080.f-gRobot.posX)<50&&fabs(6030.f-gRobot.posY)<50))
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//在y大于2500的时候将助推气阀归位
 		if(fabs(gRobot.posY)>3000.f) BoostPoleReturn();

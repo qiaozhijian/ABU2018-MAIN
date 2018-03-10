@@ -183,6 +183,7 @@ void RobotTask(void)
 							gRobot.sDta.robocon2018=ROBOT_START;
 						}
 						break;
+						
 					case ROBOT_START:
 						if(gRobot.posX>100.f)
 						{
