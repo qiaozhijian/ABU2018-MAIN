@@ -214,7 +214,15 @@ void CAN2_RX0_IRQHandler(void)
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0]-120.f;
     }
-		
+	}else if((StdId - SDO_RESPONSE_COB_ID_BASE)==8){
+		for(i = 0; i < 8; i++)
+      msg.data8[i] = buffer[i];
+    //位置
+		if(msg.data32[0]==0x00005850){
+			gRobot.holdBallAngle[1] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
+			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0]-105.f;
+			
+		}
 		
 	}
   
