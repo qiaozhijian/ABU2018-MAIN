@@ -87,6 +87,18 @@ void USARTDMAOUT(USART_TypeDef* USARTx,uint8_t *buffAddr,uint16_t *buffPointer ,
 	 
 void USART_OUTByDMA(const char *Data,...); 
 
+#define PRINF(format,...)   \
+do{\
+	sprintf((char*)(USART1DMASendBuf+USART1SendBufferCnt),format,__VA_ARGS__); \
+	for (uint8_t* s=(USART1DMASendBuf+USART1SendBufferCnt); *s; s++) \
+	{\
+		USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);\
+	}\
+}while(0)
+//  for ( s=pBuf; *s; s++) \
+//	{\
+//		USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);\
+//  }
 #ifdef __cplusplus
 }
 #endif

@@ -324,6 +324,7 @@ void USARTDMASendData(USART_TypeDef* USARTx,uint8_t data,uint8_t *buffAddr,uint1
 		*buffPointer = 0;
 	}
 }
+
 /**
   * @brief	串口DMA格式化输出函数
   * @note	
@@ -409,11 +410,10 @@ void USARTDMAOUT(USART_TypeDef* USARTx,uint8_t *buffAddr,uint16_t *buffPointer ,
 //		sprintf( (char*)s, "%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
 //  USART_OUT(DEBUG_USART,s);
 //}
-
-
 /*通过DMA发数*/
 void USART_OUTByDMA(const char *Data, ...)
 { 
+
 	const char *s;
     int d;
 		float f;
@@ -467,15 +467,17 @@ void USART_OUTByDMA(const char *Data, ...)
             break;
 						
 				case 'f':										  //小数点后四位
-						f = (float)va_arg(ap, double);
-						if(f<0.f&&f>-1.f)
-							sprintf( (char*)String, "-%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs((int) f))  * 10000));
-						else
-							sprintf( (char*)String, "%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs((int) f))  * 10000));
-						for (s=String; *s; s++) 
-				    {
-							USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
-            }
+//						PRINF("%f",...);
+//						f = (float)va_arg(ap, double);
+//						if(f<0.f&&f>-1.f)
+//							sprintf( (char*)String, "-%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs((int) f))  * 10000));
+//						else
+//							sprintf( (char*)String, "%d.%04d\t", ( int )f, (unsigned int)((fabs(f) - abs((int) f))  * 10000));
+//						for (s=String; *s; s++) 
+//				    {
+//							USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
+//            }
+						
 						Data++;
             break;
 						
