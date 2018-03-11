@@ -224,21 +224,21 @@ void AT_CMD_Handle(void){
     value = atof(buffer + 4);
 		gRobot.sDta.holdBallAimAngle[0]=value;
 		gRobot.sDta.holdBallAimAngle[1]=value;
-		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
+		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle[0]);
     break;
 		
 	case STEER1:
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.holdBallAimAngle[0]=value;
-		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle[0],2000);
+		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle[0]);
 		break;
 		
 	case STEER2:
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 5);
 		gRobot.sDta.holdBallAimAngle[1]=value;
-		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1],2000);
+		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1]);
 		break;
   case BOOST:
     USART_OUTByDMA("OK\r\n");

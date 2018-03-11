@@ -38,86 +38,7 @@ void GasMotion(float value)
   CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
 }
 
-//摄像头。c
-void TalkToCamera(uint32_t command)
-{
-	int times=0;
-	switch(command)
-	{
-		case CAMERA_START:
-			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
-			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
-			{
-				USART_OUT(CAMERA_USART,"AT\r\n");
-				Delay_ms(3);
-				times++;
-				IWDG_Feed();
-//				if(times>100)
-//				{
-////					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-////					break;
-//				}
-			}
-			times=0;
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-		case CAMERA_SHUT_ALL:
-			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
-			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
-			{
-				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
-				Delay_ms(3);
-				times++;
-				IWDG_Feed();
-				if(times>100)
-				{
-//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-//					break;
-				}
-			}
-			times=0;
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-		case CAMERA_OPEN_NEAR:
-			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
-			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
-			{
-				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
-				Delay_ms(3);
-				times++;
-				IWDG_Feed();
-				if(times>100)
-				{
-//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-//					break;
-				}
-			}
-			times=0;
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-		case CAMERA_OPEN_FAR:
-			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
-			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
-			{
-				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
-				Delay_ms(3);
-				times++;
-				IWDG_Feed();
-				if(times>100)
-				{
-//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
-//					break;
-				}
-			}
-			times=0;
-			/*清空标志位*/
-			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
-			break;
-	}
-}
+
 
 /* 动作执行函数
 * 
@@ -132,7 +53,7 @@ void MotionExecute(void)
 	if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 		||!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 	{
-		HoldBallPosCrlSeparate(gRobot.sDta.holdBallAimAngle[0],gRobot.sDta.holdBallAimAngle[1],2000);
+		HoldBallPosCrlSeparate(gRobot.sDta.holdBallAimAngle[0],gRobot.sDta.holdBallAimAngle[1]);
 	}
 	
 	if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
@@ -149,10 +70,6 @@ void MotionExecute(void)
 	{
 		GasMotion(gRobot.sDta.gasAimValue);
 	}
-	
-	//CameraSteerPosCrl(gRobot.sDta.cameraAimAngle);
-
-	//CameraAlign();
 	
 }
 
@@ -250,19 +167,6 @@ void MotionStatusUpdate(void)
 //	{
 //		SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
 //	}
-	
-//	/*判断相机转台舵机是否到位*/
-//	if(fabs(gRobot.sDta.cameraAimAngle-gRobot.cameraAngle)<0.5f)
-//	{
-//		SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
-//	}
-//	else
-//	{
-//		SetMotionFlag(~AT_CAMERA_RESPONSE_SUCCESS);
-//	}
-	/*将舵机的各种错误发送出来，如果不发送证明舵机没有出问题*/
-	SteerResponseError(HOLD_BALL_1,gRobot.holdBall1Error);
-	SteerResponseError(HOLD_BALL_2,gRobot.holdBall2Error);
-	SteerResponseError(CAMERA_STEER,gRobot.cameraSteerError);
-	
+
+
 }

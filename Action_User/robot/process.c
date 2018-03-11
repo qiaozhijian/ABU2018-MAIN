@@ -773,16 +773,16 @@ void RobotSelfTest(void){
 		
 		  //上下两个舵机到0
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
-			HoldBallPosCrlSeparate(0.f,0.f,1500);
+			HoldBallPosCrlSeparate(0.f,0.f);
 			Delay_ms(2000);
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=90.f;
-			HoldBallPosCrlSeparate(90.f,90.f,1500);
+			HoldBallPosCrlSeparate(90.f,90.f);
 			Delay_ms(2000);
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=-90.f;
-			HoldBallPosCrlSeparate(-90.f,-90.f,1500);
+			HoldBallPosCrlSeparate(-90.f,-90.f);
 			Delay_ms(2000);
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
-			HoldBallPosCrlSeparate(0.f,0.f,1500);
+			HoldBallPosCrlSeparate(0.f,0.f);
 			
 			selfTestStep++;
 		break;

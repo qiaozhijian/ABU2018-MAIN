@@ -11,16 +11,16 @@
 extern Robot_t gRobot;
 
 //以vel的速度转到angle角度,但由于现在给定一直都是最大加速度所以就没用到vel
-void HoldBallPosCrl(float angle,int vel)
+void HoldBallPosCrl(float angle)
 {
-  HoldSteer1PosCrl(angle,vel);
-  HoldSteer2PosCrl(angle,vel);
+  HoldSteer1PosCrl(angle);
+  HoldSteer2PosCrl(angle);
 }
-/*vel1 为舵机1的速度上舵机  vel2为下舵机的速度*///两个舵机分开控制
-void HoldBallPosCrlSeparate(float angle0,float angle1,int vel)
+/*vel1 为舵机1的速度上舵机  vel2为下舵机的速度*///两个舵机分开控制，现在变为电机
+void HoldBallPosCrlSeparate(float angle0,float angle1)
 {
-  HoldSteer1PosCrl(angle0,vel);
-  HoldSteer2PosCrl(angle1,vel);
+  HoldSteer1PosCrl(angle0);
+  HoldSteer2PosCrl(angle1);
 }
 //void Enable_ROBS(void)
 //{
@@ -42,7 +42,7 @@ void HoldBallPosCrlSeparate(float angle0,float angle1,int vel)
 //  //#1 W 40,1,1\r\n
 //}
 
-void HoldSteer2PosCrl(float angle,int vel)
+void HoldSteer2PosCrl(float angle)
 {
   int pos=0.f;
 
@@ -55,7 +55,7 @@ void HoldSteer2PosCrl(float angle,int vel)
   
 	PosCrl(CAN2,8,ABSOLUTE_MODE,pos);
 }
-void HoldSteer1PosCrl(float angle,int vel)
+void HoldSteer1PosCrl(float angle)
 {
   int pos=0.f;
 
@@ -106,6 +106,11 @@ void HoldSteer1PosCrl(float angle,int vel)
 //  
 //  SteerPosCrlBy485(HOLD_BALL_1,pos);
 //}
+
+
+
+
+/* 当初舵机用的是485和ttl*/
 
 
 void CameraSteerPosCrl(float angle)
@@ -320,7 +325,6 @@ void SetSteerNum(uint8_t num)
 	
 	RS485_Send_Data(command,8);
 }
-
 
 /*******DEFINE*******/
 /*485舵机的各种错误状态*/

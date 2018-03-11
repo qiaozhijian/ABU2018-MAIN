@@ -121,7 +121,7 @@ void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
   /*关闭下方限位爪*/
   ClawShut();
   /*舵机转向*/
-  HoldBallPosCrlSeparate(PrepareGetBall_t.upSteerAngle, PrepareGetBall_t.downSteerAngle, PrepareGetBall_t.steerSpeed);
+  HoldBallPosCrlSeparate(PrepareGetBall_t.upSteerAngle, PrepareGetBall_t.downSteerAngle);
 }
 void PrepareGetBall(int index)
 {
@@ -171,7 +171,7 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
   /*提前打开发射装置小气缸*/
   ShootSmallOpen();
   /*舵机转向*/
-  HoldBallPosCrlSeparate( PrepareShootBall_t.upSteerAngle, PrepareShootBall_t.downSteerAngle, PrepareShootBall_t.steerSpeed);
+  HoldBallPosCrlSeparate( PrepareShootBall_t.upSteerAngle, PrepareShootBall_t.downSteerAngle);
 }
 void PrepareShootBall(int index)
 {
@@ -220,7 +220,7 @@ void PrepareWork(void)
 		//确保一定转向了
 		if(cnt>50)
 			break;
-		HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle ,PrepareCompete.steerSpeed);
+		HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle );
 	}
 	/*设置俯仰角度*/
 	PitchAngleMotion(PrepareCompete.pitchAngle);

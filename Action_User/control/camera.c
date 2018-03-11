@@ -8,13 +8,15 @@
 #include <string.h>
 #include "robot.h"
 #include "task.h"
-
+#include "iwdg.h"
+#include "timer.h"
 static char buffer[20];
 static int bufferI=0;
 
 void AT_CAMEARA_CMD_Judge(void);
 void CameraBufferInit(void);
 
+extern Robot_t gRobot;
 /*摄像头蓝牙接收中断*/
 void USART6_IRQHandler(void)
 {
@@ -61,6 +63,87 @@ void AT_CAMEARA_CMD_Judge(void){
 		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
     //摄像头连接成功
   }
+}
+
+
+void TalkToCamera(uint32_t command)
+{
+	int times=0;
+	switch(command)
+	{
+		case CAMERA_START:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT\r\n");
+				Delay_ms(3);
+				times++;
+				IWDG_Feed();
+//				if(times>100)
+//				{
+////					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+////					break;
+//				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+		case CAMERA_SHUT_ALL:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_SHUT_ALL);
+				Delay_ms(3);
+				times++;
+				IWDG_Feed();
+				if(times>100)
+				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+		case CAMERA_OPEN_NEAR:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_NEAR);
+				Delay_ms(3);
+				times++;
+				IWDG_Feed();
+				if(times>100)
+				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+		case CAMERA_OPEN_FAR:
+			/*如果与摄像头通信标志位没有置一，500us发一次数据*/
+			while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_TALK_SUCCESS))
+			{
+				USART_OUT(CAMERA_USART,"AT+%d\r\n",CAMERA_OPEN_FAR);
+				Delay_ms(3);
+				times++;
+				IWDG_Feed();
+				if(times>100)
+				{
+//					USART_OUT(DEBUG_USART,"Camera dead\r\n");
+//					break;
+				}
+			}
+			times=0;
+			/*清空标志位*/
+			SetMotionFlag(~AT_CAMERA_TALK_SUCCESS);
+			break;
+	}
 }
 
 

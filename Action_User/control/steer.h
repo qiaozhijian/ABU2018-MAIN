@@ -17,15 +17,15 @@ void CameraAlign(void);
 
 void SteerPosCrlBy485(int num,int pos);
 
-//以vel的速度转到angle角度
-void HoldBallPosCrl(float angle,int vel);
+//以vel的速度转到angle角度/*485 ttl舵机*/
+void HoldBallPosCrl(float angle);
 
-void HoldSteer1PosCrl(float angle,int vel);
+void HoldSteer1PosCrl(float angle);
 
-void HoldSteer2PosCrl(float angle,int vel);
+void HoldSteer2PosCrl(float angle);
 
 //舵机1，2分开控制
-void HoldBallPosCrlSeparate(float angle0,float angle1,int vel);
+void HoldBallPosCrlSeparate(float angle0,float angle1);
 
 void OpenSteerAll(void);
 
