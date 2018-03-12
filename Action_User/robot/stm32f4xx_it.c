@@ -285,6 +285,7 @@ void TIM2_IRQHandler(void)
   
   if(TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
   {
+		gRobot.runTime++;
     //实现10ms 发送1次信号量
     periodCounter--;
     if (periodCounter == 0)
@@ -311,7 +312,7 @@ void TIM7_IRQHandler(void)
 		if(startCnt==1)
 		{
 			Cnt++;
-			//USART_OUTByDMA("%d\r\n",Cnt*100);
+			USART_OUTByDMA("Cnt=%d\r\n",Cnt);
 		}
 		//printf("%d\r\n",Cnt);
 		//IWDG_Feed();
@@ -322,7 +323,6 @@ void TIM7_IRQHandler(void)
 
 void StartCount(void)
 {
-	//printf("%d\t",startCnt);
 	startCnt=1;
 	Cnt=0;
 }
@@ -330,10 +330,10 @@ void StartCount(void)
 uint32_t returnEndUs(void)
 {
 	uint32_t	end;
-	end=Cnt*100;
+	end=Cnt;
 	Cnt=0;
 	startCnt=0;
-	USART_OUTByDMA("%d\r\n",end);
+	USART_OUTByDMA("end=%d\r\n",end);
 	return end;
 }	
 

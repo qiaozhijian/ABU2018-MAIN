@@ -68,7 +68,7 @@ void HardWareInit(void);
 void statusInit(void);
 
 /*全局变量的声明*/
-Robot_t gRobot;
+Robot_t gRobot={0};
 
 void ConfigTask(void)
 {
@@ -159,6 +159,7 @@ void RobotTask(void)
 					USART_OUTByDMA("%f",gRobot.pitchAngle);
 					USART_OUTByDMA("%f",gRobot.gasValue);
 					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
+					USART_OUTByDMA("%d\t",gRobot.runTime);
 					USART_OUTByDMA("\r\n");
 				}
 				
@@ -222,7 +223,7 @@ void RobotTask(void)
 void HardWareInit(void){
   USART_OUTByDMA("HardWareInit\r\n");
   //定时器初始化
-  TIM_Init(TIM2, 99, 839, 0, 0);   //1ms主定时器
+  TIM_Init(TIM2, 99, 839, 1, 0);   //1ms主定时器
 	
   CAN_Config(CAN1, 500, GPIOB, GPIO_Pin_8, GPIO_Pin_9);
   
@@ -254,7 +255,7 @@ void HardWareInit(void){
   //蜂鸣器PE7
   GPIO_Init_Pins(GPIOC, GPIO_Pin_3, GPIO_Mode_OUT);
 	
-  TIM_Init(TIM7,99,83,0,0);					//100us
+  TIM_Init(TIM7,9,83,0,0);					//100us
   
 }
 void MotorInit(void){

@@ -46,7 +46,8 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void StartCount(void);
 unsigned int returnEndUs(void);
-
+void StartCount(void);
+unsigned int returnEndUs(void);
 
 #endif /* __STM32F4xx_IT_H */
 

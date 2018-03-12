@@ -192,6 +192,7 @@ void FightForBall1(void)
 					USART_OUTByDMA("!GAS1\t");
 					USART_OUTByDMA("%f",gRobot.gasValue);
 				}
+				USART_OUTByDMA("%d\t",gRobot.runTime);
 				USART_OUTByDMA("\r\n");
 			}
 			break;
@@ -303,6 +304,7 @@ void FightForBall2(void)
 					USART_OUTByDMA("!GAS2\t");
 					USART_OUTByDMA("%f",gRobot.gasValue);
 				}
+				USART_OUTByDMA("%d\t",gRobot.runTime);
 				USART_OUTByDMA("\r\n");
 			}
 			break;
@@ -439,6 +441,7 @@ void FightForGoldBall(void)
 				USART_OUTByDMA("!GAS3\t");
 				USART_OUTByDMA("%f",gRobot.gasValue);
 			}
+			USART_OUTByDMA("%d\t",gRobot.runTime);
 			USART_OUTByDMA("\r\n");
 		}
     break;

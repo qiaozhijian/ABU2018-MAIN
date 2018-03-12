@@ -24,6 +24,7 @@
 #include "usart.h"
 #include "iwdg.h"
 #include "dma.h"
+#include "stm32f4xx_it.h"
 /**
   * @brief  Initialize the CANx as encoder
   * @param  CANx:  CANx, where x can be 1,2
@@ -441,7 +442,6 @@ uint8_t CAN_TxMsg(CAN_TypeDef* CANx,
 	TxMessage.DLC=len;						 // 发送两帧信息
 	for(i=0;i<len;i++)
 		TxMessage.Data[i]=Msg[i];			 // 第一帧信息 
-  
 	mbox= CAN_Transmit(CANx, &TxMessage);         	
 	i=0;
 	uint16_t timeout = 0;

@@ -879,7 +879,7 @@ void ReadActualVel(CAN_TypeDef* CANx, uint8_t ElmoNum)
 	TxMessage.RTR=CAN_RTR_Data  ;			 						// the type of frame for the message that will be transmitted
 	TxMessage.DLC=8;
 
-   	TxMessage.Data[0] = *(unsigned long*)&data[0][0]&0xff;
+  TxMessage.Data[0] = *(unsigned long*)&data[0][0]&0xff;
 	TxMessage.Data[1] = (*(unsigned long*)&data[0][0]>>8)&0xff;
 	TxMessage.Data[2] = (*(unsigned long*)&data[0][0]>>16)&0xff;
 	TxMessage.Data[3] = (*(unsigned long*)&data[0][0]>>24)&0xff;

@@ -305,7 +305,9 @@ typedef struct{
 	
 	/*重启后可以选择性执行程序*/
 	uint32_t resetFlag;
-  
+	
+	/*在定时器2中计时*/
+  uint32_t runTime;
 }Robot_t ;
 
 #include "gasvalveControl.h"
