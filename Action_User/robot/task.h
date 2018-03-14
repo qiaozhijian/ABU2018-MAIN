@@ -49,6 +49,11 @@
 #define ANGLE_TO_RAD(angle) 																					((angle)*0.0174533f)
 /*弧度制转换为角度制*/
 #define RAD_TO_ANGLE(rad) 																						((rad)*57.29578f)
+/*定位系统与车中心的差*/
+#define DISX_GYRO2CENTER (231.0f)
+#define DISY_GYRO2CENTER (145.0f)
+/*车中心与转盘中心的误差*/
+#define CAR_CENTER_TO_COURCE_CENTER   (15.f)
 
 /*3508减速比3591/187=19.203208  8192位总脉冲*/
 #define PITCH_CODE_TO_ANGLE(code)													((code)/8738.1333f)
@@ -200,6 +205,8 @@
 
 #define GET_MOTIONCARD_SELFTEST_WHEEL_OVER 66
 
+#define GET_QIAO_ZHIJIAN_TEST             88
+
 /*球编号*/
 #define READY															0
 #define BALL_1														1
@@ -213,6 +220,16 @@
 
 #define ERROR_TIME										10
 
+#define COLOR_BALL_FRAME_POSX         (525.f)
+#define COLOR_BALL_FRAME_POSY         (3235.f)
+
+#define GOLD_BALL_FRAME_POSX         (525.f)
+#define GOLD_BALL_FRAME_POSY         (6495.f)
+
+#define ROBOT_COURCE_CENTER_TO_ARM   (445.f)
+#define ROBOT_ARM_TO_MOTOR           (509.26f)
+#define ROBOT_ARM_TO_THROW_CENTER    (596.88f)
+#define ROBOT_CENTER_TO_COURCE       (15.f)
 typedef struct{
   
 	/*判断此次是否为看门狗复位*/

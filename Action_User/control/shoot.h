@@ -30,5 +30,7 @@ void PrepareShootBall(int index);
 void prepareMotionParaInit(void);
 
 void PrepareWork(void);
+
+void SmallChange(void);
 #endif
 

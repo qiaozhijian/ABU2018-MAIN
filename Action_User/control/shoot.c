@@ -6,6 +6,7 @@
 #include "includes.h"
 #include "process.h"
 #include "robot.h"
+#include "dma.h"
 
 extern OS_EVENT *PeriodSem;
 
@@ -50,7 +51,7 @@ void prepareMotionParaInit(void)
   PrepareCompete.upSteerAngle=-90.f;
 	PrepareCompete.downSteerAngle=-90.f;
   PrepareCompete.steerSpeed=2000;
-  PrepareCompete.gasAim=0.480f;
+  PrepareCompete.gasAim=0.410f;
 	
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=65.5f;
@@ -58,31 +59,31 @@ void prepareMotionParaInit(void)
   PrepareGetBall1.upSteerAngle=-67.0f;
 	PrepareGetBall1.downSteerAngle=-72.0f;
   PrepareGetBall1.steerSpeed=2000;
-  PrepareGetBall1.gasAim=0.480f;
+  PrepareGetBall1.gasAim=0.410f;
   
   /*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=171.5f;
-  PrepareShootBall1.pitchAngle=6.7f;
+  PrepareShootBall1.courseAngle=170.5f;
+  PrepareShootBall1.pitchAngle=8.2f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
-  PrepareShootBall1.gasAim=0.480f;
+  PrepareShootBall1.gasAim=0.410f;
 	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=86.5f;
-  PrepareGetBall2.pitchAngle=4.50f;
+  PrepareGetBall2.pitchAngle=4.5f;
   PrepareGetBall2.upSteerAngle=93.f; 
 	PrepareGetBall2.downSteerAngle=93.f;
   PrepareGetBall2.steerSpeed=2000;
-  PrepareGetBall2.gasAim=0.480;
+  PrepareGetBall2.gasAim=0.425;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=174.5f;
-  PrepareShootBall2.pitchAngle=7.2f;
+  PrepareShootBall2.courseAngle=173.5f;
+  PrepareShootBall2.pitchAngle=8.5f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.steerSpeed=2000;
-  PrepareShootBall2.gasAim=0.480f;
+  PrepareShootBall2.gasAim=0.425f;
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=88.5f;
@@ -93,8 +94,8 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.gasAim=0.480f;
   
   /*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=182.9f;
-  PrepareShootBall3.pitchAngle=-0.5f;
+  PrepareShootBall3.courseAngle=181.4f;
+  PrepareShootBall3.pitchAngle=5.0f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.steerSpeed=2000;
@@ -195,6 +196,46 @@ void PrepareShootBall(int index)
   }	
 }
 
+/*进行微调*/
+void SmallChange(void){
+	switch(gRobot.sDta.robocon2018){
+		case COLORFUL_BALL_1:
+			if((fabs(gRobot.posX-4450.f)>5.f || fabs(gRobot.posY-2140.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
+							- RAD_TO_ANGLE(atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))) + 90.f;
+				 USART_OUTByDMA("courseAimAngle1=%f\r\n",gRobot.sDta.courseAimAngle);
+				 USART_OUTByDMA("courseAngle1=%f\r\n",gRobot.courseAngle);
+			}
+		break;
+		
+		case COLORFUL_BALL_2:
+			if((fabs(gRobot.posX-6565.f)>5.f || fabs(gRobot.posY-2180.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
+							- RAD_TO_ANGLE(atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))) + 90.f;
+				 USART_OUTByDMA("courseAimAngle2=%f\r\n",gRobot.sDta.courseAimAngle);
+				 USART_OUTByDMA("courseAngle2=%f\r\n",gRobot.courseAngle);
+			}
+		break;
+		
+		case GOLD_BALL:
+			if((fabs(gRobot.posX-6080.f)>5.f || fabs(gRobot.posY-6030.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
+						- RAD_TO_ANGLE(atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
+				 USART_OUTByDMA("courseAimAngle3=%f\r\n",gRobot.sDta.courseAimAngle);
+				 USART_OUTByDMA("courseAngle=%f\r\n",gRobot.courseAngle);
+			}
+		break;
+	}	
+	
+	if(gRobot.sDta.courseAimAngle>198.f){
+		gRobot.sDta.courseAimAngle=198.f;
+		USART_OUTByDMA("courseAngle OUT OF RANGE");
+	}else if(gRobot.sDta.courseAimAngle<0.f){
+		gRobot.sDta.courseAimAngle=0.f;
+		USART_OUTByDMA("courseAngle OUT OF RANGE");
+	}
+	
+}
 
 /*初始化动作 先下降再旋转*/
 void PrepareWork(void)
@@ -220,7 +261,7 @@ void PrepareWork(void)
 		//确保一定转向了
 		if(cnt>50)
 			break;
-		HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle );
+		HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle);
 	}
 	/*设置俯仰角度*/
 	PitchAngleMotion(PrepareCompete.pitchAngle);

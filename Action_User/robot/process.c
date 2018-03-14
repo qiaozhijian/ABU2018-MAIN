@@ -121,7 +121,7 @@ void FightForBall1(void)
 						break;
 
 						case 2:
-							if((gRobot.posX>4054.f)||(gRobot.posY>2000.f))
+							if((gRobot.posX>4054.f)||(gRobot.posY>1620.f))
 							{
 								USART_OUTByDMA("IntoTheArea\r\n");
 								//TalkToCamera(CAMERA_OPEN_NEAR);
@@ -134,13 +134,15 @@ void FightForBall1(void)
 			
     /*第一个球取球完毕，去投射区一*/
 		case TO_THE_AREA_1:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(fabs(4573.f-gRobot.posX)<50&&fabs(2127.f-gRobot.posY)<50))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY-1620.f>0.f))
 				gRobot.sDta.process=TO_THROW_BALL_1;
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
 			
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
+			/*25ms进行一次计算微调航向*/
+			SmallChange();
 			/*光电到位*/
 			if(/*持球舵机到位*/
 			//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -239,7 +241,7 @@ void FightForBall2(void)
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(fabs(6574.f-gRobot.posX)<50&&fabs(2192.f-gRobot.posY)<50))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>1620.f))
 				gRobot.sDta.process=TO_THROW_BALL_2;
 //			if(!PrepareForTheBall())
 //			{
@@ -249,6 +251,8 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
+			/*25ms进行一次计算微调航向*/
+			SmallChange();
 			/*光电到位*/
 			if(/*持球舵机到位*/
 		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -378,7 +382,7 @@ void FightForGoldBall(void)
 		
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE||(fabs(6080.f-gRobot.posX)<50&&fabs(6030.f-gRobot.posY)<50))
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE||(gRobot.posY>5530.f))/*射金球点6080 ， 6030*/
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//在y大于2500的时候将助推气阀归位
 		if(fabs(gRobot.posY)>3000.f) BoostPoleReturn();
@@ -390,6 +394,8 @@ void FightForGoldBall(void)
     break;
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
+		/*25ms进行一次计算微调航向*/
+			SmallChange();
 		/*光电到位*/
     if(PrepareForTheBall()
 				/*持球舵机到位*/
