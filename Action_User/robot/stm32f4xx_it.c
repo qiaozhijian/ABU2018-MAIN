@@ -89,7 +89,7 @@ void CAN1_RX0_IRQHandler(void)
 	  SetMotionFlag(AT_REACH_THIRD_PLACE);
 	  USART_OUTByDMA("GET_MOTIONCARD_REACH_AREA3\r\n");
 	} 
-    if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.robocon2018==ROBOT_PREPARE)
+   if(msg.data32[0]==GET_MOTIONCARD_PREPARE_READY&&gRobot.sDta.robocon2018==ROBOT_PREPARE)
 	{
 	  SetMotionFlag(AT_PREPARE_READY);
 	  USART_OUTByDMA("GET_MOTIONCARD_PREPARE_READY\r\n");
@@ -99,6 +99,13 @@ void CAN1_RX0_IRQHandler(void)
 		SetMotionFlag(AT_THE_WHEEL_SELFTEST_OVER);
 	  USART_OUTByDMA("GET_MOTIONCARD_SELFTEST_WHEEL_OVER\r\n");	
 	}
+	if(msg.data32[0]==GET_QIAO_ZHIJIAN_TEST)
+	{
+		while(1){
+	    USART_OUTByDMA("GET_QIAO_ZHIJIAN_TESTLUELUELUE\r\n");	
+		}
+	}
+	
 	if(msg.data8[3]==0&&msg.data8[1]=='S'&&msg.data8[0]=='L')
 	{
 		if(msg.data8[2]=='A'){

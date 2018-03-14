@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "iwdg.h"
 #include "robot.h"
+
 extern Robot_t gRobot;
 
 void PitchAngleMotion(float angle)
@@ -155,6 +156,7 @@ void MotionExecute(void)
 	//CameraAlign();
 	
 }
+
 
 /* 动作状态问询函数
 * 
