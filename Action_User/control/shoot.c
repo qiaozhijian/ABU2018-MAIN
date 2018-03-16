@@ -198,6 +198,8 @@ void PrepareShootBall(int index)
 
 /*进行微调*/
 void SmallChange(void){
+	//定义是否进行计算了的变量
+	int whetherCount=0;
 	switch(gRobot.sDta.robocon2018){
 		case COLORFUL_BALL_1:
 			if((fabs(gRobot.posX-4450.f)>5.f || fabs(gRobot.posY-2140.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
@@ -205,6 +207,9 @@ void SmallChange(void){
 							- RAD_TO_ANGLE(atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))) + 90.f;
 				 USART_OUTByDMA("courseAimAngle1=%f\r\n",gRobot.sDta.courseAimAngle);
 				 USART_OUTByDMA("courseAngle1=%f\r\n",gRobot.courseAngle);
+				 whetherCount=1;
+			}else {
+				 whetherCount=0;
 			}
 		break;
 		
@@ -214,6 +219,9 @@ void SmallChange(void){
 							- RAD_TO_ANGLE(atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))) + 90.f;
 				 USART_OUTByDMA("courseAimAngle2=%f\r\n",gRobot.sDta.courseAimAngle);
 				 USART_OUTByDMA("courseAngle2=%f\r\n",gRobot.courseAngle);
+				 whetherCount=1;
+			}else {
+				 whetherCount=0;
 			}
 		break;
 		
@@ -222,18 +230,34 @@ void SmallChange(void){
 				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
 						- RAD_TO_ANGLE(atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				 USART_OUTByDMA("courseAimAngle3=%f\r\n",gRobot.sDta.courseAimAngle);
-				 USART_OUTByDMA("courseAngle=%f\r\n",gRobot.courseAngle);
+				 USART_OUTByDMA("courseAngle=%f\r\n",gRobot.courseAngle); 
+				 whetherCount=1;
+			}else {
+				 whetherCount=0;
 			}
 		break;
 	}	
 	
-	if(gRobot.sDta.courseAimAngle>198.f){
-		gRobot.sDta.courseAimAngle=198.f;
-		USART_OUTByDMA("courseAngle OUT OF RANGE");
-	}else if(gRobot.sDta.courseAimAngle<0.f){
-		gRobot.sDta.courseAimAngle=0.f;
-		USART_OUTByDMA("courseAngle OUT OF RANGE");
-	}
+	
+	
+	//如果计算了判断计算值是否与给定的值超过了0.2超过了则微调
+	if(whetherCount){
+		/*防止计算的值超过限定角度*/
+		if(gRobot.sDta.courseAimAngle>198.f){
+			gRobot.sDta.courseAimAngle=198.f;
+			USART_OUTByDMA("courseAngle OUT OF RANGE");
+		}else if(gRobot.sDta.courseAimAngle<0.f){
+			gRobot.sDta.courseAimAngle=0.f;
+		  USART_OUTByDMA("courseAngle OUT OF RANGE");
+		}
+		
+		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)>0.2f){
+				SetMotionFlag(~AT_COURSE_SUCCESS);
+				USART_OUTByDMA("courseAngle need change=%f\r\n",gRobot.sDta.courseAimAngle);
+		}else {
+				USART_OUTByDMA("courseAngle OK\r\n");	
+		}
+  }
 	
 }
 

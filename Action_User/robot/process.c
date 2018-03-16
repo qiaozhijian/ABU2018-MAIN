@@ -173,6 +173,9 @@ void FightForBall1(void)
 			else
 			{
 				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+				USART_OUTByDMA("%f",gRobot.posX);
+				USART_OUTByDMA("%f",gRobot.posY);
+				USART_OUTByDMA("%f",gRobot.angle);
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE1\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
@@ -286,6 +289,10 @@ void FightForBall2(void)
 			else
 			{
 				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+				USART_OUTByDMA("%f",gRobot.posX);
+				USART_OUTByDMA("%f",gRobot.posY);
+				USART_OUTByDMA("%f",gRobot.angle);
+
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
@@ -424,6 +431,10 @@ void FightForGoldBall(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+			USART_OUTByDMA("%f",gRobot.posX);
+			USART_OUTByDMA("%f",gRobot.posY);
+			USART_OUTByDMA("%f",gRobot.angle);
+
 			if(!PE_FOR_THE_BALL)
 				USART_OUTByDMA("!PE3\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
