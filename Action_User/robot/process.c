@@ -356,9 +356,16 @@ void FightForGoldBall(void)
 			break;
 				
 			case 3:
+				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<45.f){
+					LowerClawStairOn();
+					
+					isGetBall++;
+				}
+			break;
+				
+			case 4:
 				if(PrepareForTheBall()&&fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<5.f&&fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<2.f)
 				{
-					LowerClawStairOn();
 					
 					USART_OUTByDMA("YOU should shoot\r\n");
 					//这之后应该向金球架抓取气阀发数抓取金球架
