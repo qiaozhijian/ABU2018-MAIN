@@ -141,8 +141,6 @@ void FightForBall1(void)
 			
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
-			/*25ms进行一次计算微调航向*/
-			SmallChange();
 			/*光电到位*/
 			if(/*持球舵机到位*/
 			//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -254,9 +252,6 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			/*25ms进行一次计算微调航向*/
-			SmallChange();
-			/*光电到位*/
 			if(/*持球舵机到位*/
 		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 						/*持球舵机到位*/
@@ -386,12 +381,10 @@ void FightForGoldBall(void)
       MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL3);
     }
     break;
+		
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
-		/*25ms进行一次计算微调航向*/
-			SmallChange();
-		/*光电到位*/
-    if(PrepareForTheBall()
+    if(PE_FOR_THE_BALL
 				/*持球舵机到位*/
 		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/

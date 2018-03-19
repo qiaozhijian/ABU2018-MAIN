@@ -144,6 +144,9 @@ void MotionStatusUpdate(void)
 		SetMotionFlag(~AT_GAS_SUCCESS);
 	}
 	
+	/*等到进入射球进程的时候进行一次计算微调航向*/
+  SmallChange();
+	
 //	/*判断持球舵机一是否到位*/
 //	if(fabs(gRobot.sDta.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
 //	{
