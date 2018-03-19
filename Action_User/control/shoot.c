@@ -253,7 +253,9 @@ void SmallChange(void){
 		
 		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)>0.2f){
 				SetMotionFlag(~AT_COURSE_SUCCESS);
-				USART_OUTByDMA("courseAngle need change=%f\r\n",gRobot.sDta.courseAimAngle);
+				USART_OUTByDMA("courseAngle need change=");
+				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+				USART_OUTByDMA("\r\n");
 		}else {
 				USART_OUTByDMA("courseAngle OK\r\n");	
 		}

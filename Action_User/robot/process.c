@@ -173,9 +173,9 @@ void FightForBall1(void)
 			else
 			{
 				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-				USART_OUTByDMA("%f",gRobot.posX);
-				USART_OUTByDMA("%f",gRobot.posY);
-				USART_OUTByDMA("%f",gRobot.angle);
+				USART_OUTByDMAF(gRobot.posX);
+				USART_OUTByDMAF(gRobot.posY);
+				USART_OUTByDMAF(gRobot.angle);
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE1\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
@@ -185,17 +185,17 @@ void FightForBall1(void)
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				{
 					USART_OUTByDMA("!PITCH1\t");
-					USART_OUTByDMA("%f",gRobot.pitchAngle);
+					USART_OUTByDMAF(gRobot.pitchAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
 					USART_OUTByDMA("!COURSE1\t");
-					USART_OUTByDMA("%f",gRobot.courseAngle);
+					USART_OUTByDMAF(gRobot.courseAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 				{
 					USART_OUTByDMA("!GAS1\t");
-					USART_OUTByDMA("%f",gRobot.gasValue);
+					USART_OUTByDMAF(gRobot.gasValue);
 				}
 				USART_OUTByDMA("\r\n");
 			}
@@ -289,9 +289,9 @@ void FightForBall2(void)
 			else
 			{
 				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-				USART_OUTByDMA("%f",gRobot.posX);
-				USART_OUTByDMA("%f",gRobot.posY);
-				USART_OUTByDMA("%f",gRobot.angle);
+				USART_OUTByDMAF(gRobot.posX);
+				USART_OUTByDMAF(gRobot.posY);
+				USART_OUTByDMAF(gRobot.angle);
 
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2\t");
@@ -302,17 +302,17 @@ void FightForBall2(void)
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				{
 					USART_OUTByDMA("!PITCH2\t");
-					USART_OUTByDMA("%f",gRobot.pitchAngle);
+					USART_OUTByDMAF(gRobot.pitchAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
 					USART_OUTByDMA("!COURSE2\t");
-					USART_OUTByDMA("%f",gRobot.courseAngle);
+					USART_OUTByDMAF(gRobot.courseAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 				{
 					USART_OUTByDMA("!GAS2\t");
-					USART_OUTByDMA("%f",gRobot.gasValue);
+					USART_OUTByDMAF(gRobot.gasValue);
 				}
 				USART_OUTByDMA("\r\n");
 			}
@@ -353,19 +353,21 @@ void FightForGoldBall(void)
 				
 			case 2:
 				if(PrepareForTheBall()&&(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f){
-					LowerClawStairOn();
+					/*上舵机到位直接开始准备射球参数*/
+					PrepareShootBall(BALL_3);
+	
 					isGetBall++;
 				}
 			break;
 				
 			case 3:
-				if(gRobot.posY>1000&&PrepareForTheBall())
+				if(PrepareForTheBall()&&fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<5.f&&fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<2.f)
 				{
+					LowerClawStairOn();
+					
 					USART_OUTByDMA("YOU should shoot\r\n");
 					//这之后应该向金球架抓取气阀发数抓取金球架
 					isGetBall++;
-					
-					PrepareShootBall(BALL_3);
 					
 					gRobot.sDta.process=TO_THE_AREA_3;
 				}
@@ -416,9 +418,9 @@ void FightForGoldBall(void)
 		else
 		{
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			USART_OUTByDMA("%f",gRobot.posX);
-			USART_OUTByDMA("%f",gRobot.posY);
-			USART_OUTByDMA("%f",gRobot.angle);
+			USART_OUTByDMAF(gRobot.posX);
+			USART_OUTByDMAF(gRobot.posY);
+			USART_OUTByDMAF(gRobot.angle);
 
 			if(!PE_FOR_THE_BALL)
 				USART_OUTByDMA("!PE3\t");
@@ -429,17 +431,17 @@ void FightForGoldBall(void)
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 			{
 				USART_OUTByDMA("!PITCH3\t");
-				USART_OUTByDMA("%f",gRobot.pitchAngle);
+				USART_OUTByDMAF(gRobot.pitchAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 			{
 				USART_OUTByDMA("!COURSE3\t");
-				USART_OUTByDMA("%f",gRobot.courseAngle);
+				USART_OUTByDMAF(gRobot.courseAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				USART_OUTByDMA("!GAS3\t");
-				USART_OUTByDMA("%f",gRobot.gasValue);
+				USART_OUTByDMAF(gRobot.gasValue);
 			}
 			USART_OUTByDMA("\r\n");
 		}
@@ -454,43 +456,43 @@ void MotionStatus(void)
 {
 	/*返回舵机一的状态*/
   USART_OUTByDMA("steer 1 aimAngle ");
-	USART_OUTByDMA("%f",gRobot.sDta.holdBallAimAngle[0]);
+	USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
   USART_OUTByDMA("realpos ");
-	USART_OUTByDMA("%f",gRobot.holdBallAngle[0]);
+	USART_OUTByDMAF(gRobot.holdBallAngle[0]);
 	USART_OUTByDMA("\r\n");
 	
 	/*返回舵机二的状态*/
   USART_OUTByDMA("steer 2 aimAngle ");
-	USART_OUTByDMA("%f",gRobot.sDta.holdBallAimAngle[1]);
+	USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[1]);
   USART_OUTByDMA("realpos ");
-	USART_OUTByDMA("%f",gRobot.holdBallAngle[1]);
+	USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 	USART_OUTByDMA("\r\n");
 	
 	/*返回舵机三的状态*/
   USART_OUTByDMA("steer 3 aimAngle ");
-	USART_OUTByDMA("%f",gRobot.sDta.cameraAimAngle);
+	USART_OUTByDMAF(gRobot.sDta.cameraAimAngle);
   USART_OUTByDMA("realpos ");
-	USART_OUTByDMA("%f",gRobot.cameraAngle);
+	USART_OUTByDMAF(gRobot.cameraAngle);
 	USART_OUTByDMA("\r\n");
 	
 	/*返回航向角的状态*/
   USART_OUTByDMA("course aimAngle ");
-	USART_OUTByDMA("%f",gRobot.sDta.courseAimAngle);
+	USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
   USART_OUTByDMA("realpos ");
-	USART_OUTByDMA("%f",gRobot.courseAngle);
+	USART_OUTByDMAF(gRobot.courseAngle);
 	USART_OUTByDMA("\r\n");
 	
 	/*返回俯仰角的状态*/
   USART_OUTByDMA("course aimAngle ");
-	USART_OUTByDMA("%f",gRobot.sDta.pitchAimAngle);
+	USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
   USART_OUTByDMA("realpos ");
-	USART_OUTByDMA("%f",gRobot.pitchAngle);
+	USART_OUTByDMAF(gRobot.pitchAngle);
 	USART_OUTByDMA("\r\n");
   
   USART_OUTByDMA("gasValue aim ");
-  USART_OUTByDMA("%f",gRobot.sDta.gasAimValue);
+  USART_OUTByDMAF(gRobot.sDta.gasAimValue);
   USART_OUTByDMA("\treal ");
-  USART_OUTByDMA("%f",gRobot.gasValue);
+  USART_OUTByDMAF(gRobot.gasValue);
   USART_OUTByDMA("\r\n");
 }
 
@@ -695,7 +697,7 @@ void processReport(void)
 //      delayMs[0]=0;
 //    }
 //    else{
-//      //			USART_OUTByDMA("%f",fabs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0]));
+//      //			USART_OUTByDMAF(fabs(gRobot.steerAimPos[0][1]-gRobot.steerPos[0]));
 //    }
 //  }
 //  
@@ -721,7 +723,7 @@ void processReport(void)
 //      delayMs[1]=0;
 //    }
 //    else{
-//      //			USART_OUTByDMA("%f",fabs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1]));
+//      //			USART_OUTByDMAF(fabs(gRobot.steerAimPos[1][1]-gRobot.steerPos[1]));
 //      //			USART_OUTByDMA("\r\n");
 //    }
 //  }
@@ -839,7 +841,7 @@ void RobotSelfTest(void){
 			}
 			GasTestTime++;
 			USART_OUTByDMA("gasValue\t");
-			USART_OUTByDMA("%f",gRobot.gasValue);
+			USART_OUTByDMAF(gRobot.gasValue);
 			USART_OUTByDMA("\r\n");
 			if(GasTestTime<=600){
 				GasMotion(0.500);

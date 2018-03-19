@@ -149,15 +149,15 @@ void RobotTask(void)
 				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
 				{
 					processReponse();
-					USART_OUTByDMA("%f",gRobot.posX);
-					USART_OUTByDMA("%f",gRobot.posY);
-					USART_OUTByDMA("%f",gRobot.angle);
-					USART_OUTByDMA("%f",gRobot.sDta.courseAimAngle);
-					USART_OUTByDMA("%f",gRobot.sDta.pitchAimAngle);
-					USART_OUTByDMA("%f",gRobot.sDta.holdBallAimAngle[0]);
-					USART_OUTByDMA("%f",gRobot.courseAngle);
-					USART_OUTByDMA("%f",gRobot.pitchAngle);
-					USART_OUTByDMA("%f",gRobot.gasValue);
+					USART_OUTByDMAF(gRobot.posX);
+					USART_OUTByDMAF(gRobot.posY);
+					USART_OUTByDMAF(gRobot.angle);
+					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
+					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
+					USART_OUTByDMAF(gRobot.courseAngle);
+					USART_OUTByDMAF(gRobot.pitchAngle);
+					USART_OUTByDMAF(gRobot.gasValue);
 					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
 					USART_OUTByDMA("\r\n");
 				}
