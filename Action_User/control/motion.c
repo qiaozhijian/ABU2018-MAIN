@@ -115,7 +115,7 @@ void MotionRead(void)
 void MotionStatusUpdate(void)
 {
 	/*判断航向角是否到位*/
-	if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.01f)
+	if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.1f)
 	{
 		SetMotionFlag(AT_COURSE_SUCCESS);
 	}

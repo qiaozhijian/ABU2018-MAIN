@@ -30,7 +30,7 @@
 #define STEER1 					9
 #define STEER2 					10
 #define BOOST 					11
-#define STAIR1 					12
+#define LOWER_CLAW_STAIR 					12
 #define STAIR2 					13
 
 extern Robot_t gRobot;
@@ -106,7 +106,7 @@ void AT_CMD_Judge(void){
   else if((bufferI >= 5) && strncmp(buffer, "AT+13", 5)==0)//发射按钮   
     atCommand=BOOST;
   else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0)//发射按钮   
-    atCommand=STAIR1;
+    atCommand=LOWER_CLAW_STAIR;
   else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//发射按钮   
     atCommand=STAIR2;
 	
@@ -251,15 +251,15 @@ void AT_CMD_Handle(void){
       BoostPoleReturn();
     } 
     break;
-  case STAIR1:
+  case LOWER_CLAW_STAIR:
     USART_OUTByDMA("OK\r\n");
     if(*(buffer + 5) == '1') 
     {
-      GoldBallGraspStairOneOn();
+      LowerClawStairOn();
     }
     else if(*(buffer + 5) == '0') 
     {
-      GoldBallGraspStairOneOff();
+      LowerClawStairOff();
     } 
     break;
   case STAIR2:
