@@ -338,7 +338,7 @@ void FightForGoldBall(void)
 			break;
 				
 			case 1:
-				if(gRobot.posY>1620.f)
+				if(gRobot.posY>2100.f)
 				{
 					//提前将两个舵机转到0度
 					gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;

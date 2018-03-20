@@ -98,8 +98,6 @@ void MotionRead(void)
 	ReadActualPos(CAN2,8);
   /*将读航向角姿态的标志位归0*/
 	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
-	/*向舵机发送指令，从串口中断读取的状态是否发生错误，在MotionStatusUpdate（）对外发数*/
-	ReadSteerErrorAll();
 }
 
 
