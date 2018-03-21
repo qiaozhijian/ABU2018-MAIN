@@ -338,40 +338,21 @@ void FightForGoldBall(void)
 			break;
 				
 			case 1:
-				if(gRobot.posY>2100.f)
+				if(PrepareForTheBall()&&gRobot.posY>2100.f)
 				{
-					//提前将两个舵机转到0度
-					gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+					PrepareShootBall(BALL_3);
+					USART_OUTByDMA("PrepareShoot\r\n");
 					isGetBall++;
 				}
 			break;
 				
 			case 2:
-				if(PrepareForTheBall()&&(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f){
+				if(PrepareForTheBall()&&(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f \
+					&&(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1]))<5.f){
 					/*上舵机到位直接开始准备射球参数*/
-					PrepareShootBall(BALL_3);
-	
-					isGetBall++;
-				}
-			break;
-				
-			case 3:
-				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<45.f){
 					LowerClawStairOn();
-					
-					isGetBall++;
-				}
-			break;
-				
-			case 4:
-				if(PrepareForTheBall()&&fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<5.f&&fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<2.f)
-				{
-					
-					USART_OUTByDMA("YOU should shoot\r\n");
-					//这之后应该向金球架抓取气阀发数抓取金球架
-					isGetBall++;
-					
 					gRobot.sDta.process=TO_THE_AREA_3;
+					USART_OUTByDMA("YOU should shoot\r\n");
 				}
 			break;
 				

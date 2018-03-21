@@ -157,6 +157,8 @@ void RobotTask(void)
 					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
 					USART_OUTByDMAF(gRobot.courseAngle);
 					USART_OUTByDMAF(gRobot.pitchAngle);
+					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+					USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 					USART_OUTByDMAF(gRobot.gasValue);
 					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
 					USART_OUTByDMA("\r\n");

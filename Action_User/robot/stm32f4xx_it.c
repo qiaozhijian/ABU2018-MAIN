@@ -227,7 +227,7 @@ void CAN2_RX0_IRQHandler(void)
     //位置
 		if(msg.data32[0]==0x00005850){
 			gRobot.holdBallAngle[1] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0]-105.f;
+			gRobot.holdBallAngle[1]=gRobot.holdBallAngle[1]-74.38f;
 			
 		}
 		
