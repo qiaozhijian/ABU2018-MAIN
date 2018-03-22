@@ -30,7 +30,7 @@ void ShootBall(void)
 	ShootLedOn();
   /*夹子打开*/
   ClawOpen();
-  Delay_ms(300);
+  Delay_ms(200);
   /*把两个发射气缸打开*/
   ShootBigOpen();
 }
@@ -128,26 +128,26 @@ void PrepareGetBall(int index)
 {
   switch(index)
   {
-  case READY:
-		PrepareWork();
-    //传入准备区的参数
-    PrepareGetBallMotion(PrepareCompete);
-    break;
-  case BALL_1:
-    //传入准备得到球的参数
-    PrepareGetBallMotion(PrepareGetBall1);
-    break;
-  case BALL_2:
-    //传入准备得到球的参数
-    PrepareGetBallMotion(PrepareGetBall2);
-    break;
-  case BALL_3:
-    //传入准备得到球的参数
-    PrepareGetBallMotion(PrepareGetBall3);
-    break;
-  default:
-    USART_OUT(DEBUG_USART,"PrepareGetBall error\r\n");
-    break;
+		case READY:
+			PrepareWork();
+			//传入准备区的参数
+			PrepareGetBallMotion(PrepareCompete);
+			break;
+		case BALL_1:
+			//传入准备得到球的参数
+			PrepareGetBallMotion(PrepareGetBall1);
+			break;
+		case BALL_2:
+			//传入准备得到球的参数
+			PrepareGetBallMotion(PrepareGetBall2);
+			break;
+		case BALL_3:
+			//传入准备得到球的参数
+			PrepareGetBallMotion(PrepareGetBall3);
+			break;
+		default:
+			USART_OUT(DEBUG_USART,"PrepareGetBall error\r\n");
+			break;
   }	
 }
 
@@ -208,7 +208,8 @@ void SmallChange(void){
 			
 			if((fabs(gRobot.posX-4450.f)>5.f || fabs(gRobot.posY-2140.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
-							- RAD_TO_ANGLE(atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))) + 90.f;
+							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
+				 /*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
 				 whetherCount=1;
 			}else {
 				 whetherCount=0;
@@ -222,7 +223,8 @@ void SmallChange(void){
 		
 			if((fabs(gRobot.posX-6565.f)>5.f || fabs(gRobot.posY-2180.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
-							- RAD_TO_ANGLE(atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))) + 90.f;
+							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
+				/*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
 				 whetherCount=1;
 			}else {
 				 whetherCount=0;
@@ -236,8 +238,9 @@ void SmallChange(void){
 			
 			if((fabs(gRobot.posX-6080.f)>5.f || fabs(gRobot.posY-6030.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
-						- RAD_TO_ANGLE(atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
-				 whetherCount=1;
+						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
+				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
+				whetherCount=1;
 			}else {
 				 whetherCount=0;
 			}

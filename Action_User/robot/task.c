@@ -152,6 +152,7 @@ void RobotTask(void)
 					USART_OUTByDMAF(gRobot.posX);
 					USART_OUTByDMAF(gRobot.posY);
 					USART_OUTByDMAF(gRobot.angle);
+					USART_OUTByDMAF(gRobot.robotVel.countVel);
 					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
 					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
 					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);

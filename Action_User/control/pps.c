@@ -23,7 +23,7 @@ void USART3_IRQHandler(void)
   OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
   OSIntNesting++;
   OS_EXIT_CRITICAL();
-  
+	
   if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET)
   {
     USART_ClearITPendingBit(USART3, USART_IT_RXNE);
@@ -71,18 +71,25 @@ void USART3_IRQHandler(void)
     case 4:
       if (ch == 0x0d)
       {
-				
 				/*x= x - (DISX_GYRO2CENTER*cosf(ANGLE_TO_RAD(angle)) - DISY_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))) + DISX_GYRO2CENTER;
 		y =y- (DISX_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0])) + DISY_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))) + DISY_GYRO2CENTER;*/
-        gRobot.angle=posture.ActVal[0] ;
+        gRobot.robotVel.lastPosX=gRobot.posX;
+        gRobot.robotVel.lastPosY=gRobot.posY;
+				
+				gRobot.angle=posture.ActVal[0] ;
         gRobot.speedX=-posture.ActVal[1] ;
         gRobot.speedY=posture.ActVal[2] ;
         gRobot.posX = -posture.ActVal[3] + (DISX_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))-DISY_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISX_GYRO2CENTER;
-        gRobot.posY = posture.ActVal[4] + (DISX_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))+DISY_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISY_GYRO2CENTER;
+        gRobot.posY =  posture.ActVal[4] + (DISX_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))+DISY_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISY_GYRO2CENTER;
 				gRobot.AngularVelocity=posture.ActVal[5];
 				gRobot.posSystemReady=1;
 				
-      }
+				if(gRobot.robotVel.countTime!=0){
+				 gRobot.robotVel.countVel=sqrtf((gRobot.posX - gRobot.robotVel.lastPosX)*(gRobot.posX - gRobot.robotVel.lastPosX)+(gRobot.posY - gRobot.robotVel.lastPosY)*(gRobot.posY - gRobot.robotVel.lastPosY))/gRobot.robotVel.countTime;
+				 gRobot.robotVel.countVel=gRobot.robotVel.countVel*10000;
+				}
+				gRobot.robotVel.countTime=0;
+			}
       count = 0;
       break;
     default:

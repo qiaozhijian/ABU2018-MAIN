@@ -263,7 +263,13 @@ typedef struct{
   /*气压*/
   float gasAimValue;
 }DataSave_t;
-
+/*计算机器人的速度结构体*/
+typedef struct{
+	float lastPosX;
+  float lastPosY;
+	uint32_t countTime;
+	float countVel;
+}RobotVel_t;
 /**************typedef area**********/
 typedef struct{
   
@@ -322,6 +328,10 @@ typedef struct{
 	
 	/*重启后可以选择性执行程序*/
 	uint32_t resetFlag;
+	
+	
+	/*计算机器人的速度结构体*/
+	RobotVel_t robotVel;
   
 }Robot_t ;
 

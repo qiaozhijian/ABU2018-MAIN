@@ -323,6 +323,8 @@ void TIM7_IRQHandler(void)
   OS_EXIT_CRITICAL();
   if(TIM_GetITStatus(TIM7, TIM_IT_Update)==SET)
   {	
+		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.sDta.robocon2018!=ROBOT_SELF_TEST)
+		  gRobot.robotVel.countTime++;
 		if(startCnt==1)
 		{
 			Cnt++;
