@@ -63,7 +63,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=171.5f;
-  PrepareShootBall1.pitchAngle=7.7f;
+  PrepareShootBall1.pitchAngle=12.7f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
@@ -79,7 +79,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=174.2f;
-  PrepareShootBall2.pitchAngle=5.0f;
+  PrepareShootBall2.pitchAngle=9.0f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.steerSpeed=2000;
@@ -95,7 +95,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=181.4f;
-  PrepareShootBall3.pitchAngle=2.0f;
+  PrepareShootBall3.pitchAngle=3.5f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.steerSpeed=2000;
@@ -206,10 +206,11 @@ void SmallChange(void){
 				return;
 			}
 			
-			if((fabs(gRobot.posX-4450.f)>5.f || fabs(gRobot.posY-2140.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if((fabs(gRobot.posX-4450.f)>5.f || fabs(gRobot.posY-2140.f)>5.f || fabs(gRobot.angle)>1.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				 /*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
+				 gRobot.sDta.courseAimAngle=gRobot.sDta.courseAimAngle-gRobot.angle;
 				 whetherCount=1;
 			}else {
 				 whetherCount=0;
@@ -221,10 +222,11 @@ void SmallChange(void){
 				return;
 			}
 		
-			if((fabs(gRobot.posX-6565.f)>5.f || fabs(gRobot.posY-2180.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if((fabs(gRobot.posX-6565.f)>5.f || fabs(gRobot.posY-2180.f)>5.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
 				/*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
+				 gRobot.sDta.courseAimAngle=gRobot.sDta.courseAimAngle-gRobot.angle;
 				 whetherCount=1;
 			}else {
 				 whetherCount=0;
@@ -236,10 +238,11 @@ void SmallChange(void){
 				return;
 			}
 			
-			if((fabs(gRobot.posX-6080.f)>5.f || fabs(gRobot.posY-6030.f)>5.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if((fabs(gRobot.posX-6080.f)>5.f || fabs(gRobot.posY-6030.f)>5.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 gRobot.sDta.courseAimAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
 						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
+				gRobot.sDta.courseAimAngle=gRobot.sDta.courseAimAngle-gRobot.angle;
 				whetherCount=1;
 			}else {
 				 whetherCount=0;
@@ -252,8 +255,8 @@ void SmallChange(void){
 	//如果计算了判断计算值是否与给定的值超过了0.2超过了则微调
 	if(whetherCount){
 		/*防止计算的值超过限定角度*/
-		if(gRobot.sDta.courseAimAngle>198.f){
-			gRobot.sDta.courseAimAngle=198.f;
+		if(gRobot.sDta.courseAimAngle>189.f){
+			gRobot.sDta.courseAimAngle=189.f;
 			USART_OUTByDMA("courseAngle OUT OF RANGE");
 		}else if(gRobot.sDta.courseAimAngle<0.f){
 			gRobot.sDta.courseAimAngle=0.f;

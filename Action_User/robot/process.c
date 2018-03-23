@@ -142,12 +142,14 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(/*持球舵机到位*/
-			//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+			if(gRobot.robotVel.countVel<15.f
+					 &&PE_FOR_THE_BALL
+				/*持球舵机到位*/
+			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 						/*持球舵机到位*/
 					//	&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 							/*俯仰到位，*/
-							(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
 									/*气压到位*/
@@ -179,7 +181,10 @@ void FightForBall1(void)
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 		//				USART_OUTByDMA("!HB11\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-		//				USART_OUTByDMA("!HB21\t");
+		//-USART_OUTByDMA("!HB21\t");
+				if(gRobot.robotVel.countVel>15.f){
+				  USART_OUTByDMA("RobotVel Large!\t");
+			  }
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				{
 					USART_OUTByDMA("!PITCH1\t");
@@ -252,16 +257,18 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			if(/*持球舵机到位*/
-		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
-						/*持球舵机到位*/
-			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
-							/*俯仰到位，*/
-							(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
-								/*航向到位*/
-								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
-									/*气压到位*/
-									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+			if(gRobot.robotVel.countVel<15.f
+					 &&PE_FOR_THE_BALL
+					/*持球舵机到位*/
+			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+							/*持球舵机到位*/
+				//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+								/*俯仰到位，*/
+								&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+									/*航向到位*/
+									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
+										/*气压到位*/
+										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				/*射球*/
 				ShootBall();
@@ -290,6 +297,10 @@ void FightForBall2(void)
 
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2\t");
+				
+				if(gRobot.robotVel.countVel>15.f){
+				  USART_OUTByDMA("RobotVel Large!\t");
+			  }
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 		//				USART_OUTByDMA("!HB12\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
@@ -373,6 +384,7 @@ void FightForGoldBall(void)
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
     if(PE_FOR_THE_BALL
+				&&gRobot.robotVel.countVel<15.f
 				/*持球舵机到位*/
 		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
@@ -409,6 +421,9 @@ void FightForGoldBall(void)
 //				USART_OUTByDMA("!HB13\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUTByDMA("!HB23\t");
+			if(gRobot.robotVel.countVel>15.f){
+				USART_OUTByDMA("RobotVel Large!\t");
+			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 			{
 				USART_OUTByDMA("!PITCH3\t");
