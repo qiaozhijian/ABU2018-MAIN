@@ -497,11 +497,13 @@ void processReponse(void)
 	
   switch(gRobot.sDta.robocon2018)
   {
-  case ROBOT_PREPARE:
-    USART_OUTByDMA("ROBOT_PREPARE\t");
+    case ROBOT_PREPARE:
+      USART_OUTByDMA("ROBOT_PREPARE\t");
+		break;
 	
-  case ROBOT_START:
-    USART_OUTByDMA("ROBOT_START\t");
+		case ROBOT_START:
+			USART_OUTByDMA("ROBOT_START\t");
+		break;
 	}
   switch(gRobot.sDta.process)
   {
