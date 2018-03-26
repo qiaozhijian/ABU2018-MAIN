@@ -79,8 +79,8 @@ void USART3_IRQHandler(void)
 				gRobot.angle=posture.ActVal[0] ;
         gRobot.speedX=-posture.ActVal[1] ;
         gRobot.speedY=posture.ActVal[2] ;
-        gRobot.posX = -posture.ActVal[3] + (DISX_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))-DISY_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISX_GYRO2CENTER;
-        gRobot.posY =  posture.ActVal[4] + (DISX_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))+DISY_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISY_GYRO2CENTER;
+        gRobot.posX = posture.ActVal[3] + (DISX_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))-DISY_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISX_GYRO2CENTER;
+        gRobot.posY = -posture.ActVal[4] + (DISX_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))+DISY_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISY_GYRO2CENTER;
 				gRobot.AngularVelocity=posture.ActVal[5];
 				gRobot.posSystemReady=1;
 				

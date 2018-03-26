@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "usart.h"
 /**************#define area**********/
-#define TEST
+///#define TEST
 //#define DEBUG
 
 //常量定义
@@ -50,8 +50,8 @@
 /*弧度制转换为角度制*/
 #define RAD_TO_ANGLE(rad) 																						((rad)*57.29578f)
 /*定位系统与车中心的差*/
-#define DISX_GYRO2CENTER (231.0f)
-#define DISY_GYRO2CENTER (145.0f)
+#define DISX_GYRO2CENTER (164.0f)
+#define DISY_GYRO2CENTER (445.0f)
 /*车中心与转盘中心的误差*/
 #define CAR_CENTER_TO_COURCE_CENTER   (15.f)
 

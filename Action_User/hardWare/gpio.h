@@ -11,7 +11,7 @@
 
 #define BEEP_OFF         		 GPIO_ResetBits(GPIOC, GPIO_Pin_3)
 
-#define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_15))	
+#define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0))	
 
 
 

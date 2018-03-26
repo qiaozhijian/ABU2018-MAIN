@@ -839,6 +839,11 @@ void RobotSelfTest(void){
 			//金球架抓取气阀
 			GoldBallGraspStairTwoOff();
 		  Delay_ms(1500);
+			
+			LowerClawStairOn();
+			Delay_ms(1500);
+			LowerClawStairOff();
+			Delay_ms(1500);
 		  selfTestStep++;
 		break;
 		
