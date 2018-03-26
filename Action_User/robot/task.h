@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "usart.h"
 /**************#define area**********/
-//#define TEST
+#define TEST
 //#define DEBUG
 
 //常量定义
@@ -212,6 +212,7 @@
 #define BALL_1														1
 #define BALL_2														2
 #define BALL_3														3
+#define BALL_4														4
 
 #define DELAY_TASK_NUM										2
 /*延时进行的任务*/

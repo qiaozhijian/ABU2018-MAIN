@@ -187,7 +187,7 @@ void CAN2_RX0_IRQHandler(void)
     if(msg.data32[0]==0x00005850)
     {
       gRobot.pitchAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.pitchAngle=20.f-gRobot.pitchAngle;
+			gRobot.pitchAngle=30.f-gRobot.pitchAngle;
       SetMotionFlag(AT_PITCH_READ_SUCCESS);
     }
     //速度
@@ -204,7 +204,7 @@ void CAN2_RX0_IRQHandler(void)
     if(msg.data32[0]==0x00005850)
     {
       gRobot.courseAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.courseAngle=gRobot.courseAngle-3.f;
+			gRobot.courseAngle=gRobot.courseAngle+40.f;
       SetMotionFlag(AT_COURSE_READ_SUCCESS);
     }
     //速度

@@ -240,17 +240,7 @@ void AT_CMD_Handle(void){
 		gRobot.sDta.holdBallAimAngle[1]=value;
 		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1]);
 		break;
-  case BOOST:
-    USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 5) == '1') 
-    {
-      BoostPolePush();
-    }
-    else if(*(buffer + 5) == '0') 
-    {
-      BoostPoleReturn();
-    } 
-    break;
+  
   case LOWER_CLAW_STAIR:
     USART_OUTByDMA("OK\r\n");
     if(*(buffer + 5) == '1') 

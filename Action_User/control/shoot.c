@@ -18,6 +18,7 @@ motionPara_t PrepareCompete;
 motionPara_t PrepareGetBall1;
 motionPara_t PrepareGetBall2;
 motionPara_t PrepareGetBall3;
+motionPara_t PrepareGetBall4;
 motionPara_t PrepareShootBall1;
 motionPara_t PrepareShootBall2;
 motionPara_t PrepareShootBall3;
@@ -100,6 +101,14 @@ void prepareMotionParaInit(void)
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.steerSpeed=2000;
   PrepareShootBall3.gasAim=0.480f;
+	
+	/*准备第四个球的参数*/
+	PrepareGetBall4.courseAngle=80.f;
+	PrepareGetBall4.pitchAngle = 2.f;
+	PrepareGetBall4.upSteerAngle = 60.f;
+	PrepareGetBall4.downSteerAngle = 60.f;
+	PrepareGetBall4.steerSpeed = 2000;
+	PrepareGetBall4.gasAim = 0.480f;
   
 }
 //
@@ -145,6 +154,12 @@ void PrepareGetBall(int index)
 			//传入准备得到球的参数
 			PrepareGetBallMotion(PrepareGetBall3);
 			break;
+		
+		case BALL_4:
+			//传入准备得到球的参数
+			PrepareGetBallMotion(PrepareGetBall4);
+			break;
+		
 		default:
 			USART_OUT(DEBUG_USART,"PrepareGetBall error\r\n");
 			break;
@@ -187,6 +202,10 @@ void PrepareShootBall(int index)
     PrepareShootBallMotion(PrepareShootBall2);
     break;
   case BALL_3:
+    //传入准备射球的参数
+    PrepareShootBallMotion(PrepareShootBall3);
+    break;
+	case BALL_4:
     //传入准备射球的参数
     PrepareShootBallMotion(PrepareShootBall3);
     break;

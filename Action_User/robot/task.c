@@ -304,15 +304,11 @@ void statusInit(void)
   
 	/*爪子关闭*/
 	ClawShut();
-	/*去投第三个球时的助推气阀重置*/
-	BoostPoleReturn();
 	/*射球完毕时的归位小气阀重置*/
 	ShootSmallShut();
 	/*射球时的助力大气阀重置*/
 	ShootBigShut();
 	ShootLedOff();
-	/*金球架抓取一级气阀打开*/
-	GoldBallGraspStairOneOn();
 	/*金球架抓取二级气阀打开*/
 	GoldBallGraspStairTwoOn();
 	/*下爪手臂向上抬*/

@@ -3,11 +3,16 @@
 #include  "can.h"
 
 #define GASVALVE_BOARD_ID 				0
-#define GASVALVE_BOARD_ID_DOWN    1
+#define GASVALVE_BOARD_ID_DOWN    0
+#define LED_BOARD_ID 							0
 
 #define SHOOT_LED_ID							1
+#define SHOOT_SMALL_ID										7
+#define SHOOT_BIG_ID 									  	2
+#define CLAW_ID 													5
+#define GOLD_GET_STAIR2_ID 								3
+#define LOW_CLAW_ID                       4
 
-#define LED_BOARD_ID 							1
 
 /*控制气阀板的函数*/
 void GasValveControl(uint8_t boardNum , uint8_t valveNum , uint8_t valveState);
@@ -32,15 +37,7 @@ void ShootLedOn(void);
 
 void ShootLedOff(void);
 
-/*去投第三个球时的助推气阀*/
-void BoostPolePush(void);
 
-void BoostPoleReturn(void);
-
-/*金球架抓取一级气阀*/
-void GoldBallGraspStairOneOn(void);
-
-void GoldBallGraspStairOneOff(void);
 
 /*金球架抓取二级气阀*/
 void GoldBallGraspStairTwoOn(void);

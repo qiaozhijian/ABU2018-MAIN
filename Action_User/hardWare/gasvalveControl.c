@@ -7,14 +7,7 @@
 
 
 
-#define SHOOT_SMALL_ID										2
-#define CLAW_ID 													3
-#define GOLD_GET_STAIR2_ID 								4
-#define SHOOT_BIG_ID 									  	5
-#define GOLD_GET_STAIR1_ID								6
-#define BOOST_POLE_ID											8
 
-#define LOW_CLAW_ID                       2
 
 /*
 车底两个助力气阀，一个气阀
@@ -98,27 +91,6 @@ void ShootLedOff(void)
 	GasValveControl(LED_BOARD_ID , SHOOT_LED_ID , 0);
 }
 
-/*去投第三个球时的,自动车助推气阀*/
-void BoostPolePush(void)
-{
-	GasValveControl(GASVALVE_BOARD_ID , BOOST_POLE_ID , 1);
-}
-
-void BoostPoleReturn(void)
-{
-	GasValveControl(GASVALVE_BOARD_ID , BOOST_POLE_ID , 0);
-}
-
-/*金球架抓取一级气阀*/
-void GoldBallGraspStairOneOff(void)
-{
-	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR1_ID , 1);
-}
-
-void GoldBallGraspStairOneOn(void)
-{
-	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR1_ID , 0);
-}
 
 /*金球架抓取二级气阀*/
 void GoldBallGraspStairTwoOn(void)
@@ -133,10 +105,10 @@ void GoldBallGraspStairTwoOff(void)
 /*下爪手臂向下撑*/
 void LowerClawStairOn(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 0);
+	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 1);
 }
 /*下爪手臂向上抬*/
 void LowerClawStairOff(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 1);
+	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 0);
 }

@@ -30,9 +30,7 @@ void SelfTest(void)
 			count=0;
 		if(count>200)
 		{
-			BoostPolePush();
 			Delay_ms(2000);
-			BoostPoleReturn();
 			count=0;
 		}
 	
@@ -365,6 +363,24 @@ void FightForGoldBall(void)
 					gRobot.sDta.process=TO_THE_AREA_3;
 					USART_OUTByDMA("YOU should shoot\r\n");
 				}
+			break; 
+				
+			//接去第二金球
+			case 11:
+				GoldBallGraspStairTwoOff();
+				PrepareGetBall(BALL_4);
+				isGetBall = 12;
+			break;
+				
+			case 12:
+				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS
+							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
+									&&PrepareForTheBall()){
+					PrepareShootBall(BALL_4);
+					gRobot.sDta.robocon2018=TO_THROW_BALL_3;
+					
+				}
 			break;
 				
 		}
@@ -405,7 +421,8 @@ void FightForGoldBall(void)
       ShootReset();
       
 			/*射完金球进程停止了，这时候看看需要再投掷，那就把 gRobot.sDta.process改为取金球同时更改第一个金球到的判读坐标条件*/
-      gRobot.sDta.process=END_COMPETE;
+      gRobot.sDta.process=TO_GET_BALL_3;
+			isGetBall=11;
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
@@ -802,7 +819,6 @@ void RobotSelfTest(void){
 		
 		  //射球两个气阀
 			ClawOpen();
-			BoostPoleReturn();
 			ShootSmallOpen();
 			Delay_ms(1000);
       ShootBigOpen();
@@ -814,17 +830,13 @@ void RobotSelfTest(void){
 
 		
 			//助推车的气阀
-			BoostPolePush();
 			Delay_ms(1000);
 			//助推车的气阀
-			BoostPoleReturn();
 		
 			//金球架抓取气阀
-			GoldBallGraspStairOneOn();
 			GoldBallGraspStairTwoOn();
 			Delay_ms(1500);
 			//金球架抓取气阀
-			GoldBallGraspStairOneOff();
 			GoldBallGraspStairTwoOff();
 		  Delay_ms(1500);
 		  selfTestStep++;
