@@ -278,7 +278,7 @@ typedef struct{
   float laserInit;
   
   /*激光测得的值*/
-  uint16_t laser[3];
+  uint16_t laser[2];
   
   /*持球舵机的位置*/
   float holdBallAngle[2];

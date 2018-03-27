@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "iwdg.h"
 #include "robot.h"
+#include "motion.h"
 
 extern Robot_t gRobot;
 
@@ -19,7 +20,7 @@ void PitchAngleMotion(float angle)
 	
 	angle=30.f-angle;
 	
-  PosCrl(CAN2, 5,ABSOLUTE_MODE,PITCH_ANGLE_TO_CODE(angle));
+  PosCrl(CAN2, PITCH_MOTOR_ID,ABSOLUTE_MODE,PITCH_ANGLE_TO_CODE(angle));
 }
 
 void CourseAngleMotion(float angle)
@@ -31,7 +32,7 @@ void CourseAngleMotion(float angle)
     angle=150.f;
 	
 	
-  PosCrl(CAN2, 6,ABSOLUTE_MODE,COURSE_ANGLE_TO_CODE(angle));
+  PosCrl(CAN2, COURCE_MOTOR_ID,ABSOLUTE_MODE,COURSE_ANGLE_TO_CODE(angle));
 }
 
 void GasMotion(float value)
@@ -87,15 +88,15 @@ void MotionExecute(void)
 void MotionRead(void)
 {
 	/*读取俯仰角*/
-	ReadActualPos(CAN2,5);
+	ReadActualPos(CAN2,PITCH_MOTOR_ID);
   /*将读俯仰角姿态的标志位归0*/
 	SetMotionFlag(~AT_PITCH_READ_SUCCESS);
 	/*读取航向角角*/
-	ReadActualPos(CAN2,6);
+	ReadActualPos(CAN2,COURCE_MOTOR_ID);
 	/*读取上电机航向角角*/
-	ReadActualPos(CAN2,7);
+	ReadActualPos(CAN2,UP_STEER_MOTOR_ID);
 	/*读取下电机航向角角*/
-	ReadActualPos(CAN2,8);
+	ReadActualPos(CAN2,DOWN_STEER_MOTOR_ID);
   /*将读航向角姿态的标志位归0*/
 	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
 }

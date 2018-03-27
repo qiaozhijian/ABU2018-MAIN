@@ -8,6 +8,7 @@
 #include "process.h"
 #include "robot.h"
 #include "dma.h"
+#include "motion.h"
 extern Robot_t gRobot;
 
 //以vel的速度转到angle角度,但由于现在给定一直都是最大加速度所以就没用到vel
@@ -53,7 +54,7 @@ void HoldSteer2PosCrl(float angle)
 
 	pos=(int)(-angle+116.f)*36.f*8192.f/360;
   
-	PosCrl(CAN2,8,ABSOLUTE_MODE,pos);
+	PosCrl(CAN2,DOWN_STEER_MOTOR_ID,ABSOLUTE_MODE,pos);
 }
 void HoldSteer1PosCrl(float angle)
 {
@@ -71,7 +72,7 @@ void HoldSteer1PosCrl(float angle)
 	/*angle*25/16*36*8192.f/360*/
   pos=(int)(angle +123.f)*1280;
 	
-  PosCrl(CAN2,7,ABSOLUTE_MODE,pos);
+  PosCrl(CAN2,UP_STEER_MOTOR_ID,ABSOLUTE_MODE,pos);
 }
 
 //void HoldSteer2PosCrl(float angle,int vel)

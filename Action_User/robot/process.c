@@ -764,48 +764,24 @@ void RobotSelfTest(void){
 	MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST);
 	static int selfTestStep=0;
 	switch(selfTestStep){
-		//对电机，舵机的自检
+		//自动车轮子检测
 		case 0:
-			ShootLEDShine();
-			USART_OUTByDMA("STEER_MOTION_TEST\r\n");
-			//俯仰角到-15度
-			PitchAngleMotion(-15.f);
-			gRobot.sDta.pitchAimAngle=-15.f;
-			Delay_ms(1500);
-			//俯仰角到20度
-			gRobot.sDta.pitchAimAngle=15.f;
-			PitchAngleMotion(15.f);
-			Delay_ms(1500);
-			gRobot.sDta.pitchAimAngle=0.f;
-			PitchAngleMotion(0.f);
-			Delay_ms(1500);
-		
-			gRobot.sDta.courseAimAngle=0.f;//防止参数更新，MotionExceute里面会执行
-			CourseAngleMotion(0.f);
-			Delay_ms(2000);
-			gRobot.sDta.courseAimAngle=180.f;//防止参数更新，MotionExceute里面会执行
-			CourseAngleMotion(90.f);
-			Delay_ms(2000);
-			gRobot.sDta.courseAimAngle=0.f;
-			CourseAngleMotion(0.f);
-			Delay_ms(2500);
-		
-		  //上下两个舵机到0
-			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
-			HoldBallPosCrlSeparate(0.f,0.f);
-			Delay_ms(2000);
-			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=90.f;
-			HoldBallPosCrlSeparate(90.f,90.f);
-			Delay_ms(2000);
-			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=-90.f;
-			HoldBallPosCrlSeparate(-90.f,-90.f);
-			Delay_ms(2000);
-			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
-			HoldBallPosCrlSeparate(0.f,0.f);
-			
-			selfTestStep++;
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
+			USART_OUTByDMA("WHEEL_TEST\r\n");
+			if(!sendWheelFlag){
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
+				sendWheelFlag=1;
+			}
+			if(gRobot.sDta.AT_motionFlag&AT_THE_WHEEL_SELFTEST_OVER){
+				selfTestStep++;
+				ShootLEDShineOnce=1;
+				USART_OUTByDMA("WHEEL_TEST_OVER\r\n");
+			}
 		break;
-		
+			
 		//对各个气阀的自检
 		case 1:
 			ShootLEDShine();
@@ -868,22 +844,46 @@ void RobotSelfTest(void){
 			}
 		break;
 		
-		//自动车轮子检测
+		//对电机，舵机的自检
 		case 3:
-			if(ShootLEDShineOnce){
-				ShootLEDShineOnce=0;
-				ShootLEDShine();
-			}
-			USART_OUTByDMA("WHEEL_TEST\r\n");
-			if(!sendWheelFlag){
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
-				sendWheelFlag=1;
-			}
-			if(gRobot.sDta.AT_motionFlag&AT_THE_WHEEL_SELFTEST_OVER){
-				selfTestStep++;
-				ShootLEDShineOnce=1;
-				USART_OUTByDMA("WHEEL_TEST_OVER\r\n");
-			}
+			ShootLEDShine();
+			USART_OUTByDMA("STEER_MOTION_TEST\r\n");
+			//俯仰角到-15度
+			PitchAngleMotion(-15.f);
+			gRobot.sDta.pitchAimAngle=-15.f;
+			Delay_ms(1500);
+			//俯仰角到20度
+			gRobot.sDta.pitchAimAngle=15.f;
+			PitchAngleMotion(15.f);
+			Delay_ms(1500);
+			gRobot.sDta.pitchAimAngle=0.f;
+			PitchAngleMotion(0.f);
+			Delay_ms(1500);
+		
+			gRobot.sDta.courseAimAngle=0.f;//防止参数更新，MotionExceute里面会执行
+			CourseAngleMotion(0.f);
+			Delay_ms(2000);
+			gRobot.sDta.courseAimAngle=180.f;//防止参数更新，MotionExceute里面会执行
+			CourseAngleMotion(90.f);
+			Delay_ms(2000);
+			gRobot.sDta.courseAimAngle=0.f;
+			CourseAngleMotion(0.f);
+			Delay_ms(2500);
+		
+		  //上下两个舵机到0
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+			HoldBallPosCrlSeparate(0.f,0.f);
+			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=90.f;
+			HoldBallPosCrlSeparate(90.f,90.f);
+			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=-90.f;
+			HoldBallPosCrlSeparate(-90.f,-90.f);
+			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+			HoldBallPosCrlSeparate(0.f,0.f);
+			
+			selfTestStep++;
 		break;
 		
 		//激光检测
@@ -892,9 +892,16 @@ void RobotSelfTest(void){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
 			}
+			if(KEYSWITCH||KEYSWITCH_CHECK_GOLD){
+				BEEP_ON;
+				return;
+			}else if(KEYSWITCH==0&&KEYSWITCH_CHECK_GOLD==0){
+				BEEP_OFF;
+			}
+			
 			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_LASER);
 			USART_OUTByDMA("LASER_TEST\r\n");
-			USART_OUTByDMA("A%d\t B%d\t D%d \t\r\n",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
+			USART_OUTByDMA("A%d\t B%d\t\r\n",gRobot.laser[0],gRobot.laser[1]);
 			if(gRobot.laser[0]>20&&gRobot.laser[0]<600){
 				BEEP_ON;
 				Delay_ms(gRobot.laser[0]/10*5);
@@ -905,12 +912,9 @@ void RobotSelfTest(void){
 				Delay_ms(gRobot.laser[1]/10*5);
 				BEEP_OFF;
 				Delay_ms(gRobot.laser[1]/10*5);
-			}else if(gRobot.laser[2]>20&&gRobot.laser[2]<600){
-				BEEP_ON;
-				Delay_ms(gRobot.laser[2]/10*5);
-				BEEP_OFF;
-				Delay_ms(gRobot.laser[2]/10*5);
 			}
+			
+			
 		break;
 		
 	}

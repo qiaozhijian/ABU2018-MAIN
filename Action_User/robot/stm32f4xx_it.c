@@ -42,6 +42,7 @@
 #include "DataRecover.h"
 #include "robot.h"
 #include "dma.h"
+#include "motion.h"
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
@@ -112,8 +113,6 @@ void CAN1_RX0_IRQHandler(void)
 			gRobot.laser[0]=msg.data32[1];
 		}else if(msg.data8[2]=='B'){
 			gRobot.laser[1]=msg.data32[1];
-		}else if(msg.data8[2]=='D'){
-			gRobot.laser[2]=msg.data32[1];
 		}
 	}
 	if(msg.data32[0]==GET_MOTIONCARD_INTO_HARDFAULT)
@@ -178,7 +177,7 @@ void CAN2_RX0_IRQHandler(void)
   CAN_RxMsg(CAN2, &StdId, buffer, 8);
   canNodeId = StdId;
   
-  if((StdId - SDO_RESPONSE_COB_ID_BASE)==5)     //俯仰
+  if((StdId - SDO_RESPONSE_COB_ID_BASE)==PITCH_MOTOR_ID)     //俯仰
   {
     //fix me, if length not 8
     for(i = 0; i < 8; i++)
@@ -195,7 +194,7 @@ void CAN2_RX0_IRQHandler(void)
     {
       
     }
-  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==6)     //航向
+  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==COURCE_MOTOR_ID)     //航向
   {
     //fix me, if length not 8
     for(i = 0; i < 8; i++)
@@ -212,7 +211,7 @@ void CAN2_RX0_IRQHandler(void)
     {
       
     }
-  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==7){
+  }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==UP_STEER_MOTOR_ID){
 		for(i = 0; i < 8; i++)
       msg.data8[i] = buffer[i];
     //位置
@@ -221,7 +220,7 @@ void CAN2_RX0_IRQHandler(void)
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0]-120.f;
     }
-	}else if((StdId - SDO_RESPONSE_COB_ID_BASE)==8){
+	}else if((StdId - SDO_RESPONSE_COB_ID_BASE)==DOWN_STEER_MOTOR_ID){
 		for(i = 0; i < 8; i++)
       msg.data8[i] = buffer[i];
     //位置
