@@ -130,6 +130,28 @@ void RobotTask(void)
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
+		
+				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
+				{
+					processReponse();
+					USART_OUTByDMAF(gRobot.posX);
+					USART_OUTByDMAF(gRobot.posY);
+					USART_OUTByDMAF(gRobot.angle);
+//					USART_OUTByDMAF(gRobot.angleBais);
+//					USART_OUTByDMAF(gRobot.KalmanZ);
+//					USART_OUTByDMAF(gRobot.AngularVelocity);
+					USART_OUTByDMAF(gRobot.robotVel.countVel);
+					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
+					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
+					USART_OUTByDMAF(gRobot.courseAngle);
+					USART_OUTByDMAF(gRobot.pitchAngle);
+					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+					USART_OUTByDMAF(gRobot.holdBallAngle[1]);
+					USART_OUTByDMAF(gRobot.gasValue);
+					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
+					
+				}
 				
 				/*蓝牙命令处理*/
 				AT_CMD_Handle();
@@ -146,24 +168,6 @@ void RobotTask(void)
 				/*运动状态更新*/
 				MotionRead();
 				
-				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
-				{
-					processReponse();
-					USART_OUTByDMAF(gRobot.posX);
-					USART_OUTByDMAF(gRobot.posY);
-					USART_OUTByDMAF(gRobot.angle);
-					USART_OUTByDMAF(gRobot.robotVel.countVel);
-					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
-					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
-					USART_OUTByDMAF(gRobot.courseAngle);
-					USART_OUTByDMAF(gRobot.pitchAngle);
-					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-					USART_OUTByDMAF(gRobot.holdBallAngle[1]);
-					USART_OUTByDMAF(gRobot.gasValue);
-					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
-					USART_OUTByDMA("\r\n");
-				}
 				
 				switch(gRobot.sDta.robocon2018)
 				{
@@ -216,7 +220,8 @@ void RobotTask(void)
 						BEEP_ON;
 					  USART_OUTByDMA("INTO_HARDFAULT!!!\r\n");
 					break;
-				}	
+				}
+				USART_OUTByDMA("\r\n");
 			#endif
 		#endif
   } 

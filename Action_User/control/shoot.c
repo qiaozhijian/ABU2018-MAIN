@@ -287,11 +287,11 @@ void SmallChange(void){
 			
 				USART_OUTByDMA("courseAngle need change=");
 				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-				USART_OUTByDMA("\r\n");
+//				USART_OUTByDMA("\r\n");
 		}else {
 				USART_OUTByDMA("courseAngle OK\t");
 				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-				USART_OUTByDMA("\r\n");
+//				USART_OUTByDMA("\r\n");
 		}
   }
 	

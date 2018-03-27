@@ -230,7 +230,7 @@
 #define ROBOT_COURCE_CENTER_TO_ARM   (445.f)
 #define ROBOT_ARM_TO_MOTOR           (509.26f)
 #define ROBOT_ARM_TO_THROW_CENTER    (596.88f)
-#define ROBOT_CENTER_TO_COURCE       (15.f)
+#define ROBOT_CENTER_TO_COURCE       (0.f)
 typedef struct{
   
 	/*判断此次是否为看门狗复位*/
@@ -311,6 +311,8 @@ typedef struct{
 	float speedY;
 	float AngularVelocity;
 	int posSystemCode[2];
+	float angleBais;
+	float KalmanZ;
 	
 	uint32_t posSystemReady;
 	

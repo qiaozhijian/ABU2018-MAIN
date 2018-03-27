@@ -14,8 +14,8 @@ void USART3_IRQHandler(void)
 {
   static uint8_t ch;
   static union {
-    uint8_t data[24];
-    float ActVal[6];
+    uint8_t data[32];
+    float ActVal[8];
   } posture;
   static uint8_t count = 0;
   static uint8_t i = 0;
@@ -54,7 +54,7 @@ void USART3_IRQHandler(void)
     case 2:
       posture.data[i] = ch;
       i++;
-      if (i >= 24)
+      if (i >= 32)
       {
         i = 0;
         count++;
@@ -76,20 +76,22 @@ void USART3_IRQHandler(void)
         gRobot.robotVel.lastPosX=gRobot.posX;
         gRobot.robotVel.lastPosY=gRobot.posY;
 				
-				gRobot.angle=posture.ActVal[0] ;
+	    gRobot.angle=posture.ActVal[0] ;
         gRobot.speedX=-posture.ActVal[1] ;
         gRobot.speedY=posture.ActVal[2] ;
         gRobot.posX = posture.ActVal[3] + (DISX_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))-DISY_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISX_GYRO2CENTER;
         gRobot.posY = -posture.ActVal[4] + (DISX_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))+DISY_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))) - DISY_GYRO2CENTER;
-				gRobot.AngularVelocity=posture.ActVal[5];
-				gRobot.posSystemReady=1;
+		gRobot.AngularVelocity=posture.ActVal[5];
+		gRobot.angleBais=posture.ActVal[6];
+		gRobot.KalmanZ=posture.ActVal[7];
+		gRobot.posSystemReady=1;
 				
-				if(gRobot.robotVel.countTime!=0){
-				 gRobot.robotVel.countVel=sqrtf((gRobot.posX - gRobot.robotVel.lastPosX)*(gRobot.posX - gRobot.robotVel.lastPosX)+(gRobot.posY - gRobot.robotVel.lastPosY)*(gRobot.posY - gRobot.robotVel.lastPosY))/gRobot.robotVel.countTime;
-				 gRobot.robotVel.countVel=gRobot.robotVel.countVel*10000;
-				}
-				gRobot.robotVel.countTime=0;
-			}
+		if(gRobot.robotVel.countTime!=0){
+		 gRobot.robotVel.countVel=sqrtf((gRobot.posX - gRobot.robotVel.lastPosX)*(gRobot.posX - gRobot.robotVel.lastPosX)+(gRobot.posY - gRobot.robotVel.lastPosY)*(gRobot.posY - gRobot.robotVel.lastPosY))/gRobot.robotVel.countTime;
+		 gRobot.robotVel.countVel=gRobot.robotVel.countVel*10000;
+		}
+		gRobot.robotVel.countTime=0;
+	  }
       count = 0;
       break;
     default:

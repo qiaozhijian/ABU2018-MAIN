@@ -121,7 +121,7 @@ void FightForBall1(void)
 						case 2:
 							if((gRobot.posX>4054.f)||(gRobot.posY>1620.f))
 							{
-								USART_OUTByDMA("IntoTheArea\r\n");
+								USART_OUTByDMA("IntoTheArea");
 								//TalkToCamera(CAMERA_OPEN_NEAR);
 								PrepareShootBall(BALL_1);
 								gRobot.sDta.process=TO_THE_AREA_1;
@@ -198,7 +198,7 @@ void FightForBall1(void)
 					USART_OUTByDMA("!GAS1\t");
 					USART_OUTByDMAF(gRobot.gasValue);
 				}
-				USART_OUTByDMA("\r\n");
+				//USART_OUTByDMA("\r\n");
 			}
 			break;
 		}
@@ -234,7 +234,7 @@ void FightForBall2(void)
 				case 2:
 					if(gRobot.posX>6000.f)
 					{	
-						USART_OUTByDMA("IntoTheArea\r\n");
+						USART_OUTByDMA("IntoTheArea");
 						gRobot.sDta.process=TO_THE_AREA_2;
 						
 						PrepareShootBall(BALL_2);
@@ -318,7 +318,7 @@ void FightForBall2(void)
 					USART_OUTByDMA("!GAS2\t");
 					USART_OUTByDMAF(gRobot.gasValue);
 				}
-				USART_OUTByDMA("\r\n");
+				//USART_OUTByDMA("\r\n");
 			}
 			break;
   }
@@ -339,18 +339,18 @@ void FightForGoldBall(void)
 			case 0:
 				if(GoldRackInto()){
 					GoldBallGraspStairTwoOn();
-					USART_OUTByDMA("GoldballRackInto Push\r\n");
+					USART_OUTByDMA("GoldballRackInto Push");
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
-				USART_OUTByDMA("BallRack %d\r\n",KEYSWITCH_CHECK_GOLD);
+				USART_OUTByDMA("BallRack %d",KEYSWITCH_CHECK_GOLD);
 			break;
 				
 			case 1:
 				if(PrepareForTheBall()&&gRobot.posY>2100.f)
 				{
 					PrepareShootBall(BALL_3);
-					USART_OUTByDMA("PrepareShoot\r\n");
+					USART_OUTByDMA("PrepareShoot");
 					isGetBall++;
 				}
 			break;
@@ -361,7 +361,7 @@ void FightForGoldBall(void)
 					/*上舵机到位直接开始准备射球参数*/
 					LowerClawStairOn();
 					gRobot.sDta.process=TO_THE_AREA_3;
-					USART_OUTByDMA("YOU should shoot\r\n");
+					USART_OUTByDMA("YOU should shoot");
 				}
 			break; 
 				
@@ -456,7 +456,7 @@ void FightForGoldBall(void)
 				USART_OUTByDMA("!GAS3\t");
 				USART_OUTByDMAF(gRobot.gasValue);
 			}
-			USART_OUTByDMA("\r\n");
+			//USART_OUTByDMA("\r\n");
 		}
     break;
   }
