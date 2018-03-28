@@ -377,9 +377,19 @@ void FightForGoldBall(void)
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
 									&&PrepareForTheBall()){
+					LowerClawStairOn();
 					PrepareShootBall(BALL_4);
-					gRobot.sDta.process=TO_THROW_BALL_3;
-					
+					isGetBall=13;
+				}
+			break;
+				
+				/*因为第四个金球已经拿到时已经到了投掷金球点，可能在调节过程中一次性满足所有条件然后就发射了，航向等还有瞬时速度，干扰投球*/
+			case 13:
+				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS
+							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
+				  gRobot.sDta.process=TO_THROW_BALL_3;
+
 				}
 			break;
 				

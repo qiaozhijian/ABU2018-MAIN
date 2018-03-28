@@ -25,7 +25,8 @@ motionPara_t PrepareShootBall3;
 
 
 void ShootBall(void)
-{					
+{				
+	Delay_ms(150);
   /*将下爪手臂气缸上抬*/
   LowerClawStairOff();
 	ShootLedOn();
@@ -80,7 +81,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=174.2f;
-  PrepareShootBall2.pitchAngle=3.5f;
+  PrepareShootBall2.pitchAngle=7.5f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.steerSpeed=2000;
@@ -96,7 +97,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=181.4f;
-  PrepareShootBall3.pitchAngle=1.5f;
+  PrepareShootBall3.pitchAngle=5.5f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.steerSpeed=2000;
