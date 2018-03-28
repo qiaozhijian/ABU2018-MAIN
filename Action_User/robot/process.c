@@ -378,7 +378,7 @@ void FightForGoldBall(void)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
 									&&PrepareForTheBall()){
 					PrepareShootBall(BALL_4);
-					gRobot.sDta.robocon2018=TO_THROW_BALL_3;
+					gRobot.sDta.process=TO_THROW_BALL_3;
 					
 				}
 			break;

@@ -218,7 +218,7 @@ void RobotTask(void)
 					case INTO_HARDFAULT:
 						ShootLedOn();
 						BEEP_ON;
-					  USART_OUTByDMA("INTO_HARDFAULT!!!\r\n");
+					  USART_OUTByDMA("INTO_HARDFAULT!!!");
 					break;
 				}
 				USART_OUTByDMA("\r\n");
