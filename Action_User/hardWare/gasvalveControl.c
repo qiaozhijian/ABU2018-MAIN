@@ -62,22 +62,26 @@ void ClawShut(void)
 void ShootSmallOpen(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 0);
+	SetMotionFlag(AT_SHOOT_SMALL_ENABLE);
 }
 
 void ShootSmallShut(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID , SHOOT_SMALL_ID , 1);
+	SetMotionFlag(~AT_SHOOT_SMALL_ENABLE);
 }
 
 /*射球时的助力大气阀*/
 void ShootBigOpen(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 1);
+	SetMotionFlag(AT_SHOOT_BIG_ENABLE);
 }
 
 void ShootBigShut(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID , SHOOT_BIG_ID , 0);
+	SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
 }
 
 /*投球LED指示气阀*/

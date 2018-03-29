@@ -70,7 +70,6 @@ void UART4_IRQHandler(void)
     }else{
       if(buffer[0]!='A'){
         BufferInit();
-        //USART_OUT(UART4,"NOT START WITH 'A'\r\n");
       }
     }
   }else{
@@ -138,12 +137,10 @@ void AT_CMD_Handle(void){
     if(*(buffer + 4) == '1') 
     {
       ClawShut();
-      SetMotionFlag(~AT_CLAW_STATUS_OPEN);
     }
     else if(*(buffer + 4) == '0') 
     {
       ClawOpen();
-      SetMotionFlag(AT_CLAW_STATUS_OPEN);
     } 
     else{
 		
@@ -155,13 +152,17 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     if(*(buffer + 4) == '1')
     {
-      if(gRobot.sDta.AT_motionFlag&(AT_CLAW_STATUS_OPEN|AT_STEER_READY))
-      {
-        ShootSmallOpen();
-        ShootBigOpen();
-        SetMotionFlag(AT_SHOOT_BIG_ENABLE);
-        SetMotionFlag(AT_SHOOT_SMALL_ENABLE);
-      }
+			ShootSmallOpen();
+			Delay_ms(300);
+//      if(gRobot.sDta.AT_motionFlag/*AT_CLAW_STATUS_OPEN|*/)
+//      {
+			if(PE_FOR_THE_BALL){
+				ClawOpen();
+				LowerClawStairOff();
+				Delay_ms(500);
+				ShootBigOpen();
+			}
+//      }
     }
     else if(*(buffer + 4) == '0') 
     {
@@ -169,16 +170,13 @@ void AT_CMD_Handle(void){
       {
         ShootSmallShut();
 				ShootBigShut();
-        SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
-        SetMotionFlag(~AT_SHOOT_SMALL_ENABLE);
       }
       else
       {
         ShootSmallOpen();
-        SetMotionFlag(~AT_SHOOT_SMALL_ENABLE);
         ClawShut();
-        SetMotionFlag(~AT_CLAW_STATUS_OPEN);
       }
+			LowerClawStairOff();
     }
     break;
     

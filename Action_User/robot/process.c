@@ -22,32 +22,6 @@ void SelfTest(void)
 	static int count=0;
 	switch(step)
 	{
-		case 10:
-		if(PrepareForTheBall())
-		{
-			count++;
-		}else
-			count=0;
-		if(count>200)
-		{
-			Delay_ms(2000);
-			count=0;
-		}
-	
-		
-//			SetResponseStair(0x01);
-//	HoldSteer1PosCrl(0.f,2000);		
-//	OpenSteerTorque(0xfe);
-//  SteerPosCrlBy485(0xfe,(int)(180.f*11.378f));
-//		HoldSteer2PosCrl(30.f,2000);
-		
-//		if(flagggg==1)
-//		{
-//			BoostPolePush();
-//			step++;
-//		}
-//		
-			break;
 		case 0:
 			ShootSmallOpen();
 			//电机位置环
@@ -88,6 +62,19 @@ void SelfTest(void)
 				step=0;
 			}
 			break;
+			
+		case 10:
+			if(PrepareForTheBall())
+			{
+				count++;
+			}else
+				count=0;
+			if(count>200)
+			{
+				Delay_ms(2000);
+				count=0;
+			}
+		break;
 	}
 }
 
@@ -361,17 +348,17 @@ void FightForGoldBall(void)
 					LowerClawStairOn();
 					PrepareShootBall(BALL_3);
 					USART_OUTByDMA("PrepareShoot\t");
+				  gRobot.sDta.process=TO_THE_AREA_3;
 					isGetBall++;
 				}
 			break;
 				
-			case 3:
-				if(PrepareForTheBall()&&(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f \
-					&&(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1]))<5.f){
-					gRobot.sDta.process=TO_THE_AREA_3;
-					USART_OUTByDMA("YOU should shoot\t");
-				}
-			break; 
+//			case 3:
+//				if(PrepareForTheBall()&&(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f \
+//					&&(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1]))<5.f){
+//					USART_OUTByDMA("YOU should shoot\t");
+//				}
+//			break; 
 				
 			//接去第二金球
 			case 11:

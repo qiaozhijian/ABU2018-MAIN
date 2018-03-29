@@ -28,7 +28,7 @@ void ShootBall(void)
 {	
 	/*因为第四个金球已经拿到时已经到了投掷金球点，可能在调节过程中一次性满足所有条件然后就发射了，
 	航向等还有瞬时速度，干扰投球*/
-	Delay_ms(150);
+	Delay_ms(500);
   /*将下爪手臂气缸上抬*/
   LowerClawStairOff();
 	ShootLedOn();
@@ -41,10 +41,13 @@ void ShootBall(void)
 
 void ShootReset(void)
 {
+	/*关闭下方限位爪*/
+  ClawShut();
 	ShootLedOff();
   /*复位*/
   ShootSmallShut();
   ShootBigShut();
+	Delay_ms(250);
 }
 
 void prepareMotionParaInit(void)
@@ -66,8 +69,8 @@ void prepareMotionParaInit(void)
   PrepareGetBall1.gasAim=0.470f;
   
   /*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=173.f;
-  PrepareShootBall1.pitchAngle=5.8f;
+  PrepareShootBall1.courseAngle=170.f;
+  PrepareShootBall1.pitchAngle=3.3f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
@@ -82,8 +85,8 @@ void prepareMotionParaInit(void)
   PrepareGetBall2.gasAim=0.470;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=174.5f;
-  PrepareShootBall2.pitchAngle=2.3f;
+  PrepareShootBall2.courseAngle=173.f;
+  PrepareShootBall2.pitchAngle=0.8f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.steerSpeed=2000;
@@ -91,8 +94,8 @@ void prepareMotionParaInit(void)
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=88.5f;
-  PrepareGetBall3.pitchAngle=3.0f;
-  PrepareGetBall3.upSteerAngle=-87.f;
+  PrepareGetBall3.pitchAngle=-6.2f;
+  PrepareGetBall3.upSteerAngle=-85.f;
 	PrepareGetBall3.downSteerAngle=-90.f;
   PrepareGetBall3.steerSpeed=2000;
   PrepareGetBall3.gasAim=0.470f;
@@ -131,8 +134,6 @@ void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
   PitchAngleMotion(PrepareGetBall_t.pitchAngle);
   /*设置航向角度*/
   CourseAngleMotion(PrepareGetBall_t.courseAngle);
-  /*关闭下方限位爪*/
-  ClawShut();
   /*舵机转向*/
   HoldBallPosCrlSeparate(PrepareGetBall_t.upSteerAngle, PrepareGetBall_t.downSteerAngle);
 }

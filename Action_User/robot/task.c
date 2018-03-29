@@ -295,19 +295,12 @@ void statusInit(void)
   Delay_ms(3000);
   USART_OUTByDMA("statusInit start\r\n");
   #ifndef DEBUG
-//	//打开扭矩开关
-//  OpenSteerAll();
-  USART_OUTByDMA("statusInit OpenSteerAll\r\n");
- //设置回应等级（注意不要打开写开关，因为打开扭矩输出需要回答）
-// ShutAllSteerResponse();
   USART_OUTByDMA("statusInit step 3\r\n");
   #endif
 	
   /*运动控制状态初始化*/
 	/*爪子标志位关闭*/
   SetMotionFlag(~AT_CLAW_STATUS_OPEN);
-	/*舵机准备标志位打开*/
-  SetMotionFlag(AT_STEER_READY);
 	/*射球时的助力大气阀标志位关闭*/
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
@@ -352,7 +345,6 @@ void statusInit(void)
 //	TalkToCamera(CAMERA_SHUT_ALL);
 //	TalkToCamera(CAMERA_OPEN_FAR);
 		#ifndef DEBUG
-//	  SetSteerByte(HOLD_BALL_2,P_STEER_ADDRESS,0X9);
 		#endif
 		BEEP_ON;
 		ShootLedOn();
