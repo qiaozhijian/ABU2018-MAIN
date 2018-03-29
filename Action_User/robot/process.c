@@ -106,7 +106,7 @@ void FightForBall1(void)
 							if(PrepareForTheBall()){
 								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
 								getBallStep++;
-								Delay_ms(50);
+								Delay_ms(200);
 							}
 						break;
 					
@@ -115,6 +115,7 @@ void FightForBall1(void)
 							//让球被取出来才能下爪的手臂向下撑
 								LowerClawStairOn();
 								getBallStep++;
+								Delay_ms(200);
 							}
 						break;
 
@@ -228,6 +229,8 @@ void FightForBall2(void)
 						//让球被取出来才能下爪的手臂向下撑
 						LowerClawStairOn();
 						getBallStep++;
+						Delay_ms(200);
+
 					}
 				break;
 
@@ -328,7 +331,6 @@ void FightForBall2(void)
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
-	static int timeCnt=0;
 	static uint8_t isGetBall=0;
   switch(gRobot.sDta.process)
   {
@@ -339,7 +341,6 @@ void FightForGoldBall(void)
 			case 0:
 				if(GoldRackInto()){
 					GoldBallGraspStairTwoOn();
-					USART_OUTByDMA("GoldballRackInto Push\t");
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
@@ -347,19 +348,26 @@ void FightForGoldBall(void)
 			break;
 				
 			case 1:
-				if(PrepareForTheBall()&&gRobot.posY>2100.f)
+				if(PrepareForTheBall()&&gRobot.posY>1600.f)
 				{
+					gRobot.sDta.courseAimAngle = 179.9f;
+					isGetBall++;
+				}
+			break;
+				
+			case 2:
+				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
+					/*航向转到到位直接开始准备射球参数*/
+					LowerClawStairOn();
 					PrepareShootBall(BALL_3);
 					USART_OUTByDMA("PrepareShoot\t");
 					isGetBall++;
 				}
 			break;
 				
-			case 2:
+			case 3:
 				if(PrepareForTheBall()&&(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f \
 					&&(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1]))<5.f){
-					/*上舵机到位直接开始准备射球参数*/
-					LowerClawStairOn();
 					gRobot.sDta.process=TO_THE_AREA_3;
 					USART_OUTByDMA("YOU should shoot\t");
 				}
@@ -378,20 +386,13 @@ void FightForGoldBall(void)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
 									&&PrepareForTheBall()){
 					LowerClawStairOn();
+					Delay_ms(200);
 					PrepareShootBall(BALL_4);
-					isGetBall=13;
+					gRobot.sDta.process=TO_THROW_BALL_3;
 				}
 			break;
 				
-				/*因为第四个金球已经拿到时已经到了投掷金球点，可能在调节过程中一次性满足所有条件然后就发射了，航向等还有瞬时速度，干扰投球*/
-			case 13:
-				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS
-							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
-								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
-				  gRobot.sDta.process=TO_THROW_BALL_3;
-
-				}
-			break;
+			
 				
 		}
     break;
@@ -833,8 +834,15 @@ void RobotSelfTest(void){
 		  selfTestStep++;
 		break;
 		
-		//气压检测
 		case 2:
+			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT);
+			if(gRobot.sDta.AT_motionFlag&AT_THE_DUCT_SELFTEST_OVER){
+				selfTestStep++;
+			}
+		break;
+		
+		//气压检测
+		case 3:
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
@@ -855,7 +863,7 @@ void RobotSelfTest(void){
 		break;
 		
 		//对电机，舵机的自检
-		case 3:
+		case 4:
 			ShootLEDShine();
 			USART_OUTByDMA("STEER_MOTION_TEST\r\n");
 			//俯仰角到-15度
@@ -897,7 +905,7 @@ void RobotSelfTest(void){
 		break;
 		
 		//激光检测
-		case 4:
+		case 5:
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();

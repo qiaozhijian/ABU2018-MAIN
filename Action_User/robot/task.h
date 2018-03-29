@@ -106,6 +106,8 @@
 #define AT_REACH_THIRD_PLACE													0x80000u
 
 #define AT_THE_WHEEL_SELFTEST_OVER										0x100000u
+
+#define AT_THE_DUCT_SELFTEST_OVER										0x200000u
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
 
@@ -189,6 +191,8 @@
 #define NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL	13
 //通知控制卡进行激光自检
 #define NOTIFY_MOTIONCARD_SELFTEST_THE_LASER	14
+//通知控制卡自检涵道
+#define NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT   33
 
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1				1
@@ -200,6 +204,9 @@
 #define GET_MOTIONCARD_SELFTEST_FINISH		4
 /*控制卡初始化完成*/
 #define GET_MOTIONCARD_PREPARE_READY			5
+/*控制卡告诉我涵道自检完成*/
+#define GET_MOTIONCARD_DUCT_SELFTEST_OK		21
+
 /*控制卡通知进入硬件中断*/
 #define GET_MOTIONCARD_INTO_HARDFAULT			44
 
