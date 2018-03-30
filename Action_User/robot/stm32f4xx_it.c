@@ -206,9 +206,20 @@ void CAN2_RX0_IRQHandler(void)
     //位置
     if(msg.data32[0]==0x00005850)
     {
+			
       gRobot.courseAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.courseAngle=gRobot.courseAngle+40.f;
-      SetMotionFlag(AT_COURSE_READ_SUCCESS);
+			
+			/*计算航向速度*/
+			if(gRobot.robotVel.countCourseTime!=0){
+				gRobot.robotVel.courseVel=(gRobot.courseAngle-gRobot.robotVel.lastCourseAngle)/gRobot.robotVel.countCourseTime*10000;
+			}
+			
+			gRobot.robotVel.lastCourseAngle=gRobot.courseAngle;
+			SetMotionFlag(AT_COURSE_READ_SUCCESS);
+			
+			gRobot.robotVel.countCourseTime=0;
+      
     }
     //速度
     if(msg.data32[0]==0x00005856)
@@ -223,6 +234,12 @@ void CAN2_RX0_IRQHandler(void)
     {
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0]-120.f;
+			/*计算上舵机速度*/
+			if(gRobot.robotVel.countSteerTime!=0){
+				gRobot.robotVel.steerVel[0]=(gRobot.holdBallAngle[0] -gRobot.robotVel.lastSteerAngle[0])/gRobot.robotVel.countSteerTime*10000;
+			}
+			gRobot.robotVel.lastSteerAngle[0]=gRobot.holdBallAngle[0];
+			gRobot.robotVel.countSteerTime=0;
     }
 	}else if((StdId - SDO_RESPONSE_COB_ID_BASE)==DOWN_STEER_MOTOR_ID){
 		for(i = 0; i < 8; i++)
@@ -326,8 +343,11 @@ void TIM7_IRQHandler(void)
   OS_EXIT_CRITICAL();
   if(TIM_GetITStatus(TIM7, TIM_IT_Update)==SET)
   {	
-		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.sDta.robocon2018!=ROBOT_SELF_TEST)
+		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
 		  gRobot.robotVel.countTime++;
+			gRobot.robotVel.countCourseTime++;
+			gRobot.robotVel.countSteerTime++;
+		}
 		if(startCnt==1)
 		{
 			Cnt++;

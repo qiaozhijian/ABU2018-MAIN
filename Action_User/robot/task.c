@@ -141,13 +141,15 @@ void RobotTask(void)
 //					USART_OUTByDMAF(gRobot.KalmanZ);
 //					USART_OUTByDMAF(gRobot.AngularVelocity);
 					USART_OUTByDMAF(gRobot.robotVel.countVel);
+					USART_OUTByDMAF(gRobot.robotVel.courseVel);
+					USART_OUTByDMAF(gRobot.robotVel.steerVel[0]);
+					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
 					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
 					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
 					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
 					USART_OUTByDMAF(gRobot.courseAngle);
 					USART_OUTByDMAF(gRobot.pitchAngle);
 					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-					USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 					USART_OUTByDMAF(gRobot.gasValue);
 					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
 					
@@ -336,8 +338,8 @@ void statusInit(void)
 	
 	#endif
 	/*恢复快速转动状态*/
-  PosLoopCfg(CAN2, 5, 8000000, 8000000,1250000);        
-  PosLoopCfg(CAN2, 6, 8000000, 8000000,800000);
+  PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
+  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
 	
 	#ifdef TEST
 //	TalkToCamera(CAMERA_START);

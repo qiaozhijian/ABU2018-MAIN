@@ -277,6 +277,14 @@ typedef struct{
   float lastPosY;
 	uint32_t countTime;
 	float countVel;
+	
+	/*计算航向，上下电机转动时间*/
+	uint32_t countCourseTime;
+	uint32_t countSteerTime;
+	float lastCourseAngle;
+	float lastSteerAngle[2];
+	float courseVel;
+	float steerVel[2];
 }RobotVel_t;
 /**************typedef area**********/
 typedef struct{

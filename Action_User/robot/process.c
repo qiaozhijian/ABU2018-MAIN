@@ -268,11 +268,16 @@ void FightForBall2(void)
 				/*射球机构复位*/
 				ShootReset();
 				
+				/*金球航向速度减小*/
+				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS){
+					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,800000);
+				}
 				
 				/*准备接球三*/
 				PrepareGetBall(BALL_3);
 				
 				gRobot.sDta.process=TO_GET_BALL_3;
+				
 				gRobot.sDta.robocon2018=GOLD_BALL;
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 			}
@@ -335,7 +340,7 @@ void FightForGoldBall(void)
 			break;
 				
 			case 1:
-				if(PrepareForTheBall()&&gRobot.posY>1600.f)
+				if(PrepareForTheBall()&&gRobot.posY>2100.f)
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
 					isGetBall++;
@@ -345,11 +350,18 @@ void FightForGoldBall(void)
 			case 2:
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					/*航向转到到位直接开始准备射球参数*/
-					LowerClawStairOn();
 					PrepareShootBall(BALL_3);
 					USART_OUTByDMA("PrepareShoot\t");
-				  gRobot.sDta.process=TO_THE_AREA_3;
 					isGetBall++;
+				}
+			break;
+				
+			case 3:
+				if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f){
+						Delay_ms(200);
+						LowerClawStairOn();
+						GoldBallGraspStairTwoOff();
+						gRobot.sDta.process=TO_THE_AREA_3;
 				}
 			break;
 				
@@ -362,7 +374,6 @@ void FightForGoldBall(void)
 				
 			//接去第二金球
 			case 11:
-				GoldBallGraspStairTwoOff();
 				PrepareGetBall(BALL_4);
 				isGetBall = 12;
 			break;
@@ -370,11 +381,22 @@ void FightForGoldBall(void)
 			case 12:
 				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
-								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
-									&&PrepareForTheBall()){
-					LowerClawStairOn();
-					Delay_ms(200);
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
+					Delay_ms(300);
+					isGetBall=13;
+				}
+			break;
+				
+			case 13:
+				if(PrepareForTheBall()){
 					PrepareShootBall(BALL_4);
+					isGetBall=14;
+				}
+			break;
+				
+			case 14:
+				if(fabs(gRobot.courseAngle-gRobot.sDta.courseAimAngle)<45.f){
+					LowerClawStairOn();
 					gRobot.sDta.process=TO_THROW_BALL_3;
 				}
 			break;
