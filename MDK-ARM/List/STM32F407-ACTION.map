@@ -1,4 +1,4 @@
-Component: ARM Compiler 5.06 update 4 (build 422) Tool: armlink [4d35d2]
+Component: ARM Compiler 5.06 update 3 (build 300) Tool: armlink [4d35c9]
 
 ==============================================================================
 
@@ -2980,55 +2980,55 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       476         38          0          4         20       2296   camera.o
-      1424         86          0          1          0       3871   can.o
-      1380        174          0          8         20       2994   customer.o
-       588         54          0          0         40       9401   datarecover.o
-       672        104          0          5         20       1986   debug.o
-      2540        102          0          8        800      18745   dma.o
-      5276        754        224          2          0      13905   elmo.o
-         4          0          0          0          0        686   errorreport.o
-       276          6          0          0          0       2231   gasvalvecontrol.o
-       620         66          0         16          0       2887   gpio.o
-        44          0          0          0          0        698   iwdg.o
-       116         18          0          0       1024     229974   main.o
-       224         20          0          0          0       1957   misc.o
-       716         52          0          0          0       1543   motion.o
-        18          0          0          0          0       1519   os_apphooks.o
-      3408        290        256         96       7048      19411   os_core.o
-       184         32          0          0          0        312   os_cpu_a.o
-       712         28          0          6        512      12375   os_cpu_c.o
-       348        230        116          0          0       3378   os_dbg.o
-      2148         44          0          0          0       7328   os_flag.o
-       600         16          0          0          0       3496   os_mem.o
-      1612         50          0          0          0       4698   os_mutex.o
-      1620         34          0          0          0       6005   os_q.o
-       992         22          0          0          0       4158   os_sem.o
-      2316         76          0          0          0       8477   os_task.o
-       468         28          0          0          0       1930   os_time.o
-      1760        132          0          0          0       5877   os_tmr.o
-       712         50          0          3         32        908   pps.o
-      4676        852          0         36          0       4564   process.o
-      1000         10          0          0          0        760   robot.o
-      3476        388          0          0        192       3424   shoot.o
-        80         32        392          0      25600        868   startup_stm32f4xx.o
-      3164        418          0         28          0       6370   steer.o
-      2544         38          0          0          0       8280   stm32f4xx_can.o
-       936         32          0          0          0       6533   stm32f4xx_dma.o
-      1212         26          0          0          0       7213   stm32f4xx_flash.o
-       604         36          0          0          0       4261   stm32f4xx_gpio.o
-      2676        666          0         21          0       6078   stm32f4xx_it.o
-        64          6          0          0          0       1393   stm32f4xx_iwdg.o
-      1416         48          0         16          0      11199   stm32f4xx_rcc.o
-      3234         60          0          0          0      23148   stm32f4xx_tim.o
-      1086         26          0          0          0       8060   stm32f4xx_usart.o
-       528         46          0         20          0       1855   system_stm32f4xx.o
-      1372        306          0          8       5288      63389   task.o
-      1816         30          0          0          0       4081   timer.o
-      2512        190          0         12       1600       7742   usart.o
+       476         38          0          4         20       2388   camera.o
+      1424         86          0          1          0       3935   can.o
+      1380        174          0          8         20       3082   customer.o
+       588         54          0          0         40       9513   datarecover.o
+       672        104          0          5         20       2050   debug.o
+      2540        102          0          8        800      18897   dma.o
+      5276        754        224          2          0      13945   elmo.o
+         4          0          0          0          0        710   errorreport.o
+       276          6          0          0          0       2255   gasvalvecontrol.o
+       620         66          0         16          0       2951   gpio.o
+        44          0          0          0          0        722   iwdg.o
+       116         18          0          0       1024     230186   main.o
+       224         20          0          0          0       2001   misc.o
+       716         52          0          0          0       1567   motion.o
+        18          0          0          0          0       1539   os_apphooks.o
+      3408        290        256         96       7048      19507   os_core.o
+       184         32          0          0          0        336   os_cpu_a.o
+       712         28          0          6        512      12467   os_cpu_c.o
+       348        230        116          0          0       3446   os_dbg.o
+      2148         44          0          0          0       7368   os_flag.o
+       600         16          0          0          0       3540   os_mem.o
+      1612         50          0          0          0       4746   os_mutex.o
+      1620         34          0          0          0       6045   os_q.o
+       992         22          0          0          0       4202   os_sem.o
+      2316         76          0          0          0       8521   os_task.o
+       468         28          0          0          0       1950   os_time.o
+      1760        132          0          0          0       5917   os_tmr.o
+       712         50          0          3         32        928   pps.o
+      4676        852          0         36          0       4608   process.o
+      1000         10          0          0          0        784   robot.o
+      3476        388          0          0        192       3472   shoot.o
+        80         32        392          0      25600        896   startup_stm32f4xx.o
+      3164        418          0         28          0       6394   steer.o
+      2544         38          0          0          0       8324   stm32f4xx_can.o
+       936         32          0          0          0       6573   stm32f4xx_dma.o
+      1212         26          0          0          0       7261   stm32f4xx_flash.o
+       604         36          0          0          0       4305   stm32f4xx_gpio.o
+      2676        666          0         21          0       6162   stm32f4xx_it.o
+        64          6          0          0          0       1413   stm32f4xx_iwdg.o
+      1416         48          0         16          0      11267   stm32f4xx_rcc.o
+      3234         60          0          0          0      23192   stm32f4xx_tim.o
+      1086         26          0          0          0       8104   stm32f4xx_usart.o
+       528         46          0         20          0       1919   system_stm32f4xx.o
+      1372        306          0          8       5288      63657   task.o
+      1816         30          0          0          0       4125   timer.o
+      2512        190          0         12       1600       7850   usart.o
 
     ----------------------------------------------------------------------
-     63656       5716       1020        300      42196     542264   Object Totals
+     63656       5716       1020        300      42196     545020   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          6          0          0         10          0          0   (incl. Padding)
 
@@ -3161,8 +3161,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     81892       7106       1828        300      42292     538316   Grand Totals
-     81892       7106       1828         48      42292     538316   ELF Image Totals (compressed)
+     81892       7106       1828        300      42292     541072   Grand Totals
+     81892       7106       1828         48      42292     541072   ELF Image Totals (compressed)
      81892       7106       1828         48          0          0   ROM Totals
 
 ==============================================================================
