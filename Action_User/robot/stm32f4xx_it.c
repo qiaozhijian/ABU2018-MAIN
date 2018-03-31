@@ -190,7 +190,7 @@ void CAN2_RX0_IRQHandler(void)
     if(msg.data32[0]==0x00005850)
     {
       gRobot.pitchAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.pitchAngle=30.f-gRobot.pitchAngle;
+			gRobot.pitchAngle=PITCH_COMPENSATE - gRobot.pitchAngle;
       SetMotionFlag(AT_PITCH_READ_SUCCESS);
     }
     //速度
@@ -208,7 +208,7 @@ void CAN2_RX0_IRQHandler(void)
     {
 			
       gRobot.courseAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.courseAngle=gRobot.courseAngle+40.f;
+			gRobot.courseAngle=gRobot.courseAngle+COURCE_COMPENSATE;
 			
 			/*计算航向速度*/
 			if(gRobot.robotVel.countCourseTime!=0){
@@ -233,7 +233,7 @@ void CAN2_RX0_IRQHandler(void)
     if(msg.data32[0]==0x00005850)
     {
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0]-120.f;
+			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0] - UP_STEER_COMPENSATE;
 			/*计算上舵机速度*/
 			if(gRobot.robotVel.countSteerTime!=0){
 				gRobot.robotVel.steerVel[0]=(gRobot.holdBallAngle[0] -gRobot.robotVel.lastSteerAngle[0])/gRobot.robotVel.countSteerTime*10000;
@@ -246,8 +246,8 @@ void CAN2_RX0_IRQHandler(void)
       msg.data8[i] = buffer[i];
     //位置
 		if(msg.data32[0]==0x00005850){
-			gRobot.holdBallAngle[1] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.holdBallAngle[1]=gRobot.holdBallAngle[1]-74.38f;
+			gRobot.holdBallAngle[1] = DOWN_STEER_CODE_TO_ANGLE(msg.data32[1]);
+			gRobot.holdBallAngle[1]=-(gRobot.holdBallAngle[1] - DOWN_STEER_COMPENSATE);
 			
 		}
 		

@@ -62,8 +62,13 @@
 #define COURSE_CODE_TO_ANGLE(code)												((code)/6116.693f)
 #define COURSE_ANGLE_TO_CODE(angle)												((int)(((angle))*6116.693f))//((angle)*14.0f*19.2f*8192.f/360.f)
 
-#define UPSTEER_CODE_TO_ANGLE(code)                       ((code)/1280.f)
+#define UPSTEER_CODE_TO_ANGLE(code)                       ((code)/1280.f)       
+#define DOWN_STEER_CODE_TO_ANGLE(code)                    ((code)/819.2f)
 
+#define UP_STEER_COMPENSATE                               (126.4f)   
+#define DOWN_STEER_COMPENSATE															(113.f )
+#define PITCH_COMPENSATE																	(30.f	 )
+#define COURCE_COMPENSATE																  (40.f  )
 //×´Ì¬Á¿½âÊÍ
 #define AT_CLAW_STATUS_OPEN 										0x01u
 

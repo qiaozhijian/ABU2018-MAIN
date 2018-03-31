@@ -18,14 +18,14 @@ void PitchAngleMotion(float angle)
   else if(angle<-10.f)
     angle=-10.f;
 	
-	angle=30.f-angle;
+	angle=PITCH_COMPENSATE - angle;
 	
   PosCrl(CAN2, PITCH_MOTOR_ID,ABSOLUTE_MODE,PITCH_ANGLE_TO_CODE(angle));
 }
 
 void CourseAngleMotion(float angle)
 {
-	angle=angle-40.f;
+	angle=angle-COURCE_COMPENSATE;
   if(angle<0.f)
     angle=0.f;
   else if(angle>150.f)

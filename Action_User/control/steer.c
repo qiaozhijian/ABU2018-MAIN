@@ -52,7 +52,7 @@ void HoldSteer2PosCrl(float angle)
   if(angle<-120.f)
     angle=-120.f;
 
-	pos=(int)(-angle+113.f)*36.f*8192.f/360;
+	pos=(int)(-angle + DOWN_STEER_COMPENSATE)*36.f*8192.f/360;
   
 	PosCrl(CAN2,DOWN_STEER_MOTOR_ID,ABSOLUTE_MODE,pos);
 }
@@ -70,7 +70,7 @@ void HoldSteer1PosCrl(float angle)
 		angle=-120.f;
 
 	/*angle*25/16*36*8192.f/360*/
-  pos=(int)(angle +126.4f)*1280;
+  pos=(int)(angle + UP_STEER_COMPENSATE)*1280;
 	
   PosCrl(CAN2,UP_STEER_MOTOR_ID,ABSOLUTE_MODE,pos);
 }

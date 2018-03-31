@@ -93,7 +93,7 @@ void FightForBall1(void)
 							if(PrepareForTheBall()){
 								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
 								getBallStep++;
-								Delay_ms(200);
+								Delay_ms(100);
 							}
 						break;
 					
@@ -128,7 +128,7 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(gRobot.robotVel.countVel<15.f
+			if(gRobot.robotVel.countVel<50.f
 					 &&PE_FOR_THE_BALL
 				/*持球舵机到位*/
 			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -207,7 +207,7 @@ void FightForBall2(void)
 					if(PrepareForTheBall()){
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
 						getBallStep++;
-						Delay_ms(300);
+						Delay_ms(100);
 					}
 				break;
 						
@@ -245,7 +245,7 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			if(gRobot.robotVel.countVel<15.f
+			if(gRobot.robotVel.countVel<50.f
 					 &&PE_FOR_THE_BALL
 					/*持球舵机到位*/
 			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -420,7 +420,7 @@ void FightForGoldBall(void)
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
     if(PE_FOR_THE_BALL
-				&&gRobot.robotVel.countVel<15.f
+				&&gRobot.robotVel.countVel<50.f
 				/*持球舵机到位*/
 		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/

@@ -126,6 +126,9 @@ void RobotTask(void)
 			debugFunction();
 		#else
 			#ifdef TEST
+//				HoldBallPosCrlSeparate(0.f,-90.f);
+//				ReadActualPos(CAN2,UP_STEER_MOTOR_ID);
+//				ReadActualPos(CAN2,DOWN_STEER_MOTOR_ID);
 			  SelfTest();
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
