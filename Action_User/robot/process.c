@@ -106,20 +106,20 @@ void FightForBall1(void)
 						break;
 
 						case 2:
-							if((gRobot.posX>4054.f)||(gRobot.posY>1620.f))
-							{
+//							if((gRobot.posX>4054.f)||(gRobot.posY>1620.f))
+//							{
 								USART_OUTByDMA("IntoTheArea\t");
 								//TalkToCamera(CAMERA_OPEN_NEAR);
 								PrepareShootBall(BALL_1);
 								gRobot.sDta.process=TO_THE_AREA_1;
-							}
+//							}
 						break;
 			}
 			break;
 			
     /*第一个球取球完毕，去投射区一*/
 		case TO_THE_AREA_1:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY >2000.f))
+//			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY >2000.f))
 				gRobot.sDta.process=TO_THROW_BALL_1;
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
@@ -137,7 +137,7 @@ void FightForBall1(void)
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/
-									 &&(gRobot.posY>2000.f)
+//									 &&(gRobot.posY>2000.f)
 									  /*气压到位*/
 										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -150,10 +150,11 @@ void FightForBall1(void)
 				/*射球机构复位*/
 				ShootReset();
 				/*准备接球二*/
-				PrepareGetBall(BALL_2);
+				getBallStep=0;
+				PrepareGetBall(BALL_1);
 				/*进入下一状态*/
-				gRobot.sDta.process=TO_GET_BALL_2;
-				gRobot.sDta.robocon2018=COLORFUL_BALL_2;
+				gRobot.sDta.process=TO_GET_BALL_1;
+				gRobot.sDta.robocon2018=COLORFUL_BALL_1;
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 			}
 			else
@@ -224,20 +225,20 @@ void FightForBall2(void)
 				break;
 
 				case 2:
-					if(gRobot.posX>6000.f)
-					{	
+					/*if(gRobot.posX>6000.f)
+					{*/	
 						USART_OUTByDMA("IntoTheArea\t");
 						gRobot.sDta.process=TO_THE_AREA_2;
 						
 						PrepareShootBall(BALL_2);
-					}
+					/*}*/
 					break;
 				}
 		break;
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>2000.f))
+			/*if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>2000.f))*/
 				gRobot.sDta.process=TO_THROW_BALL_2;
 //			if(!PrepareForTheBall())
 //			{
@@ -257,7 +258,7 @@ void FightForBall2(void)
 								&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 									/*航向到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f)*/
-										&&fabs(gRobot.posY-TZ_2_Y)<80.f
+										/*&&fabs(gRobot.posY-TZ_2_Y)<80.f*/
 											/*气压到位*/
 											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -277,12 +278,12 @@ void FightForBall2(void)
 				}
 				
 				/*准备接球三*/
-				PrepareGetBall(BALL_3);
+				PrepareGetBall(BALL_2);
 				
-				gRobot.sDta.process=TO_GET_BALL_3;
-				
-				gRobot.sDta.robocon2018=GOLD_BALL;
-				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+				gRobot.sDta.process=TO_GET_BALL_2;
+				getBallStep=0;
+//				gRobot.sDta.robocon2018=GOLD_BALL;
+//				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 			}
 			else
 			{

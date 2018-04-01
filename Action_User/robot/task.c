@@ -165,19 +165,22 @@ void RobotTask(void)
 					break;
 					
 					case ROBOT_PREPARE:
-						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
-						{
-							//灯亮两秒，蜂鸣器响两秒，表示准备完成
-							BEEP_ON;
-							ShootLedOn();
-							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
-							Delay_ms(2000);
-							ShootLedOff();
-							BEEP_OFF;
-							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
-							SetMotionFlag(~AT_PREPARE_READY);
-							gRobot.sDta.robocon2018=ROBOT_START;
-						}
+						PrepareGetBall(BALL_1);
+						gRobot.sDta.process=TO_GET_BALL_1;
+					  gRobot.sDta.robocon2018=COLORFUL_BALL_1;
+//						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
+//						{
+//							//灯亮两秒，蜂鸣器响两秒，表示准备完成
+//							BEEP_ON;
+//							ShootLedOn();
+//							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
+//							Delay_ms(2000);
+//							ShootLedOff();
+//							BEEP_OFF;
+//							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
+//							SetMotionFlag(~AT_PREPARE_READY);
+//							gRobot.sDta.robocon2018=ROBOT_START;
+//						}
 						break;
 						
 					case ROBOT_START:
