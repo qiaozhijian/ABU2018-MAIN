@@ -337,14 +337,14 @@ void FightForGoldBall(void)
 			case 0:
 				if(GoldRackInto()){
 					GoldBallGraspStairTwoOn();
-					//MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
 				USART_OUTByDMA("BallRack %d\t",KEYSWITCH_CHECK_GOLD);
 			break;
 				
 			case 1:
-				if(PrepareForTheBall()/*&&gRobot.posY>2100.f*/)
+				if(PrepareForTheBall()&&gRobot.posY>2100.f)
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
 					isGetBall++;
@@ -365,17 +365,9 @@ void FightForGoldBall(void)
 						Delay_ms(200);
 						LowerClawStairOn();
 						GoldBallGraspStairTwoOff();
-//						gRobot.sDta.process=TO_THE_AREA_3;
-					gRobot.sDta.process=TO_THROW_BALL_3;
+						gRobot.sDta.process=TO_THE_AREA_3;
 				}
 			break;
-				
-//			case 3:
-//				if(PrepareForTheBall()&&(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0]))<5.f \
-//					&&(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1]))<5.f){
-//					USART_OUTByDMA("YOU should shoot\t");
-//				}
-//			break; 
 				
 			//接去第二金球
 			case 11:

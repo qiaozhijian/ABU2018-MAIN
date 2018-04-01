@@ -125,7 +125,7 @@ void CAN1_RX0_IRQHandler(void)
 	  USART_OUTByDMA("GET_MOTIONCARD_INTO_HARDFAULT\r\n");
 	}
    
-    USART_OUTByDMA("GET_FROM_MOTIONCARD %d\t",msg.data32[0]);
+    USART_OUTByDMA("GET_FROM_MOTIONCARD %d ",msg.data32[0]);
   }
   
   CAN_ClearFlag(CAN1, CAN_FLAG_EWG);
@@ -224,7 +224,7 @@ void CAN2_RX0_IRQHandler(void)
 		//速度
     if(msg.data32[0]==0x00005856)
     {
-      gRobot.robotVel.courseVel=msg.data32[1];
+      gRobot.robotVel.courseVel=msg.data32[1]/6116.693;
     }
   }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==UP_STEER_MOTOR_ID){
 		for(i = 0; i < 8; i++)
@@ -242,7 +242,7 @@ void CAN2_RX0_IRQHandler(void)
 			gRobot.robotVel.countSteerTime=0;
     }
 		if(msg.data32[0]==0x00005856){
-			gRobot.robotVel.readSteerVel[0]=msg.data32[1];
+			gRobot.robotVel.readSteerVel[0]=msg.data32[1]/1280;
 			
 		}
 	}else if((StdId - SDO_RESPONSE_COB_ID_BASE)==DOWN_STEER_MOTOR_ID){

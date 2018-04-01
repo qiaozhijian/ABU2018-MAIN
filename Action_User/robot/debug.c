@@ -100,30 +100,30 @@ void DebugDataUSART_OUT(void){
 	if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
 	{
 		processReponse();
-		USART_OUTByDMA("P\t");
+		USART_OUTByDMA("P ");
 		USART_OUTByDMAF(gRobot.posX);
 	  USART_OUTByDMAF(gRobot.posY);
 		USART_OUTByDMAF(gRobot.angle);
 //					USART_OUTByDMAF(gRobot.angleBais);
 //					USART_OUTByDMAF(gRobot.KalmanZ);
 //					USART_OUTByDMAF(gRobot.AngularVelocity);
-		USART_OUTByDMA("V\t");
+		USART_OUTByDMA("V ");
 		USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
 		USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
 	  USART_OUTByDMAF(gRobot.robotVel.countVel);
 		USART_OUTByDMAF(gRobot.robotVel.courseVel);
 		USART_OUTByDMAF(gRobot.robotVel.steerVel[0]);
-		USART_OUTByDMA("MAA\t");
+		USART_OUTByDMA("MAA ");
 		USART_OUTByDMAF(gRobot.holdBallAngle[0]);
 		USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
 		USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
 		USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
-		USART_OUTByDMA("MA\t");
+		USART_OUTByDMA("MA ");
 		USART_OUTByDMAF(gRobot.courseAngle);
 		USART_OUTByDMAF(gRobot.pitchAngle);
 		USART_OUTByDMAF(gRobot.holdBallAngle[0]);
 		USART_OUTByDMAF(gRobot.gasValue);
-		USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
+		USART_OUTByDMA("%d ",PE_FOR_THE_BALL);
 	}
 	
 }

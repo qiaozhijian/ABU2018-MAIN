@@ -126,9 +126,6 @@ void RobotTask(void)
 			debugFunction();
 		#else
 			#ifdef TEST
-//				HoldBallPosCrlSeparate(0.f,-90.f);
-//				ReadActualPos(CAN2,UP_STEER_MOTOR_ID);
-//				ReadActualPos(CAN2,DOWN_STEER_MOTOR_ID);
 			  SelfTest();
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
@@ -168,25 +165,19 @@ void RobotTask(void)
 					break;
 					
 					case ROBOT_PREPARE:
-						PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,800000);
-						PrepareGetBall(BALL_3);
-
-						gRobot.sDta.robocon2018=GOLD_BALL;
-						gRobot.sDta.process=TO_GET_BALL_3;
-						
-//						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
-//						{
-//							//灯亮两秒，蜂鸣器响两秒，表示准备完成
-//							BEEP_ON;
-//							ShootLedOn();
-//							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
-//							Delay_ms(2000);
-//							ShootLedOff();
-//							BEEP_OFF;
-//							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
-//							SetMotionFlag(~AT_PREPARE_READY);
-//							gRobot.sDta.robocon2018=ROBOT_START;
-//						}
+						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
+						{
+							//灯亮两秒，蜂鸣器响两秒，表示准备完成
+							BEEP_ON;
+							ShootLedOn();
+							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
+							Delay_ms(2000);
+							ShootLedOff();
+							BEEP_OFF;
+							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
+							SetMotionFlag(~AT_PREPARE_READY);
+							gRobot.sDta.robocon2018=ROBOT_START;
+						}
 						break;
 						
 					case ROBOT_START:
@@ -275,7 +266,8 @@ void MotorInit(void){
   //电机位置环
   PosLoopCfg(CAN2, UP_STEER_MOTOR_ID, 10000000, 10000000,20000000);
 		
-	PosLoopCfg(CAN2, DOWN_STEER_MOTOR_ID, 10000000, 10000000,20000000);
+	PosLoopCfg(CAN2, DOWN_STEER_MOTOR_ID , 6400000 , 6400000 , 12800000);
+//	PosLoopCfg(CAN2, DOWN_STEER_MOTOR_ID, 10000000, 10000000,20000000);
 
 	//电机使能
   MotorOn(CAN2,PITCH_MOTOR_ID); 
@@ -313,7 +305,7 @@ void statusInit(void)
 	/*下爪手臂向上抬*/
 	LowerClawStairOff();
 	USART_OUTByDMA("statusInit step 1\r\n");
-	Delay_ms(2000);
+	Delay_ms(1500);
 	
 	#ifndef TEST
 	USART_OUTByDMA("statusInit step 2\r\n");

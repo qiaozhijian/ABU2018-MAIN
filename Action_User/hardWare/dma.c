@@ -496,9 +496,9 @@ void USART_OUTByDMAF(float x){
      const char *s;
 		 char String[20]={0};
 		 if(x<0.f&&x>-1.f)
-				sprintf( (char*)String, "-%d.%04d\t", ( int )x, (unsigned int)((fabs(x) - abs((int) x))  * 10000));
+				sprintf( (char*)String, "-%d.%04d ", ( int )x, (unsigned int)((fabs(x) - abs((int) x))  * 10000));
 		 else
-				sprintf( (char*)String, "%d.%04d\t", ( int )x, (unsigned int)((fabs(x) - abs((int) x))  * 10000));
+				sprintf( (char*)String, "%d.%04d ", ( int )x, (unsigned int)((fabs(x) - abs((int) x))  * 10000));
 		 for (s=String; *s; s++) 
 		 {
 				USARTDMASendData(DEBUG_USART,*s,USART1SendBuf,&USART1SendBufferCnt ,USART1DMASendBuf,USART1_SEND_BUF_CAPACITY);
