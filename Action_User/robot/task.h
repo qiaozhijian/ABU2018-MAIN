@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "usart.h"
 /**************#define area**********/
-#define TEST
+//#define TEST
 //#define DEBUG
 
 //常量定义

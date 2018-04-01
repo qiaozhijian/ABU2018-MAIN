@@ -98,9 +98,9 @@ void prepareMotionParaInit(void)
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=91.5f;
-  PrepareGetBall3.pitchAngle=-6.2f;
-  PrepareGetBall3.upSteerAngle=-90.f;
-	PrepareGetBall3.downSteerAngle=-90.f;
+  PrepareGetBall3.pitchAngle=-5.7f;
+  PrepareGetBall3.upSteerAngle=-94.f;
+	PrepareGetBall3.downSteerAngle=-94.f;
   PrepareGetBall3.steerSpeed=2000;
   PrepareGetBall3.gasAim=0.440f;
   
@@ -113,10 +113,10 @@ void prepareMotionParaInit(void)
   PrepareShootBall3.gasAim=0.440;
 	
 	/*准备第四个球的参数*/
-	PrepareGetBall4.courseAngle=93.5f;
-	PrepareGetBall4.pitchAngle = -5.7f;
-	PrepareGetBall4.upSteerAngle = -67.f;
-	PrepareGetBall4.downSteerAngle = -65.f;
+	PrepareGetBall4.courseAngle=93.f;
+	PrepareGetBall4.pitchAngle = -5.5f;
+	PrepareGetBall4.upSteerAngle = -72.f;
+	PrepareGetBall4.downSteerAngle = -70.f;
 	PrepareGetBall4.steerSpeed = 2000;
 	PrepareGetBall4.gasAim = 0.440;
 	
@@ -252,7 +252,6 @@ void SmallChange(void){
 			}else {
 				 whetherCount=0;
 			}
-			whetherCount=0;
 		break;
 		
 		case COLORFUL_BALL_2:
@@ -269,7 +268,6 @@ void SmallChange(void){
 			}else {
 				 whetherCount=0;
 			}
-			whetherCount=0;
 		break;
 		
 		case GOLD_BALL:
