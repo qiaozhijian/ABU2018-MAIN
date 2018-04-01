@@ -68,7 +68,7 @@ void HardWareInit(void);
 void statusInit(void);
 
 /*全局变量的声明*/
-Robot_t gRobot;
+Robot_t gRobot={0};
 
 void ConfigTask(void)
 {
@@ -133,32 +133,15 @@ void RobotTask(void)
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
-		
-				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
-				{
-					processReponse();
-					USART_OUTByDMAF(gRobot.posX);
-					USART_OUTByDMAF(gRobot.posY);
-					USART_OUTByDMAF(gRobot.angle);
-//					USART_OUTByDMAF(gRobot.angleBais);
-//					USART_OUTByDMAF(gRobot.KalmanZ);
-//					USART_OUTByDMAF(gRobot.AngularVelocity);
-					USART_OUTByDMAF(gRobot.robotVel.countVel);
-					USART_OUTByDMAF(gRobot.robotVel.courseVel);
-					USART_OUTByDMAF(gRobot.robotVel.steerVel[0]);
-					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
-					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
-					USART_OUTByDMAF(gRobot.courseAngle);
-					USART_OUTByDMAF(gRobot.pitchAngle);
-					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-					USART_OUTByDMAF(gRobot.gasValue);
-					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
-					
-				}
 				
-				/*蓝牙命令处理*/
+				/*调试数据发送*/
+				DebugDataUSART_OUT();
+				
+				
+				/*蓝牙命令处理&&和进入平板调试模式*/
+				if(KEYSWITCH){
+					KeySwitchIntoBTCtrl();
+				}
 				AT_CMD_Handle();
 				
 				/*过程报告*/
@@ -176,24 +159,34 @@ void RobotTask(void)
 				
 				switch(gRobot.sDta.robocon2018)
 				{
+					case ROBOT_CONTROL_BY_BT:
+						SelfTest();
+					break;
+					
 					case ROBOT_SELF_TEST:
 						 RobotSelfTest();
 					break;
 					
 					case ROBOT_PREPARE:
-						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
-						{
-							//灯亮两秒，蜂鸣器响两秒，表示准备完成
-							BEEP_ON;
-							ShootLedOn();
-							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
-							Delay_ms(2000);
-							ShootLedOff();
-							BEEP_OFF;
-							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
-							SetMotionFlag(~AT_PREPARE_READY);
-							gRobot.sDta.robocon2018=ROBOT_START;
-						}
+						PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,800000);
+						PrepareGetBall(BALL_3);
+
+						gRobot.sDta.robocon2018=GOLD_BALL;
+						gRobot.sDta.process=TO_GET_BALL_3;
+						
+//						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
+//						{
+//							//灯亮两秒，蜂鸣器响两秒，表示准备完成
+//							BEEP_ON;
+//							ShootLedOn();
+//							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
+//							Delay_ms(2000);
+//							ShootLedOff();
+//							BEEP_OFF;
+//							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
+//							SetMotionFlag(~AT_PREPARE_READY);
+//							gRobot.sDta.robocon2018=ROBOT_START;
+//						}
 						break;
 						
 					case ROBOT_START:
@@ -276,9 +269,9 @@ void MotorInit(void){
   ElmoInit(CAN2);
   
   //电机位置环
-  PosLoopCfg(CAN2, PITCH_MOTOR_ID, 100000, 100000,100000);
+  PosLoopCfg(CAN2, PITCH_MOTOR_ID, 600000, 600000,600000);
   //电机位置环
-  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 100000, 100000,100000);
+  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 600000, 600000,600000);
   //电机位置环
   PosLoopCfg(CAN2, UP_STEER_MOTOR_ID, 10000000, 10000000,20000000);
 		
@@ -297,13 +290,11 @@ void MotorInit(void){
 //状态初始化，张开抓投球，等舵机到0的时候，闭合之后舵机才能转
 void statusInit(void)
 {	
-  Delay_ms(3000);
-  USART_OUTByDMA("statusInit start\r\n");
-  #ifndef DEBUG
-  USART_OUTByDMA("statusInit step 3\r\n");
-  #endif
+	USART_OUTByDMA("statusInit start\r\n");
+  Delay_ms(1000);
 	
   /*运动控制状态初始化*/
+	
 	/*爪子标志位关闭*/
   SetMotionFlag(~AT_CLAW_STATUS_OPEN);
 	/*射球时的助力大气阀标志位关闭*/
@@ -321,11 +312,11 @@ void statusInit(void)
 	GoldBallGraspStairTwoOn();
 	/*下爪手臂向上抬*/
 	LowerClawStairOff();
-	USART_OUTByDMA("statusInit step 4\r\n");
+	USART_OUTByDMA("statusInit step 1\r\n");
+	Delay_ms(2000);
+	
 	#ifndef TEST
-	Delay_ms(3000);
-  
-	USART_OUTByDMA("statusInit step 5\r\n");
+	USART_OUTByDMA("statusInit step 2\r\n");
   /*与上一次的调试数据区分开*/
   USART_OUTByDMA("\r\n");
   USART_OUTByDMA("\r\n");
@@ -333,22 +324,18 @@ void statusInit(void)
   USART_OUTByDMA("\r\n");
   USART_OUTByDMA("\r\n");
   USART_OUTByDMA("\r\n");
-
 	
-  PrepareGetBall(READY);
-	USART_OUTByDMA("statusInit step 6\r\n");
-	Delay_ms(1000);
+	PrepareGetBall(READY);
 	
+	USART_OUTByDMA("statusInit step PrepareGetBall\r\n");
 	#endif
+	
 	/*恢复快速转动状态*/
   PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
-  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
+//  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
+	PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,800000);
 	
 	#ifdef TEST
-//	TalkToCamera(CAMERA_START);
-//	TalkToCamera(CAMERA_OPEN_NEAR);
-//	TalkToCamera(CAMERA_SHUT_ALL);
-//	TalkToCamera(CAMERA_OPEN_FAR);
 		#ifndef DEBUG
 		#endif
 		BEEP_ON;
@@ -359,7 +346,9 @@ void statusInit(void)
 	#endif
 	
 	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+	/*自检检测*/
 	KeySwitchCheck();
+	
 	if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
 	  /*准备工作完毕*/
 		gRobot.sDta.robocon2018=ROBOT_PREPARE;

@@ -221,10 +221,10 @@ void CAN2_RX0_IRQHandler(void)
 			gRobot.robotVel.countCourseTime=0;
       
     }
-    //速度
+		//速度
     if(msg.data32[0]==0x00005856)
     {
-      
+      gRobot.robotVel.courseVel=msg.data32[1];
     }
   }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==UP_STEER_MOTOR_ID){
 		for(i = 0; i < 8; i++)
@@ -241,6 +241,10 @@ void CAN2_RX0_IRQHandler(void)
 			gRobot.robotVel.lastSteerAngle[0]=gRobot.holdBallAngle[0];
 			gRobot.robotVel.countSteerTime=0;
     }
+		if(msg.data32[0]==0x00005856){
+			gRobot.robotVel.readSteerVel[0]=msg.data32[1];
+			
+		}
 	}else if((StdId - SDO_RESPONSE_COB_ID_BASE)==DOWN_STEER_MOTOR_ID){
 		for(i = 0; i < 8; i++)
       msg.data8[i] = buffer[i];

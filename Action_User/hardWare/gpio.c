@@ -16,6 +16,7 @@
 #include "usart.h"
 #include "task.h"
 #include "dma.h"
+#include "robot.h"
 /**
   * @brief  set the pins of a specific GPIO group to be input or output driver pin.
   * @param  GPIOx: where x can be A-I.
@@ -199,8 +200,24 @@ void KeySwitchCheck(void){
 			keyOpenTime=0;
 			gRobot.sDta.robocon2018=ROBOT_SELF_TEST;
 			USART_OUTByDMA("In the RobotSelfTest\r\n");
+			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 		}
 		Delay_ms(500);
   }
 	//
+}
+
+void KeySwitchIntoBTCtrl(void){
+	if(KEYSWITCH){
+	  keyOpenTime++;
+	}
+	else{
+	  keyOpenTime=0;
+	}
+	if(keyOpenTime>=650){
+		keyOpenTime=0;
+		gRobot.sDta.robocon2018=ROBOT_CONTROL_BY_BT;
+		USART_OUTByDMA("In the RobotBTCTRL\r\n");
+		SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+	}
 }

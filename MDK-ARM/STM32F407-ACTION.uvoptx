@@ -117,6 +117,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>DLGDARM</Key>
           <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
@@ -150,9 +154,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>229</LineNumber>
+          <LineNumber>250</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134220412</Address>
+          <Address>134221326</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -161,71 +165,71 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\robot\stm32f4xx_it.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407_ACTION\../Action_User/robot/stm32f4xx_it.c\229</Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/robot/stm32f4xx_it.c\250</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>230</LineNumber>
+          <LineNumber>79</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134220420</Address>
+          <Address>134240202</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\robot\stm32f4xx_it.c</Filename>
+          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\control\pps.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407_ACTION\../Action_User/robot/stm32f4xx_it.c\230</Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/control/pps.c\79</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>237</LineNumber>
+          <LineNumber>80</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134220434</Address>
+          <Address>134240214</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\robot\stm32f4xx_it.c</Filename>
+          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\control\pps.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407_ACTION\../Action_User/robot/stm32f4xx_it.c\237</Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/control/pps.c\80</Expression>
         </Bp>
         <Bp>
           <Number>3</Number>
           <Type>0</Type>
-          <LineNumber>236</LineNumber>
+          <LineNumber>81</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134240226</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\Action_User\robot\stm32f4xx_it.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\control\pps.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/control/pps.c\81</Expression>
         </Bp>
         <Bp>
           <Number>4</Number>
           <Type>0</Type>
-          <LineNumber>78</LineNumber>
+          <LineNumber>82</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134240244</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\Action_User\control\pps.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\control\pps.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/control/pps.c\82</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -253,6 +257,26 @@
           <count>4</count>
           <WinNumber>1</WinNumber>
           <ItemText>holdBallAngle</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\STM32F407_ACTION\../Action_User/robot/task.c\gRobot</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>msg,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ch</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>posture</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

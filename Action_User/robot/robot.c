@@ -141,7 +141,7 @@ void SetMotionFlag(uint32_t status){
     break;
 	
 	case AT_THE_DUCT_SELFTEST_OVER:
-		gRobot.sDta.AT_motionFlag&=AT_THE_DUCT_SELFTEST_OVER;
+		gRobot.sDta.AT_motionFlag|=AT_THE_DUCT_SELFTEST_OVER;
 	break;
 	
 	case ~AT_THE_DUCT_SELFTEST_OVER:

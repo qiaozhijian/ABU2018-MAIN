@@ -165,7 +165,8 @@
 #define GOLD_BALL								4
 #define ROBOT_SELF_TEST         9
 #define INTO_HARDFAULT					10
-
+/*蓝牙调试自定义程序*/
+#define ROBOT_CONTROL_BY_BT     11
 /*控制卡通信解释*/
 //开始出发
 #define NOTIFY_MOTIONCARD_START						1
@@ -233,16 +234,26 @@
 
 #define ERROR_TIME										10
 
-#define COLOR_BALL_FRAME_POSX         (525.f)
-#define COLOR_BALL_FRAME_POSY         (3235.f)
+#define COLOR_BALL_FRAME_POSX         (515.f)
+#define COLOR_BALL_FRAME_POSY         (3275.f)
 
-#define GOLD_BALL_FRAME_POSX         (525.f)
-#define GOLD_BALL_FRAME_POSY         (6495.f)
+#define GOLD_BALL_FRAME_POSX         (515.f)
+#define GOLD_BALL_FRAME_POSY         (6535.f)
 
 #define ROBOT_COURCE_CENTER_TO_ARM   (445.f)
 #define ROBOT_ARM_TO_MOTOR           (509.26f)
 #define ROBOT_ARM_TO_THROW_CENTER    (596.88f)
 #define ROBOT_CENTER_TO_COURCE       (0.f)
+
+#define TZ_1_X (4565.0f)
+#define TZ_1_Y (2180.0f)
+
+#define TZ_2_X (6565.0f)
+#define TZ_2_Y (2180.0f)
+
+#define TZ_3_X (6110.0f)
+#define TZ_3_Y (6030.0f)
+
 typedef struct{
   
 	/*判断此次是否为看门狗复位*/
@@ -290,6 +301,8 @@ typedef struct{
 	float lastSteerAngle[2];
 	float courseVel;
 	float steerVel[2];
+	float readCourseVel;
+	float readSteerVel[2];
 }RobotVel_t;
 /**************typedef area**********/
 typedef struct{

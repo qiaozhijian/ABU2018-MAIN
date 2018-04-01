@@ -32,4 +32,6 @@ int PrepareForTheBall(void);
 int GoldRackInto(void);
 
 void KeySwitchCheck(void);
+
+void KeySwitchIntoBTCtrl(void);
 #endif

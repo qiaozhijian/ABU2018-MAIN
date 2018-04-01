@@ -99,6 +99,10 @@ void MotionRead(void)
 	ReadActualPos(CAN2,DOWN_STEER_MOTOR_ID);
   /*将读航向角姿态的标志位归0*/
 	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
+	/*读取航向速度*/
+	ReadActualVel(CAN2,COURCE_MOTOR_ID);
+	/*读取上舵机速度*/
+	ReadActualVel(CAN2,UP_STEER_MOTOR_ID);
 }
 
 
@@ -144,7 +148,7 @@ void MotionStatusUpdate(void)
 	}
 	
 	/*等到进入射球进程的时候进行一次计算微调航向*/
-  SmallChange();
+  //SmallChange();
 	
 //	/*判断持球舵机一是否到位*/
 //	if(fabs(gRobot.sDta.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
@@ -174,3 +178,4 @@ void MotionStatusUpdate(void)
 
 
 }
+

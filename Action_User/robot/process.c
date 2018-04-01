@@ -102,7 +102,6 @@ void FightForBall1(void)
 							//让球被取出来才能下爪的手臂向下撑
 								LowerClawStairOn();
 								getBallStep++;
-								Delay_ms(200);
 							}
 						break;
 
@@ -120,7 +119,7 @@ void FightForBall1(void)
 			
     /*第一个球取球完毕，去投射区一*/
 		case TO_THE_AREA_1:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY-1620.f>0.f))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY >2000.f))
 				gRobot.sDta.process=TO_THROW_BALL_1;
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
@@ -128,7 +127,7 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(gRobot.robotVel.countVel<50.f
+			if(gRobot.robotVel.countVel<100.f
 					 &&PE_FOR_THE_BALL
 				/*持球舵机到位*/
 			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -137,14 +136,15 @@ void FightForBall1(void)
 							/*俯仰到位，*/
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
-								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
-									/*气压到位*/
-									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/
+									 &&(gRobot.posY>2000.f)
+									  /*气压到位*/
+										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				/*射球*/
 				ShootBall();
 				/*给延时使发射杆能执行到位*/
-				Delay_ms(500);
+				Delay_ms(400);
 				/*通知控制卡*/
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
 				/*射球机构复位*/
@@ -162,6 +162,8 @@ void FightForBall1(void)
 				USART_OUTByDMAF(gRobot.posX);
 				USART_OUTByDMAF(gRobot.posY);
 				USART_OUTByDMAF(gRobot.angle);
+				USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
+				USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE1\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
@@ -216,7 +218,6 @@ void FightForBall2(void)
 						//让球被取出来才能下爪的手臂向下撑
 						LowerClawStairOn();
 						getBallStep++;
-						Delay_ms(200);
 
 					}
 				break;
@@ -235,7 +236,7 @@ void FightForBall2(void)
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>1620.f))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>2000.f))
 				gRobot.sDta.process=TO_THROW_BALL_2;
 //			if(!PrepareForTheBall())
 //			{
@@ -245,7 +246,7 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			if(gRobot.robotVel.countVel<50.f
+			if(gRobot.robotVel.countVel<100.f
 					 &&PE_FOR_THE_BALL
 					/*持球舵机到位*/
 			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -254,15 +255,16 @@ void FightForBall2(void)
 								/*俯仰到位，*/
 								&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 									/*航向到位*/
-									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
-										/*气压到位*/
-										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f)*/
+										&&fabs(gRobot.posY-TZ_2_Y)<80.f
+											/*气压到位*/
+											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				/*射球*/
 				ShootBall();
 				
 				/*给延时使发射杆能执行到位*/
-				Delay_ms(500);
+				Delay_ms(400);
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
 				
 				/*射球机构复位*/
@@ -287,6 +289,8 @@ void FightForBall2(void)
 				USART_OUTByDMAF(gRobot.posX);
 				USART_OUTByDMAF(gRobot.posY);
 				USART_OUTByDMAF(gRobot.angle);
+				USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
+				USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
 
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2\t");
@@ -333,14 +337,14 @@ void FightForGoldBall(void)
 			case 0:
 				if(GoldRackInto()){
 					GoldBallGraspStairTwoOn();
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
+					//MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
 				USART_OUTByDMA("BallRack %d\t",KEYSWITCH_CHECK_GOLD);
 			break;
 				
 			case 1:
-				if(PrepareForTheBall()&&gRobot.posY>2100.f)
+				if(PrepareForTheBall()/*&&gRobot.posY>2100.f*/)
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
 					isGetBall++;
@@ -361,7 +365,8 @@ void FightForGoldBall(void)
 						Delay_ms(200);
 						LowerClawStairOn();
 						GoldBallGraspStairTwoOff();
-						gRobot.sDta.process=TO_THE_AREA_3;
+//						gRobot.sDta.process=TO_THE_AREA_3;
+					gRobot.sDta.process=TO_THROW_BALL_3;
 				}
 			break;
 				
@@ -389,26 +394,27 @@ void FightForGoldBall(void)
 				
 			case 13:
 				if(PrepareForTheBall()){
-					PrepareShootBall(BALL_4);
+					gRobot.sDta.courseAimAngle = 178.4f;
 					isGetBall=14;
 				}
 			break;
 				
 			case 14:
-				if(fabs(gRobot.courseAngle-gRobot.sDta.courseAimAngle)<45.f){
+				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<45.f){
 					LowerClawStairOn();
+					PrepareShootBall(BALL_4);
 					gRobot.sDta.process=TO_THROW_BALL_3;
+					isGetBall=15;
 				}
 			break;
 				
-			
 				
 		}
     break;
 		
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE||(gRobot.posY>5530.f))/*射金球点6080 ， 6030*/
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE/*||(gRobot.posY>5530.f)*/)/*射金球点6080 ， 6030*/
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
     if(!PrepareForTheBall())
@@ -420,7 +426,7 @@ void FightForGoldBall(void)
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
     if(PE_FOR_THE_BALL
-				&&gRobot.robotVel.countVel<50.f
+				&&gRobot.robotVel.countVel<100.f
 				/*持球舵机到位*/
 		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
@@ -428,15 +434,17 @@ void FightForGoldBall(void)
 						/*俯仰到位，*/
 						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)&&(gRobot.posY>1800.f)
-								/*气压到位*/
-								&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
+								/*&&(gRobot.posY>5530.f)*/
+								/*&&fabs(gRobot.posY-TZ_3_Y)<50.f*/
+									/*气压到位*/
+									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
       /*射球*/
       ShootBall();
       
       /*给延时使发射杆能执行到位*/
-      Delay_ms(500);
+      Delay_ms(400);
       /*射球机构复位*/
       ShootReset();
       
@@ -451,6 +459,8 @@ void FightForGoldBall(void)
 			USART_OUTByDMAF(gRobot.posX);
 			USART_OUTByDMAF(gRobot.posY);
 			USART_OUTByDMAF(gRobot.angle);
+			USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
+			USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
 
 			if(!PE_FOR_THE_BALL)
 				USART_OUTByDMA("!PE3\t");
@@ -779,22 +789,24 @@ void ShootLEDShine(void){
 	Delay_ms(500);
 }
 void RobotSelfTest(void){
-	static int GasTestTime=0;
-	static int sendWheelFlag=0;
-	MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST);
 	static int selfTestStep=0;
+	static int GasTestTime=0;
+	MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST);
+	
+	USART_OUTByDMA("P\t");
+	USART_OUTByDMAF(gRobot.posX);
+	USART_OUTByDMAF(gRobot.posY);
+  USART_OUTByDMAF(gRobot.angle);
+	
 	switch(selfTestStep){
 		//自动车轮子检测
 		case 0:
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
 			}
 			USART_OUTByDMA("WHEEL_TEST\r\n");
-			if(!sendWheelFlag){
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_WHEEL);
-				sendWheelFlag=1;
-			}
 			if(gRobot.sDta.AT_motionFlag&AT_THE_WHEEL_SELFTEST_OVER){
 				selfTestStep++;
 				ShootLEDShineOnce=1;
@@ -804,8 +816,10 @@ void RobotSelfTest(void){
 			
 		//对各个气阀的自检
 		case 1:
-			ShootLEDShine();
-		
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
 			USART_OUTByDMA("GAS_BAORD_TEST\r\n");
 			//爪子张开
 			ClawOpen();
@@ -841,12 +855,20 @@ void RobotSelfTest(void){
 			LowerClawStairOff();
 			Delay_ms(1500);
 		  selfTestStep++;
+			ShootLEDShineOnce=1;
 		break;
 		
 		case 2:
-			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT);
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT);
+			}
+			USART_OUTByDMA("DUCT_TEST\r\n");
 			if(gRobot.sDta.AT_motionFlag&AT_THE_DUCT_SELFTEST_OVER){
 				selfTestStep++;
+				ShootLEDShineOnce=1;
+				USART_OUTByDMA("THE_DUCT_SELFTEST_OVER\r\n");
 			}
 		break;
 		
@@ -855,12 +877,11 @@ void RobotSelfTest(void){
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
-				USART_OUTByDMA("GAS_TEST\r\n");
 			}
+			USART_OUTByDMA("GAS_TEST\r\n");
 			GasTestTime++;
 			USART_OUTByDMA("gasValue\t");
 			USART_OUTByDMAF(gRobot.gasValue);
-			USART_OUTByDMA("\r\n");
 			if(GasTestTime<=600){
 				GasMotion(0.500);
 			}else if(GasTestTime>600&&GasTestTime<=1200){
@@ -873,7 +894,10 @@ void RobotSelfTest(void){
 		
 		//对电机，舵机的自检
 		case 4:
-			ShootLEDShine();
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
 			USART_OUTByDMA("STEER_MOTION_TEST\r\n");
 			//俯仰角到-15度
 			PitchAngleMotion(-15.f);
@@ -918,16 +942,15 @@ void RobotSelfTest(void){
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_LASER);
 			}
+			USART_OUTByDMA("LASER_TEST\r\n");
 			if(KEYSWITCH||KEYSWITCH_CHECK_GOLD){
 				BEEP_ON;
 				return;
 			}else if(KEYSWITCH==0&&KEYSWITCH_CHECK_GOLD==0){
 				BEEP_OFF;
 			}
-			
-			MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_LASER);
-			USART_OUTByDMA("LASER_TEST\r\n");
 			USART_OUTByDMA("A%d\t B%d\t\r\n",gRobot.laser[0],gRobot.laser[1]);
 			if(gRobot.laser[0]>20&&gRobot.laser[0]<600){
 				BEEP_ON;

@@ -99,12 +99,12 @@ void ShootLedOff(void)
 /*金球架抓取二级气阀*/
 void GoldBallGraspStairTwoOn(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR2_ID , 0);
+	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR2_ID , 1);
 }
 
 void GoldBallGraspStairTwoOff(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR2_ID , 1);
+	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR2_ID , 0);
 }
 /*下爪手臂向下撑*/
 void LowerClawStairOn(void)
