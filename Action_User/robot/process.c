@@ -158,34 +158,35 @@ void FightForBall1(void)
 			}
 			else
 			{
-				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-				USART_OUTByDMAF(gRobot.posX);
-				USART_OUTByDMAF(gRobot.posY);
-				USART_OUTByDMAF(gRobot.angle);
-				USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
-				USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
+//				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+//				USART_OUTByDMAF(gRobot.posX);
+//				USART_OUTByDMAF(gRobot.posY);
+//				USART_OUTByDMAF(gRobot.angle);
+//				USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
+//				USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
+				
 				if(!PE_FOR_THE_BALL)
-					USART_OUTByDMA("!PE1\t");
+					USART_OUTByDMA("!PE1 ");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 		//				USART_OUTByDMA("!HB11\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 		//-USART_OUTByDMA("!HB21\t");
 				if(gRobot.robotVel.countVel>15.f){
-				  USART_OUTByDMA("RobotVel Large!\t");
+				  USART_OUTByDMA("RobotVel Large! ");
 			  }
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				{
-					USART_OUTByDMA("!PITCH1\t");
+					USART_OUTByDMA("!PITCH1 ");
 					USART_OUTByDMAF(gRobot.pitchAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
-					USART_OUTByDMA("!COURSE1\t");
+					USART_OUTByDMA("!COURSE1 ");
 					USART_OUTByDMAF(gRobot.courseAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 				{
-					USART_OUTByDMA("!GAS1\t");
+					USART_OUTByDMA("!GAS1 ");
 					USART_OUTByDMAF(gRobot.gasValue);
 				}
 				//USART_OUTByDMA("\r\n");
@@ -285,18 +286,18 @@ void FightForBall2(void)
 			}
 			else
 			{
-				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-				USART_OUTByDMAF(gRobot.posX);
-				USART_OUTByDMAF(gRobot.posY);
-				USART_OUTByDMAF(gRobot.angle);
-				USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
-				USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
+//				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+//				USART_OUTByDMAF(gRobot.posX);
+//				USART_OUTByDMAF(gRobot.posY);
+//				USART_OUTByDMAF(gRobot.angle);
+//				USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
+//				USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
 
 				if(!PE_FOR_THE_BALL)
-					USART_OUTByDMA("!PE2\t");
+					USART_OUTByDMA("!PE2 ");
 				
 				if(gRobot.robotVel.countVel>15.f){
-				  USART_OUTByDMA("RobotVel Large!\t");
+				  USART_OUTByDMA("RobotVel Large! ");
 			  }
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 		//				USART_OUTByDMA("!HB12\t");
@@ -304,17 +305,17 @@ void FightForBall2(void)
 		//				USART_OUTByDMA("!HB22\t");
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				{
-					USART_OUTByDMA("!PITCH2\t");
+					USART_OUTByDMA("!PITCH2 ");
 					USART_OUTByDMAF(gRobot.pitchAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
-					USART_OUTByDMA("!COURSE2\t");
+					USART_OUTByDMA("!COURSE2 ");
 					USART_OUTByDMAF(gRobot.courseAngle);
 				}
 				if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 				{
-					USART_OUTByDMA("!GAS2\t");
+					USART_OUTByDMA("!GAS2 ");
 					USART_OUTByDMAF(gRobot.gasValue);
 				}
 				//USART_OUTByDMA("\r\n");
@@ -340,7 +341,7 @@ void FightForGoldBall(void)
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
-				USART_OUTByDMA("BallRack %d\t",KEYSWITCH_CHECK_GOLD);
+				USART_OUTByDMA("BallRack %d ",KEYSWITCH_CHECK_GOLD);
 			break;
 				
 			case 1:
@@ -355,7 +356,7 @@ void FightForGoldBall(void)
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					/*航向转到到位直接开始准备射球参数*/
 					PrepareShootBall(BALL_3);
-					USART_OUTByDMA("PrepareShoot\t");
+					USART_OUTByDMA("PrepareShoot ");
 					isGetBall++;
 				}
 			break;
@@ -447,35 +448,32 @@ void FightForGoldBall(void)
     }
 		else
 		{
-			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-			USART_OUTByDMAF(gRobot.posX);
-			USART_OUTByDMAF(gRobot.posY);
-			USART_OUTByDMAF(gRobot.angle);
-			USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
-			USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
-
+//			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+//			USART_OUTByDMAF(gRobot.posX);
+//			USART_OUTByDMAF(gRobot.posY);
+//			USART_OUTByDMAF(gRobot.angle);
 			if(!PE_FOR_THE_BALL)
-				USART_OUTByDMA("!PE3\t");
+				USART_OUTByDMA("!PE3 ");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 //				USART_OUTByDMA("!HB13\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUTByDMA("!HB23\t");
 			if(gRobot.robotVel.countVel>15.f){
-				USART_OUTByDMA("RobotVel Large!\t");
+				USART_OUTByDMA("RobotVel Large! ");
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 			{
-				USART_OUTByDMA("!PITCH3\t");
+				USART_OUTByDMA("!PITCH3 ");
 				USART_OUTByDMAF(gRobot.pitchAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 			{
-				USART_OUTByDMA("!COURSE3\t");
+				USART_OUTByDMA("!COURSE3 ");
 				USART_OUTByDMAF(gRobot.courseAngle);
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
-				USART_OUTByDMA("!GAS3\t");
+				USART_OUTByDMA("!GAS3 ");
 				USART_OUTByDMAF(gRobot.gasValue);
 			}
 			//USART_OUTByDMA("\r\n");

@@ -29,7 +29,7 @@ void ShootBall(void)
 	/*因为第四个金球已经拿到时已经到了投掷金球点，可能在调节过程中一次性满足所有条件然后就发射了，
 	航向等还有瞬时速度，干扰投球*/
 	if(gRobot.sDta.robocon2018==COLORFUL_BALL_1&&gRobot.sDta.robocon2018==COLORFUL_BALL_2){
-		Delay_ms(500);
+		Delay_ms(1000);
 	}else if(gRobot.sDta.robocon2018==GOLD_BALL){
 		Delay_ms(1000);
 	}
@@ -242,7 +242,7 @@ void SmallChange(void){
 				return;
 			}
 			
-			if((fabs(gRobot.posX-TZ_1_X)>50.f || fabs(gRobot.posY-TZ_1_Y)>50.f || fabs(gRobot.angle)>1.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if((fabs(gRobot.posX-TZ_1_X)>25.f || fabs(gRobot.posY-TZ_1_Y)>25.f || fabs(gRobot.angle)>1.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 
 				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
@@ -260,7 +260,7 @@ void SmallChange(void){
 				return;
 			}
 		
-			if((fabs(gRobot.posX-TZ_2_X)>50.f || fabs(gRobot.posY-TZ_2_Y)>50.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if((fabs(gRobot.posX-TZ_2_X)>25.f || fabs(gRobot.posY-TZ_2_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 
 				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
@@ -277,7 +277,7 @@ void SmallChange(void){
 				return;
 			}
 			
-			if((fabs(gRobot.posX-TZ_3_X)>50.f || fabs(gRobot.posY-TZ_3_Y)>50.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
 						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 

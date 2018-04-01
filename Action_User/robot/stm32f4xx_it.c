@@ -224,7 +224,7 @@ void CAN2_RX0_IRQHandler(void)
 		//速度
     if(msg.data32[0]==0x00005856)
     {
-      gRobot.robotVel.courseVel=msg.data32[1]/6116.693;
+      gRobot.robotVel.readCourseVel=msg.data32[1]/6116.693;
     }
   }else if((StdId - SDO_RESPONSE_COB_ID_BASE)==UP_STEER_MOTOR_ID){
 		for(i = 0; i < 8; i++)

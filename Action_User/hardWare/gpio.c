@@ -219,5 +219,14 @@ void KeySwitchIntoBTCtrl(void){
 		gRobot.sDta.robocon2018=ROBOT_CONTROL_BY_BT;
 		USART_OUTByDMA("In the RobotBTCTRL\r\n");
 		SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
+		BEEP_ON;
+		for(int i=0;i<3;i++){
+			ShootLedOn();
+			Delay_ms(300);
+			ShootLedOff();
+			Delay_ms(300);
+		}
+		BEEP_OFF;
+		
 	}
 }

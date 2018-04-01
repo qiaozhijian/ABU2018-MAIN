@@ -110,20 +110,20 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMA("V ");
 		USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
 		USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
-	  USART_OUTByDMAF(gRobot.robotVel.countVel);
 		USART_OUTByDMAF(gRobot.robotVel.courseVel);
 		USART_OUTByDMAF(gRobot.robotVel.steerVel[0]);
-		USART_OUTByDMA("MAA ");
-		USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-		USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-		USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
-		USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
-		USART_OUTByDMA("MA ");
+		USART_OUTByDMAF(gRobot.robotVel.countVel);
+		USART_OUTByDMA("MV ");
 		USART_OUTByDMAF(gRobot.courseAngle);
-		USART_OUTByDMAF(gRobot.pitchAngle);
 		USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+		USART_OUTByDMAF(gRobot.holdBallAngle[1]);
+		USART_OUTByDMAF(gRobot.pitchAngle);
 		USART_OUTByDMAF(gRobot.gasValue);
-		USART_OUTByDMA("%d ",PE_FOR_THE_BALL);
+		USART_OUTByDMA("MAV ");
+		USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+		USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
+		USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
+		USART_OUTByDMA("PE%d ",PE_FOR_THE_BALL);
 	}
 	
 }
