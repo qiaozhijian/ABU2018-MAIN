@@ -914,11 +914,12 @@ void RobotSelfTest(void){
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=90.f;
 			HoldBallPosCrlSeparate(90.f,90.f);
 			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+			HoldBallPosCrlSeparate(0.f,0.f);
+			Delay_ms(2000);
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=-90.f;
 			HoldBallPosCrlSeparate(-90.f,-90.f);
 			Delay_ms(2000);
-			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
-			HoldBallPosCrlSeparate(0.f,0.f);
 			ShootLEDShineOnce=1;
 			selfTestStep++;
 		break;
