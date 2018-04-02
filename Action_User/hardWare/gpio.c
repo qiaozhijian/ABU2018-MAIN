@@ -155,7 +155,7 @@ static int IsBallRack=0;
 #define IS_A_BaLL_RACK 1
 #define NOT_A_Ball_RACK  0
 int GoldRackInto(void){
-	if(KEYSWITCH_CHECK_GOLD){
+	if(PE_CHECK_GOLD){
 		IsBallRack++;
 	}else{
 		IsBallRack=0;

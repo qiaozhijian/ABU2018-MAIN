@@ -93,7 +93,6 @@ void FightForBall1(void)
 							if(PrepareForTheBall()){
 								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
 								getBallStep++;
-								Delay_ms(100);
 							}
 						break;
 					
@@ -106,13 +105,10 @@ void FightForBall1(void)
 						break;
 
 						case 2:
-							if((gRobot.posX>4054.f)||(gRobot.posY>1620.f))
-							{
 								USART_OUTByDMA("IntoTheArea\t");
 								//TalkToCamera(CAMERA_OPEN_NEAR);
 								PrepareShootBall(BALL_1);
 								gRobot.sDta.process=TO_THE_AREA_1;
-							}
 						break;
 			}
 			break;
@@ -341,7 +337,7 @@ void FightForGoldBall(void)
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
-				USART_OUTByDMA("BallRack %d ",KEYSWITCH_CHECK_GOLD);
+				USART_OUTByDMA("BallRack %d ",PE_CHECK_GOLD);
 			break;
 				
 			case 1:
@@ -429,7 +425,7 @@ void FightForGoldBall(void)
 							/*航向到位*/
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
 								/*&&(gRobot.posY>5530.f)*/
-								/*&&fabs(gRobot.posY-TZ_3_Y)<50.f*/
+								&&fabs(gRobot.posY-TZ_3_Y)<50.f
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
@@ -923,7 +919,7 @@ void RobotSelfTest(void){
 			Delay_ms(2000);
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
 			HoldBallPosCrlSeparate(0.f,0.f);
-			
+			ShootLEDShineOnce=1;
 			selfTestStep++;
 		break;
 		
@@ -935,10 +931,10 @@ void RobotSelfTest(void){
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_LASER);
 			}
 			USART_OUTByDMA("LASER_TEST\r\n");
-			if(KEYSWITCH||KEYSWITCH_CHECK_GOLD){
+			if(PE_FOR_THE_BALL||PE_CHECK_GOLD){
 				BEEP_ON;
 				return;
-			}else if(KEYSWITCH==0&&KEYSWITCH_CHECK_GOLD==0){
+			}else if(PE_FOR_THE_BALL==0&&PE_CHECK_GOLD==0){
 				BEEP_OFF;
 			}
 			USART_OUTByDMA("A%d\t B%d\t\r\n",gRobot.laser[0],gRobot.laser[1]);

@@ -5,7 +5,7 @@
 
 #define KEYSWITCH		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_7))
 
-#define KEYSWITCH_CHECK_GOLD		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_14))
+#define PE_CHECK_GOLD		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_14))
 
 #define BEEP_ON          		 GPIO_SetBits(GPIOC, GPIO_Pin_3)
 
