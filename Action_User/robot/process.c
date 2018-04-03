@@ -91,9 +91,9 @@ void FightForBall1(void)
 				//第一步对光电进行扫描
 						case 0:
 							if(PrepareForTheBall()){
-								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
+//								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
 								getBallStep++;
-								Delay_ms(100);
+								Delay_ms(1000);
 							}
 						break;
 					
@@ -101,6 +101,7 @@ void FightForBall1(void)
 							if(PrepareForTheBall()){
 							//让球被取出来才能下爪的手臂向下撑
 								LowerClawStairOn();
+								Delay_ms(200);
 								getBallStep++;
 							}
 						break;

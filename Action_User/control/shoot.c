@@ -28,18 +28,13 @@ void ShootBall(void)
 {	
 	/*因为第四个金球已经拿到时已经到了投掷金球点，可能在调节过程中一次性满足所有条件然后就发射了，
 	航向等还有瞬时速度，干扰投球*/
-	if(gRobot.sDta.robocon2018==COLORFUL_BALL_1||gRobot.sDta.robocon2018==COLORFUL_BALL_2){
-		Delay_ms(500);
-		USART_OUTByDMA("hahaahhahahaha");
-	}else if(gRobot.sDta.robocon2018==GOLD_BALL){
-		Delay_ms(1000);
-	}
   /*将下爪手臂气缸上抬*/
+	Delay_ms(150);
   LowerClawStairOff();
 	ShootLedOn();
   /*夹子打开*/
   ClawOpen();
-  Delay_ms(400);
+  Delay_ms(250);
   /*把两个发射气缸打开*/
   ShootBigOpen();
 }
