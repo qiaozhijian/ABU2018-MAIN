@@ -91,6 +91,7 @@ void FightForBall1(void)
 				//第一步对光电进行扫描
 						case 0:
 							if(PrepareForTheBall()){
+								Delay_ms(1000);
 								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
 								getBallStep++;
 							}
@@ -100,6 +101,7 @@ void FightForBall1(void)
 							if(PrepareForTheBall()){
 							//让球被取出来才能下爪的手臂向下撑
 								LowerClawStairOn();
+								Delay_ms(200);
 								getBallStep++;
 							}
 						break;
@@ -800,86 +802,8 @@ void RobotSelfTest(void){
 			}
 		break;
 			
-		//对各个气阀的自检
-		case 1:
-			if(ShootLEDShineOnce){
-				ShootLEDShineOnce=0;
-				ShootLEDShine();
-			}
-			USART_OUTByDMA("GAS_BAORD_TEST\r\n");
-			//爪子张开
-			ClawOpen();
-			Delay_ms(1000);
-			ClawShut();
-			Delay_ms(1000);
-		
-		  //射球两个气阀
-			ClawOpen();
-			ShootSmallOpen();
-			Delay_ms(1000);
-      ShootBigOpen();
-			Delay_ms(2000);	
-			ShootSmallShut();
-      ShootBigShut();
-			ClawShut();
-			Delay_ms(1000);
-
-		
-			//助推车的气阀
-			Delay_ms(1000);
-			//助推车的气阀
-		
-			//金球架抓取气阀
-			GoldBallGraspStairTwoOn();
-			Delay_ms(1500);
-			//金球架抓取气阀
-			GoldBallGraspStairTwoOff();
-		  Delay_ms(1500);
-			
-			LowerClawStairOn();
-			Delay_ms(1500);
-			LowerClawStairOff();
-			Delay_ms(1500);
-		  selfTestStep++;
-			ShootLEDShineOnce=1;
-		break;
-		
-		case 2:
-			if(ShootLEDShineOnce){
-				ShootLEDShineOnce=0;
-				ShootLEDShine();
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT);
-			}
-			USART_OUTByDMA("DUCT_TEST\r\n");
-			if(gRobot.sDta.AT_motionFlag&AT_THE_DUCT_SELFTEST_OVER){
-				selfTestStep++;
-				ShootLEDShineOnce=1;
-				USART_OUTByDMA("THE_DUCT_SELFTEST_OVER\r\n");
-			}
-		break;
-		
-		//气压检测
-		case 3:
-			if(ShootLEDShineOnce){
-				ShootLEDShineOnce=0;
-				ShootLEDShine();
-			}
-			USART_OUTByDMA("GAS_TEST\r\n");
-			GasTestTime++;
-			USART_OUTByDMA("gasValue\t");
-			USART_OUTByDMAF(gRobot.gasValue);
-			if(GasTestTime<=600){
-				GasMotion(0.500);
-			}else if(GasTestTime>600&&GasTestTime<=1200){
-				GasMotion(0.430);
-			}else if(GasTestTime>1200){
-				ShootLEDShineOnce=1;
-				selfTestStep++;
-			}
-		break;
-		
 		//对电机，舵机的自检
-		case 4:
+		case 1:
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
@@ -920,9 +844,88 @@ void RobotSelfTest(void){
 			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=-90.f;
 			HoldBallPosCrlSeparate(-90.f,-90.f);
 			Delay_ms(2000);
+			gRobot.sDta.holdBallAimAngle[0]=gRobot.sDta.holdBallAimAngle[1]=0.f;
+			HoldBallPosCrlSeparate(0.f,0.f);
+			Delay_ms(2000);
 			ShootLEDShineOnce=1;
 			selfTestStep++;
 		break;
+			
+		//对各个气阀的自检
+		case 2:
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
+			USART_OUTByDMA("GAS_BAORD_TEST\r\n");
+			//爪子张开
+			ClawOpen();
+			Delay_ms(1000);
+			ClawShut();
+			Delay_ms(1000);
+		
+		  //射球两个气阀
+			ClawOpen();
+			ShootSmallOpen();
+			Delay_ms(1000);
+      ShootBigOpen();
+			Delay_ms(2000);	
+			ShootSmallShut();
+      ShootBigShut();
+			ClawShut();
+			Delay_ms(1000);
+
+		
+			//金球架抓取气阀
+			GoldBallGraspStairTwoOn();
+			Delay_ms(1500);
+			//金球架抓取气阀
+			GoldBallGraspStairTwoOff();
+		  Delay_ms(1500);
+			
+			LowerClawStairOn();
+			Delay_ms(1500);
+			LowerClawStairOff();
+			Delay_ms(1500);
+		  selfTestStep++;
+			ShootLEDShineOnce=1;
+		break;
+		
+		case 3:
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT);
+			}
+			USART_OUTByDMA("DUCT_TEST\r\n");
+			if(gRobot.sDta.AT_motionFlag&AT_THE_DUCT_SELFTEST_OVER){
+				selfTestStep++;
+				ShootLEDShineOnce=1;
+				USART_OUTByDMA("THE_DUCT_SELFTEST_OVER\r\n");
+			}
+		break;
+		
+		//气压检测
+		case 4:
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
+			USART_OUTByDMA("GAS_TEST\r\n");
+			GasTestTime++;
+			USART_OUTByDMA("gasValue\t");
+			USART_OUTByDMAF(gRobot.gasValue);
+			if(GasTestTime<=600){
+				GasMotion(0.500);
+			}else if(GasTestTime>600&&GasTestTime<=1200){
+				GasMotion(0.430);
+			}else if(GasTestTime>1200){
+				ShootLEDShineOnce=1;
+				selfTestStep++;
+			}
+		break;
+		
+		
 		
 		//激光检测
 		case 5:
@@ -944,7 +947,8 @@ void RobotSelfTest(void){
 				Delay_ms(gRobot.laser[0]/10*5);
 				BEEP_OFF;
 				Delay_ms(gRobot.laser[0]/10*5);
-			}else if(gRobot.laser[1]>20&&gRobot.laser[1]<600){
+			}
+			if(gRobot.laser[1]>20&&gRobot.laser[1]<600){
 				BEEP_ON;
 				Delay_ms(gRobot.laser[1]/10*5);
 				BEEP_OFF;
