@@ -54,6 +54,7 @@ void ClawOpen(void)
 
 void ClawShut(void)
 {
+	/*爪子标志位关闭*/
 	SetMotionFlag(~AT_CLAW_STATUS_OPEN);
 	GasValveControl(GASVALVE_BOARD_ID , CLAW_ID , 0);
 }

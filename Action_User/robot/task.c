@@ -139,7 +139,6 @@ void RobotTask(void)
 				if(KEYSWITCH){
 					KeySwitchIntoBTCtrl();
 				}
-				AT_CMD_Handle();
 				
 				/*过程报告*/
 				//processReport();
@@ -157,7 +156,7 @@ void RobotTask(void)
 				switch(gRobot.sDta.robocon2018)
 				{
 					case ROBOT_CONTROL_BY_BT:
-						SelfTest();
+						AT_CMD_Handle();
 					break;
 					
 					case ROBOT_SELF_TEST:
@@ -287,8 +286,7 @@ void statusInit(void)
 	
   /*运动控制状态初始化*/
 	
-	/*爪子标志位关闭*/
-  SetMotionFlag(~AT_CLAW_STATUS_OPEN);
+
 	/*射球时的助力大气阀标志位关闭*/
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
   SetMotionFlag(~AT_SHOOT_BIG_ENABLE);

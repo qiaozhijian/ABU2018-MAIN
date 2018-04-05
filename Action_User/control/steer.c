@@ -60,7 +60,7 @@ void HoldSteer1PosCrl(float angle)
 {
   int pos=0.f;
 
-	if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN)
+	if(gRobot.sDta.AT_motionFlag&AT_CLAW_STATUS_OPEN&&gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT)
   {
     ClawShut();
   }

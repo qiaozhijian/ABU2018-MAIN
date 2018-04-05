@@ -159,7 +159,7 @@ void AT_CMD_Handle(void){
 			if(PE_FOR_THE_BALL){
 				ClawOpen();
 				LowerClawStairOff();
-				Delay_ms(500);
+				Delay_ms(250);
 				ShootBigOpen();
 			}
 //      }
