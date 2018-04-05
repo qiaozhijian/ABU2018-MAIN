@@ -779,6 +779,7 @@ void ShootLEDShine(void){
 void RobotSelfTest(void){
 	static int selfTestStep=0;
 	static int GasTestTime=0;
+	static int gasTestStep=1;
 	MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST);
 	
 	USART_OUTByDMA("P\t");
@@ -802,8 +803,22 @@ void RobotSelfTest(void){
 			}
 		break;
 			
-		//对电机，舵机的自检
 		case 1:
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT);
+			}
+			USART_OUTByDMA("DUCT_TEST\r\n");
+			if(gRobot.sDta.AT_motionFlag&AT_THE_DUCT_SELFTEST_OVER){
+				selfTestStep++;
+				ShootLEDShineOnce=1;
+				USART_OUTByDMA("THE_DUCT_SELFTEST_OVER\r\n");
+			}
+		break;
+			
+		//对电机，舵机的自检
+		case 2:
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
@@ -851,8 +866,48 @@ void RobotSelfTest(void){
 			selfTestStep++;
 		break;
 			
+			
+		//气压检测，顺便先放气
+		case 3:
+			if(ShootLEDShineOnce){
+				ShootLEDShineOnce=0;
+				ShootLEDShine();
+			}
+			USART_OUTByDMA("GAS_TEST\r\n");
+			GasTestTime++;
+			USART_OUTByDMA("gasValue\t");
+			USART_OUTByDMAF(gRobot.gasValue);
+			switch(gasTestStep){
+				case 1:
+					gRobot.sDta.gasAimValue = 0.250f;
+				  GasMotion(0.250);
+					if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.02){
+				    gasTestStep++;
+						GasTestTime=0;
+			    }
+					if(GasTestTime>1000){
+						BEEP_ON;
+					}
+			  break;
+					
+				case 2:
+					gRobot.sDta.gasAimValue = 0.300;
+				  GasMotion(0.300);
+					BEEP_OFF;
+					if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.02){
+				    ShootLEDShineOnce=1;
+				    selfTestStep++;
+			    }
+					if(GasTestTime>1000){
+						BEEP_ON;
+					}
+			  break;
+				
+			}
+		break;
+			
 		//对各个气阀的自检
-		case 2:
+		case 4:
 			if(ShootLEDShineOnce){
 				ShootLEDShineOnce=0;
 				ShootLEDShine();
@@ -890,41 +945,6 @@ void RobotSelfTest(void){
 		  selfTestStep++;
 			ShootLEDShineOnce=1;
 		break;
-		
-		case 3:
-			if(ShootLEDShineOnce){
-				ShootLEDShineOnce=0;
-				ShootLEDShine();
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT);
-			}
-			USART_OUTByDMA("DUCT_TEST\r\n");
-			if(gRobot.sDta.AT_motionFlag&AT_THE_DUCT_SELFTEST_OVER){
-				selfTestStep++;
-				ShootLEDShineOnce=1;
-				USART_OUTByDMA("THE_DUCT_SELFTEST_OVER\r\n");
-			}
-		break;
-		
-		//气压检测
-		case 4:
-			if(ShootLEDShineOnce){
-				ShootLEDShineOnce=0;
-				ShootLEDShine();
-			}
-			USART_OUTByDMA("GAS_TEST\r\n");
-			GasTestTime++;
-			USART_OUTByDMA("gasValue\t");
-			USART_OUTByDMAF(gRobot.gasValue);
-			if(GasTestTime<=600){
-				GasMotion(0.500);
-			}else if(GasTestTime>600&&GasTestTime<=1200){
-				GasMotion(0.430);
-			}else if(GasTestTime>1200){
-				ShootLEDShineOnce=1;
-				selfTestStep++;
-			}
-		break;
-		
 		
 		
 		//激光检测
