@@ -76,36 +76,36 @@ void ConfigTask(void)
   os_err = os_err;  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
-// DebugBLE_Init(921600);
+	DebugBLE_Init(921600);
   /*dma初始化*/
   USARTDMASendInit(DEBUG_USART,USART1DMASendBuf,&DebugBLE_Init,921600);
-	
-	USART_OUTByDMA("START\r\n");
-//  USART_OUTByDMA("START\r\n");
+//	
+//	USART_OUTByDMA("START\r\n");
+////  USART_OUTByDMA("START\r\n");
 
-  #ifndef TEST
-	USART_OUTByDMA("SoftWareReset\r\n");
-//  USART_OUTByDMA("SoftWareReset\r\n");
-  SoftWareReset();
-  #endif
+//  #ifndef TEST
+//	USART_OUTByDMA("SoftWareReset\r\n");
+////  USART_OUTByDMA("SoftWareReset\r\n");
+//  SoftWareReset();
+//  #endif
 	
   
   HardWareInit();
-  if(!gRobot.resetFlag)
-  {
-			//给航向，俯仰电机上电初始化时间
-			Delay_ms(100);
-			/*电机初始化*/
-			MotorInit();
-			if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
-			/*状态初始化*/
-			statusInit();
-		}
-  }
-	
-  #ifndef TEST
-  IWDG_Init(1,50); // 11ms-11.2ms
-  #endif
+//  if(!gRobot.resetFlag)
+//  {
+//			//给航向，俯仰电机上电初始化时间
+//			Delay_ms(100);
+//			/*电机初始化*/
+//			MotorInit();
+//			if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
+//			/*状态初始化*/
+//			statusInit();
+//		}
+//  }
+//	
+//  #ifndef TEST
+//  IWDG_Init(1,50); // 11ms-11.2ms
+//  #endif
 	
   OSTaskSuspend(OS_PRIO_SELF);
 }
@@ -121,150 +121,148 @@ void RobotTask(void)
     OSSemPend(PeriodSem, 0, &os_err);
 		/*清除信号量*/
 		OSSemSet(PeriodSem, 0, &os_err);
-		#ifdef DEBUG
-			IWDG_Feed();
-			debugFunction();
-		#else
-			#ifdef TEST
-			  SelfTest();
-			#else		
-				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
-				IWDG_Feed();
-		
-				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
-				{
-					processReponse();
-					USART_OUTByDMAF(gRobot.posX);
-					USART_OUTByDMAF(gRobot.posY);
-					USART_OUTByDMAF(gRobot.angle);
-//					USART_OUTByDMAF(gRobot.angleBais);
-//					USART_OUTByDMAF(gRobot.KalmanZ);
-//					USART_OUTByDMAF(gRobot.AngularVelocity);
-					USART_OUTByDMAF(gRobot.robotVel.countVel);
-					USART_OUTByDMAF(gRobot.robotVel.courseVel);
-					USART_OUTByDMAF(gRobot.robotVel.steerVel[0]);
-					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
-					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
-					USART_OUTByDMAF(gRobot.courseAngle);
-					USART_OUTByDMAF(gRobot.pitchAngle);
-					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-					USART_OUTByDMAF(gRobot.gasValue);
-					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
-					
-				}
-				
-				/*蓝牙命令处理*/
-				AT_CMD_Handle();
-				
-				/*过程报告*/
-				//processReport();
-				
-				/*运动状态标志位更新*/
-				MotionStatusUpdate();
-				
-				/*运动参数执行*/
-				MotionExecute();
-				
-				/*运动状态更新*/
-				MotionRead();
-				
-				
-				switch(gRobot.sDta.robocon2018)
-				{
-					case ROBOT_SELF_TEST:
-						 RobotSelfTest();
-					break;
-					
-					case ROBOT_PREPARE:
-						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
-						{
-							//灯亮两秒，蜂鸣器响两秒，表示准备完成
-							BEEP_ON;
-							ShootLedOn();
-							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
-							Delay_ms(2000);
-							ShootLedOff();
-							BEEP_OFF;
-							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
-							SetMotionFlag(~AT_PREPARE_READY);
-							gRobot.sDta.robocon2018=ROBOT_START;
-						}
-						break;
-						
-					case ROBOT_START:
-						if(gRobot.posX>100.f)
-						{
-							PrepareGetBall(BALL_1);			
-						}
-						if(gRobot.posX>2000.f)
-						{
-							gRobot.sDta.process=TO_GET_BALL_1;
-							gRobot.sDta.robocon2018=COLORFUL_BALL_1;
-						}
-						break;
-					case COLORFUL_BALL_1:
-						/*完成彩球一的投射*/
-						FightForBall1();
-						break;
-					case COLORFUL_BALL_2:
-						/*完成彩球二的投射*/
-						FightForBall2();
-						break;
-					case GOLD_BALL:
-						/*完成金球的投射*/
-						FightForGoldBall();
-						break;
-					
-					case INTO_HARDFAULT:
-						ShootLedOn();
-						BEEP_ON;
-					  USART_OUTByDMA("INTO_HARDFAULT!!!");
-					break;
-				}
-				USART_OUTByDMA("\r\n");
-			#endif
-		#endif
+//		#ifdef DEBUG
+//			IWDG_Feed();
+//			debugFunction();
+//		#else
+//			#ifdef TEST
+//			  SelfTest();
+//			#else		
+//				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
+//				IWDG_Feed();
+//		
+//				if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
+//				{
+//					processReponse();
+//					USART_OUTByDMAF(gRobot.posX);
+//					USART_OUTByDMAF(gRobot.posY);
+//					USART_OUTByDMAF(gRobot.angle);
+////					USART_OUTByDMAF(gRobot.angleBais);
+////					USART_OUTByDMAF(gRobot.KalmanZ);
+////					USART_OUTByDMAF(gRobot.AngularVelocity);
+//					USART_OUTByDMAF(gRobot.robotVel.countVel);
+//					USART_OUTByDMAF(gRobot.robotVel.courseVel);
+//					USART_OUTByDMAF(gRobot.robotVel.steerVel[0]);
+//					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+//					USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+//					USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
+//					USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
+//					USART_OUTByDMAF(gRobot.courseAngle);
+//					USART_OUTByDMAF(gRobot.pitchAngle);
+//					USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+//					USART_OUTByDMAF(gRobot.gasValue);
+//					USART_OUTByDMA("%d\t",PE_FOR_THE_BALL);
+//					
+//				}
+//				
+//				
+//				/*过程报告*/
+//				//processReport();
+//				
+//				/*运动状态标志位更新*/
+//				MotionStatusUpdate();
+//				
+//				/*运动参数执行*/
+//				MotionExecute();
+//				
+//				/*运动状态更新*/
+//				MotionRead();
+//				
+//				
+//				switch(gRobot.sDta.robocon2018)
+//				{
+//					case ROBOT_SELF_TEST:
+//						 RobotSelfTest();
+//					break;
+//					
+//					case ROBOT_PREPARE:
+//						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
+//						{
+//							//灯亮两秒，蜂鸣器响两秒，表示准备完成
+//							BEEP_ON;
+//							ShootLedOn();
+//							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
+//							Delay_ms(2000);
+//							ShootLedOff();
+//							BEEP_OFF;
+//							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
+//							SetMotionFlag(~AT_PREPARE_READY);
+//							gRobot.sDta.robocon2018=ROBOT_START;
+//						}
+//						break;
+//						
+//					case ROBOT_START:
+//						if(gRobot.posX>100.f)
+//						{
+//							PrepareGetBall(BALL_1);			
+//						}
+//						if(gRobot.posX>2000.f)
+//						{
+//							gRobot.sDta.process=TO_GET_BALL_1;
+//							gRobot.sDta.robocon2018=COLORFUL_BALL_1;
+//						}
+//						break;
+//					case COLORFUL_BALL_1:
+//						/*完成彩球一的投射*/
+//						FightForBall1();
+//						break;
+//					case COLORFUL_BALL_2:
+//						/*完成彩球二的投射*/
+//						FightForBall2();
+//						break;
+//					case GOLD_BALL:
+//						/*完成金球的投射*/
+//						FightForGoldBall();
+//						break;
+//					
+//					case INTO_HARDFAULT:
+//						ShootLedOn();
+//						BEEP_ON;
+//					  USART_OUTByDMA("INTO_HARDFAULT!!!");
+//					break;
+//				}
+//				USART_OUTByDMA("\r\n");
+//			#endif
+//		#endif
   } 
 }
 
 void HardWareInit(void){
-  USART_OUTByDMA("HardWareInit\r\n");
+//  USART_OUTByDMA("HardWareInit\r\n");
   //定时器初始化
   TIM_Init(TIM2, 99, 839, 0, 0);   //1ms主定时器
 	
-  CAN_Config(CAN1, 500, GPIOB, GPIO_Pin_8, GPIO_Pin_9);
-  
-  CAN_Config(CAN2, 500, GPIOB, GPIO_Pin_5, GPIO_Pin_6);
+//  CAN_Config(CAN1, 500, GPIOB, GPIO_Pin_8, GPIO_Pin_9);
+//  
+//  CAN_Config(CAN2, 500, GPIOB, GPIO_Pin_5, GPIO_Pin_6);
   
   /*初始化取球，射击参数结构体*/
   prepareMotionParaInit();
 	
-  //摄像头转台初始化
-  SteerInit(1000000);
-	
-  Steer2Init(1000000);
-	
-  /*与摄像头通信的串口初始化*/
-  CameraTalkInit(256000);
-	
-  /*接收定位系统数据的串口初始化*/
-  GYRO_Init(921600);
+//  //摄像头转台初始化
+//  SteerInit(1000000);
+//	
+//  Steer2Init(1000000);
+//	
+//  /*与摄像头通信的串口初始化*/
+//  CameraTalkInit(256000);
+//	
+//  /*接收定位系统数据的串口初始化*/
+//  GYRO_Init(921600);
 	
   /*调试蓝牙*/
-  ControlBLE_Init(921600);
+  ControlBLE_Init(460800);
 	
-  /*光电初始化*/
-  PhotoelectricityInit();
-	
-	/*检测到金球架进来就推助推气阀的光电*/
-  PhotoelectricityCheckGoldBallInit();
-	
-  //蜂鸣器PE7
-  GPIO_Init_Pins(GPIOC, GPIO_Pin_3, GPIO_Mode_OUT);
-	
-  TIM_Init(TIM7,99,83,0,0);					//100us
+//  /*光电初始化*/
+//  PhotoelectricityInit();
+//	
+//	/*检测到金球架进来就推助推气阀的光电*/
+//  PhotoelectricityCheckGoldBallInit();
+//	
+//  //蜂鸣器PE7
+//  GPIO_Init_Pins(GPIOC, GPIO_Pin_3, GPIO_Mode_OUT);
+//	
+//  TIM_Init(TIM7,99,83,0,0);					//100us
   
 }
 void MotorInit(void){

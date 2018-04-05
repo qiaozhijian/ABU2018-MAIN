@@ -18,25 +18,9 @@
 #include "robot.h"
 #include "dma.h"
 
-
-#define CLAW 						1
-#define SHOOT 					2
-#define PITCH 					3
-#define STEER 					4
-#define GAS  						5
-#define COURSE  				6
-#define TEST_GAS  			7
-#define CAMERA	  			8
-#define STEER1 					9
-#define STEER2 					10
-#define BOOST 					11
-#define LOWER_CLAW_STAIR 					12
-#define STAIR2 					13
-
+#define YENUM					124
 extern Robot_t gRobot;
-
-/*调试蓝牙中断*/
-static char buffer[20];
+static char buffer[YENUM];
 static int bufferI=0;
 static int atCommand=0;
 
@@ -45,14 +29,16 @@ void AT_CMD_Judge(void);
 void BufferInit(void){
   bufferI=0;
 	atCommand=0;
-  for(int i=0;i<20;i++)
+  for(int i=0;i<YENUM;i++)
     buffer[i]=0;
 }
 
-/*平板控制蓝牙串口中断*/
 void UART4_IRQHandler(void)
 {
   uint8_t data;
+	static int updateKey=0;
+	static int updateFlag=0;
+	static int step=0;
   OS_CPU_SR  cpu_sr;
   OS_ENTER_CRITICAL();/* Tell uC/OS-II that we are starting an ISR*/
   OSIntNesting++;
@@ -61,17 +47,50 @@ void UART4_IRQHandler(void)
   {
     USART_ClearITPendingBit( UART4,USART_IT_RXNE);
     data=USART_ReceiveData(UART4);
-    buffer[bufferI]=data;
-    bufferI++;
-    if(bufferI==20)
-      bufferI=0;
-    if(bufferI>1&&buffer[bufferI-1]=='\n'&&buffer[bufferI-2]=='\r'){
-      AT_CMD_Judge();
-    }else{
-      if(buffer[0]!='A'){
-        BufferInit();
-      }
-    }
+		
+		switch(step)
+		{
+			case 0:
+				if(data==0x59)
+					step++;
+				else
+					step=0;
+				break;
+			case 1:
+				if(data==0x49)
+					step++;
+				else
+					step=0;
+				break;
+			case 2:
+				if(data==0x53)
+				{
+					updateKey=1;
+					updateFlag=0;
+					BufferInit();
+				}
+				step=0;
+				break;
+		}
+		
+		if(updateFlag==1)
+		{
+			buffer[bufferI]=data;
+			bufferI++;
+			if(bufferI==YENUM)
+			{
+				AT_CMD_Judge();
+				BufferInit();
+				updateFlag=0;
+			}
+		}
+		
+		if(updateKey==1)
+		{
+			updateKey=0;
+			updateFlag=1;
+		}
+		
   }else{
     data=USART_ReceiveData(UART4);
   }
@@ -79,195 +98,136 @@ void UART4_IRQHandler(void)
 }
 
 
+//鍒濈増
+float Acceleration[3]={0.f};
+float freeAcceleration[3]={0.f};
+float deltaVelocity[3]={0.f};
+float angularVelocity[3]={0.f};
+float magneticField[3]={0.f};
+float eulerAngles[3]={0.f};
+float Quaternion[4]={0.f};
+float deltaQuaternion[4]={0.f};
 
-void AT_CMD_Judge(void){
-	
-  if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0)//AT    
-    atCommand=CLAW;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0)//AT    
-    atCommand=SHOOT;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+3", 4)==0)//AT    
-    atCommand=PITCH;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+4", 4)==0)//发射按钮   
-    atCommand=STEER;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+5", 4)==0)//发射按钮   
-    atCommand=GAS;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+6", 4)==0)//发射按钮   
-    atCommand=COURSE;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//发射按钮   
-    atCommand=TEST_GAS;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//发射按钮   
-    atCommand=CAMERA;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+9", 4)==0)//发射按钮   
-    atCommand=STEER1;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+12", 5)==0)//发射按钮   
-    atCommand=STEER2;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+13", 5)==0)//发射按钮   
-    atCommand=BOOST;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0)//发射按钮   
-    atCommand=LOWER_CLAW_STAIR;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//发射按钮   
-    atCommand=STAIR2;
-	
-//  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
-//  {
-//		
-//		SetMotionFlag(AT_CAMERA_TALK_SUCCESS);
-//    //摄像头连接成功
-//  }
-	
-  /*如果是及时处理的命令，就初始化*/
-	if(atCommand==0)
+void AT_CMD_Judge(void)
+{
+	int num=4;
+	union
 	{
-		BufferInit();
+		int value;
+		uint8_t data[4];
+	}convert_t={0};
+	
+	/*Len=0x78*/
+	if(buffer[2]==0x78)
+	{
+		if(buffer[3]==0x10&&buffer[4]==0x0C&&buffer[17]==0x11&&buffer[18]==0x0C)
+		{
+			num=3;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[3+i*4+j+2];
+					if(j==3)
+						Acceleration[i]=convert_t.value*0.000001;
+				}
+		}
+		if(buffer[17]==0x11&&buffer[18]==0x0C&&buffer[31]==0x12&&buffer[32]==0x0C)
+		{
+			num=3;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[17+i*4+j+2];
+					if(j==3)
+						freeAcceleration[i]=convert_t.value*0.000001;
+				}
+		}
+		if(buffer[31]==0x12&&buffer[32]==0x0C&&buffer[45]==0x20&&buffer[46]==0x0C)
+		{
+			num=3;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[31+i*4+j+2];
+					if(j==3)
+						deltaVelocity[i]=convert_t.value*0.000001;
+				}
+		}
+		if(buffer[45]==0x20&&buffer[46]==0x0C&&buffer[59]==0x30&&buffer[60]==0x0C)
+		{
+			num=3;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[45+i*4+j+2];
+					if(j==3)
+						angularVelocity[i]=convert_t.value*0.000001;
+				}
+		}
+		if(buffer[59]==0x30&&buffer[60]==0x0C&&buffer[73]==0x40&&buffer[74]==0x0C)
+		{
+			num=3;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[59+i*4+j+2];
+					if(j==3)
+						magneticField[i]=convert_t.value*0.001;
+				}
+		}
+		if(buffer[73]==0x40&&buffer[74]==0x0C&&buffer[87]==0x42&&buffer[88]==0x10)
+		{
+			num=3;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[73+i*4+j+2];
+					if(j==3)
+						eulerAngles[i]=convert_t.value*0.000001;
+				}
+		}
+		if(buffer[87]==0x42&&buffer[88]==0x10&&buffer[105]==0x42&&buffer[106]==0x10)
+		{
+			num=4;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[87+i*4+j+2];
+					if(j==3)
+						Quaternion[i]=convert_t.value;
+				}
+		}
+		if(buffer[105]==0x42&&buffer[106]==0x10&&buffer[123]==0x78)
+		{
+			num=4;
+			for(int i=0;i<num;i++)
+				for(int j=0;j<4;j++)
+				{
+					convert_t.data[j]=buffer[105+i*4+j+2];
+					if(j==3)
+						deltaQuaternion[i]=convert_t.value*0.000001;
+				}
+		}
+//		for(int i=0;i<3;i++)
+//			USART_OUTByDMAF(Acceleration[i]);
+//		for(int i=0;i<3;i++)
+//			USART_OUTByDMAF(freeAcceleration[i]);
+//		for(int i=0;i<3;i++)
+//			USART_OUTByDMAF(deltaVelocity[i]);
+		for(int i=0;i<3;i++)
+			USART_OUTByDMAF(angularVelocity[i]);
+//		for(int i=0;i<3;i++)
+//			USART_OUTByDMAF(magneticField[i]);
+//		for(int i=0;i<3;i++)
+//			USART_OUTByDMAF(eulerAngles[i]);
+//		for(int i=0;i<3;i++)
+//			USART_OUTByDMAF(deltaVelocity[i]);
+//		for(int i=0;i<3;i++)
+//			USART_OUTByDMAF(angularVelocity[i]);
+		USART_OUTByDMA("\r\n");
 	}
 }
 
-
-
-void AT_CMD_Handle(void){
-  float value=0.0f;
-  switch(atCommand)
-  {
-  case 0:
-    break;
-    /*控制张爪*/
-  case CLAW:
-    USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 4) == '1') 
-    {
-      ClawShut();
-    }
-    else if(*(buffer + 4) == '0') 
-    {
-      ClawOpen();
-    } 
-    else{
-		
-		}
-    break;
-    
-    /*控制是否射击*/
-  case SHOOT:
-    USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 4) == '1')
-    {
-			ShootSmallOpen();
-			Delay_ms(300);
-//      if(gRobot.sDta.AT_motionFlag/*AT_CLAW_STATUS_OPEN|*/)
-//      {
-			if(PE_FOR_THE_BALL){
-				ClawOpen();
-				LowerClawStairOff();
-				Delay_ms(500);
-				ShootBigOpen();
-			}
-//      }
-    }
-    else if(*(buffer + 4) == '0') 
-    {
-      if(gRobot.sDta.AT_motionFlag&(AT_SHOOT_BIG_ENABLE|AT_SHOOT_SMALL_ENABLE))
-      {
-        ShootSmallShut();
-				ShootBigShut();
-      }
-      else
-      {
-        ShootSmallOpen();
-        ClawShut();
-      }
-			LowerClawStairOff();
-    }
-    break;
-    
-  case GAS:
-    USART_OUTByDMA("OK\r\n");
-    //平板的值
-    value = atof(buffer + 4);
-    CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
-    break;
-    
-  case PITCH:
-    USART_OUTByDMA("OK\r\n");
-    value = atof(buffer + 4);
-		gRobot.sDta.pitchAimAngle=value;
-		#ifdef TEST
-		PitchAngleMotion(gRobot.sDta.pitchAimAngle);
-		#endif
-    break;
-    
-  case COURSE:
-    USART_OUTByDMA("OK\r\n");
-    value = atof(buffer + 4);
-		gRobot.sDta.courseAimAngle=value;
-		#ifdef TEST
-		CourseAngleMotion(gRobot.sDta.courseAimAngle);
-		#endif
-    break;
-   
-	case TEST_GAS:
-    USART_OUTByDMA("OK\r\n");
-		//GasValveControl(GASVALVE_BOARD_ID,*(buffer+4)-'0',*(buffer+5)-'0');
-		break;
-	
-  case CAMERA:
-    USART_OUTByDMA("OK\r\n");
-    value = atof(buffer + 4);
-		gRobot.sDta.cameraAimAngle=value;
-		CameraSteerPosCrl(gRobot.sDta.cameraAimAngle);
-    break;
-    
-  case STEER:
-    USART_OUTByDMA("OK\r\n");
-    value = atof(buffer + 4);
-		gRobot.sDta.holdBallAimAngle[0]=value;
-		gRobot.sDta.holdBallAimAngle[1]=value;
-		HoldBallPosCrl(gRobot.sDta.holdBallAimAngle[0]);
-    break;
-		
-	case STEER1:
-    USART_OUTByDMA("OK\r\n");
-    value = atof(buffer + 4);
-		gRobot.sDta.holdBallAimAngle[0]=value;
-		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle[0]);
-		break;
-		
-	case STEER2:
-    USART_OUTByDMA("OK\r\n");
-    value = atof(buffer + 5);
-		gRobot.sDta.holdBallAimAngle[1]=value;
-		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1]);
-		break;
-  
-  case LOWER_CLAW_STAIR:
-    USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 5) == '1') 
-    {
-      LowerClawStairOn();
-    }
-    else if(*(buffer + 5) == '0') 
-    {
-      LowerClawStairOff();
-    } 
-    break;
-  case STAIR2:
-    USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 5) == '1') 
-    {
-      GoldBallGraspStairTwoOn();
-    }
-    else if(*(buffer + 5) == '0') 
-    {
-      GoldBallGraspStairTwoOff();
-    } 
-    break;
-	
-  default:
-    break;
-  }
-  
-  BufferInit();
-}
 
 
 
