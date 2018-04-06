@@ -254,6 +254,9 @@
 #define TZ_3_X (6110.0f)
 #define TZ_3_Y (6030.0f)
 
+#define HANDOVER_3_X (7094.f)
+#define HANDOVER_3_Y (935.f)
+
 typedef struct{
   
 	/*判断此次是否为看门狗复位*/

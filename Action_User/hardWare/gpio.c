@@ -154,17 +154,20 @@ void PhotoelectricityCheckGoldBallInit(void)
 static int IsBallRack=0;
 #define IS_A_BaLL_RACK 1
 #define NOT_A_Ball_RACK  0
-int GoldRackInto(void){
-	if(PE_CHECK_GOLD){
-		IsBallRack++;
-	}else{
-		IsBallRack=0;
+int GoldRackInto(void){	
+	while(1){
+		Delay_ms(2);
+		USART_OUTByDMA("BallRack %d ",PE_CHECK_GOLD);
+		if(PE_CHECK_GOLD){
+			IsBallRack++;
+		}else{
+			IsBallRack=0;
+		}
+		if(IsBallRack>=3){
+			IsBallRack=0;
+			return IS_A_BaLL_RACK;
+		}
 	}
-	if(IsBallRack>=4){
-		IsBallRack=0;
-		return IS_A_BaLL_RACK;
-	}
-	return NOT_A_Ball_RACK;
 }
 /*光电25ms触发说明拿到球*/
 #define IS_A_BaLL 1

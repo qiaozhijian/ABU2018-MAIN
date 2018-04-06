@@ -334,15 +334,23 @@ void FightForGoldBall(void)
 		switch(isGetBall)
 		{
 			case 0:
+				if(gRobot.robotVel.countVel<50.f
+						&&fabs(gRobot.posX-HANDOVER_3_X)<50.f
+							&&fabs(gRobot.posY-HANDOVER_3_Y)<50.f){
+								isGetBall++;
+								GoldBallGraspStairTwoOn();
+				}
+			break;
+							
+				
+		  case 1:
 				if(GoldRackInto()){
-					GoldBallGraspStairTwoOn();
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
-				USART_OUTByDMA("BallRack %d ",PE_CHECK_GOLD);
 			break;
 				
-			case 1:
+			case 2:
 				if(PrepareForTheBall()&&gRobot.posY>2100.f)
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
@@ -350,7 +358,7 @@ void FightForGoldBall(void)
 				}
 			break;
 				
-			case 2:
+			case 3:
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					/*航向转到到位直接开始准备射球参数*/
 					PrepareShootBall(BALL_3);
@@ -359,7 +367,7 @@ void FightForGoldBall(void)
 				}
 			break;
 				
-			case 3:
+			case 4:
 				if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f){
 						Delay_ms(200);
 						LowerClawStairOn();
