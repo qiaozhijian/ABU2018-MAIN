@@ -883,12 +883,11 @@ ARM Macro Assembler    Page 14
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=.\obj\startup_stm32f4xx.d -o.\obj\startup_stm32f4xx.o -I.\RTE\_
-ACTION -I"D:\Program Files (x86)\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0\Driver
-s\CMSIS\Device\ST\STM32F4xx\Include" -I"D:\Program Files (x86)\Keil\ARM\CMSIS\I
-nclude" -I"D:\Program Files (x86)\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0\Devic
-e\Include" --predefine="__UVISION_VERSION SETA 525" --predefine="STM32F407xx SE
-TA 1" --list=.\list\startup_stm32f4xx.lst ..\Libraries\CMSIS\startup\startup_st
-m32f4xx.s
+ACTION -IE:\Keil5\ARM\PACK\Keil\STM32F4xx_DFP\2.11.0\Drivers\CMSIS\Device\ST\ST
+M32F4xx\Include -IE:\Keil5\ARM\CMSIS\Include -IE:\Keil5\ARM\PACK\Keil\STM32F4xx
+_DFP\2.11.0\Device\Include --predefine="__UVISION_VERSION SETA 523" --predefine
+="STM32F407xx SETA 1" --list=.\list\startup_stm32f4xx.lst ..\Libraries\CMSIS\st
+artup\startup_stm32f4xx.s
 
 
 

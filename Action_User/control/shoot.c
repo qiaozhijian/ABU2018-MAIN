@@ -39,6 +39,7 @@ void ShootBall(void)
   /*将下爪手臂气缸上抬*/
   LowerClawStairOff();
 	ShootLedOn();
+	Delay_ms(50);
   /*夹子打开*/
   ClawOpen();
   Delay_ms(250);
