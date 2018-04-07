@@ -37,7 +37,23 @@ void CourseAngleMotion(float angle)
 
 void GasMotion(float value)
 {
-  CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
+	uint32_t data[2]={0x00005045,0x00000000};
+	union
+	{
+		float dataFloat;
+		uint32_t data32;
+	}sendData;
+	
+	sendData.dataFloat = value;
+	
+	data[1] = sendData.data32;
+  CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&data),8);
+}
+
+void GasEnable(void)
+{
+	uint32_t data[2]={0x00004145,1};
+  CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&data),8);	
 }
 
 

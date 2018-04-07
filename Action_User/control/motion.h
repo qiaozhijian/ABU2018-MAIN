@@ -18,5 +18,6 @@ void MotionRead(void);
 void MotionExecute(void);
 void MotionStatusUpdate(void);
 void TalkToCamera(uint32_t command);
+void GasEnable(void);
 #endif
 

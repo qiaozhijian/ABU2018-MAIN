@@ -889,6 +889,7 @@ void RobotSelfTest(void){
 				case 1:
 					gRobot.sDta.gasAimValue = 0.250f;
 				  GasMotion(0.250);
+					GasEnable();
 					if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.02){
 				    gasTestStep++;
 						GasTestTime=0;

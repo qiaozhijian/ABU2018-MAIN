@@ -320,7 +320,6 @@ void SmallChange(void){
   }
 	
 }
-
 /*初始化动作 先下降再旋转*/
 void PrepareWork(void)
 {
@@ -336,8 +335,7 @@ void PrepareWork(void)
   ClawShut();
 	
 	Delay_ms(200);
-  //设置气压
-  GasMotion(PrepareCompete.gasAim);
+
 	
   /*舵机转向*/
 	HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle);
@@ -350,7 +348,7 @@ void PrepareWork(void)
 		ReadActualPos(CAN2,7);
 		ReadActualPos(CAN2,8);
 			/*判断俯仰角是否到位*/
-		if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])&&fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<0.3f)
+		if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f&&fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<5.f)
 		{
 			SetMotionFlag(AT_PITCH_SUCCESS);
 			break;
@@ -358,9 +356,34 @@ void PrepareWork(void)
 		if(cnt>450){
 			BEEP_ON;
 			USART_OUTByDMA("Steer Not Ok You need reset");
+			while(!gRobot.resetFlag){
+				int cnt=0;
+				while(1){
+					Delay_ms(5);
+					cnt++;
+					cnt%=200;
+					USART_OUTByDMAF(gRobot.gasValue);
+					if(gRobot.gasValue>0.6f){
+						ShootLedOn();
+						if(cnt<100){
+							BEEP_ON;
+						}
+						else{
+							BEEP_OFF;
+						}
+					}else
+					{
+						ShootLedOff();
+					}
+				}
+			}
 			break;
 		}
 	}
+	
+	GasMotion(PrepareCompete.gasAim);
+	GasEnable();
+	
 	
 	cnt=0;
 	/*设置俯仰角度*/
@@ -407,5 +430,8 @@ void PrepareWork(void)
 			break;
 		}
 	}
+	
+  //设置气压
+  GasMotion(PrepareCompete.gasAim);
 
 }
