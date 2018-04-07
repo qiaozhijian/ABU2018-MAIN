@@ -10,7 +10,7 @@
 #include "usart.h"
 /**************#define area**********/
 //#define TEST
-//#define DEBUG
+//	 DEBUG
 
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f

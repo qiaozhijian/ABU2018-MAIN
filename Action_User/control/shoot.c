@@ -100,10 +100,10 @@ void prepareMotionParaInit(void)
   PrepareShootBall2.gasAim=0.550;
   
   /*准备去拿第三个球的数据*/
-  PrepareGetBall3.courseAngle=91.5f;
+  PrepareGetBall3.courseAngle=90.5f;
   PrepareGetBall3.pitchAngle=-5.7f;
-  PrepareGetBall3.upSteerAngle=-94.f;
-	PrepareGetBall3.downSteerAngle=-94.f;
+  PrepareGetBall3.upSteerAngle=-93.f;
+	PrepareGetBall3.downSteerAngle=-93.f;
   PrepareGetBall3.steerSpeed=2000;
   PrepareGetBall3.gasAim=0.430;
   
