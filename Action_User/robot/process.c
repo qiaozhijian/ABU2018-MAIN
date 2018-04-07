@@ -91,7 +91,7 @@ void FightForBall1(void)
 				//第一步对光电进行扫描
 						case 0:
 							if(PrepareForTheBall()){
-								Delay_ms(1000);
+//								Delay_ms(1000);
 								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
 								getBallStep++;
 							}
