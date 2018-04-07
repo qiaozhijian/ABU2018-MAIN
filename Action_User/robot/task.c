@@ -286,13 +286,6 @@ void statusInit(void)
 	
   /*运动控制状态初始化*/
 	
-
-	/*射球时的助力大气阀标志位关闭*/
-  SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
-  SetMotionFlag(~AT_SHOOT_BIG_ENABLE);
-  
-	/*爪子关闭*/
-	ClawShut();
 	/*射球完毕时的归位小气阀重置*/
 	ShootSmallShut();
 	/*射球时的助力大气阀重置*/
