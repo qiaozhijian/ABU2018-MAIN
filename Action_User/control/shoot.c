@@ -66,7 +66,7 @@ void prepareMotionParaInit(void)
   PrepareCompete.upSteerAngle=-90.f;
 	PrepareCompete.downSteerAngle=-90.f;
   PrepareCompete.steerSpeed=2000;
-  PrepareCompete.gasAim=0.550;
+  PrepareCompete.gasAim=0.500;
 	
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=43.5f;
@@ -74,31 +74,31 @@ void prepareMotionParaInit(void)
   PrepareGetBall1.upSteerAngle=-36.0f;
 	PrepareGetBall1.downSteerAngle=-36.0f;
   PrepareGetBall1.steerSpeed=2000;
-  PrepareGetBall1.gasAim=0.550;
+  PrepareGetBall1.gasAim=0.500;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=170.0f;
-  PrepareShootBall1.pitchAngle=5.8f;
+  PrepareShootBall1.pitchAngle=6.3f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.steerSpeed=2000;
-  PrepareShootBall1.gasAim=0.550;
+  PrepareShootBall1.gasAim=0.500;
 	
   /*准备去拿第二个球的数据*/
-  PrepareGetBall2.courseAngle=90.f;
-  PrepareGetBall2.pitchAngle=-4.5f;
-  PrepareGetBall2.upSteerAngle=92.f; 
-	PrepareGetBall2.downSteerAngle=84.f;
+  PrepareGetBall2.courseAngle=91.5f;
+  PrepareGetBall2.pitchAngle=-2.f;
+  PrepareGetBall2.upSteerAngle=88.f; 
+	PrepareGetBall2.downSteerAngle=88.f;
   PrepareGetBall2.steerSpeed=2000;
-  PrepareGetBall2.gasAim=0.550;
+  PrepareGetBall2.gasAim=0.500;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=174.2f;
-  PrepareShootBall2.pitchAngle=5.1f;
+  PrepareShootBall2.courseAngle=171.5f;
+  PrepareShootBall2.pitchAngle=11.8f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.steerSpeed=2000;
-  PrepareShootBall2.gasAim=0.550;
+  PrepareShootBall2.gasAim=0.500;
   
   /*准备去拿第三个球的数据*/
   PrepareGetBall3.courseAngle=90.5f;
@@ -109,8 +109,8 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.gasAim=0.430;
   
   /*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=179.9f;
-  PrepareShootBall3.pitchAngle=-1.8f;
+  PrepareShootBall3.courseAngle=178.4f;
+  PrepareShootBall3.pitchAngle=-1.3f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.steerSpeed=2000;
@@ -125,8 +125,8 @@ void prepareMotionParaInit(void)
 	PrepareGetBall4.gasAim = 0.430;
 	
 	/*准备射第四个球的数据*/
-	PrepareShootBall4.courseAngle=179.9f;
-  PrepareShootBall4.pitchAngle=-2.f;
+	PrepareShootBall4.courseAngle=178.4f;
+  PrepareShootBall4.pitchAngle=-1.3f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
   PrepareShootBall4.steerSpeed=2000;
@@ -323,6 +323,7 @@ void SmallChange(void){
 /*初始化动作 先下降再旋转*/
 void PrepareWork(void)
 {
+	static int prepareWorkStep=1;
 	int cnt=0;
 		/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
 	gRobot.sDta.courseAimAngle=PrepareCompete.courseAngle;
@@ -336,102 +337,99 @@ void PrepareWork(void)
 	
 	Delay_ms(200);
 
-	
-  /*舵机转向*/
-	HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle);
-	cnt=0;
-	while(1)
-	{
-		Delay_ms(5);
-		cnt++;
-		/*读取上下电机角度*/
-		ReadActualPos(CAN2,7);
-		ReadActualPos(CAN2,8);
-			/*判断俯仰角是否到位*/
-		if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f&&fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<5.f)
-		{
-			SetMotionFlag(AT_PITCH_SUCCESS);
-			break;
-		}
-		if(cnt>450){
-			BEEP_ON;
-			USART_OUTByDMA("Steer Not Ok You need reset");
-			while(!gRobot.resetFlag){
-				int cnt=0;
-				while(1){
-					Delay_ms(5);
-					cnt++;
-					cnt%=200;
-					USART_OUTByDMAF(gRobot.gasValue);
-					if(gRobot.gasValue>0.6f){
-						ShootLedOn();
-						if(cnt<100){
-							BEEP_ON;
-						}
-						else{
-							BEEP_OFF;
-						}
-					}else
-					{
-						ShootLedOff();
-					}
-				}
-			}
-			break;
-		}
-	}
-	
-	GasMotion(PrepareCompete.gasAim);
-	GasEnable();
-	
-	
-	cnt=0;
-	/*设置俯仰角度*/
-	PitchAngleMotion(PrepareCompete.pitchAngle);
-	while(1)
-	{
-		Delay_ms(5);
-		cnt++;
-		/*读取俯仰角*/
-		ReadActualPos(CAN2,5);
-			/*判断俯仰角是否到位*/
-		if(fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<0.3f)
-		{
-			SetMotionFlag(AT_PITCH_SUCCESS);
-			break;
-		}
-		if(cnt>450){
-			BEEP_ON;
-			USART_OUTByDMA("Pitch Not Ok You need reset\t");
-			break;
-		}
-	}
-	
-  /*设置航向角度*/
-  CourseAngleMotion(PrepareCompete.courseAngle);
-	/*等待慢转动状态完成*/
-	cnt=0;
-  while(1)
-	{
-		Delay_ms(5);
-		cnt++;
-		/*读取航向角*/
-		ReadActualPos(CAN2,6);
-		/*判断航向角是否到位*/
-		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.1f)
-		{
-			SetMotionFlag(AT_COURSE_SUCCESS);
-			break;
-		}
 		
-		if(cnt>450){
-			BEEP_ON;
-			USART_OUTByDMA("Course Not Ok You need reset\t");
+	while(1){
+		Delay_ms(5);
+		switch(prepareWorkStep){
+			case 1:
+				/*舵机转向*/
+	      HoldBallPosCrlSeparate(PrepareCompete.upSteerAngle, PrepareCompete.downSteerAngle);
+				cnt++;
+				/*读取上下电机角度*/
+				ReadActualPos(CAN2,7);
+				ReadActualPos(CAN2,8);
+				/*判断俯仰角是否到位*/
+				if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f&&fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<5.f)
+				{
+					SetMotionFlag(AT_PITCH_SUCCESS);
+					prepareWorkStep=2;
+				}
+				if(cnt>450){
+						cnt=0;
+						BEEP_ON;
+						USART_OUTByDMA("Steer Not Ok You need reset");
+						/*进入打气气压检测中*/
+						while(1){
+							Delay_ms(5);
+							cnt++;
+							cnt%=200;
+							USART_OUTByDMAF(gRobot.gasValue);
+							if(gRobot.gasValue>0.6f){
+									ShootLedOn();
+									if(cnt<100){
+										BEEP_ON;
+									}
+									else{
+										BEEP_OFF;
+									}
+							}
+							else
+							{
+								 ShootLedOff();
+							}
+						}
+					}
 			break;
+			
+			case 2:
+				/*之前打气检测只是开小电，这时候是正常模式再给气阀板发指令*/
+				GasMotion(PrepareCompete.gasAim);
+	      GasEnable();
+				prepareWorkStep=3;
+			  cnt=0;
+			break;
+			
+			case 3:
+				/*设置俯仰角度*/
+	      PitchAngleMotion(PrepareCompete.pitchAngle);
+				/*读取俯仰角*/
+		    ReadActualPos(CAN2,5);
+				cnt++;
+        /*判断俯仰角是否到位*/
+				if(fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<0.3f)
+				{
+					SetMotionFlag(AT_PITCH_SUCCESS);
+					prepareWorkStep=4;
+					cnt =0;
+				}
+				if(cnt>450){
+					BEEP_ON;
+					USART_OUTByDMA("Pitch Not Ok You need reset\t");
+					prepareWorkStep=4;
+					cnt =0;
+				}
+			break;
+				
+			case 4:
+				/*设置航向角度*/
+        CourseAngleMotion(PrepareCompete.courseAngle);
+				/*读取航向角*/
+				ReadActualPos(CAN2,6);
+				cnt++;
+        /*判断航向角是否到位*/
+				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<0.1f)
+				{
+					SetMotionFlag(AT_COURSE_SUCCESS);
+					return;
+				}
+		
+		    if(cnt>450){
+			    BEEP_ON;
+			    USART_OUTByDMA("Course Not Ok You need reset\t");
+			    return;
+		    }
+		  break;
 		}
 	}
-	
-  //设置气压
-  GasMotion(PrepareCompete.gasAim);
 
 }
