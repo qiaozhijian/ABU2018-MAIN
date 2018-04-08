@@ -275,7 +275,7 @@ void FightForBall2(void)
 				}
 				
 				/*准备接球三*/
-				PrepareGetBall(BALL_3);
+				PrepareGetBall(BALL_3_WAIT);
 				
 				gRobot.sDta.process=TO_GET_BALL_3;
 				
@@ -351,28 +351,31 @@ void FightForGoldBall(void)
 			break;
 				
 			case 2:
-				if(PrepareForTheBall()&&gRobot.posY>2100.f)
+				if(gRobot.posY>1100.f){
+					//接取金球一
+					PrepareGetBall(BALL_3);
+					isGetBall++;
+				}
+			break;
+				
+			case 3:
+				if(PrepareForTheBall())
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
 					isGetBall++;
 				}
 			break;
 				
-			case 3:
+			case 4:
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					/*航向转到到位直接开始准备射球参数*/
 					LowerClawStairOn();
 					Delay_ms(200);
 					PrepareShootBall(BALL_3);
+					GoldBallGraspStairTwoOff();
+					gRobot.sDta.process=TO_THE_AREA_3;
 					USART_OUTByDMA("PrepareShoot ");
 					isGetBall++;
-				}
-			break;
-				
-			case 4:
-				if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f){
-						GoldBallGraspStairTwoOff();
-						gRobot.sDta.process=TO_THE_AREA_3;
 				}
 			break;
 				

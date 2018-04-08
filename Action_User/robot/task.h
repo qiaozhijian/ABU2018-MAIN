@@ -227,6 +227,8 @@
 #define BALL_3														3
 #define BALL_4														4
 
+#define BALL_3_WAIT                      6
+
 #define DELAY_TASK_NUM										2
 /*延时进行的任务*/
 #define DELAY_HOLD_BALL_1_CHECK_POS										0x01

@@ -17,6 +17,7 @@ extern Robot_t gRobot;
 motionPara_t PrepareCompete;
 motionPara_t PrepareGetBall1;
 motionPara_t PrepareGetBall2;
+motionPara_t PrepareGetBall3Wait;
 motionPara_t PrepareGetBall3;
 motionPara_t PrepareGetBall4;
 motionPara_t PrepareShootBall1;
@@ -100,11 +101,18 @@ void prepareMotionParaInit(void)
   PrepareShootBall2.steerSpeed=2000;
   PrepareShootBall2.gasAim=0.500;
   
-  /*准备去拿第三个球的数据*/
-  PrepareGetBall3.courseAngle=90.5f;
+  /*准备等待拿第三个球的数据*/
+  PrepareGetBall3Wait.courseAngle=114.f;
+  PrepareGetBall3Wait.pitchAngle=-5.7f;
+  PrepareGetBall3Wait.upSteerAngle=-85.f;
+	PrepareGetBall3Wait.downSteerAngle=-81.f;
+  PrepareGetBall3Wait.steerSpeed=2000;
+  PrepareGetBall3Wait.gasAim=0.430;
+	/*接取第三个球的参数*/
+	PrepareGetBall3.courseAngle=86.5f;
   PrepareGetBall3.pitchAngle=-5.7f;
-  PrepareGetBall3.upSteerAngle=-97.f;
-	PrepareGetBall3.downSteerAngle=-97.f;
+  PrepareGetBall3.upSteerAngle=-85.f;
+	PrepareGetBall3.downSteerAngle=-81.f;
   PrepareGetBall3.steerSpeed=2000;
   PrepareGetBall3.gasAim=0.430;
   
@@ -166,12 +174,19 @@ void PrepareGetBall(int index)
 			//传入准备得到球的参数
 			PrepareGetBallMotion(PrepareGetBall1);
 			break;
+		
 		case BALL_2:
 			//传入准备得到球的参数
 			PrepareGetBallMotion(PrepareGetBall2);
 			break;
-		case BALL_3:
+		
+		case BALL_3_WAIT:
 			//传入准备得到球的参数
+			PrepareGetBallMotion(PrepareGetBall3Wait);
+		break;
+		
+		case BALL_3:
+			//传入接取金球的参数
 			PrepareGetBallMotion(PrepareGetBall3);
 			break;
 		
