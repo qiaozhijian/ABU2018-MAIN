@@ -184,7 +184,10 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     //Æ½°åµÄÖµ
     value = atof(buffer + 4);
-    CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&value),4);
+  
+  	GasMotion(value);
+  	GasEnable();
+
     break;
     
   case PITCH:
