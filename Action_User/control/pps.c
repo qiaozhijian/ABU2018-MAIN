@@ -10,7 +10,7 @@ extern Robot_t gRobot;
 
 
 /*定位系统串口中断*/
-void USART3_IRQHandler(void)
+void UART5_IRQHandler(void)
 {
   static uint8_t ch;
   static union {
@@ -24,10 +24,10 @@ void USART3_IRQHandler(void)
   OSIntNesting++;
   OS_EXIT_CRITICAL();
 	
-  if (USART_GetITStatus(USART3, USART_IT_RXNE) == SET)
+  if (USART_GetITStatus(UART5, USART_IT_RXNE) == SET)
   {
-    USART_ClearITPendingBit(USART3, USART_IT_RXNE);
-    ch = USART_ReceiveData(USART3);
+    USART_ClearITPendingBit(UART5, USART_IT_RXNE);
+    ch = USART_ReceiveData(UART5);
     switch (count)
     {
     case 0:
@@ -101,7 +101,7 @@ void USART3_IRQHandler(void)
   }
   else
   {
-    USART_ReceiveData(USART3);
+    USART_ReceiveData(UART5);
   }
   OSIntExit();
 }

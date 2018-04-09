@@ -458,7 +458,7 @@ void USART2_IRQHandler(void)
 
 /****************舵机二串口接收中断****start****************/
 
-void UART5_IRQHandler(void)
+void USART3_IRQHandler(void)
 {
   static uint8_t ch;
   static uint8_t step;

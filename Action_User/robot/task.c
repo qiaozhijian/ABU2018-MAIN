@@ -134,6 +134,7 @@ void RobotTask(void)
 					USART_OUTByDMAF(gRobot.posSystemCode[0]);
 		      USART_OUTByDMAF(gRobot.posSystemCode[1]);
 					USART_OUTByDMAF(gRobot.AngularVelocity);
+					USART_OUTByDMA("\r\n");
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
@@ -251,7 +252,7 @@ void HardWareInit(void){
   //摄像头转台初始化
   SteerInit(1000000);
 	
-  Steer2Init(1000000);
+  Steer2Init(115200);
 	
   /*与摄像头通信的串口初始化*/
   CameraTalkInit(256000);
