@@ -324,6 +324,9 @@ void TIM2_IRQHandler(void)
   
   if(TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
   {
+		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.posX>0.1f){
+		     gRobot.roboconTime++;
+		}
     //实现10ms 发送1次信号量
     periodCounter--;
     if (periodCounter == 0)

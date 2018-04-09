@@ -374,6 +374,7 @@ typedef struct{
 	/*计算机器人的速度结构体*/
 	RobotVel_t robotVel;
   
+	uint32_t roboconTime;
 }Robot_t ;
 
 #include "gasvalveControl.h"

@@ -97,6 +97,7 @@ void BufferDebugInit(void){
 }
 
 void DebugDataUSART_OUT(void){
+	float time =gRobot.roboconTime/1000.f;
 	if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
 	{
 		processReponse();
@@ -124,6 +125,8 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
 		USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
 		USART_OUTByDMA("PE%d ",PE_FOR_THE_BALL);
+		USART_OUTByDMA("T ");
+		USART_OUTByDMAF(time);
 	}
 	
 }
