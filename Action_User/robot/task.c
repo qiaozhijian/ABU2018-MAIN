@@ -126,10 +126,14 @@ void RobotTask(void)
 			debugFunction();
 		#else
 			#ifdef TEST
-//				HoldBallPosCrlSeparate(0.f,-90.f);
-//				ReadActualPos(CAN2,UP_STEER_MOTOR_ID);
-//				ReadActualPos(CAN2,DOWN_STEER_MOTOR_ID);
-			  SelfTest();
+					USART_OUTByDMAF(gRobot.angle);
+					USART_OUTByDMAF(gRobot.speedX);
+		      USART_OUTByDMAF(gRobot.speedY);
+					USART_OUTByDMAF( gRobot.posX);
+		      USART_OUTByDMAF(gRobot.posY);
+					USART_OUTByDMAF(gRobot.posSystemCode[0]);
+		      USART_OUTByDMAF(gRobot.posSystemCode[1]);
+					USART_OUTByDMAF(gRobot.AngularVelocity);
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
