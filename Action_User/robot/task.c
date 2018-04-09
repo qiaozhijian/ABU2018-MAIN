@@ -143,19 +143,23 @@ void RobotTask(void)
 				/*过程报告*/
 				//processReport();
 				
-				/*运动状态标志位更新*/
-				MotionStatusUpdate();
-				
-				/*运动参数执行*/
-				MotionExecute();
-				
-				/*运动状态更新*/
-				MotionRead();
+				/*当平板控制程序启动时*/
+				if(gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT){
+					/*运动状态标志位更新*/
+					MotionStatusUpdate();
+					
+					/*运动参数执行*/
+					MotionExecute();
+					
+					/*运动状态更新*/
+					MotionRead();
+				}
 				
 				
 				switch(gRobot.sDta.robocon2018)
 				{
 					case ROBOT_CONTROL_BY_BT:
+						USART_BLE_SEND(gRobot.gasValue);
 						AT_CMD_Handle();
 					break;
 					

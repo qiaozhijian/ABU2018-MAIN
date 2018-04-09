@@ -194,18 +194,14 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.pitchAimAngle=value;
-		#ifdef TEST
 		PitchAngleMotion(gRobot.sDta.pitchAimAngle);
-		#endif
     break;
     
   case COURSE:
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.courseAimAngle=value;
-		#ifdef TEST
 		CourseAngleMotion(gRobot.sDta.courseAimAngle);
-		#endif
     break;
    
 	case TEST_GAS:
