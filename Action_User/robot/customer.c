@@ -158,8 +158,7 @@ void AT_CMD_Handle(void){
 //      {
 			if(PE_FOR_THE_BALL){
 				ClawOpen();
-				LowerClawStairOff();
-				Delay_ms(250);
+				Delay_ms(30);
 				ShootBigOpen();
 			}
 //      }
@@ -176,7 +175,6 @@ void AT_CMD_Handle(void){
         ShootSmallOpen();
         ClawShut();
       }
-			LowerClawStairOff();
     }
     break;
     

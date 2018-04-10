@@ -36,14 +36,11 @@ void ShootBall(void)
 //	}else if(gRobot.sDta.robocon2018==GOLD_BALL){
 //		Delay_ms(850);
 //	}
-	Delay_ms(150);
-  /*将下爪手臂气缸上抬*/
-  LowerClawStairOff();
 	ShootLedOn();
-	Delay_ms(50);
+	Delay_ms(10);
   /*夹子打开*/
   ClawOpen();
-  Delay_ms(250);
+  Delay_ms(30);
   /*把两个发射气缸打开*/
   ShootBigOpen();
 }

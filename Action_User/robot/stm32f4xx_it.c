@@ -251,7 +251,7 @@ void CAN2_RX0_IRQHandler(void)
     //位置
 		if(msg.data32[0]==0x00005850){
 			gRobot.holdBallAngle[1] = DOWN_STEER_CODE_TO_ANGLE(msg.data32[1]);
-			gRobot.holdBallAngle[1]=-(gRobot.holdBallAngle[1] - DOWN_STEER_COMPENSATE);
+			gRobot.holdBallAngle[1]= (gRobot.holdBallAngle[1] + DOWN_STEER_COMPENSATE)-210.f;
 			
 		}
 		

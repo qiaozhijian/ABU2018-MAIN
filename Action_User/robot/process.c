@@ -18,6 +18,7 @@ void SelfTest(void)
 {
 	AT_CMD_Handle();
 	USART_BLE_SEND(gRobot.gasValue);
+	MotionRead();
 	static int step=100;
 	static int count=0;
 	switch(step)
@@ -99,9 +100,6 @@ void FightForBall1(void)
 					
 						case 1:
 							if(PrepareForTheBall()){
-							//让球被取出来才能下爪的手臂向下撑
-								LowerClawStairOn();
-								Delay_ms(200);
 								getBallStep++;
 							}
 						break;
@@ -214,8 +212,6 @@ void FightForBall2(void)
 						
 				case 1:
 					if(PrepareForTheBall()){
-						//让球被取出来才能下爪的手臂向下撑
-						LowerClawStairOn();
 						getBallStep++;
 
 					}
@@ -403,7 +399,6 @@ void FightForGoldBall(void)
 				
 			case 14:
 				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<45.f){
-					LowerClawStairOn();
 					PrepareShootBall(BALL_4);
 					gRobot.sDta.process=TO_THROW_BALL_3;
 					isGetBall=15;
@@ -949,11 +944,7 @@ void RobotSelfTest(void){
 			//金球架抓取气阀
 			GoldBallGraspStairTwoOff();
 		  Delay_ms(1500);
-			
-			LowerClawStairOn();
-			Delay_ms(1500);
-			LowerClawStairOff();
-			Delay_ms(1500);
+
 		  selfTestStep++;
 			ShootLEDShineOnce=1;
 		break;

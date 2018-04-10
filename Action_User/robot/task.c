@@ -297,8 +297,7 @@ void statusInit(void)
 	ShootLedOff();
 	/*金球架抓取二级气阀打开*/
 	GoldBallGraspStairTwoOn();
-	/*下爪手臂向上抬*/
-	LowerClawStairOff();
+
 	USART_OUTByDMA("statusInit step 1\r\n");
 	Delay_ms(1500);
 	
@@ -321,6 +320,15 @@ void statusInit(void)
   PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
   PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
 	
+	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+	/*自检检测*/
+	KeySwitchCheck();
+	
+	if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
+	  /*准备工作完毕*/
+		gRobot.sDta.robocon2018=ROBOT_PREPARE;
+	}
+	
 	#ifdef TEST
 		#ifndef DEBUG
 		#endif
@@ -330,15 +338,6 @@ void statusInit(void)
 		ShootLedOff();
 		BEEP_OFF;
 	#endif
-	
-	SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
-	/*自检检测*/
-	KeySwitchCheck();
-	
-	if(gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
-	  /*准备工作完毕*/
-		gRobot.sDta.robocon2018=ROBOT_PREPARE;
-	}
 	
 	USART_OUTByDMA("statusInit step finish\r\n");
 }	
