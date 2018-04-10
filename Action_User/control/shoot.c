@@ -40,7 +40,7 @@ void ShootBall(void)
 	Delay_ms(10);
   /*夹子打开*/
   ClawOpen();
-  Delay_ms(30);
+  Delay_ms(50);
   /*把两个发射气缸打开*/
   ShootBigOpen();
 }
@@ -100,15 +100,15 @@ void prepareMotionParaInit(void)
   
   /*准备等待拿第三个球的数据*/
   PrepareGetBall3Wait.courseAngle=120.f;
-  PrepareGetBall3Wait.pitchAngle=-3.7f;
-  PrepareGetBall3Wait.upSteerAngle=-85.f;
+  PrepareGetBall3Wait.pitchAngle=-2.1f;
+  PrepareGetBall3Wait.upSteerAngle=-86.f;
 	PrepareGetBall3Wait.downSteerAngle=-70.f;
   PrepareGetBall3Wait.steerSpeed=2000;
   PrepareGetBall3Wait.gasAim=0.430;
 	/*接取第三个球的参数*/
 	PrepareGetBall3.courseAngle=90.f;
-  PrepareGetBall3.pitchAngle=-3.7f;
-  PrepareGetBall3.upSteerAngle=-85.f;
+  PrepareGetBall3.pitchAngle=-2.1f;
+  PrepareGetBall3.upSteerAngle=-86.f;
 	PrepareGetBall3.downSteerAngle=-70.f;
   PrepareGetBall3.steerSpeed=2000;
   PrepareGetBall3.gasAim=0.430;

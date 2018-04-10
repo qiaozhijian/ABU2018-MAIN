@@ -4,7 +4,7 @@
 #include "usart.h"
 #include "task.h"
 #include "robot.h"
-
+#include "timer.h"
 
 
 
@@ -116,4 +116,20 @@ void LowerClawStairOn(void)
 void LowerClawStairOff(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 0);
+}
+/*让球进入*/
+void LedBallInto(void){
+	static int cnt=10;
+	while(cnt){
+		Delay_ms(5);
+		cnt--;
+		if(cnt>=5){
+			ClawOpen();
+		}else{
+			ClawShut();
+		}
+	}
+//	if(cnt<=0){
+//		cnt=10;
+//	}
 }

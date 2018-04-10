@@ -118,6 +118,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name>理&gt;</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -154,34 +155,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>171</LineNumber>
+          <LineNumber>254</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134218634</Address>
+          <Address>134220770</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\Action_User\robot\task.c</Filename>
+          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\robot\stm32f4xx_it.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407_ACTION\../Action_User/robot/task.c\171</Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/robot/stm32f4xx_it.c\254</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>95</LineNumber>
+          <LineNumber>261</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134219850</Address>
+          <Address>134220794</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\Action_User\robot\stm32f4xx_it.c</Filename>
+          <Filename>E:\git浠ｇ爜搴?ABU2018-MAIN\Action_User\robot\stm32f4xx_it.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F407_ACTION\../Action_User/robot/stm32f4xx_it.c\95</Expression>
+          <Expression>\\STM32F407_ACTION\../Action_User/robot/stm32f4xx_it.c\261</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -264,10 +265,6 @@
       <pszMrule></pszMrule>
       <pSingCmds></pSingCmds>
       <pMultCmds></pMultCmds>
-      <pMisraNamep></pMisraNamep>
-      <pszMrulep></pszMrulep>
-      <pSingCmdsp></pSingCmdsp>
-      <pMultCmdsp></pMultCmdsp>
       <DebugDescription>
         <Enable>1</Enable>
         <EnableLog>0</EnableLog>

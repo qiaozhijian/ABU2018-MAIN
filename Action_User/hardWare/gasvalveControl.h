@@ -47,4 +47,5 @@ void GoldBallGraspStairTwoOff(void);
 void LowerClawStairOn(void);
 
 void LowerClawStairOff(void);
+void LedBallInto(void);
 #endif
