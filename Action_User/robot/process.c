@@ -99,7 +99,10 @@ void FightForBall1(void)
 						break;
 					
 						case 1:
-							if(PrepareForTheBall()){
+							if(PE_FOR_THE_BALL){
+								PrepareShootBall(BALL_1);
+								/*这个动作一定要等到先给电机发指令转后进行，因为函数内有延时*/
+								LedBallInto();
 								getBallStep++;
 							}
 						break;
@@ -107,7 +110,7 @@ void FightForBall1(void)
 						case 2:
 								USART_OUTByDMA("IntoTheArea\t");
 								//TalkToCamera(CAMERA_OPEN_NEAR);
-								PrepareShootBall(BALL_1);
+								
 								gRobot.sDta.process=TO_THE_AREA_1;
 						break;
 			}
@@ -212,6 +215,9 @@ void FightForBall2(void)
 						
 				case 1:
 					if(PrepareForTheBall()){
+						/*和彩球1情况一样*/
+						PrepareShootBall(BALL_2);
+						LedBallInto();
 						getBallStep++;
 
 					}
@@ -223,7 +229,7 @@ void FightForBall2(void)
 						USART_OUTByDMA("IntoTheArea\t");
 						gRobot.sDta.process=TO_THE_AREA_2;
 						
-						PrepareShootBall(BALL_2);
+						
 					}
 					break;
 				}

@@ -119,17 +119,26 @@ void LowerClawStairOff(void)
 }
 /*让球进入*/
 void LedBallInto(void){
+	/*定义张爪闭爪的周期数9*/
 	static int cnt=10;
-	while(cnt){
-		Delay_ms(5);
-		cnt--;
-		if(cnt>=5){
-			ClawOpen();
-		}else{
-			ClawShut();
+	/*定义动作循环次数*/
+	static int circleTime=2;
+	while(circleTime--){
+		/*9个周期内 5 :4张爪指令和闭爪指令*/
+		while(cnt--){
+			Delay_ms(5);
+			if(cnt>=5){
+				ClawOpen();
+			}else{
+				ClawShut();
+			}
 		}
+		if(cnt<=0){
+			 cnt=10;
+	  }
 	}
-//	if(cnt<=0){
-//		cnt=10;
-//	}
+	if(circleTime<=0){
+			 circleTime=2;
+			 cnt=10;
+	}
 }

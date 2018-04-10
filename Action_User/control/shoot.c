@@ -223,6 +223,7 @@ void PrepareShootBallMotion(motionPara_t PrepareShootBall_t)
 }
 void PrepareShootBall(int index)
 {
+	
   switch(index)
   {
   case BALL_1:
