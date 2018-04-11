@@ -126,7 +126,7 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(gRobot.robotVel.countVel<100.f
+			if(gRobot.robotVel.countVel<150.f
 					 &&PE_FOR_THE_BALL
 				/*持球舵机到位*/
 			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -353,7 +353,7 @@ void FightForGoldBall(void)
 			break;
 				
 			case 2:
-				if(gRobot.posY>1100.f){
+				if(gRobot.posY>1500.f){
 					//接取金球一
 					PrepareGetBall(BALL_3);
 					isGetBall++;

@@ -154,14 +154,11 @@ void AT_CMD_Handle(void){
     {
 			ShootSmallOpen();
 			Delay_ms(300);
-//      if(gRobot.sDta.AT_motionFlag/*AT_CLAW_STATUS_OPEN|*/)
-//      {
 			if(PE_FOR_THE_BALL){
 				ClawOpen();
-				Delay_ms(30);
+				Delay_ms(50);
 				ShootBigOpen();
 			}
-//      }
     }
     else if(*(buffer + 4) == '0') 
     {
@@ -169,11 +166,7 @@ void AT_CMD_Handle(void){
       {
         ShootSmallShut();
 				ShootBigShut();
-      }
-      else
-      {
-        ShootSmallOpen();
-        ClawShut();
+				ClawShut();
       }
     }
     break;
