@@ -4,7 +4,7 @@
 #include "ucos_ii.h"
 #include "stm32f4xx_usart.h"
 #include "task.h"
-
+#include  "dma.h"
 extern Robot_t gRobot;
 
 
@@ -28,6 +28,7 @@ void UART5_IRQHandler(void)
   {
     USART_ClearITPendingBit(UART5, USART_IT_RXNE);
     ch = USART_ReceiveData(UART5);
+		USART_OUTByDMA("%s ",ch);
     switch (count)
     {
     case 0:
@@ -85,15 +86,21 @@ void UART5_IRQHandler(void)
 		gRobot.angleBais=posture.ActVal[6];
 		gRobot.KalmanZ=posture.ActVal[7];
 		gRobot.posSystemReady=1;
-				
-		if(gRobot.robotVel.countTime!=0){
-		 gRobot.robotVel.countVel=sqrtf((gRobot.posX - gRobot.robotVel.lastPosX)*(gRobot.posX - gRobot.robotVel.lastPosX)+(gRobot.posY - gRobot.robotVel.lastPosY)*(gRobot.posY - gRobot.robotVel.lastPosY))/gRobot.robotVel.countTime;
-		 gRobot.robotVel.countVel=gRobot.robotVel.countVel*10000;
-		}
-		gRobot.robotVel.countTime=0;
-	  }
-      count = 0;
+	
+		USART_OUTByDMA("p ");		
+		USART_OUTByDMAF(gRobot.angle);
+		USART_OUTByDMAF(gRobot.speedX);
+		USART_OUTByDMAF(gRobot.speedY);
+		USART_OUTByDMAF( gRobot.posX);
+		USART_OUTByDMAF(gRobot.posY);
+		USART_OUTByDMAF(gRobot.posSystemCode[0]);
+		USART_OUTByDMAF(gRobot.posSystemCode[1]);
+		USART_OUTByDMAF(gRobot.AngularVelocity);
+		USART_OUTByDMA("\r\n");
+	} 
+			count = 0;
       break;
+	
     default:
       count = 0;
       break;
@@ -103,6 +110,7 @@ void UART5_IRQHandler(void)
   {
     USART_ReceiveData(UART5);
   }
+
   OSIntExit();
 }
 

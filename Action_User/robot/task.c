@@ -126,15 +126,7 @@ void RobotTask(void)
 			debugFunction();
 		#else
 			#ifdef TEST
-					USART_OUTByDMAF(gRobot.angle);
-					USART_OUTByDMAF(gRobot.speedX);
-		      USART_OUTByDMAF(gRobot.speedY);
-					USART_OUTByDMAF( gRobot.posX);
-		      USART_OUTByDMAF(gRobot.posY);
-					USART_OUTByDMAF(gRobot.posSystemCode[0]);
-		      USART_OUTByDMAF(gRobot.posSystemCode[1]);
-					USART_OUTByDMAF(gRobot.AngularVelocity);
-					USART_OUTByDMA("\r\n");
+					
 			#else		
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
