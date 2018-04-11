@@ -367,7 +367,7 @@ void PrepareWork(void)
 					SetMotionFlag(AT_PITCH_SUCCESS);
 					prepareWorkStep=2;
 				}
-				if(cnt>450){
+				if(cnt>800){
 						cnt=0;
 						BEEP_ON;
 						USART_OUTByDMA("Steer Not Ok You need reset");
@@ -375,11 +375,15 @@ void PrepareWork(void)
 						while(1){
 							Delay_ms(5);
 							cnt++;
-							cnt%=200;
+							/*先将蜂鸣器关了太吵了*/
+							if(cnt>=800){
+								BEEP_OFF;
+							}
+							cnt%=800;
 							USART_OUTByDMAF(gRobot.gasValue);
 							if(gRobot.gasValue>0.6f){
 									ShootLedOn();
-									if(cnt<100){
+									if(cnt<400){
 										BEEP_ON;
 									}
 									else{

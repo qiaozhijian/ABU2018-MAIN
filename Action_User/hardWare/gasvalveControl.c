@@ -118,27 +118,24 @@ void LowerClawStairOff(void)
 	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 0);
 }
 /*让球进入*/
+/*让球进入*/
 void LedBallInto(void){
 	/*定义张爪闭爪的周期数9*/
-	static int cnt=10;
+	int cnt=13;
 	/*定义动作循环次数*/
-	static int circleTime=2;
+	int circleTime=4;
 	while(circleTime--){
-		/*9个周期内 5 :4张爪指令和闭爪指令*/
+		/*12个周期内 1 :2张爪指令和闭爪指令*/
 		while(cnt--){
 			Delay_ms(5);
-			if(cnt>=5){
+			if(cnt>=9){
 				ClawOpen();
 			}else{
 				ClawShut();
 			}
 		}
 		if(cnt<=0){
-			 cnt=10;
+			 cnt=13;
 	  }
-	}
-	if(circleTime<=0){
-			 circleTime=2;
-			 cnt=10;
 	}
 }
