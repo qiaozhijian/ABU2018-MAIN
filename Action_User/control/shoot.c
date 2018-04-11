@@ -367,6 +367,7 @@ void PrepareWork(void)
 					SetMotionFlag(AT_PITCH_SUCCESS);
 					prepareWorkStep=2;
 				}
+				/*4s爪子不到位*/
 				if(cnt>800){
 						cnt=0;
 						BEEP_ON;
