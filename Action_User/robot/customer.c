@@ -30,7 +30,7 @@
 #define STEER1 					9
 #define STEER2 					10
 #define BOOST 					11
-#define LOWER_CLAW_STAIR 					12
+#define WHEEL 					12
 #define STAIR2 					13
 
 //平版控制球的动作ballMode
@@ -52,6 +52,7 @@ static char buffer[20];
 static int bufferI=0;
 static int atCommand=0;
 
+static int getGoldBallStep=0;
 /*哪一个球*/
 static int WhichBall=3;
 /*当前需要修改写入的参数的球的动作*/
@@ -124,7 +125,7 @@ void AT_CMD_Judge(void){
   else if((bufferI >= 5) && strncmp(buffer, "AT+13", 5)==0)//  
     atCommand=BOOST;
   else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0)//  
-    atCommand=LOWER_CLAW_STAIR;
+    atCommand=WHEEL;
   else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//   
     atCommand=STAIR2;
 	
@@ -168,6 +169,7 @@ void AT_CMD_Handle(void){
     
     /*控制是否射击*/
   case SHOOT:
+		
     USART_OUTByDMA("OK\r\n");
     if(*(buffer + 4) == '1')
     {
@@ -219,11 +221,21 @@ void AT_CMD_Handle(void){
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='2'){
 				WhichBall=BALL_3;
-				PrepareGetBall(BALL_3);
+				if(getGoldBallStep==0){
+					PrepareGetBall(BALL_3_WAIT);
+					getGoldBallStep=1;
+				}else if(getGoldBallStep==1){
+					PrepareGetBall(BALL_3);
+					getGoldBallStep=0;
+				}
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='3'){
 				WhichBall=0;
 				gRobot.sDta.AT_motionFlag=0;
+				ShootSmallShut();
+				ShootBigShut();
+				ClawShut();
+				Delay_ms(500);
 			}
 			
     }
@@ -291,15 +303,15 @@ void AT_CMD_Handle(void){
 		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1]);
 		break;
   
-  case LOWER_CLAW_STAIR:
+  case WHEEL:
     USART_OUTByDMA("OK\r\n");
     if(*(buffer + 5) == '1') 
     {
-      LowerClawStairOn();
+      MotionCardCMDSend(NOTIFY_MOTIONCARD_ENABLE_WHEEL);
     }
     else if(*(buffer + 5) == '0') 
     {
-      LowerClawStairOff();
+      MotionCardCMDSend(NOTIFY_MOTIONCARD_DISABLE_WHEEL);
     } 
     break;
   case STAIR2:

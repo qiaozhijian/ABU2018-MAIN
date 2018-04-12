@@ -201,6 +201,10 @@
 #define NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT   33
 //通知控制卡主控进入自检模式
 #define NOTIFY_MOTIONCARD_INTO_BT_CTRL        84
+//通知控制卡使能轮子
+#define NOTIFY_MOTIONCARD_ENABLE_WHEEL        78
+//通知控制卡失能轮子
+#define NOTIFY_MOTIONCARD_DISABLE_WHEEL       70
 
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1				1

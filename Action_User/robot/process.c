@@ -969,14 +969,19 @@ void RobotSelfTest(void){
 			}else if(PE_FOR_THE_BALL==0&&PE_CHECK_GOLD==0){
 				BEEP_OFF;
 			}
-			USART_OUTByDMA("A%d\t B%d\t\r\n",gRobot.laser[0],gRobot.laser[1]);
-			if(gRobot.laser[0]>20&&gRobot.laser[0]<600){
+			USART_OUTByDMA("A%d\t B%d\t",gRobot.laser[0],gRobot.laser[1]);
+			USART_OUTByDMA("P ");
+		  USART_OUTByDMAF(gRobot.posX);
+	    USART_OUTByDMAF(gRobot.posY);
+		  USART_OUTByDMAF(gRobot.angle);
+			USART_OUTByDMA("\r\n");
+			if(gRobot.laser[0]>20&&gRobot.laser[0]<300){
 				BEEP_ON;
 				Delay_ms(gRobot.laser[0]/10*5);
 				BEEP_OFF;
 				Delay_ms(gRobot.laser[0]/10*5);
 			}
-			if(gRobot.laser[1]>20&&gRobot.laser[1]<600){
+			if(gRobot.laser[1]>20&&gRobot.laser[1]<300){
 				BEEP_ON;
 				Delay_ms(gRobot.laser[1]/10*5);
 				BEEP_OFF;

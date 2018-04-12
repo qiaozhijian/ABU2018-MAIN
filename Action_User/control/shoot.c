@@ -94,16 +94,16 @@ void prepareMotionParaInit(void)
   PrepareShootBall2.gasAim=0.500;
   
   /*准备等待拿第三个球的数据*/
-  PrepareGetBall3Wait.courseAngle=120.f;
-  PrepareGetBall3Wait.pitchAngle=-2.7f;
-  PrepareGetBall3Wait.upSteerAngle=-81.f;
-	PrepareGetBall3Wait.downSteerAngle=-70.f;
+  PrepareGetBall3Wait.courseAngle=115.f;
+  PrepareGetBall3Wait.pitchAngle=-1.5f;
+  PrepareGetBall3Wait.upSteerAngle=-44.f;
+	PrepareGetBall3Wait.downSteerAngle=-59.f;
   PrepareGetBall3Wait.gasAim=0.450;
 	/*接取第三个球的参数*/
-	PrepareGetBall3.courseAngle=91.5f;
-  PrepareGetBall3.pitchAngle=-2.7f;
-  PrepareGetBall3.upSteerAngle=-81.f;
-	PrepareGetBall3.downSteerAngle=-70.f;
+	PrepareGetBall3.courseAngle=95.f;
+  PrepareGetBall3.pitchAngle=-1.5f;
+  PrepareGetBall3.upSteerAngle=-44.f;
+	PrepareGetBall3.downSteerAngle=-59.f;
   PrepareGetBall3.gasAim=0.450;
   
   /*准备射第三个球的数据*/
@@ -357,8 +357,8 @@ void PrepareWork(void)
 					SetMotionFlag(AT_PITCH_SUCCESS);
 					prepareWorkStep=2;
 				}
-				/*4s爪子不到位*/
-				if(cnt>800){
+				/*3s爪子不到位*/
+				if(cnt>600){
 						cnt=0;
 						BEEP_ON;
 						USART_OUTByDMA("Steer Not Ok You need reset");
@@ -367,14 +367,14 @@ void PrepareWork(void)
 							Delay_ms(5);
 							cnt++;
 							/*先将蜂鸣器关了太吵了*/
-							if(cnt>=800){
+							if(cnt>=600){
 								BEEP_OFF;
 							}
-							cnt%=800;
+							cnt%=600;
 							USART_OUTByDMAF(gRobot.gasValue);
 							if(gRobot.gasValue>0.6f){
 									ShootLedOn();
-									if(cnt<400){
+									if(cnt<300){
 										BEEP_ON;
 									}
 									else{

@@ -335,6 +335,9 @@ void statusInit(void)
 		Delay_ms(2000);
 		ShootLedOff();
 		BEEP_OFF;
+		/*先使能气阀板*/
+		GasMotion(0.5f);
+		GasEnable();
 	#endif
 	
 	USART_OUTByDMA("statusInit step finish\r\n");
