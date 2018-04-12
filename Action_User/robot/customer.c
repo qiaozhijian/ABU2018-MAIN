@@ -33,15 +33,34 @@
 #define LOWER_CLAW_STAIR 					12
 #define STAIR2 					13
 
+//平版控制球的动作ballMode
+#define PICK_BALL       1
+#define SHOOT_BALL      2
 extern Robot_t gRobot;
+extern motionPara_t PrepareGetBall1;
+extern motionPara_t PrepareGetBall2;
+extern motionPara_t PrepareGetBall3Wait;
+extern motionPara_t PrepareGetBall3;
+extern motionPara_t PrepareGetBall4;
+extern motionPara_t PrepareShootBall1;
+extern motionPara_t PrepareShootBall2;
+extern motionPara_t PrepareShootBall3;
+extern motionPara_t PrepareShootBall4;
 
 /*调试蓝牙中断*/
 static char buffer[20];
 static int bufferI=0;
 static int atCommand=0;
 
+/*哪一个球*/
+static int WhichBall=3;
+/*当前需要修改写入的参数的球的动作*/
+static int ballMode=0;
+/*射球标志位*/
+static int shootBallFlag=0;
+
 void AT_CMD_Judge(void);
-	
+void ChangeParamTemp(float value);	
 void BufferInit(void){
   bufferI=0;
 	atCommand=0;
@@ -92,21 +111,21 @@ void AT_CMD_Judge(void){
     atCommand=STEER;
   else if((bufferI >= 4) && strncmp(buffer, "AT+5", 4)==0)//发射按钮   
     atCommand=GAS;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+6", 4)==0)//发射按钮   
+  else if((bufferI >= 4) && strncmp(buffer, "AT+6", 4)==0)//   
     atCommand=COURSE;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//发射按钮   
+  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//   
     atCommand=TEST_GAS;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//发射按钮   
+  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//   
     atCommand=CAMERA;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+9", 4)==0)//发射按钮   
+  else if((bufferI >= 4) && strncmp(buffer, "AT+9", 4)==0)//  
     atCommand=STEER1;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+12", 5)==0)//发射按钮   
+  else if((bufferI >= 5) && strncmp(buffer, "AT+12", 5)==0)//  
     atCommand=STEER2;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+13", 5)==0)//发射按钮   
+  else if((bufferI >= 5) && strncmp(buffer, "AT+13", 5)==0)//  
     atCommand=BOOST;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0)//发射按钮   
+  else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0)//  
     atCommand=LOWER_CLAW_STAIR;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//发射按钮   
+  else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//   
     atCommand=STAIR2;
 	
 //  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
@@ -152,22 +171,61 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     if(*(buffer + 4) == '1')
     {
+			shootBallFlag=1;
+			ballMode=SHOOT_BALL;
 			ShootSmallOpen();
 			Delay_ms(300);
-			if(PE_FOR_THE_BALL){
-				ClawOpen();
-				Delay_ms(50);
-				ShootBigOpen();
+			if(*(buffer + 5) =='0'){
+				WhichBall=BALL_1;
+				PrepareShootBall(BALL_1);
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='1'){
+				WhichBall=BALL_2;
+				PrepareShootBall(BALL_2);
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='2'){
+				WhichBall=BALL_3;
+				PrepareShootBall(BALL_3);
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='3'){
+				WhichBall=0;
+				gRobot.sDta.AT_motionFlag=0;
+				if(PE_FOR_THE_BALL){
+					ClawOpen();
+					Delay_ms(50);
+					ShootBigOpen();
+				}
 			}
+			
     }
     else if(*(buffer + 4) == '0') 
     {
+			ballMode=PICK_BALL;
       if(gRobot.sDta.AT_motionFlag&(AT_SHOOT_BIG_ENABLE|AT_SHOOT_SMALL_ENABLE))
       {
         ShootSmallShut();
 				ShootBigShut();
 				ClawShut();
+				Delay_ms(500);
       }
+			
+			if(*(buffer + 5) =='0'){
+				WhichBall=BALL_1;
+				PrepareGetBall(BALL_1);
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='1'){
+				WhichBall=BALL_2;
+				PrepareGetBall(BALL_2);
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='2'){
+				WhichBall=BALL_3;
+				PrepareGetBall(BALL_3);
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='3'){
+				WhichBall=0;
+				gRobot.sDta.AT_motionFlag=0;
+			}
+			
     }
     break;
     
@@ -175,8 +233,8 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     //平板的值
     value = atof(buffer + 4);
-  
   	GasMotion(value);
+		ChangeParamTemp(value);
   	GasEnable();
 
     break;
@@ -185,6 +243,7 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.pitchAimAngle=value;
+		ChangeParamTemp(value);
 		PitchAngleMotion(gRobot.sDta.pitchAimAngle);
     break;
     
@@ -192,6 +251,7 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.courseAimAngle=value;
+		ChangeParamTemp(value);
 		CourseAngleMotion(gRobot.sDta.courseAimAngle);
     break;
    
@@ -219,6 +279,7 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 4);
 		gRobot.sDta.holdBallAimAngle[0]=value;
+		ChangeParamTemp(value);
 		HoldSteer1PosCrl(gRobot.sDta.holdBallAimAngle[0]);
 		break;
 		
@@ -226,6 +287,7 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
     value = atof(buffer + 5);
 		gRobot.sDta.holdBallAimAngle[1]=value;
+		ChangeParamTemp(value);
 		HoldSteer2PosCrl(gRobot.sDta.holdBallAimAngle[1]);
 		break;
   
@@ -259,7 +321,98 @@ void AT_CMD_Handle(void){
   BufferInit();
 }
 
+void TestFightForBall(void){
 
+	/*模拟射球*/
+	if(WhichBall!=0&&ballMode==SHOOT_BALL&&shootBallFlag){
+		if(PE_FOR_THE_BALL
+				/*持球舵机到位*/
+				&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+					/*持球舵机到位*/
+	  			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+						/*俯仰到位，*/
+						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+							/*航向到位*/
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
+									/*气压到位*/
+									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+    {
+			ShootBall();
+      /*给延时使发射杆能执行到位*/
+      Delay_ms(400);
+      /*射球机构复位*/
+      ShootReset();
+			/*标志位置位0防止重复射球*/
+			shootBallFlag=0;
+		}
+	}
+	
+	
+	
+}
 
-
+void ChangeParamTemp(float value){
+	motionPara_t  * temp;
+	
+	switch(ballMode){
+		case PICK_BALL:
+			switch(WhichBall){
+				case BALL_1:
+				  temp=&PrepareGetBall1;
+				break;
+				
+				case BALL_2:
+					temp=&PrepareGetBall2;
+				break;
+				
+				case BALL_3:
+					temp=&PrepareGetBall3;
+				break;
+			}
+		break;
+		
+		case SHOOT_BALL:
+			switch(WhichBall){
+				case BALL_1:
+					temp=&PrepareShootBall1;
+				break;
+				
+				case BALL_2:
+					temp=&PrepareShootBall2;
+				break;
+				
+				case BALL_3:
+					temp=&PrepareShootBall3;
+				break;
+			}
+		break;
+	}
+	
+	if(WhichBall!=0){
+		switch(atCommand){
+			case STEER1:
+				(*temp).upSteerAngle=value;
+			break;
+			
+			case STEER2:
+				(*temp).downSteerAngle=value;
+			break;
+			
+			case COURSE:
+				(*temp).courseAngle=value;
+			break;
+			
+			case PITCH:
+				(*temp).pitchAngle=value;
+			break;
+			
+			case GAS:
+				(*temp).gasAim=value;
+			break;
+		}
+		
+  }
+	
+	
+}
 

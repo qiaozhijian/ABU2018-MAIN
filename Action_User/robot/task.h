@@ -199,6 +199,8 @@
 #define NOTIFY_MOTIONCARD_SELFTEST_THE_LASER	14
 //通知控制卡自检涵道
 #define NOTIFY_MOTIONCARD_SELFTEST_THE_DUCT   33
+//通知控制卡主控进入自检模式
+#define NOTIFY_MOTIONCARD_INTO_BT_CTRL        84
 
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1				1

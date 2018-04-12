@@ -219,6 +219,8 @@ void KeySwitchIntoBTCtrl(void){
 	}
 	if(keyOpenTime>=650){
 		keyOpenTime=0;
+		//通知控制卡进入平板控制模式
+		MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_BT_CTRL);
 		gRobot.sDta.robocon2018=ROBOT_CONTROL_BY_BT;
 		USART_OUTByDMA("In the RobotBTCTRL\r\n");
 		SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);

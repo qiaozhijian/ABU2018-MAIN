@@ -143,24 +143,22 @@ void RobotTask(void)
 				/*过程报告*/
 				//processReport();
 				
+				/*运动状态标志位更新*/
+				MotionStatusUpdate();
 				/*当平板控制程序启动时*/
 				if(gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT){
-					/*运动状态标志位更新*/
-					MotionStatusUpdate();
-					
-					/*运动参数执行*/
+				/*运动参数执行*/
 					MotionExecute();
-					
-					/*运动状态更新*/
-					MotionRead();
 				}
-				
+				/*运动状态更新*/
+				MotionRead();
 				
 				switch(gRobot.sDta.robocon2018)
 				{
 					case ROBOT_CONTROL_BY_BT:
 						USART_BLE_SEND(gRobot.gasValue);
 						AT_CMD_Handle();
+						TestFightForBall();
 					break;
 					
 					case ROBOT_SELF_TEST:
@@ -175,7 +173,6 @@ void RobotTask(void)
 							ShootLedOn();
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							Delay_ms(2000);
-							ShootLedOff();
 							BEEP_OFF;
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
@@ -186,7 +183,8 @@ void RobotTask(void)
 					case ROBOT_START:
 						if(gRobot.posX>100.f)
 						{
-							PrepareGetBall(BALL_1);			
+							PrepareGetBall(BALL_1);
+							ShootLedOff();
 						}
 						if(gRobot.posX>2000.f)
 						{

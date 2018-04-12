@@ -165,34 +165,29 @@ void MotionStatusUpdate(void)
 		SetMotionFlag(~AT_GAS_SUCCESS);
 	}
 	
+	
+	/*判断持球舵机一是否到位*/
+	if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f)
+	{
+		SetMotionFlag(AT_HOLD_BALL_1_SUCCESS);
+	}	
+	else
+	{
+		SetMotionFlag(~AT_HOLD_BALL_1_SUCCESS);
+	}
+	
+	/*判断持球舵机二是否到位*/
+	if(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<0.5f)
+	{
+		SetMotionFlag(AT_HOLD_BALL_2_SUCCESS);	
+	}
+	else
+	{
+		SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
+	}
+	
 	/*等到进入射球进程的时候进行一次计算微调航向*/
   //SmallChange();
-	
-//	/*判断持球舵机一是否到位*/
-//	if(fabs(gRobot.sDta.holdBallAimAngle-gRobot.holdBallAngle[0])<0.5f)
-//	{
-//		SetMotionFlag(AT_HOLD_BALL_1_SUCCESS);
-//		/*转到一定小角度就转不动了，干脆就不转了*/
-//		if(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
-//			gRobot.sDta.holdBallAimAngle=gRobot.holdBallAngle[0];
-//	}	
-//	else
-//	{
-//		SetMotionFlag(~AT_HOLD_BALL_1_SUCCESS);
-//	}
-//	
-//	/*判断持球舵机二是否到位*/
-//	if(fabs(gRobot.sDta.holdBallAimAngle-gRobot.holdBallAngle[1])<0.5f)
-//	{
-//		SetMotionFlag(AT_HOLD_BALL_2_SUCCESS);
-//		/*转到一定小角度就转不动了，干脆就不转了*/
-//		if(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
-//			gRobot.sDta.holdBallAimAngle=gRobot.holdBallAngle[1];
-//	}
-//	else
-//	{
-//		SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
-//	}
 
 
 }

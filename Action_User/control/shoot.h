@@ -11,8 +11,6 @@ typedef struct{
   float upSteerAngle;
 	/*下舵机角*/
   float downSteerAngle;
-  /*舵机旋转的速度*/
-  int steerSpeed;
   /*气压值*/
   float gasAim;
   

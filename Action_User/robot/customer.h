@@ -9,6 +9,6 @@
 /* Exported functions ------------------------------------------------------- */
 
 void AT_CMD_Handle(void);
-
+void TestFightForBall(void);
 
 #endif
