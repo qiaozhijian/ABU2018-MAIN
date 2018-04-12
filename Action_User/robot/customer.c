@@ -222,9 +222,11 @@ void AT_CMD_Handle(void){
 			}else if(*(buffer + 5) =='2'){
 				WhichBall=BALL_3;
 				if(getGoldBallStep==0){
+					WhichBall=BALL_3_WAIT;
 					PrepareGetBall(BALL_3_WAIT);
 					getGoldBallStep=1;
 				}else if(getGoldBallStep==1){
+					WhichBall=BALL_3;
 					PrepareGetBall(BALL_3);
 					getGoldBallStep=0;
 				}
@@ -379,6 +381,10 @@ void ChangeParamTemp(float value){
 				
 				case BALL_3:
 					temp=&PrepareGetBall3;
+				break;
+				
+				case BALL_3_WAIT:
+					temp=&PrepareGetBall3Wait;
 				break;
 			}
 		break;

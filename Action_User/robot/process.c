@@ -361,7 +361,9 @@ void FightForGoldBall(void)
 			break;
 				
 			case 3:
-				if(PrepareForTheBall())
+				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
+					      &&PrepareForTheBall())
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
 					isGetBall++;
@@ -387,8 +389,7 @@ void FightForGoldBall(void)
 			break;
 				
 			case 12:
-				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS
-							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
 					Delay_ms(300);
 					isGetBall=13;
