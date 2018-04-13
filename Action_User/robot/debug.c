@@ -97,7 +97,6 @@ void BufferDebugInit(void){
 }
 
 void DebugDataUSART_OUT(void){
-	float time =gRobot.roboconTime/1000.f;
 	if(gRobot.sDta.AT_motionFlag&AT_IS_SEND_DEBUG_DATA)
 	{
 		processReponse();
@@ -111,8 +110,6 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMA("V ");
 		USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
 		USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
-		USART_OUTByDMAF(gRobot.robotVel.courseVel);
-		USART_OUTByDMAF(gRobot.robotVel.steerVel[0]);
 		USART_OUTByDMAF(gRobot.robotVel.countVel);
 		USART_OUTByDMA("MV ");
 		USART_OUTByDMAF(gRobot.courseAngle);
@@ -124,9 +121,26 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
 		USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
 		USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
+		USART_OUTByDMAF(gRobot.sDta.gasAimValue);
 		USART_OUTByDMA("PE%d ",PE_FOR_THE_BALL);
 		USART_OUTByDMA("T ");
-		USART_OUTByDMAF(time);
+		USART_OUTByDMAF(gRobot.raceTime.roboconTime);
+		if(gRobot.sDta.robocon2018==COLORFUL_BALL_2){
+			USART_OUTByDMAF(gRobot.raceTime.colorBall1WaitTime);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall1ThrowTime);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall1Time);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall2WaitTime);
+		}else if(gRobot.sDta.robocon2018==GOLD_BALL){
+			USART_OUTByDMAF(gRobot.raceTime.colorBall1WaitTime);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall1ThrowTime);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall1Time);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall2WaitTime);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall2ThrowTime);
+			USART_OUTByDMAF(gRobot.raceTime.colorBall2Time);
+			USART_OUTByDMAF(gRobot.raceTime.goldBallWaitTime);
+			USART_OUTByDMAF(gRobot.raceTime.goldBallThrowTime);
+			USART_OUTByDMAF(gRobot.raceTime.goldBallTime);
+		}
 	}
 	
 }

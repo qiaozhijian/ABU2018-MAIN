@@ -315,6 +315,25 @@ typedef struct{
 	float readCourseVel;
 	float readSteerVel[2];
 }RobotVel_t;
+/*时间计算结构体*/
+typedef struct{
+	/*定时器里面计算的自增量*/
+	uint32_t roboconCnt;
+	/*定时器里面计算的总时间*/
+	float roboconTime;
+		
+	float colorBall1Time;
+	float colorBall2Time;
+	float goldBallTime;
+	
+	float colorBall1WaitTime;
+	float colorBall2WaitTime;
+	float goldBallWaitTime;
+	
+	float colorBall1ThrowTime;
+	float colorBall2ThrowTime;
+	float goldBallThrowTime;
+}RobotconTime_t;
 /**************typedef area**********/
 typedef struct{
   
@@ -380,7 +399,9 @@ typedef struct{
 	/*计算机器人的速度结构体*/
 	RobotVel_t robotVel;
   
-	uint32_t roboconTime;
+	
+	/*比赛各个阶段进行的时间*/
+	RobotconTime_t raceTime;
 }Robot_t ;
 
 #include "gasvalveControl.h"
