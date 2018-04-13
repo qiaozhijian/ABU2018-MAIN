@@ -180,14 +180,17 @@ void AT_CMD_Handle(void){
 			if(*(buffer + 5) =='0'){
 				WhichBall=BALL_1;
 				PrepareShootBall(BALL_1);
+				LedBallInto();
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='1'){
 				WhichBall=BALL_2;
 				PrepareShootBall(BALL_2);
+				LedBallInto();
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='2'){
 				WhichBall=BALL_3;
 				PrepareShootBall(BALL_3);
+				LedBallInto();
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='3'){
 				WhichBall=0;
