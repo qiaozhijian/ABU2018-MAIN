@@ -89,7 +89,6 @@ void ConfigTask(void)
   SoftWareReset();
   #endif
 	
-  
   HardWareInit();
   if(!gRobot.resetFlag)
   {

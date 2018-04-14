@@ -156,7 +156,7 @@ void MotionStatusUpdate(void)
 	}
 	
 	
-	if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.002f)
+	if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.0025f)
 	{
 		SetMotionFlag(AT_GAS_SUCCESS);
 	}

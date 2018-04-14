@@ -94,7 +94,7 @@ void FightForBall1(void)
 							if(PrepareForTheBall()){
 //								Delay_ms(1000);
 								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
-								gRobot.raceTime.colorBall1WaitTime=gRobot.raceTime.roboconCnt;
+								gRobot.raceTime.colorBall1WaitTime=gRobot.raceTime.roboconTime;
 								getBallStep++;
 							}
 						break;
@@ -147,7 +147,7 @@ void FightForBall1(void)
 				Delay_ms(400);
 				
 				/*计算从接到球射球的时间*/
-				gRobot.raceTime.colorBall1ThrowTime=gRobot.raceTime.roboconCnt - gRobot.raceTime.colorBall1WaitTime;
+				gRobot.raceTime.colorBall1ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1WaitTime;
 				gRobot.raceTime.colorBall1Time = gRobot.raceTime.colorBall1WaitTime + gRobot.raceTime.colorBall1ThrowTime ;
 				
 				/*通知控制卡*/
@@ -216,7 +216,7 @@ void FightForBall2(void)
 				case 0:
 					if(PrepareForTheBall()){
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
-						gRobot.raceTime.colorBall2WaitTime = gRobot.raceTime.roboconCnt  - gRobot.raceTime.colorBall1Time;
+						gRobot.raceTime.colorBall2WaitTime = gRobot.raceTime.roboconTime  - gRobot.raceTime.colorBall1Time;
 						getBallStep++;
 					}
 				break;
@@ -255,7 +255,7 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			if(gRobot.robotVel.countVel<100.f
+			if(gRobot.robotVel.countVel<150.f
 					 &&PE_FOR_THE_BALL
 					/*持球舵机到位*/
 			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -275,7 +275,7 @@ void FightForBall2(void)
 				/*给延时使发射杆能执行到位*/
 				Delay_ms(400);
 				/*计算投球时间*/
-				gRobot.raceTime.colorBall2ThrowTime=gRobot.raceTime.roboconCnt - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2WaitTime;
+				gRobot.raceTime.colorBall2ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2WaitTime;
 				gRobot.raceTime.colorBall2Time=gRobot.raceTime.colorBall2ThrowTime + gRobot.raceTime.colorBall2WaitTime;
 				
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
@@ -359,7 +359,7 @@ void FightForGoldBall(void)
 				
 		  case 1:
 				if(GoldRackInto()){
-					gRobot.raceTime.goldBallWaitTime=gRobot.raceTime.roboconCnt - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time;
+					gRobot.raceTime.goldBallWaitTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time;
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					isGetBall++;
 				}
@@ -462,7 +462,7 @@ void FightForGoldBall(void)
       /*给延时使发射杆能执行到位*/
       Delay_ms(400);
 			
-			gRobot.raceTime.goldBallThrowTime=gRobot.raceTime.roboconCnt - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time - gRobot.raceTime.goldBallWaitTime;
+			gRobot.raceTime.goldBallThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time - gRobot.raceTime.goldBallWaitTime;
 			gRobot.raceTime.goldBallTime=gRobot.raceTime.goldBallWaitTime + gRobot.raceTime.goldBallThrowTime;
 			
       /*射球机构复位*/
