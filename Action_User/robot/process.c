@@ -127,7 +127,7 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(gRobot.robotVel.countVel<150.f
+			if(gRobot.robotVel.countVel<200.f
 					 &&PE_FOR_THE_BALL
 				/*持球舵机到位*/
 			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -178,7 +178,7 @@ void FightForBall1(void)
 		//				USART_OUTByDMA("!HB11\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 		//-USART_OUTByDMA("!HB21\t");
-				if(gRobot.robotVel.countVel>15.f){
+				if(gRobot.robotVel.countVel>150.f){
 				  USART_OUTByDMA("RobotVel Large! ");
 			  }
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
@@ -308,7 +308,7 @@ void FightForBall2(void)
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2 ");
 				
-				if(gRobot.robotVel.countVel>15.f){
+				if(gRobot.robotVel.countVel>150.f){
 				  USART_OUTByDMA("RobotVel Large! ");
 			  }
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
@@ -430,7 +430,7 @@ void FightForGoldBall(void)
 		
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE/*||(gRobot.posY>5530.f)*/)/*射金球点6080 ， 6030*/
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE||(gRobot.posY>5850.f))/*射金球点6080 ， 6030*/
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
     if(!PrepareForTheBall())
@@ -485,7 +485,7 @@ void FightForGoldBall(void)
 //				USART_OUTByDMA("!HB13\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUTByDMA("!HB23\t");
-			if(gRobot.robotVel.countVel>15.f){
+			if(gRobot.robotVel.countVel>100.f){
 				USART_OUTByDMA("RobotVel Large! ");
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
