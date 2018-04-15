@@ -341,7 +341,7 @@ void ControlBLE_Init(uint32_t BaudRate)
 
 
 /*使用操作系统没有设置任务堆栈8字节对齐，直接使用sprintf会一直输出0*/
-void USART_OUT_F(float value)
+void USART_OUT_FByDEBUG(float value)
 {
   char s[9]={0};
   int integer=( int )value;
@@ -351,13 +351,25 @@ void USART_OUT_F(float value)
 		sprintf( (char*)s, "%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
   USART_OUT(DEBUG_USART,s);
 }
+
+void USART_OUT_F(USART_TypeDef * (USARTx), float value)
+{
+  char s[9]={0};
+  int integer=( int )value;
+	if(value<0.f&&value>-1.f)
+		sprintf( (char*)s, "-%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
+	else
+		sprintf( (char*)s, "%d.%04d\t", ( int )value, (unsigned int)((fabs(value) - abs(integer))  * 10000));
+  USART_OUT(USARTx,s);
+}
 void USART_Enter(void){
   USART_OUT(DEBUG_USART,"\r\n");
 }
 void USART_Enter1(void){
   USART_OUT(UART4,"\r\n");
 }
-void USART_BLE_SEND(float value)
+/*将气压通过平板发送出去*/
+void USART_BT_SendGas(float value)
 {
   char s[9]={0};
   int integer=( int )value;

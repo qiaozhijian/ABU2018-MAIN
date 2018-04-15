@@ -242,8 +242,9 @@ void AT_CMD_Handle(void){
 				ClawShut();
 				Delay_ms(500);
 			}
-			
     }
+		
+		SendParamToUpPositionMachine();
     break;
     
   case GAS:
@@ -367,7 +368,67 @@ void TestFightForBall(void){
 	
 	
 }
-
+//将参数发给上位机
+void SendParamToUpPositionMachine(void){
+	motionPara_t  * temp;
+	char paramWhich[]="PG";
+	
+	//这时候偶是自由调整模式
+	if(WhichBall==0){
+		return;
+	}
+	switch(ballMode){
+		case PICK_BALL:
+			strcpy(paramWhich,"PG");
+			switch(WhichBall){
+				case BALL_1:
+				  temp=&PrepareGetBall1;
+				break;
+				
+				case BALL_2:
+					temp=&PrepareGetBall2;
+				break;
+				
+				case BALL_3:
+					temp=&PrepareGetBall3;
+				break;
+				
+				case BALL_3_WAIT:
+					temp=&PrepareGetBall3Wait;
+				break;
+			}
+		break;
+		
+		case SHOOT_BALL:
+			strcpy(paramWhich,"PS");
+			switch(WhichBall){
+				case BALL_1:
+					temp=&PrepareShootBall1;
+				break;
+				
+				case BALL_2:
+					temp=&PrepareShootBall2;
+				break;
+				
+				case BALL_3:
+					temp=&PrepareShootBall3;
+				break;
+			}
+		break;
+	}
+	
+	USART_OUT(CONTROL_USART,"%s",paramWhich);
+	USART_OUT_F(CONTROL_USART,(*temp).courseAngle);
+	USART_OUT_F(CONTROL_USART,(*temp).pitchAngle);
+	USART_OUT_F(CONTROL_USART,(*temp).upSteerAngle);
+	USART_OUT_F(CONTROL_USART,(*temp).downSteerAngle);
+	USART_OUT_F(CONTROL_USART,(*temp).gasAim);
+	USART_OUT(CONTROL_USART,"\r\n");
+	
+	
+	
+	
+}
 void ChangeParamTemp(float value){
 	motionPara_t  * temp;
 	

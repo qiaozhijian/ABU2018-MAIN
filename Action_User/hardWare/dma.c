@@ -399,7 +399,7 @@ void USARTDMAOUT(USART_TypeDef* USARTx,uint8_t *buffAddr,uint16_t *buffPointer ,
 }
 
 ///*使用操作系统没有设置任务堆栈8字节对齐，直接使用sprintf会一直输出0*/
-//void USART_OUT_F(float value)
+//void USART_OUT_FByDEBUG(float value)
 //{
 //  char s[9]={0};
 //  int integer=( int )value;

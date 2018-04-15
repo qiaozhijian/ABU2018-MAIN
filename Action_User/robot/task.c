@@ -155,7 +155,7 @@ void RobotTask(void)
 				switch(gRobot.sDta.robocon2018)
 				{
 					case ROBOT_CONTROL_BY_BT:
-						USART_BLE_SEND(gRobot.gasValue);
+						USART_BT_SendGas(gRobot.gasValue);
 						AT_CMD_Handle();
 						TestFightForBall();
 					break;

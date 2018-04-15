@@ -8,15 +8,15 @@ extern Robot_t gRobot;
 void debugFunction(void)
 {
 	
-	USART_OUT_F(gRobot.sDta.cameraAimAngle++);
-	USART_OUT_F(gRobot.sDta.AT_motionFlag--);
-	USART_OUT_F(gRobot.sDta.courseAimAngle++);
-	USART_OUT_F(gRobot.sDta.gasAimValue++);
-	//USART_OUT_F(gRobot.sDta.holdBallAimAngle++);
-	USART_OUT_F(gRobot.sDta.isReset);
-	USART_OUT_F(gRobot.sDta.pitchAimAngle++);
-	USART_OUT_F(gRobot.sDta.process++);
-	USART_OUT_F(gRobot.sDta.robocon2018++);
+	USART_OUT_FByDEBUG(gRobot.sDta.cameraAimAngle++);
+	USART_OUT_FByDEBUG(gRobot.sDta.AT_motionFlag--);
+	USART_OUT_FByDEBUG(gRobot.sDta.courseAimAngle++);
+	USART_OUT_FByDEBUG(gRobot.sDta.gasAimValue++);
+	//USART_OUT_FByDEBUG(gRobot.sDta.holdBallAimAngle++);
+	USART_OUT_FByDEBUG(gRobot.sDta.isReset);
+	USART_OUT_FByDEBUG(gRobot.sDta.pitchAimAngle++);
+	USART_OUT_FByDEBUG(gRobot.sDta.process++);
+	USART_OUT_FByDEBUG(gRobot.sDta.robocon2018++);
 	USART_Enter();
 }
 

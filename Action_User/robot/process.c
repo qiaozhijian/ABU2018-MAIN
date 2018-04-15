@@ -17,7 +17,7 @@ extern int flagggg;
 void SelfTest(void)
 {
 	AT_CMD_Handle();
-	USART_BLE_SEND(gRobot.gasValue);
+	USART_BT_SendGas(gRobot.gasValue);
 	MotionRead();
 	static int step=100;
 	static int count=0;

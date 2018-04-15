@@ -10,5 +10,5 @@
 
 void AT_CMD_Handle(void);
 void TestFightForBall(void);
-
+void SendParamToUpPositionMachine(void);
 #endif
