@@ -106,7 +106,7 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMAF(gRobot.angle);
 //					USART_OUTByDMAF(gRobot.angleBais);
 //					USART_OUTByDMAF(gRobot.KalmanZ);
-//					USART_OUTByDMAF(gRobot.AngularVelocity);
+//					USART_OUTByDMAF(gRobot.AnguZlarVelocity);
 		USART_OUTByDMA("V ");
 		USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
 		USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);

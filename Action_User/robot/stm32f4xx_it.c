@@ -324,7 +324,7 @@ void TIM2_IRQHandler(void)
   
   if(TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
   {
-		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.posX>0.1f){
+		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.posX>1.f){
 		     gRobot.raceTime.roboconCnt++;
 		}
 	  gRobot.raceTime.roboconTime = gRobot.raceTime.roboconCnt/1000.f;
