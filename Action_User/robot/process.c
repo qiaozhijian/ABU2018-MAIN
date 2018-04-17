@@ -144,7 +144,7 @@ void FightForBall1(void)
 				/*射球*/
 				ShootBall();
 				/*给延时使发射杆能执行到位*/
-				Delay_ms(400);
+				Delay_ms(175);
 				
 				/*计算从接到球射球的时间*/
 				gRobot.raceTime.colorBall1ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1WaitTime;
@@ -273,7 +273,7 @@ void FightForBall2(void)
 				ShootBall();
 				
 				/*给延时使发射杆能执行到位*/
-				Delay_ms(400);
+				Delay_ms(175);
 				/*计算投球时间*/
 				gRobot.raceTime.colorBall2ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2WaitTime;
 				gRobot.raceTime.colorBall2Time=gRobot.raceTime.colorBall2ThrowTime + gRobot.raceTime.colorBall2WaitTime;
@@ -460,7 +460,7 @@ void FightForGoldBall(void)
       ShootBall();
       
       /*给延时使发射杆能执行到位*/
-      Delay_ms(400);
+      Delay_ms(175);
 			
 			gRobot.raceTime.goldBallThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time - gRobot.raceTime.goldBallWaitTime;
 			gRobot.raceTime.goldBallTime=gRobot.raceTime.goldBallWaitTime + gRobot.raceTime.goldBallThrowTime;
