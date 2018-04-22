@@ -150,8 +150,7 @@ void FightForBall1(void)
 				gRobot.raceTime.colorBall1ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1WaitTime;
 				gRobot.raceTime.colorBall1Time = gRobot.raceTime.colorBall1WaitTime + gRobot.raceTime.colorBall1ThrowTime ;
 				
-				/*通知控制卡*/
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
+				
 				
 				/*射球机构复位*/
 				ShootReset();
@@ -255,7 +254,7 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			if(gRobot.robotVel.countVel<150.f
+			if(gRobot.robotVel.countVel<200.f
 					 &&PE_FOR_THE_BALL
 					/*持球舵机到位*/
 			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -308,7 +307,7 @@ void FightForBall2(void)
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2 ");
 				
-				if(gRobot.robotVel.countVel>150.f){
+				if(gRobot.robotVel.countVel>200.f){
 				  USART_OUTByDMA("RobotVel Large! ");
 			  }
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
@@ -411,7 +410,9 @@ void FightForGoldBall(void)
 				
 			case 13:
 				if(PrepareForTheBall()){
-					gRobot.sDta.courseAimAngle = 178.4f;
+					gRobot.sDta.courseAimAngle = 179.4f;
+					//打开射球小气缸
+					ShootSmallOpen();
 					isGetBall=14;
 				}
 			break;
