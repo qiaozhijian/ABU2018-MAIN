@@ -150,7 +150,8 @@ void FightForBall1(void)
 				gRobot.raceTime.colorBall1ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1WaitTime;
 				gRobot.raceTime.colorBall1Time = gRobot.raceTime.colorBall1WaitTime + gRobot.raceTime.colorBall1ThrowTime ;
 				
-				
+				/*通知控制卡*/
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
 				
 				/*射球机构复位*/
 				ShootReset();
