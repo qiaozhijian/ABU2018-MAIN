@@ -143,15 +143,16 @@ void FightForBall1(void)
 			{
 				/*射球*/
 				ShootBall();
+				
 				/*给延时使发射杆能执行到位*/
 				Delay_ms(175);
+				
+				/*通知控制卡*/
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
 				
 				/*计算从接到球射球的时间*/
 				gRobot.raceTime.colorBall1ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1WaitTime;
 				gRobot.raceTime.colorBall1Time = gRobot.raceTime.colorBall1WaitTime + gRobot.raceTime.colorBall1ThrowTime ;
-				
-				/*通知控制卡*/
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
 				
 				/*射球机构复位*/
 				ShootReset();
@@ -274,11 +275,13 @@ void FightForBall2(void)
 				
 				/*给延时使发射杆能执行到位*/
 				Delay_ms(175);
+				
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
+				
 				/*计算投球时间*/
 				gRobot.raceTime.colorBall2ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2WaitTime;
 				gRobot.raceTime.colorBall2Time=gRobot.raceTime.colorBall2ThrowTime + gRobot.raceTime.colorBall2WaitTime;
 				
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
 				
 				/*射球机构复位*/
 				ShootReset();
