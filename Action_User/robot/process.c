@@ -388,13 +388,33 @@ void FightForGoldBall(void)
 				
 			case 4:
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
-					/*航向转到到位直接开始准备射球参数*/
-					Delay_ms(200);
-					PrepareShootBall(BALL_3);
 					GoldBallGraspStairTwoOff();
-					gRobot.sDta.process=TO_THE_AREA_3;
-					USART_OUTByDMA("PrepareShoot ");
-					isGetBall++;
+					/*航向转到到位直接开始准备射球参数*/
+				  int cnt=5;
+					int isBallThere=0;
+					while(cnt--){
+						Delay_ms(3);
+						if(PE_FOR_THE_BALL)
+						{					
+							isBallThere++;
+						}else{
+							isBallThere=0;
+						}
+					}
+					if(isBallThere>=3)
+					{					
+						PrepareShootBall(BALL_3);
+						gRobot.sDta.process=TO_THE_AREA_3;
+						USART_OUTByDMA("PrepareShoot ");
+						isGetBall++;
+					}else {
+						ShootBall();
+						Delay_ms(175);
+						ShootReset();
+						Delay_ms(200);
+						isGetBall=11;
+					}
+					
 				}
 			break;
 				

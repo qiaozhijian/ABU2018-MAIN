@@ -300,8 +300,8 @@ typedef struct{
 }DataSave_t;
 /*计算机器人的速度结构体*/
 typedef struct{
-	float lastPosX;
-  float lastPosY;
+	float lastPosX[3];
+  float lastPosY[3];
 	uint32_t countTime;
 	float countVel;
 	
@@ -373,6 +373,7 @@ typedef struct{
 	float speedX;
 	float speedY;
 	float AngularVelocity;
+	float CarSpeed;
 	int posSystemCode[2];
 	float angleBais;
 	float KalmanZ;

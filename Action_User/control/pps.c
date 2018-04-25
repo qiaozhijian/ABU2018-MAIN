@@ -12,10 +12,13 @@ extern Robot_t gRobot;
 /*定位系统串口中断*/
 void USART3_IRQHandler(void)
 {
+	static int averI=0;//计算平均值的i
+	float lastPosX=0.f;
+	float lastPosY=0.f;
   static uint8_t ch;
   static union {
-    uint8_t data[16];
-    float ActVal[4];
+    uint8_t data[20];
+    float ActVal[5];
   } posture;
   static uint8_t count = 0;
   static uint8_t i = 0;
@@ -54,7 +57,7 @@ void USART3_IRQHandler(void)
     case 2:
       posture.data[i] = ch;
       i++;
-      if (i >= 16)
+      if (i >= 20)
       {
         i = 0;
         count++;
@@ -73,13 +76,18 @@ void USART3_IRQHandler(void)
       {
 				/*x= x - (DISX_GYRO2CENTER*cosf(ANGLE_TO_RAD(angle)) - DISY_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0]))) + DISX_GYRO2CENTER;
 		y =y- (DISX_GYRO2CENTER*sinf(ANGLE_TO_RAD(posture.ActVal[0])) + DISY_GYRO2CENTER*cosf(ANGLE_TO_RAD(posture.ActVal[0]))) + DISY_GYRO2CENTER;*/
-        gRobot.robotVel.lastPosX=gRobot.posX;
-        gRobot.robotVel.lastPosY=gRobot.posY;
+				gRobot.robotVel.lastPosX[averI]=gRobot.posX;
+        gRobot.robotVel.lastPosY[averI]=gRobot.posY;
+				lastPosX=(gRobot.robotVel.lastPosX[0]+gRobot.robotVel.lastPosX[1]+gRobot.robotVel.lastPosX[2])/3;
+				lastPosY=(gRobot.robotVel.lastPosY[0]+gRobot.robotVel.lastPosY[1]+gRobot.robotVel.lastPosY[2])/3;
+				averI++;
+				averI%=3;
 				
 				gRobot.posX=-posture.ActVal[0];
 				gRobot.posY=-posture.ActVal[1];
 				gRobot.angle=posture.ActVal[2];
 				gRobot.AngularVelocity=posture.ActVal[3];
+				gRobot.CarSpeed=posture.ActVal[4];
 //				gRobot.angle=posture.ActVal[0] ;
 //        gRobot.speedX=-posture.ActVal[1] ;
 //        gRobot.speedY=posture.ActVal[2] ;
@@ -91,7 +99,8 @@ void USART3_IRQHandler(void)
 				gRobot.posSystemReady=1;
 				
 				if(gRobot.robotVel.countTime!=0){
-				 gRobot.robotVel.countVel=sqrtf((gRobot.posX - gRobot.robotVel.lastPosX)*(gRobot.posX - gRobot.robotVel.lastPosX)+(gRobot.posY - gRobot.robotVel.lastPosY)*(gRobot.posY - gRobot.robotVel.lastPosY))/gRobot.robotVel.countTime;
+				 gRobot.robotVel.countVel=sqrtf((gRobot.posX - lastPosX)*(gRobot.posX - lastPosX)+\
+					(gRobot.posY - lastPosY)*(gRobot.posY - lastPosY))/gRobot.robotVel.countTime;
 				 gRobot.robotVel.countVel=gRobot.robotVel.countVel*10000;
 				}
 				gRobot.robotVel.countTime=0;
