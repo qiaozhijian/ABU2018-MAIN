@@ -113,7 +113,7 @@ void RobotTask(void)
 {
   CPU_INT08U  os_err;
   os_err = os_err;
-  
+	int BeepOnCnt=0;
   OSSemSet(PeriodSem, 0, &os_err);
   while(1)
   {
@@ -167,7 +167,6 @@ void RobotTask(void)
 					case ROBOT_PREPARE:
 						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
 						{
-							//灯亮两秒，蜂鸣器响两秒，表示准备完成
 							BEEP_ON;
 							ShootLedOn();
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
@@ -178,9 +177,15 @@ void RobotTask(void)
 						break;
 						
 					case ROBOT_START:
+						//蜂鸣器响1.5秒
+					  BeepOnCnt++;
+						if(BeepOnCnt>300){
 							BEEP_OFF;
+							BeepOnCnt=0;
+						}
 						if(gRobot.posX>100.f)
 						{
+							BEEP_OFF;
 							PrepareGetBall(BALL_1);
 							ShootLedOff();
 						}
