@@ -15,7 +15,7 @@ void  wait(uint32_t n);
 void TIM_Init(TIM_TypeDef * TIMx, uint16_t arr, uint16_t psr,uint16_t prepri,uint16_t subpri); 
 void Delay_us(uint32_t nTime);
 void Delay_ms(uint32_t nTime);
-
+int DelayMsByProgramCycle(int timeWait);
 void TIM3_Pwm_Init(u32 arr,u32 psc);
 void TIM4_Pwm_Init(u32 arr,u32 psc);
 void SetCompare(uint8_t Num, float Percent);

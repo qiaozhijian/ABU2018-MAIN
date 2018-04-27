@@ -78,7 +78,7 @@ void SelfTest(void)
 		break;
 	}
 }
-
+extern motionPara_t PrepareShootBall1;
 /*完成投射彩球一的任务*/
 void FightForBall1(void)
 {
@@ -101,7 +101,13 @@ void FightForBall1(void)
 					
 						case 1:
 							if(PE_FOR_THE_BALL){
-								PrepareShootBall(BALL_1);
+								GasMotion(PrepareShootBall1.gasAim);
+								/*设置航向角度*/
+								CourseAngleMotion(PrepareShootBall1.courseAngle);
+								/*提前打开发射装置小气缸*/
+								ShootSmallOpen();
+								/*舵机转向*/
+								HoldBallPosCrlSeparate( PrepareShootBall1.upSteerAngle, PrepareShootBall1.downSteerAngle);
 								/*这个动作一定要等到先给电机发指令转后进行，因为函数内有延时*/
 								LedBallInto();
 								getBallStep++;
@@ -111,7 +117,7 @@ void FightForBall1(void)
 						case 2:
 								USART_OUTByDMA("IntoTheArea\t");
 								//TalkToCamera(CAMERA_OPEN_NEAR);
-								
+								PrepareShootBall(BALL_1);
 								gRobot.sDta.process=TO_THE_AREA_1;
 						break;
 			}
@@ -127,8 +133,8 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(/*gRobot.robotVel.countVel<400.f
-					 &&*/PE_FOR_THE_BALL
+			if(gRobot.robotVel.countVel<650.f
+					 &&PE_FOR_THE_BALL
 				/*持球舵机到位*/
 			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 						/*持球舵机到位*/
@@ -166,19 +172,9 @@ void FightForBall1(void)
 			}
 			else
 			{
-//				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
-//				USART_OUTByDMAF(gRobot.posX);
-//				USART_OUTByDMAF(gRobot.posY);
-//				USART_OUTByDMAF(gRobot.angle);
-//				USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
-//				USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
-				
+//				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);		
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE1 ");
-		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
-		//				USART_OUTByDMA("!HB11\t");
-		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-		//-USART_OUTByDMA("!HB21\t");
 				if(gRobot.robotVel.countVel>150.f){
 				  USART_OUTByDMA("RobotVel Large! ");
 			  }
@@ -197,7 +193,6 @@ void FightForBall1(void)
 					USART_OUTByDMA("!GAS1 ");
 					USART_OUTByDMAF(gRobot.gasValue);
 				}
-				//USART_OUTByDMA("\r\n");
 			}
 			break;
 		}

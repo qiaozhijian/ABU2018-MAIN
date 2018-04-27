@@ -329,7 +329,17 @@ void Delay_ms(uint32_t nTime)
     Delay_us(1000);
 	}
 }
-
+//通过主程序周期延时,填入的必须是5的倍数主程序周期是5ms
+int DelayMsByProgramCycle(int timeWait){
+	static int timeCnt=0;
+	timeWait = timeWait/5;
+	timeCnt++;
+	if(timeCnt>timeWait){
+		timeCnt=0;//清空计数
+		return 1;//延时成功
+	}
+  return 0;
+}
 /**
   * @brief  accurency time delay dunction with TIMx
   * @param  TIMx: where x can be 1-14. 
