@@ -99,9 +99,14 @@ void USART3_IRQHandler(void)
 				gRobot.posSystemReady=1;
 				
 				if(gRobot.robotVel.countTime!=0){
-				 gRobot.robotVel.countVel=sqrtf((gRobot.posX - lastPosX)*(gRobot.posX - lastPosX)+\
-					(gRobot.posY - lastPosY)*(gRobot.posY - lastPosY))/gRobot.robotVel.countTime;
-				 gRobot.robotVel.countVel=gRobot.robotVel.countVel*10000;
+					
+				  gRobot.robotVel.countXVel=(gRobot.posX - lastPosX)/gRobot.robotVel.countTime;
+					gRobot.robotVel.countYVel=(gRobot.posY - lastPosY)/gRobot.robotVel.countTime;
+				  
+					gRobot.robotVel.countVel=sqrtf(gRobot.robotVel.countXVel*gRobot.robotVel.countXVel+      \
+					gRobot.robotVel.countYVel*gRobot.robotVel.countYVel)/gRobot.robotVel.countTime;
+				  
+					gRobot.robotVel.countVel=gRobot.robotVel.countVel*10000;
 				}
 				gRobot.robotVel.countTime=0;
 	  }

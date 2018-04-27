@@ -127,8 +127,8 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(gRobot.robotVel.countVel<200.f
-					 &&PE_FOR_THE_BALL
+			if(/*gRobot.robotVel.countVel<400.f
+					 &&*/PE_FOR_THE_BALL
 				/*持球舵机到位*/
 			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 						/*持球舵机到位*/
@@ -137,7 +137,7 @@ void FightForBall1(void)
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/
-									 &&(gRobot.posY>2100.f)
+									 &&(gRobot.posY>2150.f)
 									  /*气压到位*/
 										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -237,8 +237,6 @@ void FightForBall2(void)
 					{	
 						USART_OUTByDMA("IntoTheArea\t");
 						gRobot.sDta.process=TO_THE_AREA_2;
-						
-						
 					}
 					break;
 				}
@@ -246,7 +244,7 @@ void FightForBall2(void)
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>=2130.f))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>=2115.f))
 				gRobot.sDta.process=TO_THROW_BALL_2;
 //			if(!PrepareForTheBall())
 //			{
@@ -343,6 +341,7 @@ void FightForBall2(void)
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
+	static int shootTime=0;
 	static uint8_t isGetBall=0;
   switch(gRobot.sDta.process)
   {
@@ -382,6 +381,9 @@ void FightForGoldBall(void)
 					      &&PrepareForTheBall())
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
+					CourseAngleMotion(gRobot.sDta.courseAimAngle);
+					//先让航向转再做爪子抖动的动作
+					LedBallInto();
 					isGetBall++;
 				}
 			break;
@@ -434,9 +436,10 @@ void FightForGoldBall(void)
 				
 			case 13:
 				if(PrepareForTheBall()){
-					gRobot.sDta.courseAimAngle = 179.4f;
-					//打开射球小气缸
-					ShootSmallOpen();
+					gRobot.sDta.courseAimAngle = 179.9f;
+					CourseAngleMotion(gRobot.sDta.courseAimAngle);
+					//先让航向转再做爪子抖动的动作
+					LedBallInto();
 					isGetBall=14;
 				}
 			break;
@@ -466,6 +469,7 @@ void FightForGoldBall(void)
 		
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
+		USART_OUTByDMA("SHOOTTIME=%d",shootTime);
     if(PE_FOR_THE_BALL
 				&&gRobot.robotVel.countVel<100.f
 				/*持球舵机到位*/
@@ -483,7 +487,8 @@ void FightForGoldBall(void)
     {
       /*射球*/
       ShootBall();
-      
+			
+      shootTime++;
       /*给延时使发射杆能执行到位*/
       Delay_ms(175);
 			
@@ -493,9 +498,11 @@ void FightForGoldBall(void)
       /*射球机构复位*/
       ShootReset();
       
-			/*射完金球进程停止了，这时候看看需要再投掷，那就把 gRobot.sDta.process改为取金球同时更改第一个金球到的判读坐标条件*/
       gRobot.sDta.process=TO_GET_BALL_3;
 			isGetBall=11;
+			if(shootTime>=2){
+				gRobot.sDta.process=END_COMPETE;
+			}
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else

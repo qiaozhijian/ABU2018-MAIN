@@ -303,8 +303,11 @@ typedef struct{
 	float lastPosX[3];
   float lastPosY[3];
 	uint32_t countTime;
-	float countVel;
+	//计算车xy方向上的和和速度
 	
+	float countVel;
+	float countXVel;
+	float countYVel;
 	/*计算航向，上下电机转动时间*/
 	uint32_t countCourseTime;
 	uint32_t countSteerTime;
