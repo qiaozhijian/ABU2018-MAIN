@@ -373,6 +373,15 @@ void FightForGoldBall(void)
 				
 			case 3:
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+				{
+					isGetBall++;
+					Delay_ms(100);
+				}
+			break;
+				
+			case 4:
+				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
 					      &&PrepareForTheBall())
 				{
@@ -384,7 +393,7 @@ void FightForGoldBall(void)
 				}
 			break;
 				
-			case 4:
+			case 5:
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					GoldBallGraspStairTwoOff();
 					/*航向转到到位直接开始准备射球参数*/
@@ -411,6 +420,7 @@ void FightForGoldBall(void)
 						ShootReset();
 						Delay_ms(200);
 						isGetBall=11;
+						shootTime++;
 					}
 					
 				}
@@ -425,7 +435,7 @@ void FightForGoldBall(void)
 			case 12:
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
-					Delay_ms(300);
+					Delay_ms(150);
 					isGetBall=13;
 				}
 			break;

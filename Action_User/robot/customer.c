@@ -193,6 +193,11 @@ void AT_CMD_Handle(void){
 				LedBallInto();
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='3'){
+				WhichBall=BALL_4;
+				PrepareShootBall(BALL_4);
+				LedBallInto();
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='4'){
 				WhichBall=0;
 				gRobot.sDta.AT_motionFlag=0;
 				if(PE_FOR_THE_BALL){
@@ -235,6 +240,10 @@ void AT_CMD_Handle(void){
 				}
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='3'){
+				WhichBall=BALL_4;
+				PrepareGetBall(BALL_4);
+				gRobot.sDta.AT_motionFlag=0;
+			}else if(*(buffer + 5) =='4'){
 				WhichBall=0;
 				gRobot.sDta.AT_motionFlag=0;
 				ShootSmallShut();
@@ -396,6 +405,10 @@ void SendParamToUpPositionMachine(void){
 				case BALL_3_WAIT:
 					temp=&PrepareGetBall3Wait;
 				break;
+				
+				case BALL_4:
+					temp=&PrepareGetBall4;
+				break;
 			}
 		break;
 		
@@ -412,6 +425,10 @@ void SendParamToUpPositionMachine(void){
 				
 				case BALL_3:
 					temp=&PrepareShootBall3;
+				break;
+				
+				case BALL_4:
+					temp=&PrepareShootBall4;
 				break;
 			}
 		break;
