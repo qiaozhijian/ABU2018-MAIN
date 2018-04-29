@@ -11,7 +11,7 @@
 #define SHOOT_BIG_ID 									  	2
 #define CLAW_ID 													5
 #define GOLD_GET_STAIR2_ID 								3
-#define LOW_CLAW_ID                       4
+#define EXTEND_THE_CAR_ID                 4
 
 
 /*控制气阀板的函数*/
@@ -44,8 +44,8 @@ void GoldBallGraspStairTwoOn(void);
 
 void GoldBallGraspStairTwoOff(void);
 
-void LowerClawStairOn(void);
+void ExtendCarOn(void);
 
-void LowerClawStairOff(void);
+void ExtendCarOff(void);
 void LedBallInto(void);
 #endif

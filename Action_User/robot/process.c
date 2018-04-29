@@ -125,7 +125,7 @@ void FightForBall1(void)
 			
     /*第一个球取球完毕，去投射区一*/
 		case TO_THE_AREA_1:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY >=2130.f))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY >=2160.f))
 				gRobot.sDta.process=TO_THROW_BALL_1;
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
@@ -143,7 +143,7 @@ void FightForBall1(void)
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/
-									 &&(gRobot.posY>2150.f)
+									 &&(gRobot.posY>=2160.f)
 									  /*气压到位*/
 										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -175,7 +175,7 @@ void FightForBall1(void)
 //				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);		
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE1 ");
-				if(gRobot.robotVel.countVel>150.f){
+				if(gRobot.robotVel.countVel>650.f){
 				  USART_OUTByDMA("RobotVel Large! ");
 			  }
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
@@ -221,6 +221,7 @@ void FightForBall2(void)
 					if(PrepareForTheBall()){
 						/*和彩球1情况一样*/
 						PrepareShootBall(BALL_2);
+						ExtendCarOn();
 						LedBallInto();
 						getBallStep++;
 
@@ -239,7 +240,7 @@ void FightForBall2(void)
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>=2115.f))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>=2160.f))
 				gRobot.sDta.process=TO_THROW_BALL_2;
 //			if(!PrepareForTheBall())
 //			{
@@ -249,7 +250,7 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			if(gRobot.robotVel.countVel<200.f
+			if(gRobot.robotVel.countVel<350.f
 					 &&PE_FOR_THE_BALL
 					/*持球舵机到位*/
 			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
@@ -304,7 +305,7 @@ void FightForBall2(void)
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2 ");
 				
-				if(gRobot.robotVel.countVel>200.f){
+				if(gRobot.robotVel.countVel>350.f){
 				  USART_OUTByDMA("RobotVel Large! ");
 			  }
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
@@ -994,7 +995,14 @@ void RobotSelfTest(void){
 			//金球架抓取气阀
 			GoldBallGraspStairTwoOff();
 		  Delay_ms(1500);
-
+			GoldBallGraspStairTwoOn();
+			Delay_ms(1500);
+			
+			ExtendCarOn();
+			Delay_ms(1500);
+			ExtendCarOff();
+			Delay_ms(1500);
+			
 		  selfTestStep++;
 			ShootLEDShineOnce=1;
 		break;

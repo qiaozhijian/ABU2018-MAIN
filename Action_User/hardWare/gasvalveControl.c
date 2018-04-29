@@ -107,17 +107,18 @@ void GoldBallGraspStairTwoOff(void)
 {
 	GasValveControl(GASVALVE_BOARD_ID , GOLD_GET_STAIR2_ID , 0);
 }
-/*下爪手臂向下撑*/
-void LowerClawStairOn(void)
+//车身增长气缸打开
+void ExtendCarOn(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 1);
+	GasValveControl(GASVALVE_BOARD_ID_DOWN, EXTEND_THE_CAR_ID , 1);
 }
-/*下爪手臂向上抬*/
-void LowerClawStairOff(void)
+//车身增长气缸关闭
+void ExtendCarOff(void)
 {
-	GasValveControl(GASVALVE_BOARD_ID_DOWN, LOW_CLAW_ID , 0);
+	GasValveControl(GASVALVE_BOARD_ID_DOWN, EXTEND_THE_CAR_ID , 0);
 }
-/*让球进入*/
+
+
 /*让球进入*/
 void LedBallInto(void){
 	/*定义张爪闭爪的周期数9*/
