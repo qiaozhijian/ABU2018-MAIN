@@ -454,7 +454,7 @@ void FightForGoldBall(void)
 		
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE||(gRobot.posY>5850.f))/*射金球点6080 ， 6030*/
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)/*射金球点6080 ， 6030*/
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
     if(!PrepareForTheBall())
