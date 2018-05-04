@@ -211,6 +211,7 @@ void FightForBall2(void)
 					//第一步对光电进行扫描
 				case 0:
 					if(PrepareForTheBall()){
+						ExtendCarOn();
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
 						gRobot.raceTime.colorBall2WaitTime = gRobot.raceTime.roboconTime  - gRobot.raceTime.colorBall1Time;
 						getBallStep++;
@@ -221,7 +222,6 @@ void FightForBall2(void)
 					if(PrepareForTheBall()){
 						/*和彩球1情况一样*/
 						PrepareShootBall(BALL_2);
-						ExtendCarOn();
 						LedBallInto();
 						getBallStep++;
 
@@ -477,7 +477,7 @@ void FightForGoldBall(void)
   case TO_THROW_BALL_3:
 		USART_OUTByDMA("SHOOTTIME=%d",shootTime);
     if(PE_FOR_THE_BALL
-				&&gRobot.robotVel.countVel<100.f
+				&&gRobot.robotVel.countVel<300.f
 				/*持球舵机到位*/
 		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
@@ -491,6 +491,9 @@ void FightForGoldBall(void)
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
+			if(isGetBall==15){
+				Delay_ms(500);
+			}
       /*射球*/
       ShootBall();
 			
@@ -523,7 +526,7 @@ void FightForGoldBall(void)
 //				USART_OUTByDMA("!HB13\t");
 //			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				USART_OUTByDMA("!HB23\t");
-			if(gRobot.robotVel.countVel>100.f){
+			if(gRobot.robotVel.countVel>300.f){
 				USART_OUTByDMA("RobotVel Large! ");
 			}
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
