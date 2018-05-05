@@ -9,9 +9,9 @@
 #define SHOOT_LED_ID							1
 #define SHOOT_SMALL_ID										7
 #define SHOOT_BIG_ID 									  	2
-#define CLAW_ID 													5
+#define CLAW_ID 													4
 #define GOLD_GET_STAIR2_ID 								3
-#define EXTEND_THE_CAR_ID                 4
+#define EXTEND_THE_CAR_ID                 5
 
 
 /*控制气阀板的函数*/
