@@ -366,7 +366,7 @@ void TestFightForBall(void){
     {
 			ShootBall();
       /*给延时使发射杆能执行到位*/
-      Delay_ms(400);
+      Delay_ms(175);
       /*射球机构复位*/
       ShootReset();
 			/*标志位置位0防止重复射球*/
