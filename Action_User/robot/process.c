@@ -386,14 +386,24 @@ void FightForGoldBall(void)
 					      &&PrepareForTheBall())
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
-					CourseAngleMotion(gRobot.sDta.courseAimAngle);
-					//先让航向转再做爪子抖动的动作
-					LedBallInto();
+					CourseAngleMotion(gRobot.sDta.courseAimAngle);					
 					isGetBall++;
 				}
 			break;
 				
+				
 			case 5:
+				if((gRobot.courseAngle-114.f)>0.f)
+				{
+					PrepareShootBall(BALL_3);
+					LedBallInto();
+					//先让航向转再做爪子抖动的动作
+					isGetBall++;
+				}
+			break;
+				
+			
+			case 6:
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					GoldBallGraspStairTwoOff();
 					/*航向转到到位直接开始准备射球参数*/
@@ -445,12 +455,23 @@ void FightForGoldBall(void)
 					gRobot.sDta.courseAimAngle = 179.9f;
 					CourseAngleMotion(gRobot.sDta.courseAimAngle);
 					//先让航向转再做爪子抖动的动作
-					LedBallInto();
 					isGetBall=14;
 				}
 			break;
 				
 			case 14:
+				if((gRobot.courseAngle-114.f)>0.f)
+				{
+					PrepareShootBall(BALL_4);
+					LedBallInto();
+					//先让航向转再做爪子抖动的动作
+					isGetBall++;
+				}
+			break;
+				
+				
+				
+			case 15:
 				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<45.f){
 					PrepareShootBall(BALL_4);
 					gRobot.sDta.process=TO_THROW_BALL_3;

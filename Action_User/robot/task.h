@@ -68,7 +68,7 @@
 #define UP_STEER_COMPENSATE                               (126.4f)   
 #define DOWN_STEER_COMPENSATE															(114.f)
 #define PITCH_COMPENSATE																	(30.f	 )
-#define COURCE_COMPENSATE																  (40.f  )
+#define COURCE_COMPENSATE																  (42.f  )
 //×´Ì¬Á¿½âÊÍ
 #define AT_CLAW_STATUS_OPEN 										0x01u
 
