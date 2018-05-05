@@ -134,11 +134,10 @@ void FightForBall1(void)
 		case TO_THROW_BALL_1:
 			/*光电到位*/
 			if(gRobot.robotVel.countVel<650.f
-					 &&PE_FOR_THE_BALL
 				/*持球舵机到位*/
-			   //		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+			   		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 						/*持球舵机到位*/
-					//	&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+						&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 							/*俯仰到位，*/
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
@@ -251,11 +250,10 @@ void FightForBall2(void)
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
 			if(gRobot.robotVel.countVel<350.f
-					 &&PE_FOR_THE_BALL
 					/*持球舵机到位*/
-			//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+						&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 							/*持球舵机到位*/
-				//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+							&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 								/*俯仰到位，*/
 								&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 									/*航向到位*/
@@ -392,18 +390,18 @@ void FightForGoldBall(void)
 			break;
 				
 				
-			case 5:
-				if((gRobot.courseAngle-114.f)>0.f)
-				{
-					PrepareShootBall(BALL_3);
-					LedBallInto();
-					//先让航向转再做爪子抖动的动作
-					isGetBall++;
-				}
-			break;
+//			case 5:
+//				if((gRobot.courseAngle-114.f)>0.f)
+//				{
+//					PrepareShootBall(BALL_3);
+//					LedBallInto();
+//					//先让航向转再做爪子抖动的动作
+//					isGetBall++;
+//				}
+//			break;
 				
 			
-			case 6:
+			case 5:
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					GoldBallGraspStairTwoOff();
 					/*航向转到到位直接开始准备射球参数*/
@@ -455,19 +453,19 @@ void FightForGoldBall(void)
 					gRobot.sDta.courseAimAngle = 179.9f;
 					CourseAngleMotion(gRobot.sDta.courseAimAngle);
 					//先让航向转再做爪子抖动的动作
-					isGetBall=14;
+					isGetBall=15;
 				}
 			break;
 				
-			case 14:
-				if((gRobot.courseAngle-114.f)>0.f)
-				{
-					PrepareShootBall(BALL_4);
-					LedBallInto();
-					//先让航向转再做爪子抖动的动作
-					isGetBall++;
-				}
-			break;
+//			case 14:
+//				if((gRobot.courseAngle-114.f)>0.f)
+//				{
+//					PrepareShootBall(BALL_4);
+//					LedBallInto();
+//					//先让航向转再做爪子抖动的动作
+//					isGetBall++;
+//				}
+//			break;
 				
 				
 				
@@ -497,12 +495,11 @@ void FightForGoldBall(void)
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
 		USART_OUTByDMA("SHOOTTIME=%d",shootTime);
-    if(PE_FOR_THE_BALL
-				&&gRobot.robotVel.countVel<300.f
+    if(gRobot.robotVel.countVel<300.f
 				/*持球舵机到位*/
-		//		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+				&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
-		//			&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+					&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
 						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
