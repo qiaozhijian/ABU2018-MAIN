@@ -17,6 +17,7 @@
 #include "task.h"
 #include "dma.h"
 #include "robot.h"
+#include "motion.h"
 /**
   * @brief  set the pins of a specific GPIO group to be input or output driver pin.
   * @param  GPIOx: where x can be A-I.
@@ -100,6 +101,19 @@ void KeyInit(void)
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOD, &GPIO_InitStructure);	
+}
+
+void KeyResetInit(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);	
 }
 
 //LED
@@ -235,5 +249,39 @@ void KeySwitchIntoBTCtrl(void){
 		}
 		BEEP_OFF;
 		
+	}
+}
+
+void KeySwitchIntoReset(void){
+	static int resetProgress=0;
+	if(KEY_RESET_SWITCH){
+	  keyOpenTime++;
+	}
+	else{
+	  keyOpenTime=0;
+	}
+	if(keyOpenTime>=200){
+		resetProgress++;
+		keyOpenTime=0;
+		//通知控制卡进入平板控制模式
+		gRobot.sDta.robocon2018=ROBOT_PREPARE;
+		USART_OUTByDMA("In the RobotReset\r\n");
+		BEEP_ON;
+		ShootLedOn();
+		Delay_ms(500);
+		ShootLedOff();
+		BEEP_OFF;
+	}
+	if(resetProgress>1){
+		resetProgress=0;
+		//将标志位全部清空
+		gRobot.sDta.AT_motionFlag=0;
+		
+		PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
+    PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
+		
+		Delay_ms(100);
+		PrepareGetBall(READY);
+		SetMotionFlag(AT_RESET_THE_ROBOT);
 	}
 }

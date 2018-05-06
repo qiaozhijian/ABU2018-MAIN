@@ -66,7 +66,7 @@
 #define DOWN_STEER_CODE_TO_ANGLE(code)                    ((code)/1638.4f)
 
 #define UP_STEER_COMPENSATE                               (126.4f)   
-#define DOWN_STEER_COMPENSATE															(114.f)
+#define DOWN_STEER_COMPENSATE															(111.f)
 #define PITCH_COMPENSATE																	(30.f	 )
 #define COURCE_COMPENSATE																  (42.f  )
 //状态量解释
@@ -113,6 +113,8 @@
 #define AT_THE_WHEEL_SELFTEST_OVER										0x100000u
 
 #define AT_THE_DUCT_SELFTEST_OVER										0x200000u
+
+#define AT_RESET_THE_ROBOT										0x400000u
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 										0x01u
 

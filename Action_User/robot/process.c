@@ -165,9 +165,12 @@ void FightForBall1(void)
 				/*准备接球二*/
 				PrepareGetBall(BALL_2);
 				/*进入下一状态*/
+				
+				getBallStep=0;
 				gRobot.sDta.process=TO_GET_BALL_2;
 				gRobot.sDta.robocon2018=COLORFUL_BALL_2;
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+				SetMotionFlag(~AT_REACH_FIRST_PLACE);
 			}
 			else
 			{
@@ -288,8 +291,12 @@ void FightForBall2(void)
 				
 				gRobot.sDta.process=TO_GET_BALL_3;
 				
+				getBallStep=0;
+				
 				gRobot.sDta.robocon2018=GOLD_BALL;
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+				SetMotionFlag(~AT_REACH_SECOND_PLACE);
+
 			}
 			else
 			{
@@ -509,9 +516,7 @@ void FightForGoldBall(void)
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
-			if(isGetBall==15){
-				Delay_ms(500);
-			}
+			//射第二个球的进程
       /*射球*/
       ShootBall();
 			
@@ -526,9 +531,18 @@ void FightForGoldBall(void)
       ShootReset();
       
       gRobot.sDta.process=TO_GET_BALL_3;
-			isGetBall=11;
+			
 			if(shootTime>=2){
 				gRobot.sDta.process=END_COMPETE;
+				isGetBall=0;
+			}
+			else{
+				isGetBall=11;
+			}
+			if(isGetBall==15){
+				Delay_ms(500);
+				SetMotionFlag(~AT_REACH_SECOND_PLACE);
+				shootTime=0;
 			}
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }

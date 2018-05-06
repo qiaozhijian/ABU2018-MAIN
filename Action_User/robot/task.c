@@ -139,6 +139,13 @@ void RobotTask(void)
 					KeySwitchIntoBTCtrl();
 				}
 				
+				if(KEY_RESET_SWITCH){
+					KeySwitchIntoReset();
+				}
+				
+				/*进入重启程序运行*/
+				
+				
 				/*过程报告*/
 				//processReport();
 				
@@ -165,14 +172,16 @@ void RobotTask(void)
 					break;
 					
 					case ROBOT_PREPARE:
-						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
+						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY||gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT)
 						{
 							BEEP_ON;
 							ShootLedOn();
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
+							SetMotionFlag(~AT_RESET_THE_ROBOT);
 							gRobot.sDta.robocon2018=ROBOT_START;
+							
 						}
 						break;
 						

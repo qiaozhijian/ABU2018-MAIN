@@ -32,6 +32,7 @@
 #define BOOST 					11
 #define WHEEL 					12
 #define STAIR2 					13
+#define EXTEND_THE_CAR 	14
 
 //平版控制球的动作ballMode
 #define PICK_BALL       1
@@ -128,6 +129,8 @@ void AT_CMD_Judge(void){
     atCommand=WHEEL;
   else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//   
     atCommand=STAIR2;
+	else if((bufferI >= 5) && strncmp(buffer, "AT+16", 5)==0)//   
+    atCommand=EXTEND_THE_CAR;
 	
 //  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
 //  {
@@ -190,12 +193,10 @@ void AT_CMD_Handle(void){
 			}else if(*(buffer + 5) =='2'){
 				WhichBall=BALL_3;
 				PrepareShootBall(BALL_3);
-				LedBallInto();
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='3'){
 				WhichBall=BALL_4;
 				PrepareShootBall(BALL_4);
-				LedBallInto();
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='4'){
 				WhichBall=0;
@@ -340,6 +341,18 @@ void AT_CMD_Handle(void){
       GoldBallGraspStairTwoOff();
     } 
     break;
+		
+	case EXTEND_THE_CAR:
+    USART_OUTByDMA("OK\r\n");
+    if(*(buffer + 5) == '1') 
+    {
+      ExtendCarOn();
+    }
+    else if(*(buffer + 5) == '0') 
+    {
+      ExtendCarOff();
+    } 
+   break;
 	
   default:
     break;
