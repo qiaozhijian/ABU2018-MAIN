@@ -141,7 +141,6 @@ void FightForBall1(void)
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/
-									 &&(gRobot.posY-2160.f>20.f)
 									  /*气压到位*/
 										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -256,7 +255,6 @@ void FightForBall2(void)
 								&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 									/*航向到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f)*/
-										&&gRobot.posY-TZ_2_Y>20.f
 											/*气压到位*/
 											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -504,7 +502,6 @@ void FightForGoldBall(void)
 							/*航向到位*/
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
 								/*&&(gRobot.posY>5530.f)*/
-								&&fabs(gRobot.posY-TZ_3_Y)<50.f
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
