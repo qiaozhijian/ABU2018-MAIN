@@ -125,7 +125,7 @@ void FightForBall1(void)
 			
     /*第一个球取球完毕，去投射区一*/
 		case TO_THE_AREA_1:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE||(gRobot.posY >=2160.f))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
 				gRobot.sDta.process=TO_THROW_BALL_1;
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
@@ -133,16 +133,15 @@ void FightForBall1(void)
     /*到达投射区一，射球*/
 		case TO_THROW_BALL_1:
 			/*光电到位*/
-			if(gRobot.robotVel.countVel<650.f
-				/*持球舵机到位*/
-			   		&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+			if(/*持球舵机到位*/
+			   		(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 						/*持球舵机到位*/
 						&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 							/*俯仰到位，*/
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/
-									 &&(gRobot.posY>=2160.f)
+									 &&(gRobot.posY-2160.f>20.f)
 									  /*气压到位*/
 										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -177,9 +176,6 @@ void FightForBall1(void)
 //				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);		
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE1 ");
-				if(gRobot.robotVel.countVel>650.f){
-				  USART_OUTByDMA("RobotVel Large! ");
-			  }
 				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 				{
 					USART_OUTByDMA("!PITCH1 ");
@@ -242,7 +238,7 @@ void FightForBall2(void)
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE||(gRobot.posY>=2160.f))
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
 				gRobot.sDta.process=TO_THROW_BALL_2;
 //			if(!PrepareForTheBall())
 //			{
@@ -252,16 +248,15 @@ void FightForBall2(void)
 			
 			/*到达投射区二，射球*/
 		case TO_THROW_BALL_2:
-			if(gRobot.robotVel.countVel<350.f
-					/*持球舵机到位*/
-						&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+			if(/*持球舵机到位*/
+						(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 							/*持球舵机到位*/
 							&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 								/*俯仰到位，*/
 								&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 									/*航向到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f)*/
-										&&fabs(gRobot.posY-TZ_2_Y)<80.f
+										&&gRobot.posY-TZ_2_Y>20.f
 											/*气压到位*/
 											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
@@ -310,9 +305,6 @@ void FightForBall2(void)
 				if(!PE_FOR_THE_BALL)
 					USART_OUTByDMA("!PE2 ");
 				
-				if(gRobot.robotVel.countVel>350.f){
-				  USART_OUTByDMA("RobotVel Large! ");
-			  }
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
 		//				USART_OUTByDMA("!HB12\t");
 		//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
@@ -351,7 +343,7 @@ void FightForGoldBall(void)
 		switch(isGetBall)
 		{
 			case 0:
-				if(gRobot.robotVel.countVel<50.f
+				if(gRobot.robotVel.countVel<100.f
 						&&fabs(gRobot.posX-HANDOVER_3_X)<50.f
 							&&fabs(gRobot.posY-HANDOVER_3_Y)<50.f){
 								isGetBall++;
@@ -502,9 +494,9 @@ void FightForGoldBall(void)
     /*到达投射区三，射球*/
   case TO_THROW_BALL_3:
 		USART_OUTByDMA("SHOOTTIME=%d",shootTime);
-    if(gRobot.robotVel.countVel<300.f
+    if(
 				/*持球舵机到位*/
-				&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+		    (gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 					/*持球舵机到位*/
 					&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
 						/*俯仰到位，*/
@@ -554,13 +546,10 @@ void FightForGoldBall(void)
 //			USART_OUTByDMAF(gRobot.angle);
 			if(!PE_FOR_THE_BALL)
 				USART_OUTByDMA("!PE3 ");
-//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
-//				USART_OUTByDMA("!HB13\t");
-//			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-//				USART_OUTByDMA("!HB23\t");
-			if(gRobot.robotVel.countVel>300.f){
-				USART_OUTByDMA("RobotVel Large! ");
-			}
+			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS))
+				USART_OUTByDMA("!HB13\t");
+			if(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+				USART_OUTByDMA("!HB23\t");
 			if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
 			{
 				USART_OUTByDMA("!PITCH3 ");
