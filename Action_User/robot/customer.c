@@ -378,8 +378,7 @@ void TestFightForBall(void){
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
 			ShootBall();
-      /*给延时使发射杆能执行到位*/
-      Delay_ms(175);
+      Delay_ms(125);
       /*射球机构复位*/
       ShootReset();
 			/*标志位置位0防止重复射球*/
@@ -480,6 +479,10 @@ void ChangeParamTemp(float value){
 				case BALL_3_WAIT:
 					temp=&PrepareGetBall3Wait;
 				break;
+				
+				case BALL_4:
+					temp=&PrepareGetBall4;
+				break;
 			}
 		break;
 		
@@ -495,6 +498,10 @@ void ChangeParamTemp(float value){
 				
 				case BALL_3:
 					temp=&PrepareShootBall3;
+				break;
+				
+				case BALL_4:
+					temp=&PrepareShootBall4;
 				break;
 			}
 		break;

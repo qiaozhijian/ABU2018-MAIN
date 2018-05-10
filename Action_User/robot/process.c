@@ -148,7 +148,7 @@ void FightForBall1(void)
 				ShootBall();
 				
 				/*给延时使发射杆能执行到位*/
-				Delay_ms(175);
+				Delay_ms(125);
 				
 				/*通知控制卡*/
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
@@ -262,7 +262,7 @@ void FightForBall2(void)
 				ShootBall();
 				
 				/*给延时使发射杆能执行到位*/
-				Delay_ms(175);
+				Delay_ms(125);
 				
 				MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL2);
 				
@@ -505,13 +505,12 @@ void FightForGoldBall(void)
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
-			//射第二个球的进程
       /*射球*/
       ShootBall();
 			
       shootTime++;
       /*给延时使发射杆能执行到位*/
-      Delay_ms(175);
+      Delay_ms(125);
 			
 			gRobot.raceTime.goldBallThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time - gRobot.raceTime.goldBallWaitTime;
 			gRobot.raceTime.goldBallTime=gRobot.raceTime.goldBallWaitTime + gRobot.raceTime.goldBallThrowTime;
