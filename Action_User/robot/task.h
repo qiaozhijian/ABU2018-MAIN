@@ -208,6 +208,7 @@
 //通知控制卡失能轮子
 #define NOTIFY_MOTIONCARD_DISABLE_WHEEL       70
 
+
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1				1
 /*已到达区域二，可以投球*/
@@ -227,6 +228,9 @@
 #define GET_MOTIONCARD_SELFTEST_WHEEL_OVER 66
 
 #define GET_QIAO_ZHIJIAN_TEST             88
+
+#define GET_PPS_PROBLEM                   74
+
 
 /*球编号*/
 #define READY															0

@@ -47,6 +47,8 @@
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
 extern Robot_t gRobot;
+//定位系统出问题闪灯标志位
+static int ppsErrorReportFlag=0;
 //用来处理CAN接收数据
 union MSG
 {
@@ -110,7 +112,6 @@ void CAN1_RX0_IRQHandler(void)
 	    USART_OUTByDMA("GET_QIAO_ZHIJIAN_TESTLUELUELUE\t");	
 		}
 	}
-	
 	if(msg.data8[3]==0&&msg.data8[1]=='S'&&msg.data8[0]=='L')
 	{
 		if(msg.data8[2]=='A'){
@@ -123,6 +124,11 @@ void CAN1_RX0_IRQHandler(void)
 	{
 	  gRobot.sDta.robocon2018=INTO_HARDFAULT;
 	  USART_OUTByDMA("GET_MOTIONCARD_INTO_HARDFAULT\r\n");
+	}
+	if(msg.data32[0]==GET_PPS_PROBLEM)
+	{
+		ppsErrorReportFlag=1;
+		USART_OUTByDMA("GET_PPS_PROBLEM\t");	
 	}
    
     USART_OUTByDMA("GET_FROM_MOTIONCARD %d ",msg.data32[0]);
@@ -343,7 +349,27 @@ void TIM2_IRQHandler(void)
 
 uint32_t startCnt=0;
 uint32_t Cnt=0;
-
+static int errorReportTime=0;
+static int errorShineTime=0;
+void ReportPPSError(void)
+{
+	if(ppsErrorReportFlag){
+			errorReportTime++;
+			if(errorReportTime<5000){
+					ShootLedOn();
+			}else if(errorReportTime>10000){
+				  ShootLedOff();
+				  errorReportTime=0;
+				  errorShineTime++;
+			}
+			//闪3次
+			if(errorShineTime>=3){
+				ppsErrorReportFlag=0;
+				errorReportTime=0;
+				errorShineTime=0;
+			}
+		}
+}
 void TIM7_IRQHandler(void)
 { 
 	OS_CPU_SR  cpu_sr;
@@ -352,6 +378,7 @@ void TIM7_IRQHandler(void)
   OS_EXIT_CRITICAL();
   if(TIM_GetITStatus(TIM7, TIM_IT_Update)==SET)
   {	
+		ReportPPSError();
 		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
 		  gRobot.robotVel.countTime++;
 			gRobot.robotVel.countCourseTime++;

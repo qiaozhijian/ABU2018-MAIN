@@ -423,7 +423,7 @@ void FightForGoldBall(void)
 						ShootBall();
 						Delay_ms(175);
 						ShootReset();
-						Delay_ms(200);
+						Delay_ms(500);
 						isGetBall=11;
 						shootTime++;
 					}
@@ -505,6 +505,7 @@ void FightForGoldBall(void)
 									/*∆¯—πµΩŒª*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
+			Delay_ms(200);
       /*…‰«Ú*/
       ShootBall();
 			
@@ -528,7 +529,6 @@ void FightForGoldBall(void)
 				isGetBall=11;
 			}
 			if(isGetBall==15){
-				Delay_ms(500);
 				SetMotionFlag(~AT_REACH_SECOND_PLACE);
 				shootTime=0;
 			}
