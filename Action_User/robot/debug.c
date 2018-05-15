@@ -127,22 +127,22 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMA("PE%d ",PE_FOR_THE_BALL);
 		USART_OUTByDMA("T ");
 		USART_OUTByDMAF(gRobot.raceTime.roboconTime);
-		if(gRobot.sDta.robocon2018==COLORFUL_BALL_2){
-			USART_OUTByDMAF(gRobot.raceTime.colorBall1WaitTime);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall1ThrowTime);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall1Time);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall2WaitTime);
-		}else if(gRobot.sDta.robocon2018==GOLD_BALL){
-			USART_OUTByDMAF(gRobot.raceTime.colorBall1WaitTime);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall1ThrowTime);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall1Time);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall2WaitTime);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall2ThrowTime);
-			USART_OUTByDMAF(gRobot.raceTime.colorBall2Time);
-			USART_OUTByDMAF(gRobot.raceTime.goldBallWaitTime);
-			USART_OUTByDMAF(gRobot.raceTime.goldBallThrowTime);
-			USART_OUTByDMAF(gRobot.raceTime.goldBallTime);
-		}
+//		if(gRobot.sDta.robocon2018==COLORFUL_BALL_2){
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall1WaitTime);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall1ThrowTime);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall1Time);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall2WaitTime);
+//		}else if(gRobot.sDta.robocon2018==GOLD_BALL){
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall1WaitTime);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall1ThrowTime);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall1Time);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall2WaitTime);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall2ThrowTime);
+//			USART_OUTByDMAF(gRobot.raceTime.colorBall2Time);
+//			USART_OUTByDMAF(gRobot.raceTime.goldBallWaitTime);
+//			USART_OUTByDMAF(gRobot.raceTime.goldBallThrowTime);
+//			USART_OUTByDMAF(gRobot.raceTime.goldBallTime);
+//		}
 	}
 	
 }

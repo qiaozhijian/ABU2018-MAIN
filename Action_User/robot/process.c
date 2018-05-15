@@ -377,8 +377,7 @@ void FightForGoldBall(void)
 				
 			case 4:
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
-							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
-					      &&PrepareForTheBall())
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
 					CourseAngleMotion(gRobot.sDta.courseAimAngle);					
