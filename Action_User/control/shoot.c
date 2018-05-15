@@ -62,35 +62,35 @@ void prepareMotionParaInit(void)
   PrepareCompete.pitchAngle=29.0f;
   PrepareCompete.upSteerAngle=-96.f;
 	PrepareCompete.downSteerAngle=-96.f;
-  PrepareCompete.gasAim=0.50f;
+  PrepareCompete.gasAim=0.45f;
 	
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=47.5f;
   PrepareGetBall1.pitchAngle=-1.5f;
   PrepareGetBall1.upSteerAngle=-43.0f;
 	PrepareGetBall1.downSteerAngle=-54.0f;
-  PrepareGetBall1.gasAim=0.50f;
+  PrepareGetBall1.gasAim=0.45f;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=171.6f;
-  PrepareShootBall1.pitchAngle=11.5f;
+  PrepareShootBall1.pitchAngle=8.8f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
-  PrepareShootBall1.gasAim=0.50f;
+  PrepareShootBall1.gasAim=0.45f;
 	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=90.f;
   PrepareGetBall2.pitchAngle=-1.0f;
   PrepareGetBall2.upSteerAngle=90.f; 
 	PrepareGetBall2.downSteerAngle=89.f;
-  PrepareGetBall2.gasAim=0.50f;
+  PrepareGetBall2.gasAim=0.48f;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=174.6f;
-  PrepareShootBall2.pitchAngle=9.1f;
+  PrepareShootBall2.courseAngle=173.6f;
+  PrepareShootBall2.pitchAngle=5.6f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
-  PrepareShootBall2.gasAim=0.50f;
+  PrepareShootBall2.gasAim=0.48f;
   
   /*准备等待拿第三个球的数据*/
   PrepareGetBall3Wait.courseAngle=120.f;

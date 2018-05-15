@@ -183,7 +183,7 @@ void AT_CMD_Handle(void){
 			if(*(buffer + 5) =='0'){
 				WhichBall=BALL_1;
 				PrepareShootBall(BALL_1);
-				LedBallInto();
+//				LedBallInto();
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='1'){
 				WhichBall=BALL_2;
@@ -192,10 +192,28 @@ void AT_CMD_Handle(void){
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='2'){
 				WhichBall=BALL_3;
+				gRobot.sDta.courseAimAngle = 179.9f;
+				CourseAngleMotion(gRobot.sDta.courseAimAngle);
+				while(1){
+					Delay_ms(5);
+					ReadActualPos(CAN2,COURCE_MOTOR_ID);
+					if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
+						break;
+					}
+				}
 				PrepareShootBall(BALL_3);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='3'){
 				WhichBall=BALL_4;
+				gRobot.sDta.courseAimAngle = 179.9f;
+				CourseAngleMotion(gRobot.sDta.courseAimAngle);
+				while(1){
+					Delay_ms(5);
+					ReadActualPos(CAN2,COURCE_MOTOR_ID);
+					if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
+						break;
+					}
+				}
 				PrepareShootBall(BALL_4);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='4'){
