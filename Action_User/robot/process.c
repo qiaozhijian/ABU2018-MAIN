@@ -109,7 +109,7 @@ void FightForBall1(void)
 								/*舵机转向*/
 								HoldBallPosCrlSeparate( PrepareShootBall1.upSteerAngle, PrepareShootBall1.downSteerAngle);
 								/*这个动作一定要等到先给电机发指令转后进行，因为函数内有延时*/
-								LedBallInto();
+//								LedBallInto();
 								getBallStep++;
 							}
 						break;
@@ -144,6 +144,7 @@ void FightForBall1(void)
 									  /*气压到位*/
 										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
+				
 				/*射球*/
 				ShootBall();
 				
@@ -219,7 +220,7 @@ void FightForBall2(void)
 					if(PrepareForTheBall()){
 						/*和彩球1情况一样*/
 						PrepareShootBall(BALL_2);
-						LedBallInto();
+//						LedBallInto();
 						getBallStep++;
 
 					}
@@ -258,6 +259,7 @@ void FightForBall2(void)
 											/*气压到位*/
 											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
+				
 				/*射球*/
 				ShootBall();
 				
@@ -504,6 +506,9 @@ void FightForGoldBall(void)
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
+			if(isGetBall==15){
+			  Delay_ms(300);
+			}
 			Delay_ms(200);
       /*射球*/
       ShootBall();

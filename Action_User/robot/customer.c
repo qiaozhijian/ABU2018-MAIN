@@ -395,6 +395,10 @@ void TestFightForBall(void){
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
+			if(WhichBall==BALL_3||WhichBall==BALL_4){
+					Delay_ms(200);
+			}
+
 			ShootBall();
       Delay_ms(125);
       /*射球机构复位*/

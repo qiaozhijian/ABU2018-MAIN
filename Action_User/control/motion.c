@@ -167,7 +167,7 @@ void MotionStatusUpdate(void)
 	
 	
 	/*判断持球舵机一是否到位*/
-	if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<3.f)
+	if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<1.5f)
 	{
 		SetMotionFlag(AT_HOLD_BALL_1_SUCCESS);
 	}	
@@ -177,7 +177,7 @@ void MotionStatusUpdate(void)
 	}
 	
 	/*判断持球舵机二是否到位*/
-	if(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<3.f)
+	if(fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<1.5f)
 	{
 		SetMotionFlag(AT_HOLD_BALL_2_SUCCESS);	
 	}
