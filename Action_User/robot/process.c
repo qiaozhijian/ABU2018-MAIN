@@ -373,7 +373,7 @@ void FightForGoldBall(void)
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
 					isGetBall++;
-					Delay_ms(100);
+					Delay_ms(150);
 				}
 			break;
 				
@@ -403,38 +403,19 @@ void FightForGoldBall(void)
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					GoldBallGraspStairTwoOff();
 					/*航向转到到位直接开始准备射球参数*/
-				  int cnt=5;
-					int isBallThere=0;
-					while(cnt--){
-						Delay_ms(3);
-						if(PE_FOR_THE_BALL)
-						{					
-							isBallThere++;
-						}else{
-							isBallThere=0;
-						}
-					}
-					if(isBallThere>=3)
-					{					
-						PrepareShootBall(BALL_3);
-						gRobot.sDta.process=TO_THE_AREA_3;
-						USART_OUTByDMA("PrepareShoot ");
-						isGetBall++;
-					}else {
-						ShootBall();
-						Delay_ms(175);
-						ShootReset();
-						Delay_ms(500);
-						isGetBall=11;
-						shootTime++;
-					}
-					
+					PrepareShootBall(BALL_3);
+					gRobot.sDta.process=TO_THE_AREA_3;
+					USART_OUTByDMA("PrepareShoot ");
+					isGetBall=6;			
 				}
 			break;
+				
+				
 				
 			//接去第二金球
 			case 11:
 				PrepareGetBall(BALL_4);
+				Delay_ms(200);
 				isGetBall = 12;
 			break;
 				
@@ -465,8 +446,6 @@ void FightForGoldBall(void)
 //				}
 //			break;
 				
-				
-				
 			case 15:
 				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<45.f){
 					PrepareShootBall(BALL_4);
@@ -474,7 +453,6 @@ void FightForGoldBall(void)
 					isGetBall=15;
 				}
 			break;
-				
 				
 		}
     break;
@@ -506,7 +484,7 @@ void FightForGoldBall(void)
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
-			if(isGetBall==15){
+			if(shootTime==1){
 			  Delay_ms(300);
 			}
 			Delay_ms(200);
@@ -522,18 +500,18 @@ void FightForGoldBall(void)
 			
       /*射球机构复位*/
       ShootReset();
-      
-      gRobot.sDta.process=TO_GET_BALL_3;
-			
-			if(shootTime>=2){
+      			
+			if(shootTime<2){
+				isGetBall=11;
+				gRobot.sDta.process=TO_GET_BALL_3;
+			}
+			else{
 				gRobot.sDta.process=END_COMPETE;
 				isGetBall=0;
 			}
-			else{
-				isGetBall=11;
-			}
-			if(isGetBall==15){
-				SetMotionFlag(~AT_REACH_SECOND_PLACE);
+			
+			if(shootTime>=2){
+				gRobot.sDta.AT_motionFlag=0;
 				shootTime=0;
 			}
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);

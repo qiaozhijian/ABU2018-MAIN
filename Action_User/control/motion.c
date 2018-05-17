@@ -57,6 +57,15 @@ void GasEnable(void)
 }
 
 
+//开电打气
+void GasIF(void){
+	
+	uint32_t send[2]={0x00004649,1};
+	
+	CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&send),8);	
+
+}
+
 
 /* 动作执行函数
 * 
