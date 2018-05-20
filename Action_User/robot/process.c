@@ -91,12 +91,13 @@ void FightForBall1(void)
 				switch(getBallStep){
 				//第一步对光电进行扫描
 						case 0:
-							if(PrepareForTheBall()){
-//								Delay_ms(1000);
-								MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
-								gRobot.raceTime.colorBall1WaitTime=gRobot.raceTime.roboconTime;
-								getBallStep++;
-							}
+
+								if(PrepareForTheBall()){
+									MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
+									gRobot.raceTime.colorBall1WaitTime=gRobot.raceTime.roboconTime;
+									getBallStep++;
+								}
+
 						break;
 					
 						case 1:
@@ -276,10 +277,10 @@ void FightForBall2(void)
 				/*射球机构复位*/
 				ShootReset();
 				
-				/*金球航向速度减小*/
-				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS){
-					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,800000);
-				}
+//				/*金球航向速度减小*/
+//				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS){
+//					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
+//				}
 				
 				/*准备接球三*/
 				PrepareGetBall(BALL_3_WAIT);
@@ -414,8 +415,8 @@ void FightForGoldBall(void)
 				
 			//接去第二金球
 			case 11:
+				Delay_ms(150);
 				PrepareGetBall(BALL_4);
-				Delay_ms(200);
 				isGetBall = 12;
 			break;
 				
@@ -431,7 +432,6 @@ void FightForGoldBall(void)
 				if(PrepareForTheBall()){
 					gRobot.sDta.courseAimAngle = 179.9f;
 					CourseAngleMotion(gRobot.sDta.courseAimAngle);
-					//先让航向转再做爪子抖动的动作
 					isGetBall=15;
 				}
 			break;

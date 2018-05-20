@@ -33,6 +33,9 @@
 #define WHEEL 					12
 #define STAIR2 					13
 #define EXTEND_THE_CAR 	14
+#define GOLDEN_COURCE_SPEED 77
+#define COLOR_COURCE_SPEED  78
+
 
 //平版控制球的动作ballMode
 #define PICK_BALL       1
@@ -131,7 +134,10 @@ void AT_CMD_Judge(void){
     atCommand=STAIR2;
 	else if((bufferI >= 5) && strncmp(buffer, "AT+16", 5)==0)//   
     atCommand=EXTEND_THE_CAR;
-	
+	else if((bufferI >= 4) && strncmp(buffer, "AT+77", 5)==0)//   
+    atCommand=GOLDEN_COURCE_SPEED;
+	else if((bufferI >= 4) && strncmp(buffer, "AT+78", 5)==0)//   
+    atCommand=COLOR_COURCE_SPEED;
 //  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
 //  {
 //		
@@ -371,6 +377,14 @@ void AT_CMD_Handle(void){
       ExtendCarOff();
     } 
    break;
+		
+	case COLOR_COURCE_SPEED:
+		  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
+	break;
+	
+	case GOLDEN_COURCE_SPEED:
+//		  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
+	break;
 	
   default:
     break;

@@ -39,8 +39,8 @@ void ShootBall(void)
 	ShootBigOpen();
 	ShootLedOn();
 	Delay_ms(50);
+	ClawOpen();
   /*夹子打开*/
-  ClawOpen();
   /*把两个发射气缸打开*/
 }
 
@@ -65,15 +65,15 @@ void prepareMotionParaInit(void)
   PrepareCompete.gasAim=0.5f;
 	
   /*准备去拿第一个球的数据*/ 
-  PrepareGetBall1.courseAngle=47.5f;
+  PrepareGetBall1.courseAngle=52.f;
   PrepareGetBall1.pitchAngle=-2.f;
-  PrepareGetBall1.upSteerAngle=-46.0f;
+  PrepareGetBall1.upSteerAngle=-45.0f;
 	PrepareGetBall1.downSteerAngle=-54.0f;
   PrepareGetBall1.gasAim=0.5f;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=173.1f;
-  PrepareShootBall1.pitchAngle=8.8f;
+  PrepareShootBall1.pitchAngle=14.3f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.gasAim=0.5f;
@@ -87,27 +87,27 @@ void prepareMotionParaInit(void)
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=173.1f;
-  PrepareShootBall2.pitchAngle=9.1f;
+  PrepareShootBall2.pitchAngle=10.1f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.gasAim=0.5f;
   
   /*准备等待拿第三个球的数据*/
   PrepareGetBall3Wait.courseAngle=120.f;
-  PrepareGetBall3Wait.pitchAngle=-2.5f;
-  PrepareGetBall3Wait.upSteerAngle=-48.f;
+  PrepareGetBall3Wait.pitchAngle=-3.f;
+  PrepareGetBall3Wait.upSteerAngle=-40.f;
 	PrepareGetBall3Wait.downSteerAngle=-55.f;
   PrepareGetBall3Wait.gasAim=0.5f;
 	/*接取第三个球的参数*/
-	PrepareGetBall3.courseAngle=94.5f;
-  PrepareGetBall3.pitchAngle=-2.5f;
-  PrepareGetBall3.upSteerAngle=-48.f;
+	PrepareGetBall3.courseAngle=96.f;
+  PrepareGetBall3.pitchAngle=-3.f;
+  PrepareGetBall3.upSteerAngle=-40.f;
 	PrepareGetBall3.downSteerAngle=-55.f;
   PrepareGetBall3.gasAim=0.5f;
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=179.5f;
-  PrepareShootBall3.pitchAngle=4.2f;
+  PrepareShootBall3.pitchAngle=3.2f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.gasAim=0.5f;
@@ -115,7 +115,7 @@ void prepareMotionParaInit(void)
 	/*准备第四个球的参数*/
 	PrepareGetBall4.courseAngle=90.f;
 	PrepareGetBall4.pitchAngle = -2.5f; 
-	PrepareGetBall4.upSteerAngle = -62.f;
+	PrepareGetBall4.upSteerAngle = -61.f;
 	PrepareGetBall4.downSteerAngle = -66.f;
 	PrepareGetBall4.gasAim = 0.50f;
 	
