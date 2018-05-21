@@ -331,7 +331,7 @@ void FightForBall2(void)
   }
   
 }
-
+extern motionPara_t PrepareGetBall4;
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
@@ -415,9 +415,14 @@ void FightForGoldBall(void)
 				
 			//接去第二金球
 			case 11:
-				Delay_ms(150);
-				PrepareGetBall(BALL_4);
-				isGetBall = 12;
+			  gRobot.sDta.holdBallAimAngle[0]=PrepareGetBall4.upSteerAngle;
+			  gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall4.downSteerAngle;
+        if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+					/*持球舵机到位*/&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+				{
+			    PrepareGetBall(BALL_4);
+				  isGetBall = 12;
+				}
 			break;
 				
 			case 12:
