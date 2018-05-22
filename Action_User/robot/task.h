@@ -263,9 +263,9 @@
 #define TZ_1_Y (2180.0f)
 
 #define TZ_2_X (6565.0f)
-#define TZ_2_Y (2180.0f)
+#define TZ_2_Y (2230.0f)
 
-#define TZ_3_X (6110.0f)
+#define TZ_3_X (6894.0f)
 #define TZ_3_Y (6030.0f)
 
 #define HANDOVER_3_X (6894.f)

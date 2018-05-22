@@ -383,7 +383,7 @@ void AT_CMD_Handle(void){
 	break;
 	
 	case GOLDEN_COURCE_SPEED:
-//		  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
+		  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
 	break;
 	
   default:

@@ -277,10 +277,10 @@ void FightForBall2(void)
 				/*射球机构复位*/
 				ShootReset();
 				
-//				/*金球航向速度减小*/
-//				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS){
-//					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
-//				}
+				/*金球航向速度减小*/
+				if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS){
+					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
+				}
 				
 				/*准备接球三*/
 				PrepareGetBall(BALL_3_WAIT);
