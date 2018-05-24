@@ -491,11 +491,18 @@ void FightForGoldBall(void)
     {
 			if(shootTime==1){
 			  Delay_ms(300);
+			}else{
+				Delay_ms(100);
 			}
 			Delay_ms(200);
       /*射球*/
-			ShootBall();
+//			ShootBall();
 			
+			ShootBigOpen();
+	    ShootLedOn();
+	    Delay_ms(50);
+		  ClawOpen();
+
       shootTime++;
       /*给延时使发射杆能执行到位*/
       Delay_ms(125);

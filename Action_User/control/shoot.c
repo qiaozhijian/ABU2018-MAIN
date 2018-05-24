@@ -38,8 +38,9 @@ void ShootBall(void)
 //	}
 	ShootBigOpen();
 	ShootLedOn();
-	Delay_ms(50);
 	ClawOpen();
+	Delay_ms(50);
+
   /*夹子打开*/
   /*把两个发射气缸打开*/
 }
@@ -65,29 +66,29 @@ void prepareMotionParaInit(void)
   PrepareCompete.gasAim=0.5f;
 	
   /*准备去拿第一个球的数据*/ 
-  PrepareGetBall1.courseAngle=52.f;
-  PrepareGetBall1.pitchAngle=-0.5f;
-  PrepareGetBall1.upSteerAngle=-45.0f;
-	PrepareGetBall1.downSteerAngle=-54.0f;
+  PrepareGetBall1.courseAngle=59.5f;
+  PrepareGetBall1.pitchAngle=-1.0f;
+  PrepareGetBall1.upSteerAngle=-62.0f;
+	PrepareGetBall1.downSteerAngle=-62.0f;
   PrepareGetBall1.gasAim=0.5f;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=173.1f;
-  PrepareShootBall1.pitchAngle=14.3f;
+  PrepareShootBall1.pitchAngle=12.3f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.gasAim=0.5f;
 	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=90.f;
-  PrepareGetBall2.pitchAngle=-1.0f;
+  PrepareGetBall2.pitchAngle=0.0f;
   PrepareGetBall2.upSteerAngle=90.f; 
 	PrepareGetBall2.downSteerAngle=89.f;
   PrepareGetBall2.gasAim=0.5f;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=173.1f;
-  PrepareShootBall2.pitchAngle=10.1f;
+  PrepareShootBall2.courseAngle=173.6f;
+  PrepareShootBall2.pitchAngle=11.1f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.gasAim=0.5f;
@@ -99,7 +100,7 @@ void prepareMotionParaInit(void)
 	PrepareGetBall3Wait.downSteerAngle=-55.f;
   PrepareGetBall3Wait.gasAim=0.5f;
 	/*接取第三个球的参数*/
-	PrepareGetBall3.courseAngle=95.f;
+	PrepareGetBall3.courseAngle=94.f;
   PrepareGetBall3.pitchAngle=-4.0f;
   PrepareGetBall3.upSteerAngle=-51.f;
 	PrepareGetBall3.downSteerAngle=-55.f;
@@ -265,7 +266,7 @@ void SmallChange(void){
 				return;
 			}
 		
-			if((fabs(gRobot.posX-TZ_2_X)>25.f || fabs(gRobot.posY-TZ_2_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if((fabs(gRobot.posX-TZ_2_X)>10.f || fabs(gRobot.posY-TZ_2_Y)>10.f || fabs(gRobot.angle)>0.5f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				 
 				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
@@ -308,7 +309,7 @@ void SmallChange(void){
 		  USART_OUTByDMA("courseAngle OUT OF RANGE");
 		}
 		
-		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)>0.3f){
+		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)>0.15f){
 				SetMotionFlag(~AT_COURSE_SUCCESS);
 			
 				USART_OUTByDMA("courseAngle need change=");
