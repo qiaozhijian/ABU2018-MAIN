@@ -107,7 +107,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.gasAim=0.5f;
   
   /*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=179.5f;
+  PrepareShootBall3.courseAngle=178.f;
   PrepareShootBall3.pitchAngle=3.2f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
@@ -255,7 +255,8 @@ void SmallChange(void){
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				 /*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
 				 
-				 whetherCount=1;
+				countAngle+=COLOR_BALL1_OFFSET;
+				whetherCount=1;
 			}else {
 				 whetherCount=0;
 			}
@@ -271,7 +272,9 @@ void SmallChange(void){
 				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
 				/*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
-				 whetherCount=1;
+				
+				countAngle+=COLOR_BALL2_OFFSET;
+				whetherCount=1;
 			}else {
 				 whetherCount=0;
 			}
@@ -286,7 +289,11 @@ void SmallChange(void){
 				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
 						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
-				
+				if(gRobot.sDta.WhichGoldBall==BALL_3){
+					countAngle+=GOLD_BALL1_OFFSET;
+				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
+					countAngle+=GOLD_BALL2_OFFSET;
+				}
 				whetherCount=1;
 			}else {
 				 whetherCount=0;
@@ -298,14 +305,14 @@ void SmallChange(void){
 	
 	//如果计算了判断计算值是否与给定的值超过了0.2超过了则微调
 	if(whetherCount){
-	
+	  /*减去车的偏移角度*/
 		gRobot.sDta.courseAimAngle=countAngle-gRobot.angle;
 		/*防止计算的值超过限定角度*/
 		if(gRobot.sDta.courseAimAngle>189.f){
 			gRobot.sDta.courseAimAngle=189.f;
 			USART_OUTByDMA("courseAngle OUT OF RANGE");
-		}else if(gRobot.sDta.courseAimAngle<0.f){
-			gRobot.sDta.courseAimAngle=0.f;
+		}else if(gRobot.sDta.courseAimAngle<165.f){
+			gRobot.sDta.courseAimAngle=165.f;
 		  USART_OUTByDMA("courseAngle OUT OF RANGE");
 		}
 		
