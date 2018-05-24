@@ -65,7 +65,7 @@
 #define UPSTEER_CODE_TO_ANGLE(code)                       ((code)/1280.f)       
 #define DOWN_STEER_CODE_TO_ANGLE(code)                    ((code)/1638.4f)
 
-#define UP_STEER_COMPENSATE                               (131.4f)   
+#define UP_STEER_COMPENSATE                               (126.4f)   
 #define DOWN_STEER_COMPENSATE															(111.f)
 #define PITCH_COMPENSATE																	(30.f	 )
 #define COURCE_COMPENSATE																  (42.f  )
@@ -303,6 +303,7 @@ typedef struct{
   
   /*气压*/
   float gasAimValue;
+	
 }DataSave_t;
 /*计算机器人的速度结构体*/
 typedef struct{
@@ -370,6 +371,7 @@ typedef struct{
   /*气压*/
   float gasValue;
   float gasAimValue;
+	
   
   /*延时类型*/
   uint32_t delayTask;

@@ -68,8 +68,8 @@ void prepareMotionParaInit(void)
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=59.5f;
   PrepareGetBall1.pitchAngle=-1.0f;
-  PrepareGetBall1.upSteerAngle=-62.0f;
-	PrepareGetBall1.downSteerAngle=-62.0f;
+  PrepareGetBall1.upSteerAngle=-57.0f;
+	PrepareGetBall1.downSteerAngle=-63.0f;
   PrepareGetBall1.gasAim=0.5f;
   
   /*准备射第一个球的数据*/
@@ -88,7 +88,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=173.6f;
-  PrepareShootBall2.pitchAngle=11.1f;
+  PrepareShootBall2.pitchAngle=9.1f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.gasAim=0.5f;
@@ -102,26 +102,26 @@ void prepareMotionParaInit(void)
 	/*接取第三个球的参数*/
 	PrepareGetBall3.courseAngle=94.f;
   PrepareGetBall3.pitchAngle=-4.0f;
-  PrepareGetBall3.upSteerAngle=-51.f;
+  PrepareGetBall3.upSteerAngle=-47.f;
 	PrepareGetBall3.downSteerAngle=-55.f;
   PrepareGetBall3.gasAim=0.5f;
   
   /*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=181.f;
+  PrepareShootBall3.courseAngle=179.5f;
   PrepareShootBall3.pitchAngle=3.2f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.gasAim=0.5f;
 	
 	/*准备接第四个球的参数*/
-	PrepareGetBall4.courseAngle=93.f;
+	PrepareGetBall4.courseAngle=91.5f;
 	PrepareGetBall4.pitchAngle = -2.5f; 
 	PrepareGetBall4.upSteerAngle = -66.f;
 	PrepareGetBall4.downSteerAngle = -66.f;
 	PrepareGetBall4.gasAim = 0.50f;
 	
 	/*准备射第四个球的数据*/
-	PrepareShootBall4.courseAngle=179.5f;
+	PrepareShootBall4.courseAngle=177.5f;
   PrepareShootBall4.pitchAngle=3.6f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
@@ -354,7 +354,8 @@ void PrepareWork(void)
 				/*判断俯仰角是否到位*/
 				if(fabs(gRobot.sDta.holdBallAimAngle[0]-gRobot.holdBallAngle[0])<5.f&&fabs(gRobot.sDta.holdBallAimAngle[1]-gRobot.holdBallAngle[1])<5.f)
 				{
-					SetMotionFlag(AT_PITCH_SUCCESS);
+					SetMotionFlag(AT_HOLD_BALL_1_SUCCESS);
+			    SetMotionFlag(AT_HOLD_BALL_2_SUCCESS);
 					prepareWorkStep=2;
 				}
 				/*3s爪子不到位*/
