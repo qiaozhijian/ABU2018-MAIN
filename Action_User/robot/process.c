@@ -223,7 +223,6 @@ void FightForBall2(void)
 						PrepareShootBall(BALL_2);
 //						LedBallInto();
 						getBallStep++;
-
 					}
 				break;
 
@@ -373,6 +372,7 @@ void FightForGoldBall(void)
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
+				  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,9000000);
 					isGetBall++;
 					Delay_ms(150);
 				}
@@ -416,19 +416,19 @@ void FightForGoldBall(void)
 				
 			//接去第二金球
 			case 11:
-			  gRobot.sDta.holdBallAimAngle[0]=PrepareGetBall4.upSteerAngle;
-			  gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall4.downSteerAngle;
-        if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
-					/*持球舵机到位*/&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
-				{
+				  Delay_ms(100);
+//        if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+//					/*持球舵机到位*/&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
+//				{
 			    PrepareGetBall(BALL_4);
 				  isGetBall = 12;
-				}
+//				}
 			break;
 				
 			case 12:
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
+					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,9000000);
 					Delay_ms(150);
 					isGetBall=13;
 				}
@@ -491,12 +491,12 @@ void FightForGoldBall(void)
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
-			if(shootTime==1){
-			  Delay_ms(300);
-			}else{
-				Delay_ms(100);
-			}
-			Delay_ms(200);
+//			if(shootTime==1){
+//			  Delay_ms(300);
+//			}else{
+//				Delay_ms(100);
+//			}
+			Delay_ms(300);
       /*射球*/
 //			ShootBall();
 			
@@ -518,16 +518,17 @@ void FightForGoldBall(void)
 			if(shootTime<2){
 				isGetBall=11;
 				gRobot.sDta.process=TO_GET_BALL_3;
+				gRobot.sDta.holdBallAimAngle[0]=PrepareGetBall4.upSteerAngle;
+			  gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall4.downSteerAngle;
+				PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
 			}
 			else{
 				gRobot.sDta.process=END_COMPETE;
 				isGetBall=0;
-			}
-			
-			if(shootTime>=2){
 				gRobot.sDta.AT_motionFlag=0;
 				shootTime=0;
 			}
+			
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else

@@ -118,10 +118,6 @@ void AT_CMD_Judge(void){
     atCommand=GAS;
   else if((bufferI >= 4) && strncmp(buffer, "AT+6", 4)==0)//   
     atCommand=COURSE;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//   
-    atCommand=TEST_GAS;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//   
-    atCommand=CAMERA;
   else if((bufferI >= 4) && strncmp(buffer, "AT+9", 4)==0)//  
     atCommand=STEER1;
   else if((bufferI >= 5) && strncmp(buffer, "AT+12", 5)==0)//  
@@ -134,10 +130,14 @@ void AT_CMD_Judge(void){
     atCommand=STAIR2;
 	else if((bufferI >= 5) && strncmp(buffer, "AT+16", 5)==0)//   
     atCommand=EXTEND_THE_CAR;
-	else if((bufferI >= 4) && strncmp(buffer, "AT+77", 5)==0)//   
+	else if((bufferI >= 5) && strncmp(buffer, "AT+77", 5)==0)//   
     atCommand=GOLDEN_COURCE_SPEED;
-	else if((bufferI >= 4) && strncmp(buffer, "AT+78", 5)==0)//   
+	else if((bufferI >= 5) && strncmp(buffer, "AT+78", 5)==0)//   
     atCommand=COLOR_COURCE_SPEED;
+//  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//   
+//    atCommand=TEST_GAS;
+//  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//   
+//    atCommand=CAMERA;
 //  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
 //  {
 //		
@@ -410,7 +410,7 @@ void TestFightForBall(void){
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
 			if(WhichBall==BALL_3||WhichBall==BALL_4){
-					Delay_ms(200);
+					Delay_ms(300);
 			}
 
 			ShootBall();
