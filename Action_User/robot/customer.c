@@ -409,12 +409,31 @@ void TestFightForBall(void){
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
-			if(WhichBall==BALL_3||WhichBall==BALL_4){
-					Delay_ms(300);
+			if(WhichBall==BALL_1||WhichBall==BALL_2){
+				 ShootBall();
+				//推杆执行时间
+				 Delay_ms(125);
+			}else if(WhichBall==BALL_3||WhichBall==BALL_4){
+				 //射球前的延时
+			   if(WhichBall==BALL_3){
+						ClawOpen();
+				    Delay_ms(100);
+						ClawShut();
+						Delay_ms(200);
+			   }else if(WhichBall==BALL_4){
+            Delay_ms(300);
+				 }
+				 ShootBigOpen();
+	       Delay_ms(50);
+		     ClawOpen();
+				 //推杆执行时间
+				 if(WhichBall==BALL_3){
+					  Delay_ms(125);
+			   }else if(WhichBall==BALL_4){
+            Delay_ms(300);
+				 }
 			}
-
-			ShootBall();
-      Delay_ms(125);
+			
       /*射球机构复位*/
       ShootReset();
 			/*标志位置位0防止重复射球*/

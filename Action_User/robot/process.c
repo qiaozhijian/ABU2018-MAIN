@@ -491,12 +491,14 @@ void FightForGoldBall(void)
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
+			//第一个球
 			if(shootTime==0){
 			  ClawOpen();
 				Delay_ms(100);
 				ClawShut();
 				Delay_ms(200);
-			}else{
+			}//第二个球
+			else{
 				Delay_ms(300);
 			}
       /*射球*/
@@ -509,8 +511,13 @@ void FightForGoldBall(void)
 
       shootTime++;
       /*给延时使发射杆能执行到位*/
-      Delay_ms(125);
-			
+			if(shootTime==0){
+			  Delay_ms(125);
+			}
+			else{
+				Delay_ms(300);
+			}
+      
 			gRobot.raceTime.goldBallThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time - gRobot.raceTime.goldBallWaitTime;
 			gRobot.raceTime.goldBallTime=gRobot.raceTime.goldBallWaitTime + gRobot.raceTime.goldBallThrowTime;
 			
@@ -524,7 +531,7 @@ void FightForGoldBall(void)
 			  gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall4.downSteerAngle;
 				PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
 			}
-			else{
+			else{//两个球都打完了
 				gRobot.sDta.process=END_COMPETE;
 				isGetBall=0;
 				gRobot.sDta.AT_motionFlag=0;
