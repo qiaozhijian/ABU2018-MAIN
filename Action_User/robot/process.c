@@ -491,12 +491,14 @@ void FightForGoldBall(void)
 									/*∆¯—πµΩŒª*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
-//			if(shootTime==1){
-//			  Delay_ms(300);
-//			}else{
-//				Delay_ms(100);
-//			}
-			Delay_ms(300);
+			if(shootTime==0){
+			  ClawOpen();
+				Delay_ms(100);
+				ClawShut();
+				Delay_ms(200);
+			}else{
+				Delay_ms(300);
+			}
       /*…‰«Ú*/
 //			ShootBall();
 			

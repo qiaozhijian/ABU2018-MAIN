@@ -121,15 +121,12 @@ void ExtendCarOff(void)
 
 /*让球进入*/
 void LedBallInto(void){
-	/*定义张爪闭爪的周期数9*/
-	int cnt=15;
+	/*定义张爪闭爪的周期数15*/
+	int cnt=16;
 	/*定义动作循环次数*/
 	int circleTime=4;
-	
-	
-	
 	while(circleTime--){
-		/*14个周期内 1 :6张爪指令和闭爪指令*/
+		/*15个周期内 1 :4张爪指令和闭爪指令*/
 		while(cnt--){
 			Delay_ms(5);
 			if(cnt>=13){
