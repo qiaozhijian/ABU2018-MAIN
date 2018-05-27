@@ -372,7 +372,6 @@ void FightForGoldBall(void)
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
-				  PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,9000000);
 					isGetBall++;
 					Delay_ms(150);
 				}
@@ -428,7 +427,6 @@ void FightForGoldBall(void)
 			case 12:
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
-					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,9000000);
 					Delay_ms(150);
 					isGetBall=13;
 				}
@@ -493,10 +491,11 @@ void FightForGoldBall(void)
     {
 			//第一个球
 			if(shootTime==0){
-			  ClawOpen();
-				Delay_ms(100);
-				ClawShut();
-				Delay_ms(200);
+//			  ClawOpen();
+//				Delay_ms(50);
+//			  ClawShut();
+//				Delay_ms(250);
+			  Delay_ms(300);
 			}//第二个球
 			else{
 				Delay_ms(300);
@@ -529,7 +528,6 @@ void FightForGoldBall(void)
 				gRobot.sDta.process=TO_GET_BALL_3;
 				gRobot.sDta.holdBallAimAngle[0]=PrepareGetBall4.upSteerAngle;
 			  gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall4.downSteerAngle;
-				PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,6250000);
 			}
 			else{//两个球都打完了
 				gRobot.sDta.process=END_COMPETE;

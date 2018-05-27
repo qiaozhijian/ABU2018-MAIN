@@ -416,10 +416,11 @@ void TestFightForBall(void){
 			}else if(WhichBall==BALL_3||WhichBall==BALL_4){
 				 //…‰«Ú«∞µƒ—” ±
 			   if(WhichBall==BALL_3){
-						ClawOpen();
-				    Delay_ms(100);
-						ClawShut();
-						Delay_ms(200);
+//						ClawOpen();
+//				    Delay_ms(50);
+//						ClawShut();
+//						Delay_ms(250);
+					  Delay_ms(300);
 			   }else if(WhichBall==BALL_4){
             Delay_ms(300);
 				 }
