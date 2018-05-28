@@ -495,7 +495,7 @@ void FightForGoldBall(void)
 //				Delay_ms(50);
 //			  ClawShut();
 //				Delay_ms(250);
-			  Delay_ms(300);
+			  Delay_ms(200);
 			}//µÚ¶þ¸öÇò
 			else{
 				Delay_ms(300);
