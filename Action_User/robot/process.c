@@ -361,7 +361,7 @@ void FightForGoldBall(void)
 			break;
 				
 			case 2:
-				if(gRobot.posY>2100.f){
+				if(gRobot.posY>1500.f){
 					//接取金球一
 					PrepareGetBall(BALL_3);
 					isGetBall++;
@@ -491,11 +491,7 @@ void FightForGoldBall(void)
     {
 			//第一个球
 			if(shootTime==0){
-//			  ClawOpen();
-//				Delay_ms(50);
-//			  ClawShut();
-//				Delay_ms(250);
-			  Delay_ms(200);
+			  Delay_ms(250);
 			}//第二个球
 			else{
 				Delay_ms(300);

@@ -73,7 +73,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall1.gasAim=0.5f;
   
   /*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=173.1f;
+  PrepareShootBall1.courseAngle=171.0f;
   PrepareShootBall1.pitchAngle=12.3f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
@@ -82,13 +82,13 @@ void prepareMotionParaInit(void)
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=91.5f;
   PrepareGetBall2.pitchAngle=0.0f;
-  PrepareGetBall2.upSteerAngle=90.f; 
+  PrepareGetBall2.upSteerAngle=87.f; 
 	PrepareGetBall2.downSteerAngle=89.f;
   PrepareGetBall2.gasAim=0.5f;
   
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=173.6f;
-  PrepareShootBall2.pitchAngle=8.1f;
+  PrepareShootBall2.courseAngle=173.8f;
+  PrepareShootBall2.pitchAngle=11.6f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.gasAim=0.5f;
@@ -96,19 +96,19 @@ void prepareMotionParaInit(void)
   /*准备等待拿第三个球的数据*/
   PrepareGetBall3Wait.courseAngle=120.f;
   PrepareGetBall3Wait.pitchAngle=-4.0f;
-  PrepareGetBall3Wait.upSteerAngle=-47.f;
-	PrepareGetBall3Wait.downSteerAngle=-47.f;
+  PrepareGetBall3Wait.upSteerAngle=-51.f;
+	PrepareGetBall3Wait.downSteerAngle=-51.f;
   PrepareGetBall3Wait.gasAim=0.5f;
 	/*接取第三个球的参数*/
 	PrepareGetBall3.courseAngle=94.f;
   PrepareGetBall3.pitchAngle=-4.0f;
-  PrepareGetBall3.upSteerAngle=-47.f;
-	PrepareGetBall3.downSteerAngle=-47.f;
+  PrepareGetBall3.upSteerAngle=-51.f;
+	PrepareGetBall3.downSteerAngle=-51.f;
   PrepareGetBall3.gasAim=0.5f;
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=179.5f;
-  PrepareShootBall3.pitchAngle=3.7f;
+  PrepareShootBall3.pitchAngle=4.9f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.gasAim=0.5f;
@@ -116,13 +116,13 @@ void prepareMotionParaInit(void)
 	/*准备接第四个球的参数*/
 	PrepareGetBall4.courseAngle=90.5f;
 	PrepareGetBall4.pitchAngle = -1.3f; 
-	PrepareGetBall4.upSteerAngle = -59.1f;
+	PrepareGetBall4.upSteerAngle = -64.1f;
 	PrepareGetBall4.downSteerAngle = -59.1f;
 	PrepareGetBall4.gasAim = 0.50f;
 	
 	/*准备射第四个球的数据*/
 	PrepareShootBall4.courseAngle=179.5f;
-  PrepareShootBall4.pitchAngle=3.6f;
+  PrepareShootBall4.pitchAngle=4.1f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
   PrepareShootBall4.gasAim=0.50f;
@@ -243,6 +243,8 @@ void SmallChange(void){
 	float countAngle=0.f;
 	//定义是否进行计算了的变量
 	int whetherCount=0;
+	//与预定航向的偏差量决定是否调节
+	float courseChangeDifference=0.f;
 	switch(gRobot.sDta.robocon2018){
 		case COLORFUL_BALL_1:
 			if(gRobot.sDta.process!=TO_THROW_BALL_1){
@@ -254,9 +256,12 @@ void SmallChange(void){
 				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				 /*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
-				 
-				countAngle+=COLOR_BALL1_OFFSET;
+				 /*减去车的偏移角度*/
+		
+				countAngle=countAngle + COLOR_BALL1_OFFSET - gRobot.angle;
+
 				whetherCount=1;
+			  courseChangeDifference = 1.f;
 			}else {
 				 whetherCount=0;
 			}
@@ -273,8 +278,10 @@ void SmallChange(void){
 							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
 				/*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
 				
-				countAngle+=COLOR_BALL2_OFFSET;
-				whetherCount=1;
+				countAngle=countAngle + COLOR_BALL2_OFFSET - gRobot.angle;
+				
+				whetherCount=1;			
+				courseChangeDifference = 1.f;
 			}else {
 				 whetherCount=0;
 			}
@@ -286,46 +293,48 @@ void SmallChange(void){
 			}
 			
 			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
+				 
+				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
 						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
 				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
+				
 				if(gRobot.sDta.WhichGoldBall==BALL_3){
-					countAngle+=GOLD_BALL1_OFFSET;
+					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
 				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
-					countAngle+=GOLD_BALL2_OFFSET;
+					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
 				}
 				whetherCount=1;
+				
+				courseChangeDifference = 0.15f;
 			}else {
 				 whetherCount=0;
 			}
 		break;
 	}	
 	
-	
+	/*防止计算的值超过限定角度*/
+	if(gRobot.sDta.courseAimAngle>189.f){
+		USART_OUTByDMAF(countAngle);
+		USART_OUTByDMA("courseAngle OUT OF RANGE");
+		return;
+	}else if(gRobot.sDta.courseAimAngle<165.f){
+		USART_OUTByDMAF(countAngle);
+		USART_OUTByDMA("courseAngle OUT OF RANGE");
+		return;
+	}
+
 	
 	//如果计算了判断计算值是否与给定的值超过了0.2超过了则微调
 	if(whetherCount){
-	  /*减去车的偏移角度*/
-		gRobot.sDta.courseAimAngle=countAngle-gRobot.angle;
-		/*防止计算的值超过限定角度*/
-		if(gRobot.sDta.courseAimAngle>189.f){
-			gRobot.sDta.courseAimAngle=189.f;
-			USART_OUTByDMA("courseAngle OUT OF RANGE");
-		}else if(gRobot.sDta.courseAimAngle<165.f){
-			gRobot.sDta.courseAimAngle=165.f;
-		  USART_OUTByDMA("courseAngle OUT OF RANGE");
-		}
-		
-		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)>0.15f){
+		SetMotionFlag(~AT_COURSE_SUCCESS);
+		if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)>courseChangeDifference){
 				SetMotionFlag(~AT_COURSE_SUCCESS);
 			
 				USART_OUTByDMA("courseAngle need change=");
 				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-//				USART_OUTByDMA("\r\n");
 		}else {
 				USART_OUTByDMA("courseAngle OK\t");
 				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-//				USART_OUTByDMA("\r\n");
 		}
   }
 	
@@ -381,7 +390,7 @@ void PrepareWork(void)
 							}
 							cnt%=600;
 							USART_OUTByDMAF(gRobot.gasValue);
-							if(gRobot.gasValue>0.6f){
+							if(gRobot.gasValue>0.68f){
 									ShootLedOn();
 									if(cnt<300){
 										BEEP_ON;
