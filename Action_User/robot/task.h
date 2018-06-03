@@ -167,6 +167,8 @@
 #define GOLD_BALL								4
 #define ROBOT_SELF_TEST         9
 #define INTO_HARDFAULT					10
+/*重启准备完成*/
+#define INTO_RESET_PREPARE      16
 /*蓝牙调试自定义程序*/
 #define ROBOT_CONTROL_BY_BT     11
 /*控制卡通信解释*/
@@ -207,7 +209,12 @@
 #define NOTIFY_MOTIONCARD_ENABLE_WHEEL        78
 //通知控制卡失能轮子
 #define NOTIFY_MOTIONCARD_DISABLE_WHEEL       70
-
+//通知控制卡进入重启
+#define NOTIFY_MOTIONCARD_INTO_RESET          97
+//通知控制卡进入重启
+#define NOTIFY_MOTIONCARD_RESET               99
+//通知控制卡进入擦轮程序
+#define NOTIFY_MOTIONCARD_WIPE_WHEEL          38               
 
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1				1
@@ -317,11 +324,7 @@ typedef struct{
 	float countVel;
 	float countXVel;
 	float countYVel;
-	/*计算航向，上下电机转动时间*/
-	uint32_t countCourseTime;
-	uint32_t countSteerTime;
-	float lastCourseAngle;
-	float lastSteerAngle[2];
+	
 	float courseVel;
 	float steerVel[2];
 	float readCourseVel;
@@ -346,6 +349,11 @@ typedef struct{
 	float colorBall2ThrowTime;
 	float goldBallThrowTime;
 }RobotconTime_t;
+typedef struct{
+	int colorBall1;
+	int colorBall2;
+	int goldBall;
+}GetBallStep_t;
 /**************typedef area**********/
 typedef struct{
   
@@ -413,7 +421,8 @@ typedef struct{
 	/*计算机器人的速度结构体*/
 	RobotVel_t robotVel;
   
-	
+	/*取球步骤*/
+	GetBallStep_t getBallStep;
 	/*比赛各个阶段进行的时间*/
 	RobotconTime_t raceTime;
 }Robot_t ;

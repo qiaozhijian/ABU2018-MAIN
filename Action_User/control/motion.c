@@ -118,10 +118,8 @@ void MotionRead(void)
 	SetMotionFlag(~AT_PITCH_READ_SUCCESS);
 	/*读取航向角角*//*将计算速度时间清空从这个时候开始计时*/
 	ReadActualPos(CAN2,COURCE_MOTOR_ID);
-	gRobot.robotVel.countCourseTime=0;
 	/*读取上电机航向角角*/
 	ReadActualPos(CAN2,UP_STEER_MOTOR_ID);
-	gRobot.robotVel.countSteerTime=0;
 	/*读取下电机航向角角*/
 	ReadActualPos(CAN2,DOWN_STEER_MOTOR_ID);
   /*将读航向角姿态的标志位归0*/

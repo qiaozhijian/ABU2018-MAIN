@@ -138,7 +138,7 @@ void RobotTask(void)
 				if(KEYSWITCH){
 					KeySwitchIntoBTCtrl();
 				}
-				
+				/*进入重启*/
 				if(KEY_RESET_SWITCH){
 					KeySwitchIntoReset();
 				}
@@ -172,7 +172,7 @@ void RobotTask(void)
 					break;
 					
 					case ROBOT_PREPARE:
-						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY||gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT)
+						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
 						{
 							BEEP_ON;
 							ShootLedOn();
@@ -181,9 +181,18 @@ void RobotTask(void)
 							SetMotionFlag(~AT_PREPARE_READY);
 							SetMotionFlag(~AT_RESET_THE_ROBOT);
 							gRobot.sDta.robocon2018=ROBOT_START;
-							
 						}
-						break;
+					break;
+						
+					case INTO_RESET_PREPARE:
+						if(gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT){
+							BEEP_ON;
+							ShootLedOn();
+							//告诉控制卡抱死，主控准备重启完毕
+							MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET);
+							gRobot.sDta.robocon2018=ROBOT_START;			
+						}
+					break;
 						
 					case ROBOT_START:
 						//蜂鸣器响1.5秒

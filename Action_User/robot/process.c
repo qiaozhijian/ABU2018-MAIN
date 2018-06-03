@@ -82,20 +82,18 @@ extern motionPara_t PrepareShootBall1;
 /*完成投射彩球一的任务*/
 void FightForBall1(void)
 {
-	static int getBallStep=0;
   switch(gRobot.sDta.process)
   {
     /*去取第一个球*/
 		case TO_GET_BALL_1:
 			//光电是否被扫到
-				switch(getBallStep){
+				switch(gRobot.getBallStep.colorBall1){
 				//第一步对光电进行扫描
 						case 0:
-
 								if(PrepareForTheBall()){
 									MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL1);
 									gRobot.raceTime.colorBall1WaitTime=gRobot.raceTime.roboconTime;
-									getBallStep++;
+									gRobot.getBallStep.colorBall1++;
 								}
 
 						break;
@@ -111,7 +109,7 @@ void FightForBall1(void)
 								HoldBallPosCrlSeparate( PrepareShootBall1.upSteerAngle, PrepareShootBall1.downSteerAngle);
 								/*这个动作一定要等到先给电机发指令转后进行，因为函数内有延时*/
 //								LedBallInto();
-								getBallStep++;
+								gRobot.getBallStep.colorBall1++;
 							}
 						break;
 
@@ -166,7 +164,6 @@ void FightForBall1(void)
 				PrepareGetBall(BALL_2);
 				/*进入下一状态*/
 				
-				getBallStep=0;
 				gRobot.sDta.process=TO_GET_BALL_2;
 				gRobot.sDta.robocon2018=COLORFUL_BALL_2;
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
@@ -200,20 +197,19 @@ void FightForBall1(void)
 /*完成投射彩球二的任务*/
 void FightForBall2(void)
 {
-	static int getBallStep=0;
   switch(gRobot.sDta.process)
   {
     /*去取第二个球*/
 		case TO_GET_BALL_2:
 			//光电是否被扫到
-			switch(getBallStep){
+			switch(gRobot.getBallStep.colorBall2){
 					//第一步对光电进行扫描
 				case 0:
 					if(PrepareForTheBall()){
 						ExtendCarOn();
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL2);
 						gRobot.raceTime.colorBall2WaitTime = gRobot.raceTime.roboconTime  - gRobot.raceTime.colorBall1Time;
-						getBallStep++;
+						gRobot.getBallStep.colorBall2++;
 					}
 				break;
 						
@@ -222,7 +218,7 @@ void FightForBall2(void)
 						/*和彩球1情况一样*/
 						PrepareShootBall(BALL_2);
 //						LedBallInto();
-						getBallStep++;
+						gRobot.getBallStep.colorBall2++;
 					}
 				break;
 
@@ -285,9 +281,7 @@ void FightForBall2(void)
 				PrepareGetBall(BALL_3_WAIT);
 				
 				gRobot.sDta.process=TO_GET_BALL_3;
-				
-				getBallStep=0;
-				
+								
 				gRobot.sDta.robocon2018=GOLD_BALL;
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 				SetMotionFlag(~AT_REACH_SECOND_PLACE);
@@ -335,28 +329,28 @@ extern motionPara_t PrepareGetBall4;
 void FightForGoldBall(void)
 {
 	static int shootTime=0;
-	static uint8_t isGetBall=0;
   switch(gRobot.sDta.process)
   {
     /*去取第三个球*/
   case TO_GET_BALL_3:
-		switch(isGetBall)
+		switch(gRobot.getBallStep.goldBall)
 		{
 			case 0:
-				if(gRobot.robotVel.countVel<100.f
+				if(gRobot.robotVel.countVel<300.f
 						&&fabs(gRobot.posX-HANDOVER_3_X)<50.f
 							&&fabs(gRobot.posY-HANDOVER_3_Y)<50.f){
-								isGetBall++;
+								gRobot.getBallStep.goldBall++;
 								GoldBallGraspStairTwoOn();
 				}
 			break;
 							
 				
 		  case 1:
+				//GoldRackInto()内部有死循环，一直在检测金球架光电，重启检测要加载里面
 				if(GoldRackInto()){
 					gRobot.raceTime.goldBallWaitTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time;
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
-					isGetBall++;
+					gRobot.getBallStep.goldBall++;
 				}
 			break;
 				
@@ -364,7 +358,7 @@ void FightForGoldBall(void)
 				if(gRobot.posY>1500.f){
 					//接取金球一
 					PrepareGetBall(BALL_3);
-					isGetBall++;
+					gRobot.getBallStep.goldBall++;
 				}
 			break;
 				
@@ -372,7 +366,7 @@ void FightForGoldBall(void)
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 				{
-					isGetBall++;
+					gRobot.getBallStep.goldBall++;
 					Delay_ms(150);
 				}
 			break;
@@ -383,7 +377,7 @@ void FightForGoldBall(void)
 				{
 					gRobot.sDta.courseAimAngle = 179.9f;
 					CourseAngleMotion(gRobot.sDta.courseAimAngle);					
-					isGetBall++;
+					gRobot.getBallStep.goldBall++;
 				}
 			break;
 				
@@ -407,7 +401,7 @@ void FightForGoldBall(void)
 					gRobot.sDta.WhichGoldBall=BALL_3;
 					gRobot.sDta.process=TO_THE_AREA_3;
 					USART_OUTByDMA("PrepareShoot ");
-					isGetBall=6;			
+					gRobot.getBallStep.goldBall=6;			
 				}
 			break;
 				
@@ -420,7 +414,7 @@ void FightForGoldBall(void)
 //					/*持球舵机到位*/&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
 //				{
 			    PrepareGetBall(BALL_4);
-				  isGetBall = 12;
+				  gRobot.getBallStep.goldBall = 12;
 //				}
 			break;
 				
@@ -428,7 +422,7 @@ void FightForGoldBall(void)
 				if((gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)){
 					Delay_ms(150);
-					isGetBall=13;
+					gRobot.getBallStep.goldBall=13;
 				}
 			break;
 				
@@ -436,7 +430,7 @@ void FightForGoldBall(void)
 				if(PrepareForTheBall()){
 					gRobot.sDta.courseAimAngle = 179.9f;
 					CourseAngleMotion(gRobot.sDta.courseAimAngle);
-					isGetBall=15;
+					gRobot.getBallStep.goldBall=15;
 				}
 			break;
 				
@@ -455,7 +449,7 @@ void FightForGoldBall(void)
 					PrepareShootBall(BALL_4);
 					gRobot.sDta.WhichGoldBall=BALL_4;
 					gRobot.sDta.process=TO_THROW_BALL_3;
-					isGetBall=15;
+					gRobot.getBallStep.goldBall=15;
 				}
 			break;
 				
@@ -520,14 +514,13 @@ void FightForGoldBall(void)
       ShootReset();
       			
 			if(shootTime<2){
-				isGetBall=11;
+				gRobot.getBallStep.goldBall=11;
 				gRobot.sDta.process=TO_GET_BALL_3;
 				gRobot.sDta.holdBallAimAngle[0]=PrepareGetBall4.upSteerAngle;
 			  gRobot.sDta.holdBallAimAngle[1]=PrepareGetBall4.downSteerAngle;
 			}
 			else{//两个球都打完了
 				gRobot.sDta.process=END_COMPETE;
-				isGetBall=0;
 				gRobot.sDta.AT_motionFlag=0;
 				shootTime=0;
 			}

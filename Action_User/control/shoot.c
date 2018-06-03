@@ -107,7 +107,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.gasAim=0.5f;
   
   /*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=179.f;
+  PrepareShootBall3.courseAngle=179.5f;
   PrepareShootBall3.pitchAngle=5.4f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
@@ -121,7 +121,7 @@ void prepareMotionParaInit(void)
 	PrepareGetBall4.gasAim = 0.50f;
 	
 	/*准备射第四个球的数据*/
-	PrepareShootBall4.courseAngle=179.5f;
+	PrepareShootBall4.courseAngle=179.2f;
   PrepareShootBall4.pitchAngle=4.1f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
@@ -289,29 +289,29 @@ void SmallChange(void){
 			}
 		break;
 		
-		case GOLD_BALL:
-			if(gRobot.sDta.process!=TO_THROW_BALL_3){
-				return;
-			}
-			
-			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-				 
-				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
-						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
-				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
-				
-				if(gRobot.sDta.WhichGoldBall==BALL_3){
-					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
-				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
-					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
-				}
-				whetherCount=1;
-				//金球的调节范围
-				courseChangeDifference = 0.15f;
-			}else {
-				 whetherCount=0;
-			}
-		break;
+//		case GOLD_BALL:
+//			if(gRobot.sDta.process!=TO_THROW_BALL_3){
+//				return;
+//			}
+//			
+//			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+//				 
+//				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
+//						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
+//				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
+//				
+//				if(gRobot.sDta.WhichGoldBall==BALL_3){
+//					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
+//				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
+//					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
+//				}
+//				whetherCount=1;
+//				//金球的调节范围
+//				courseChangeDifference = 0.15f;
+//			}else {
+//				 whetherCount=0;
+//			}
+//		break;
 	}	
 	
 	//如果计算了判断计算值是否与给定的值超过了courseChangeDifference,超过了则微调
@@ -342,7 +342,7 @@ void SmallChange(void){
 /*初始化动作 先下降再旋转*/
 void PrepareWork(void)
 {
-	static int prepareWorkStep=1;
+	int prepareWorkStep=1;
 	int cnt=0;
 		/*更新目标参数（不能在函数中更新,容易出现迭代更新的风险）*/
 	gRobot.sDta.courseAimAngle=PrepareCompete.courseAngle;

@@ -107,13 +107,13 @@ void KeyResetInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOE, &GPIO_InitStructure);	
+	GPIO_Init(GPIOD, &GPIO_InitStructure);	
 }
 
 //LED
@@ -172,6 +172,15 @@ int GoldRackInto(void){
 	while(1){
 		Delay_ms(2);
 		USART_OUTByDMA("BallRack %d ",PE_CHECK_GOLD);
+		
+		/*进入重启*/
+		if(KEY_RESET_SWITCH&&PE_CHECK_GOLD!=1){
+			  Delay_ms(3);
+				if(KeySwitchIntoReset()){
+					break;
+				}
+		}
+		
 		if(PE_CHECK_GOLD){
 			IsBallRack++;
 		}else{
@@ -182,6 +191,7 @@ int GoldRackInto(void){
 			return IS_A_BaLL_RACK;
 		}
 	}
+	return NOT_A_Ball_RACK;
 }
 /*光电25ms触发说明拿到球*/
 #define IS_A_BaLL 1
@@ -201,38 +211,52 @@ int PrepareForTheBall(void){
 	return NOT_Ball;
 }
 extern Robot_t gRobot;
-//行程开关触发时间
-static int keyOpenTime=0;
-//行程开关计数进入自检
+//行程开关计数进入自检，或者擦轮
 void KeySwitchCheck(void){
-	static int cntTime=6;
+	//自检行程开关触发时间
+  int keySelfCheckTouchTime=0;
+	//擦轮行程开关触发时间
+	int keyWipeWheelTouchTime=0;
+	int cntTime=6;
 	while(cntTime--){
 		if(KEYSWITCH){
-			keyOpenTime++;
+			keySelfCheckTouchTime++;
 		}
 		else{
-			keyOpenTime=0;
+			keySelfCheckTouchTime=0;
 		}
-		if(keyOpenTime>=3){
-			keyOpenTime=0;
+		if(keySelfCheckTouchTime>=3){
 			gRobot.sDta.robocon2018=ROBOT_SELF_TEST;
 			USART_OUTByDMA("In the RobotSelfTest\r\n");
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 		}
+		
+		if(KEY_RESET_SWITCH){
+			keyWipeWheelTouchTime++;
+		}
+		else{
+			keyWipeWheelTouchTime=0;
+		}
+		if(keyWipeWheelTouchTime>=3){
+			gRobot.sDta.robocon2018=ROBOT_CONTROL_BY_BT;
+			MotionCardCMDSend(NOTIFY_MOTIONCARD_WIPE_WHEEL);
+			USART_OUTByDMA("In the WipeWheel\r\n");
+		}
+		
 		Delay_ms(500);
   }
 	//
 }
-
 void KeySwitchIntoBTCtrl(void){
+	static int keyIntoBTTouchTime = 0;
 	if(KEYSWITCH){
-	  keyOpenTime++;
+	  keyIntoBTTouchTime++;
 	}
 	else{
-	  keyOpenTime=0;
+	  keyIntoBTTouchTime=0;
 	}
-	if(keyOpenTime>=650){
-		keyOpenTime=0;
+	if(keyIntoBTTouchTime>=650){
+		keyIntoBTTouchTime=0;
 		//通知控制卡进入平板控制模式
 		MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 		Delay_ms(300);
@@ -248,40 +272,73 @@ void KeySwitchIntoBTCtrl(void){
 			Delay_ms(300);
 		}
 		BEEP_OFF;
-		
+
 	}
 }
 
-void KeySwitchIntoReset(void){
+int KeySwitchIntoReset(void){
+	//重启进程一共需要按两次
 	static int resetProgress=0;
+	//按住行程开关的时间
+	static int keyResetTouchTime=0;
 	if(KEY_RESET_SWITCH){
-	  keyOpenTime++;
+	  keyResetTouchTime++;
 	}
 	else{
-	  keyOpenTime=0;
+	  keyResetTouchTime=0;
 	}
-	if(keyOpenTime>=200){
-		resetProgress++;
-		keyOpenTime=0;
-		//通知控制卡进入平板控制模式
-		gRobot.sDta.robocon2018=ROBOT_PREPARE;
-		USART_OUTByDMA("In the RobotReset\r\n");
-		BEEP_ON;
-		ShootLedOn();
-		Delay_ms(500);
-		ShootLedOff();
-		BEEP_OFF;
-	}
-	if(resetProgress>1){
-		resetProgress=0;
-		//将标志位全部清空
-		gRobot.sDta.AT_motionFlag=0;
+	
+	switch(resetProgress){
+		case 0:
+			if(keyResetTouchTime>=100){
+				resetProgress++;
+				keyResetTouchTime=0;
+				//通知控制卡准备重启
+				MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_RESET);
+				BEEP_ON;
+				ShootLedOn();
+				USART_OUTByDMA("In the RobotReset\r\n");
+				
+				ExtendCarOff();
+				GoldBallGraspStairTwoOn();
+
+				PrepareGetBall(READY);
+				
+				Delay_ms(1200);
 		
-		PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
-    PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
+		   	PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
+        PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
+				BEEP_OFF;
+				
+				return 1;
+	    }
+		break;
 		
-		Delay_ms(100);
-		PrepareGetBall(READY);
-		SetMotionFlag(AT_RESET_THE_ROBOT);
+		case 1:
+			if(keyResetTouchTime>=100){
+			  BEEP_ON;
+				ShootLedOff();
+				//重启步骤归零
+		    resetProgress=0;
+				//取球步骤归零
+				gRobot.getBallStep.colorBall1=0;
+				gRobot.getBallStep.colorBall2=0;
+        gRobot.getBallStep.goldBall=0;
+		    //将标志位全部清空
+				gRobot.sDta.AT_motionFlag=0;
+
+				Delay_ms(1000);
+				gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
+
+				SetMotionFlag(AT_RESET_THE_ROBOT);
+				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+				BEEP_OFF;
+				Delay_ms(200);
+				
+				return 1;
+			}
+		break;
 	}
+	
+	return 0;
 }

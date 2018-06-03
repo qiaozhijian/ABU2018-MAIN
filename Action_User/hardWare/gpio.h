@@ -13,7 +13,7 @@
 
 #define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0))	
 
-#define KEY_RESET_SWITCH		    	(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_3))
+#define KEY_RESET_SWITCH		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_3))
 
 
 void GPIO_Init_Pins(GPIO_TypeDef * GPIOx,uint16_t GPIO_Pin,GPIOMode_TypeDef GPIO_Mode);
@@ -38,5 +38,5 @@ void KeySwitchIntoBTCtrl(void);
 
 void KeyResetInit(void);
 
-void KeySwitchIntoReset(void);
+int KeySwitchIntoReset(void);
 #endif

@@ -215,16 +215,9 @@ void CAN2_RX0_IRQHandler(void)
 			
       gRobot.courseAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.courseAngle=gRobot.courseAngle+COURCE_COMPENSATE;
-			
-			/*计算航向速度*/
-			if(gRobot.robotVel.countCourseTime!=0){
-				gRobot.robotVel.courseVel=(gRobot.courseAngle-gRobot.robotVel.lastCourseAngle)/gRobot.robotVel.countCourseTime*10000;
-			}
-			
-			gRobot.robotVel.lastCourseAngle=gRobot.courseAngle;
+		
 			SetMotionFlag(AT_COURSE_READ_SUCCESS);
 			
-			gRobot.robotVel.countCourseTime=0;
       
     }
 		//速度
@@ -240,12 +233,6 @@ void CAN2_RX0_IRQHandler(void)
     {
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0] - UP_STEER_COMPENSATE;
-			/*计算上舵机速度*/
-			if(gRobot.robotVel.countSteerTime!=0){
-				gRobot.robotVel.steerVel[0]=(gRobot.holdBallAngle[0] -gRobot.robotVel.lastSteerAngle[0])/gRobot.robotVel.countSteerTime*10000;
-			}
-			gRobot.robotVel.lastSteerAngle[0]=gRobot.holdBallAngle[0];
-			gRobot.robotVel.countSteerTime=0;
     }
 		if(msg.data32[0]==0x00005856){
 			gRobot.robotVel.readSteerVel[0]=msg.data32[1]/1280;
@@ -381,8 +368,6 @@ void TIM7_IRQHandler(void)
 		ReportPPSError();
 		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
 		  gRobot.robotVel.countTime++;
-			gRobot.robotVel.countCourseTime++;
-			gRobot.robotVel.countSteerTime++;
 		}
 		if(startCnt==1)
 		{
