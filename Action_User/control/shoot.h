@@ -4,7 +4,7 @@
 /*希望微调加上的偏移量*/
 #define  COLOR_BALL1_OFFSET  (0.f)
 #define  COLOR_BALL2_OFFSET  (0.f)
-#define  GOLD_BALL1_OFFSET   (-0.35f)
+#define  GOLD_BALL1_OFFSET   (-0.15f)
 #define  GOLD_BALL2_OFFSET   (0.f)
 
 typedef struct{

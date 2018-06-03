@@ -251,7 +251,7 @@
 #define COLOR_BALL_FRAME_POSX         (515.f)
 #define COLOR_BALL_FRAME_POSY         (3275.f)
 
-#define GOLD_BALL_FRAME_POSX         (515.f)
+#define GOLD_BALL_FRAME_POSX         (-3220.f)
 #define GOLD_BALL_FRAME_POSY         (6535.f)
 
 #define ROBOT_COURCE_CENTER_TO_ARM   (445.f)

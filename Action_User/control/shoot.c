@@ -88,7 +88,7 @@ void prepareMotionParaInit(void)
   
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=173.8f;
-  PrepareShootBall2.pitchAngle=10.1f;
+  PrepareShootBall2.pitchAngle=12.f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.gasAim=0.58f;
@@ -107,8 +107,8 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.gasAim=0.5f;
   
   /*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=179.5f;
-  PrepareShootBall3.pitchAngle=4.9f;
+  PrepareShootBall3.courseAngle=179.f;
+  PrepareShootBall3.pitchAngle=5.4f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
   PrepareShootBall3.gasAim=0.5f;
@@ -261,6 +261,7 @@ void SmallChange(void){
 				countAngle=countAngle + COLOR_BALL1_OFFSET - gRobot.angle;
 
 				whetherCount=1;
+				//第一个彩球的调节范围
 			  courseChangeDifference = 1.f;
 			}else {
 				 whetherCount=0;
@@ -281,6 +282,7 @@ void SmallChange(void){
 				countAngle=countAngle + COLOR_BALL2_OFFSET - gRobot.angle;
 				
 				whetherCount=1;			
+				//第二个彩球的调节范围
 				courseChangeDifference = 1.f;
 			}else {
 				 whetherCount=0;
@@ -304,7 +306,7 @@ void SmallChange(void){
 					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
 				}
 				whetherCount=1;
-				
+				//金球的调节范围
 				courseChangeDifference = 0.15f;
 			}else {
 				 whetherCount=0;
@@ -312,20 +314,19 @@ void SmallChange(void){
 		break;
 	}	
 	
-	/*防止计算的值超过限定角度*/
-	if(countAngle>189.f){
-		USART_OUTByDMA("countAngle OUT OF RANGE");
-		USART_OUTByDMAF(countAngle);
-		return;
-	}else if(countAngle<165.f){
-		USART_OUTByDMA("countAngle OUT OF RANGE");
-		USART_OUTByDMAF(countAngle);
-		return;
-	}
-
-	
-	//如果计算了判断计算值是否与给定的值超过了0.2超过了则微调
+	//如果计算了判断计算值是否与给定的值超过了courseChangeDifference,超过了则微调
 	if(whetherCount){
+		/*防止计算的值超过限定角度*/
+		if(countAngle>189.f){
+			USART_OUTByDMA("countAngle OUT OF RANGE");
+			USART_OUTByDMAF(countAngle);
+			return;
+		}else if(countAngle<165.f){
+			USART_OUTByDMA("countAngle OUT OF RANGE");
+			USART_OUTByDMAF(countAngle);
+			return;
+		}
+		
 		if(fabs(gRobot.sDta.courseAimAngle - countAngle)>courseChangeDifference){
 				SetMotionFlag(~AT_COURSE_SUCCESS);
 			  gRobot.sDta.courseAimAngle = countAngle;

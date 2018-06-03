@@ -873,6 +873,12 @@ void RobotSelfTest(void){
 	USART_OUTByDMAF(gRobot.posX);
 	USART_OUTByDMAF(gRobot.posY);
   USART_OUTByDMAF(gRobot.angle);
+	USART_OUTByDMA("MV ");
+	USART_OUTByDMAF(gRobot.courseAngle);
+	USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+	USART_OUTByDMAF(gRobot.holdBallAngle[1]);
+	USART_OUTByDMAF(gRobot.pitchAngle);
+	USART_OUTByDMAF(gRobot.gasValue);
 	
 	switch(selfTestStep){
 		//自动车轮子检测
