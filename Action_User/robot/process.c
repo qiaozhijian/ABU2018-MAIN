@@ -114,6 +114,7 @@ void FightForBall1(void)
 						break;
 
 						case 2:
+							  Delay_ms(25);
 								USART_OUTByDMA("IntoTheArea\t");
 								//TalkToCamera(CAMERA_OPEN_NEAR);
 								PrepareShootBall(BALL_1);

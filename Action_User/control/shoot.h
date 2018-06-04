@@ -1,6 +1,9 @@
 #ifndef __SHOOT_H
 #define __SHOOT_H
 
+//选择哪一个手臂的参数
+#define  SHOOT_ARM             2
+
 /*希望微调加上的偏移量*/
 #define  COLOR_BALL1_OFFSET  (0.f)
 #define  COLOR_BALL2_OFFSET  (0.f)
