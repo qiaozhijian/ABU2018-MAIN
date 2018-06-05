@@ -125,7 +125,7 @@ void prepareMotionParaInit(void)
 	
 	/*准备射第四个球的数据*/
 	PrepareShootBall4.courseAngle=177.8f;
-  PrepareShootBall4.pitchAngle=4.3f;
+  PrepareShootBall4.pitchAngle=4.0f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
   PrepareShootBall4.gasAim=0.5f;
