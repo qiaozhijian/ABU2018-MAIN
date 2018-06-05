@@ -516,7 +516,8 @@ void SendParamToUpPositionMachine(void){
 }
 void ChangeParamTemp(float value){
 	motionPara_t  * temp;
-	
+	//由于等待取球3和取球3俯仰气压舵机角度都一样，改变一个另外一个也要改变
+	motionPara_t  * ball3ChangeOther=NULL;
 	switch(ballMode){
 		case PICK_BALL:
 			switch(WhichBall){
@@ -530,10 +531,12 @@ void ChangeParamTemp(float value){
 				
 				case BALL_3:
 					temp=&PrepareGetBall3;
+				  ball3ChangeOther=&PrepareGetBall3Wait;
 				break;
 				
 				case BALL_3_WAIT:
 					temp=&PrepareGetBall3Wait;
+				  ball3ChangeOther=&PrepareGetBall3;
 				break;
 				
 				case BALL_4:
@@ -567,10 +570,16 @@ void ChangeParamTemp(float value){
 		switch(atCommand){
 			case STEER1:
 				(*temp).upSteerAngle=value;
+		     if(ball3ChangeOther!=NULL){
+					 (*ball3ChangeOther).upSteerAngle=value;
+				 }
 			break;
 			
 			case STEER2:
 				(*temp).downSteerAngle=value;
+			  if(ball3ChangeOther!=NULL){
+					 (*ball3ChangeOther).downSteerAngle=value;
+				}
 			break;
 			
 			case COURSE:
@@ -579,14 +588,23 @@ void ChangeParamTemp(float value){
 			
 			case PITCH:
 				(*temp).pitchAngle=value;
+			  if(ball3ChangeOther!=NULL){
+					 (*ball3ChangeOther).pitchAngle=value;
+				}
 			break;
 			
 			case GAS:
 				(*temp).gasAim=value;
+			  if(ball3ChangeOther!=NULL){
+					 (*ball3ChangeOther).gasAim=value;
+				}
 			break;
 		}
 		
   }
+	//将变量清空
+	ball3ChangeOther=NULL;
+
 	
 	
 }
