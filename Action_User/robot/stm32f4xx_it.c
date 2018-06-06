@@ -201,7 +201,7 @@ void CAN2_RX0_IRQHandler(void)
       gRobot.pitchAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.pitchAngle=PITCH_COMPENSATE - gRobot.pitchAngle;
 			gRobot.errorTime.readMotorTime[0]=0;
-      SetMotionFlag(AT_PITCH_READ_SUCCESS);
+      SetMotionFlag(~AT_PITCH_READ);
     }
     //速度
     if(msg.data32[0]==0x00005856)
@@ -220,7 +220,7 @@ void CAN2_RX0_IRQHandler(void)
       gRobot.courseAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.courseAngle=gRobot.courseAngle+COURCE_COMPENSATE;
 		  gRobot.errorTime.readMotorTime[1]=0;
-			SetMotionFlag(AT_COURSE_READ_SUCCESS);
+			SetMotionFlag(~AT_COURSE_READ);
 			
       
     }
@@ -238,7 +238,7 @@ void CAN2_RX0_IRQHandler(void)
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0] - UP_STEER_COMPENSATE;
 			gRobot.errorTime.readMotorTime[2]=0;
-			SetMotionFlag(AT_HOLD_BALL_1_RESPONSE_SUCCESS);
+			SetMotionFlag(~AT_HOLD_BALL_1_RESPONSE);
     }
 		if(msg.data32[0]==0x00005856){
 			gRobot.robotVel.readSteerVel[0]=msg.data32[1]/1280;
@@ -252,7 +252,7 @@ void CAN2_RX0_IRQHandler(void)
 			gRobot.errorTime.readMotorTime[3]=0;
 			gRobot.holdBallAngle[1] = DOWN_STEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[1]= (gRobot.holdBallAngle[1] - DOWN_STEER_COMPENSATE);
-			SetMotionFlag(AT_HOLD_BALL_2_RESPONSE_SUCCESS);
+			SetMotionFlag(~AT_HOLD_BALL_2_RESPONSE);
 			
 		}
 		
@@ -612,16 +612,16 @@ void DebugMon_Handler(void)
 
 void ReportMotorError(void)
 {
-	if((gRobot.sDta.AT_motionFlag&AT_PITCH_READ_SUCCESS)==0){
+	if((gRobot.sDta.AT_motionFlag&AT_PITCH_READ)){
 			gRobot.errorTime.readMotorTime[0]++;
 		}
-	if((gRobot.sDta.AT_motionFlag&AT_COURSE_READ_SUCCESS)==0){
+	if((gRobot.sDta.AT_motionFlag&AT_COURSE_READ)){
 		gRobot.errorTime.readMotorTime[1]++;
 	}
-	if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_RESPONSE_SUCCESS)==0){
+	if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_RESPONSE)){
 		gRobot.errorTime.readMotorTime[2]++;
 	}
-	if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_RESPONSE_SUCCESS)==0){
+	if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_RESPONSE)){
 		gRobot.errorTime.readMotorTime[3]++;
 	}
   //函数在100us定时器内

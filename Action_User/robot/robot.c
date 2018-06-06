@@ -48,29 +48,29 @@ void SetMotionFlag(uint32_t status){
   case ~AT_HOLD_BALL_2_SUCCESS:
     gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_2_SUCCESS;
     break;
-  case AT_HOLD_BALL_1_RESPONSE_SUCCESS:
-    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_1_RESPONSE_SUCCESS;
+  case AT_HOLD_BALL_1_RESPONSE:
+    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_1_RESPONSE;
     break;
-  case ~AT_HOLD_BALL_1_RESPONSE_SUCCESS:
-    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_1_RESPONSE_SUCCESS;
+  case ~AT_HOLD_BALL_1_RESPONSE:
+    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_1_RESPONSE;
     break;
-  case AT_HOLD_BALL_2_RESPONSE_SUCCESS:
-    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_2_RESPONSE_SUCCESS;
+  case AT_HOLD_BALL_2_RESPONSE:
+    gRobot.sDta.AT_motionFlag|=AT_HOLD_BALL_2_RESPONSE;
     break;
-  case ~AT_HOLD_BALL_2_RESPONSE_SUCCESS:
-    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_2_RESPONSE_SUCCESS;
+  case ~AT_HOLD_BALL_2_RESPONSE:
+    gRobot.sDta.AT_motionFlag&=~AT_HOLD_BALL_2_RESPONSE;
     break;
-  case AT_COURSE_READ_SUCCESS:
-    gRobot.sDta.AT_motionFlag|=AT_COURSE_READ_SUCCESS;
+  case AT_COURSE_READ:
+    gRobot.sDta.AT_motionFlag|=AT_COURSE_READ;
     break;
-  case ~AT_COURSE_READ_SUCCESS:
-    gRobot.sDta.AT_motionFlag&=~AT_COURSE_READ_SUCCESS;
+  case ~AT_COURSE_READ:
+    gRobot.sDta.AT_motionFlag&=~AT_COURSE_READ;
     break;
-  case AT_PITCH_READ_SUCCESS:
-    gRobot.sDta.AT_motionFlag|=AT_PITCH_READ_SUCCESS;
+  case AT_PITCH_READ:
+    gRobot.sDta.AT_motionFlag|=AT_PITCH_READ;
     break;
-  case ~AT_PITCH_READ_SUCCESS:
-    gRobot.sDta.AT_motionFlag&=~AT_PITCH_READ_SUCCESS;
+  case ~AT_PITCH_READ:
+    gRobot.sDta.AT_motionFlag&=~AT_PITCH_READ;
     break;
   case AT_COURSE_SUCCESS:
     gRobot.sDta.AT_motionFlag|=AT_COURSE_SUCCESS;

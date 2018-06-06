@@ -115,19 +115,19 @@ void MotionRead(void)
 	/*读取俯仰角*/
 	ReadActualPos(CAN2,PITCH_MOTOR_ID);
   /*将读俯仰角姿态的标志位归0*/
-	SetMotionFlag(~AT_PITCH_READ_SUCCESS);
+	SetMotionFlag(AT_PITCH_READ);
 	/*读取航向角角*//*将计算速度时间清空从这个时候开始计时*/
 	ReadActualPos(CAN2,COURCE_MOTOR_ID);
 	/*将读航向角姿态的标志位归0*/
-	SetMotionFlag(~AT_COURSE_READ_SUCCESS);
+	SetMotionFlag(AT_COURSE_READ);
 	/*读取上电机航向角角*/
 	ReadActualPos(CAN2,UP_STEER_MOTOR_ID);	
 	/*读取上电机标志位归0*/
-	SetMotionFlag(~AT_HOLD_BALL_1_RESPONSE_SUCCESS);
+	SetMotionFlag(AT_HOLD_BALL_1_RESPONSE);
 	/*读取下电机航向角角*/
 	ReadActualPos(CAN2,DOWN_STEER_MOTOR_ID);
 	/*读取上电机标志位归0*/
-	SetMotionFlag(~AT_HOLD_BALL_2_RESPONSE_SUCCESS);
+	SetMotionFlag(AT_HOLD_BALL_2_RESPONSE);
 }
 
 

@@ -82,13 +82,13 @@
 
 #define AT_HOLD_BALL_2_SUCCESS										0x20u
 
-#define AT_HOLD_BALL_1_RESPONSE_SUCCESS							0x40u
+#define AT_HOLD_BALL_1_RESPONSE							0x40u
 
-#define AT_HOLD_BALL_2_RESPONSE_SUCCESS							0x80u
+#define AT_HOLD_BALL_2_RESPONSE							0x80u
 
-#define AT_COURSE_READ_SUCCESS									0x200u
+#define AT_COURSE_READ									0x200u
 
-#define AT_PITCH_READ_SUCCESS										0x400u
+#define AT_PITCH_READ										0x400u
 
 #define AT_COURSE_SUCCESS												0x800u
 

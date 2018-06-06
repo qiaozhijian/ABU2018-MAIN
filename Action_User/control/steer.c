@@ -252,20 +252,20 @@ uint8_t ReadOneByte(int num,int address)
 	
 	if(num==HOLD_BALL_1)
 	{
-		while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_RESPONSE_SUCCESS))
+		while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_RESPONSE))
 		{
 			RS485_Send_Data(command,8);
 			Delay_us(500);
 		};
-		SetMotionFlag(~AT_HOLD_BALL_1_RESPONSE_SUCCESS);
+		SetMotionFlag(~AT_HOLD_BALL_1_RESPONSE);
 	}else if(num==HOLD_BALL_2){
 
-		while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_RESPONSE_SUCCESS))
+		while(!(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_RESPONSE))
 		{
 			RS485_Send_Data(command,8);
 			Delay_us(500);
 		};
-		SetMotionFlag(~AT_HOLD_BALL_2_RESPONSE_SUCCESS);
+		SetMotionFlag(~AT_HOLD_BALL_2_RESPONSE);
 	}else if(num==CAMERA_STEER){
 		while(!(gRobot.sDta.AT_motionFlag&AT_CAMERA_RESPONSE_SUCCESS))
 		{
@@ -436,10 +436,10 @@ void USART2_IRQHandler(void)
 			case 6:
 				if(num==1)
 				{
-					SetMotionFlag(AT_HOLD_BALL_1_RESPONSE_SUCCESS);
+					SetMotionFlag(AT_HOLD_BALL_1_RESPONSE);
 				}else if(num==2)
 				{
-					SetMotionFlag(AT_HOLD_BALL_2_RESPONSE_SUCCESS);
+					SetMotionFlag(AT_HOLD_BALL_2_RESPONSE);
 				}else if(num==3)
 				{
 					SetMotionFlag(AT_CAMERA_RESPONSE_SUCCESS);
@@ -590,7 +590,7 @@ void UART5_IRQHandler(void)
     case 14:
       if(ch=='\n')
       {
-        SetMotionFlag(AT_HOLD_BALL_2_RESPONSE_SUCCESS);
+        SetMotionFlag(AT_HOLD_BALL_2_RESPONSE);
         step=0;
       }else
         step=0;
