@@ -163,6 +163,12 @@ void RobotTask(void)
 				{
 					case ROBOT_CONTROL_BY_BT:
 						USART_BT_SendGas(gRobot.gasValue);
+					  USART_OUTByDMA("P ");
+						USART_OUTByDMAF(gRobot.posX);
+						USART_OUTByDMAF(gRobot.posY);
+						USART_OUTByDMAF(gRobot.angle);
+					  USART_OUTByDMA("L ");
+					  USART_OUTByDMA("A%d\t B%d\t",gRobot.laser[0],gRobot.laser[1]);
 						AT_CMD_Handle();
 						TestFightForBall();
 					break;

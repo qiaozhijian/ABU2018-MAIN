@@ -350,6 +350,9 @@ typedef struct{
 	float goldBallThrowTime;
 }RobotconTime_t;
 typedef struct{
+	int readMotorTime[4];
+}ErrorTime_t;
+typedef struct{
 	int colorBall1;
 	int colorBall2;
 	int goldBall;
@@ -401,10 +404,10 @@ typedef struct{
 	
 	uint32_t posSystemReady;
 	
-	/*舵机错误指示*/
-	uint8_t holdBall1Error;
-	uint8_t holdBall2Error;
-	uint8_t cameraSteerError;
+//	/*舵机错误指示*/
+//	uint8_t holdBall1Error;
+//	uint8_t holdBall2Error;
+//	uint8_t cameraSteerError;
 	
 	/*系统复位有关变量*/
 	uint32_t isOpenGasReturn;
@@ -425,6 +428,8 @@ typedef struct{
 	GetBallStep_t getBallStep;
 	/*比赛各个阶段进行的时间*/
 	RobotconTime_t raceTime;
+	
+	ErrorTime_t  errorTime;
 }Robot_t ;
 
 #include "gasvalveControl.h"

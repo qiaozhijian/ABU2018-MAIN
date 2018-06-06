@@ -417,16 +417,16 @@ void USART2_IRQHandler(void)
 				break;	
 			case 4:
 				//´íÎó×´Ì¬
-				if(num==1)
-				{
-					gRobot.holdBall1Error=data;
-				}else if(num==2)
-				{
-					gRobot.holdBall2Error=data;
-				}else if(num==3)
-				{
-					gRobot.cameraSteerError=data;
-				}
+//				if(num==1)
+//				{
+//					gRobot.holdBall1Error=data;
+//				}else if(num==2)
+//				{
+//					gRobot.holdBall2Error=data;
+//				}else if(num==3)
+//				{
+//					gRobot.cameraSteerError=data;
+//				}
 				step++;
 				break;	
 			case 5:

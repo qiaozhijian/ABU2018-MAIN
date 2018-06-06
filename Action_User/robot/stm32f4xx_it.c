@@ -47,8 +47,12 @@
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
 extern Robot_t gRobot;
+
+void ReportMotorError(void);
 //定位系统出问题闪灯标志位
 static int ppsErrorReportFlag=0;
+
+
 //用来处理CAN接收数据
 union MSG
 {
@@ -172,7 +176,6 @@ union MSG4
   int data32;
   float dataf;
 }msg4;
-
 void CAN2_RX0_IRQHandler(void)
 {
   OS_CPU_SR  cpu_sr;
@@ -197,6 +200,7 @@ void CAN2_RX0_IRQHandler(void)
     {
       gRobot.pitchAngle = PITCH_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.pitchAngle=PITCH_COMPENSATE - gRobot.pitchAngle;
+			gRobot.errorTime.readMotorTime[0]=0;
       SetMotionFlag(AT_PITCH_READ_SUCCESS);
     }
     //速度
@@ -215,7 +219,7 @@ void CAN2_RX0_IRQHandler(void)
 			
       gRobot.courseAngle = COURSE_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.courseAngle=gRobot.courseAngle+COURCE_COMPENSATE;
-		
+		  gRobot.errorTime.readMotorTime[1]=0;
 			SetMotionFlag(AT_COURSE_READ_SUCCESS);
 			
       
@@ -233,6 +237,8 @@ void CAN2_RX0_IRQHandler(void)
     {
       gRobot.holdBallAngle[0] = UPSTEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[0]=gRobot.holdBallAngle[0] - UP_STEER_COMPENSATE;
+			gRobot.errorTime.readMotorTime[2]=0;
+			SetMotionFlag(AT_HOLD_BALL_1_RESPONSE_SUCCESS);
     }
 		if(msg.data32[0]==0x00005856){
 			gRobot.robotVel.readSteerVel[0]=msg.data32[1]/1280;
@@ -243,8 +249,10 @@ void CAN2_RX0_IRQHandler(void)
       msg.data8[i] = buffer[i];
     //位置
 		if(msg.data32[0]==0x00005850){
+			gRobot.errorTime.readMotorTime[3]=0;
 			gRobot.holdBallAngle[1] = DOWN_STEER_CODE_TO_ANGLE(msg.data32[1]);
 			gRobot.holdBallAngle[1]= (gRobot.holdBallAngle[1] - DOWN_STEER_COMPENSATE);
+			SetMotionFlag(AT_HOLD_BALL_2_RESPONSE_SUCCESS);
 			
 		}
 		
@@ -365,6 +373,7 @@ void TIM7_IRQHandler(void)
   OS_EXIT_CRITICAL();
   if(TIM_GetITStatus(TIM7, TIM_IT_Update)==SET)
   {	
+		ReportMotorError();
 		ReportPPSError();
 		if(gRobot.sDta.robocon2018!=ROBOT_PREPARE&&gRobot.sDta.robocon2018!=ROBOT_SELF_TEST){
 		  gRobot.robotVel.countTime++;
@@ -601,3 +610,32 @@ void DebugMon_Handler(void)
 {
 }
 
+void ReportMotorError(void)
+{
+	if((gRobot.sDta.AT_motionFlag&AT_PITCH_READ_SUCCESS)==0){
+			gRobot.errorTime.readMotorTime[0]++;
+		}
+	if((gRobot.sDta.AT_motionFlag&AT_COURSE_READ_SUCCESS)==0){
+		gRobot.errorTime.readMotorTime[1]++;
+	}
+	if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_RESPONSE_SUCCESS)==0){
+		gRobot.errorTime.readMotorTime[2]++;
+	}
+	if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_RESPONSE_SUCCESS)==0){
+		gRobot.errorTime.readMotorTime[3]++;
+	}
+  //函数在100us定时器内
+	if(gRobot.errorTime.readMotorTime[0]>1000){
+		USART_OUTByDMA("PITCH_READ_ERROR");
+	}
+	if(gRobot.errorTime.readMotorTime[1]>1000){
+		USART_OUTByDMA("COURSE_READ_ERROR");
+	}
+	if(gRobot.errorTime.readMotorTime[2]>1000){
+		USART_OUTByDMA("HOLD_BALL_1_READ_ERROR");
+	}
+	if(gRobot.errorTime.readMotorTime[3]>1000){
+		USART_OUTByDMA("HOLD_BALL_2_READ_ERROR");
+	}
+			
+}
