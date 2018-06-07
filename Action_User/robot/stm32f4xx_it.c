@@ -627,15 +627,19 @@ void ReportMotorError(void)
   //函数在100us定时器内
 	if(gRobot.errorTime.readMotorTime[0]>1000){
 		USART_OUTByDMA("PITCH_READ_ERROR");
+		gRobot.errorTime.readMotorTime[0]=0;
 	}
 	if(gRobot.errorTime.readMotorTime[1]>1000){
 		USART_OUTByDMA("COURSE_READ_ERROR");
+		gRobot.errorTime.readMotorTime[1]=0;
 	}
 	if(gRobot.errorTime.readMotorTime[2]>1000){
 		USART_OUTByDMA("HOLD_BALL_1_READ_ERROR");
+		gRobot.errorTime.readMotorTime[2]=0;
 	}
 	if(gRobot.errorTime.readMotorTime[3]>1000){
 		USART_OUTByDMA("HOLD_BALL_2_READ_ERROR");
+		gRobot.errorTime.readMotorTime[3]=0;
 	}
 			
 }

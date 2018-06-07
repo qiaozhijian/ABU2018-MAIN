@@ -218,7 +218,6 @@ void FightForBall2(void)
 					if(PrepareForTheBall()){
 						/*和彩球1情况一样*/
 						PrepareShootBall(BALL_2);
-//						LedBallInto();
 						gRobot.getBallStep.colorBall2++;
 					}
 				break;

@@ -26,7 +26,7 @@
 #define GAS  						5
 #define COURSE  				6
 #define TEST_GAS  			7
-#define CAMERA	  			8
+#define BALL_PARAM_BACKUP	  8
 #define STEER1 					9
 #define STEER2 					10
 #define BOOST 					11
@@ -50,6 +50,10 @@ extern motionPara_t PrepareShootBall1;
 extern motionPara_t PrepareShootBall2;
 extern motionPara_t PrepareShootBall3;
 extern motionPara_t PrepareShootBall4;
+
+extern motionPara_t PrepareShootColorBall[2];
+extern motionPara_t PrepareShootGoldBall[2];
+
 
 /*调试蓝牙中断*/
 static char buffer[20];
@@ -134,10 +138,10 @@ void AT_CMD_Judge(void){
     atCommand=GOLDEN_COURCE_SPEED;
 	else if((bufferI >= 5) && strncmp(buffer, "AT+78", 5)==0)//   
     atCommand=COLOR_COURCE_SPEED;
+	else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//   
+    atCommand=BALL_PARAM_BACKUP;
 //  else if((bufferI >= 4) && strncmp(buffer, "AT+7", 4)==0)//   
 //    atCommand=TEST_GAS;
-//  else if((bufferI >= 4) && strncmp(buffer, "AT+8", 4)==0)//   
-//    atCommand=CAMERA;
 //  if((bufferI == 4) && strncmp(buffer, "AT\r\n",4 )==0)//AT    
 //  {
 //		
@@ -178,7 +182,6 @@ void AT_CMD_Handle(void){
     
     /*控制是否射击*/
   case SHOOT:
-		
     USART_OUTByDMA("OK\r\n");
     if(*(buffer + 4) == '1')
     {
@@ -186,17 +189,20 @@ void AT_CMD_Handle(void){
 			ballMode=SHOOT_BALL;
 			ShootSmallOpen();
 			Delay_ms(300);
+			gRobot.sDta.AT_motionFlag=0;
 			if(*(buffer + 5) =='0'){
 				WhichBall=BALL_1;
 				PrepareShootBall(BALL_1);
-//				LedBallInto();
-				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='1'){
 				WhichBall=BALL_2;
 				PrepareShootBall(BALL_2);
-				LedBallInto();
-				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='2'){
+				WhichBall=BALL_1_BACKUP;
+				PrepareShootBall(BALL_1_BACKUP);
+			}else if(*(buffer + 5) =='3'){
+				WhichBall=BALL_2_BACKUP;
+				PrepareShootBall(BALL_2_BACKUP);
+			}else if(*(buffer + 5) =='4'){
 				WhichBall=BALL_3;
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
@@ -208,8 +214,7 @@ void AT_CMD_Handle(void){
 					}
 				}
 				PrepareShootBall(BALL_3);
-				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='3'){
+			}else if(*(buffer + 5) =='5'){
 				WhichBall=BALL_4;
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
@@ -221,17 +226,38 @@ void AT_CMD_Handle(void){
 					}
 				}
 				PrepareShootBall(BALL_4);
-				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='4'){
+			}else if(*(buffer + 5) =='6'){
+				WhichBall=BALL_3_BACKUP;
+				gRobot.sDta.courseAimAngle = 179.9f;
+				CourseAngleMotion(gRobot.sDta.courseAimAngle);
+				while(1){
+					Delay_ms(5);
+					ReadActualPos(CAN2,COURCE_MOTOR_ID);
+					if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
+						break;
+					}
+				}
+				PrepareShootBall(BALL_3_BACKUP);
+			}else if(*(buffer + 5) =='7'){
+				WhichBall=BALL_4_BACKUP;
+				gRobot.sDta.courseAimAngle = 179.9f;
+				CourseAngleMotion(gRobot.sDta.courseAimAngle);
+				while(1){
+					Delay_ms(5);
+					ReadActualPos(CAN2,COURCE_MOTOR_ID);
+					if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
+						break;
+					}
+				}
+				PrepareShootBall(BALL_4_BACKUP);
+			}else if(*(buffer + 5) =='8'){
 				WhichBall=0;
-				gRobot.sDta.AT_motionFlag=0;
 				if(PE_FOR_THE_BALL){
 					ClawOpen();
 					Delay_ms(50);
 					ShootBigOpen();
 				}
 			}
-			
     }
     else if(*(buffer + 4) == '0') 
     {
@@ -244,15 +270,15 @@ void AT_CMD_Handle(void){
 				Delay_ms(500);
       }
 			
-			if(*(buffer + 5) =='0'){
+			if(*(buffer + 5) =='0'||*(buffer + 5) =='2'){
 				WhichBall=BALL_1;
 				PrepareGetBall(BALL_1);
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='1'){
+			}else if(*(buffer + 5) =='1'||*(buffer + 5) =='3'){
 				WhichBall=BALL_2;
 				PrepareGetBall(BALL_2);
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='2'){
+			}else if(*(buffer + 5) =='4'||*(buffer + 5) =='6'){
 				WhichBall=BALL_3;
 				if(getGoldBallStep==0){
 					WhichBall=BALL_3_WAIT;
@@ -264,11 +290,11 @@ void AT_CMD_Handle(void){
 					getGoldBallStep=0;
 				}
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='3'){
+			}else if(*(buffer + 5) =='5'||*(buffer + 5) =='7'){
 				WhichBall=BALL_4;
 				PrepareGetBall(BALL_4);
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='4'){
+			}else if(*(buffer + 5) =='8'){
 				WhichBall=0;
 				gRobot.sDta.AT_motionFlag=0;
 				ShootSmallShut();
@@ -312,12 +338,10 @@ void AT_CMD_Handle(void){
 		//GasValveControl(GASVALVE_BOARD_ID,*(buffer+4)-'0',*(buffer+5)-'0');
 		break;
 	
-  case CAMERA:
-    USART_OUTByDMA("OK\r\n");
-    value = atof(buffer + 4);
-		gRobot.sDta.cameraAimAngle=value;
-		CameraSteerPosCrl(gRobot.sDta.cameraAimAngle);
-    break;
+	//彩球金球备选参数发送到平板
+  case BALL_PARAM_BACKUP:
+		
+	break;
     
   case STEER:
     USART_OUTByDMA("OK\r\n");
@@ -413,24 +437,20 @@ void TestFightForBall(void){
 				 ShootBall();
 				//推杆执行时间
 				 Delay_ms(125);
-			}else if(WhichBall==BALL_3||WhichBall==BALL_4){
+			}else if(WhichBall==BALL_3||WhichBall==BALL_4||WhichBall==BALL_3_BACKUP||WhichBall==BALL_4_BACKUP){
 				 //射球前的延时
-			   if(WhichBall==BALL_3){
-//						ClawOpen();
-//				    Delay_ms(50);
-//						ClawShut();
-//						Delay_ms(250);
-					  Delay_ms(300);
-			   }else if(WhichBall==BALL_4){
+			   if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
+					  Delay_ms(250);
+			   }else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
             Delay_ms(300);
 				 }
 				 ShootBigOpen();
 	       Delay_ms(50);
 		     ClawOpen();
 				 //推杆执行时间
-				 if(WhichBall==BALL_3){
+				 if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
 					  Delay_ms(125);
-			   }else if(WhichBall==BALL_4){
+			   }else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
             Delay_ms(300);
 				 }
 			}
@@ -498,6 +518,22 @@ void SendParamToUpPositionMachine(void){
 				case BALL_4:
 					temp=&PrepareShootBall4;
 				break;
+				
+				case BALL_1_BACKUP:
+					temp=&PrepareShootColorBall[0];
+				break;
+				
+				case BALL_2_BACKUP:
+					temp=&PrepareShootColorBall[1];
+				break;
+				
+				case BALL_3_BACKUP:
+					temp=&PrepareShootGoldBall[0];
+				break;
+				
+				case BALL_4_BACKUP:
+					temp=&PrepareShootGoldBall[1];
+				break;
 			}
 		break;
 	}
@@ -542,6 +578,7 @@ void ChangeParamTemp(float value){
 				case BALL_4:
 					temp=&PrepareGetBall4;
 				break;
+				
 			}
 		break;
 		
@@ -561,6 +598,22 @@ void ChangeParamTemp(float value){
 				
 				case BALL_4:
 					temp=&PrepareShootBall4;
+				break;
+				
+			  case BALL_1_BACKUP:
+					temp=&PrepareShootColorBall[0];
+				break;
+				
+				case BALL_2_BACKUP:
+					temp=&PrepareShootColorBall[1];
+				break;
+				
+				case BALL_3_BACKUP:
+					temp=&PrepareShootGoldBall[0];
+				break;
+				
+				case BALL_4_BACKUP:
+					temp=&PrepareShootGoldBall[1];
 				break;
 			}
 		break;

@@ -245,8 +245,14 @@
 #define BALL_2														2
 #define BALL_3														3
 #define BALL_4														4
+/*彩球12的备用*/
+#define BALL_1_BACKUP											5
+#define BALL_2_BACKUP											8
+/*金球12的备用*/
+#define BALL_3_BACKUP											9
+#define BALL_4_BACKUP											10
 
-#define BALL_3_WAIT                      6
+#define BALL_3_WAIT                       6
 
 #define DELAY_TASK_NUM										2
 /*延时进行的任务*/
