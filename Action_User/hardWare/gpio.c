@@ -306,9 +306,9 @@ int KeySwitchIntoReset(void){
 				PrepareGetBall(READY);
 				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
 					gRobot.sDta.gasAimValue= GetPrepareShootGoldBallGasAim();
+				
 				SetShootTimeZero();
 				Delay_ms(1200);
-		
 		   	PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
         PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
 				BEEP_OFF;
@@ -342,13 +342,14 @@ int KeySwitchIntoReset(void){
 				gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
 
 				SetMotionFlag(AT_RESET_THE_ROBOT);
+			  //告诉控制卡抱死重启模式选择
 				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_GOLD);
 				else
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_ALL);
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 				BEEP_OFF;
-				Delay_ms(200);//什么意思？
+				Delay_ms(200);
 				
 				return 1;
 			}

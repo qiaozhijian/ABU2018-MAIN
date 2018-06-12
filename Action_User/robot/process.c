@@ -218,11 +218,10 @@ void FightForBall2(void)
 				break;
 						
 				case 1:
-					if(PrepareForTheBall()){
+						Delay_ms(100);
 						/*和彩球1情况一样*/
 						PrepareShootBall(BALL_2);
 						gRobot.getBallStep.colorBall2++;
-					}
 				break;
 
 				case 2:
@@ -534,9 +533,9 @@ void FightForGoldBall(void)
 				gRobot.sDta.process=END_COMPETE;
 				gRobot.sDta.AT_motionFlag=0;
 				shootTime=0;
+				SetMotionFlag(AT_RESET_SHOOT_GOLD);
 			}
-			SetMotionFlag(AT_RESET_SHOOT_GOLD);
-			//记录投过金球了，决定重启后是否用备用参数,实际这一步需要用拨码开关，但我没改
+			
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else

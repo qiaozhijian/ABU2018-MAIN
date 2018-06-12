@@ -200,7 +200,6 @@ void RobotTask(void)
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
-							SetMotionFlag(~AT_RESET_THE_ROBOT);//有何意义？
 							gRobot.sDta.robocon2018=ROBOT_START;
 						}
 					break;
@@ -211,7 +210,6 @@ void RobotTask(void)
 							{
 								BEEP_ON;
 								ShootLedOn();
-								//告诉控制卡抱死，主控准备重启完毕
 								gRobot.sDta.robocon2018=ROBOT_START;	
 							}		
 						}
