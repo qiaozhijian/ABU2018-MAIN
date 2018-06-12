@@ -106,6 +106,12 @@ void CAN1_RX0_IRQHandler(void)
 		SetMotionFlag(AT_THE_WHEEL_SELFTEST_OVER);
 	  USART_OUTByDMA("GET_MOTIONCARD_SELFTEST_WHEEL_OVER\t");	
 	}
+	if(msg.data32[0]==GET_MOTIONCARD_RESET_FINISH)
+	{
+		SetMotionFlag(AT_GET_MOTIONCARD_RESET_FINISH);
+	  USART_OUTByDMA("GET_MOTIONCARD_RESET_FINISH\t");	
+	}
+	
 	if(msg.data32[0]==GET_MOTIONCARD_DUCT_SELFTEST_OK){
 		SetMotionFlag(AT_THE_DUCT_SELFTEST_OVER);
 		USART_OUTByDMA("GET_MOTIONCARD_SELFTEST_DUCT_OVER\t");	
@@ -134,7 +140,7 @@ void CAN1_RX0_IRQHandler(void)
 		ppsErrorReportFlag=1;
 		USART_OUTByDMA("GET_PPS_PROBLEM\t");	
 	}
-   
+   if(gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT)
     USART_OUTByDMA("GET_FROM_MOTIONCARD %d ",msg.data32[0]);
   }
   
@@ -403,7 +409,6 @@ uint32_t returnEndUs(void)
 	end=Cnt*100;
 	Cnt=0;
 	startCnt=0;
-	USART_OUTByDMA("%d\r\n",end);
 	return end;
 }	
 

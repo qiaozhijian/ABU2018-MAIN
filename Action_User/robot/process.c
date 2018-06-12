@@ -127,6 +127,7 @@ void FightForBall1(void)
 		case TO_THE_AREA_1:
 			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
 				gRobot.sDta.process=TO_THROW_BALL_1;
+			StartCount();
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
 			
@@ -144,7 +145,9 @@ void FightForBall1(void)
 									  /*气压到位*/
 										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
-				
+				USART_OUTByDMA("\r\nball1_wait_time\t");
+				USART_OUTByDMAF(returnEndUs()/1000.f);
+				USART_OUTByDMA("\r\n");
 				/*射球*/
 				ShootBall();
 				
@@ -236,6 +239,7 @@ void FightForBall2(void)
 		case TO_THE_AREA_2:
 			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
 				gRobot.sDta.process=TO_THROW_BALL_2;
+			StartCount();
 //			if(!PrepareForTheBall())
 //			{
 //				MotionCardCMDSend(NOTIFY_MOTIONCARD_LOSE_BALL2);
@@ -255,7 +259,9 @@ void FightForBall2(void)
 											/*气压到位*/
 											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
-				
+				USART_OUTByDMA("\r\nball2_wait_time\t");
+				USART_OUTByDMAF(returnEndUs()/1000.f);
+				USART_OUTByDMA("\r\n");
 				/*射球*/
 				ShootBall();
 				
@@ -285,7 +291,6 @@ void FightForBall2(void)
 				gRobot.sDta.robocon2018=GOLD_BALL;
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 				SetMotionFlag(~AT_REACH_SECOND_PLACE);
-
 			}
 			else
 			{
@@ -325,10 +330,10 @@ void FightForBall2(void)
   
 }
 extern motionPara_t PrepareGetBall4;
+static int shootTime=0;
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
-	static int shootTime=0;
   switch(gRobot.sDta.process)
   {
     /*去取第三个球*/
@@ -397,7 +402,10 @@ void FightForGoldBall(void)
 				if(fabs(gRobot.courseAngle - gRobot.sDta.courseAimAngle)<45.f){
 					GoldBallGraspStairTwoOff();
 					/*航向转到到位直接开始准备射球参数*/
-					PrepareShootBall(BALL_3);
+					if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY)
+						PrepareShootBall(BALL_3_BACKUP);
+					else
+						PrepareShootBall(BALL_3);
 					gRobot.sDta.WhichGoldBall=BALL_3;
 					gRobot.sDta.process=TO_THE_AREA_3;
 					USART_OUTByDMA("PrepareShoot ");
@@ -446,7 +454,10 @@ void FightForGoldBall(void)
 				
 			case 15:
 				if(fabs(gRobot.sDta.courseAimAngle-gRobot.courseAngle)<45.f){
-					PrepareShootBall(BALL_4);
+					if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY)
+						PrepareShootBall(BALL_4_BACKUP);
+					else
+						PrepareShootBall(BALL_4);
 					gRobot.sDta.WhichGoldBall=BALL_4;
 					gRobot.sDta.process=TO_THROW_BALL_3;
 					gRobot.getBallStep.goldBall=15;
@@ -524,7 +535,8 @@ void FightForGoldBall(void)
 				gRobot.sDta.AT_motionFlag=0;
 				shootTime=0;
 			}
-			
+			SetMotionFlag(AT_RESET_SHOOT_GOLD);
+			//记录投过金球了，决定重启后是否用备用参数,实际这一步需要用拨码开关，但我没改
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
     }
 		else
@@ -560,7 +572,10 @@ void FightForGoldBall(void)
   }
 }
 
-
+void SetShootTimeZero(void)
+{
+	shootTime=0;
+}
 
 //motion。c
 void MotionStatus(void)

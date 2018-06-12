@@ -18,6 +18,7 @@
 #include "dma.h"
 #include "robot.h"
 #include "motion.h"
+#include "process.h"
 /**
   * @brief  set the pins of a specific GPIO group to be input or output driver pin.
   * @param  GPIOx: where x can be A-I.
@@ -303,7 +304,9 @@ int KeySwitchIntoReset(void){
 				GoldBallGraspStairTwoOn();
 
 				PrepareGetBall(READY);
-				
+				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
+					gRobot.sDta.gasAimValue= GetPrepareShootGoldBallGasAim();
+				SetShootTimeZero();
 				Delay_ms(1200);
 		
 		   	PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
@@ -324,16 +327,28 @@ int KeySwitchIntoReset(void){
 				gRobot.getBallStep.colorBall1=0;
 				gRobot.getBallStep.colorBall2=0;
         gRobot.getBallStep.goldBall=0;
-		    //将标志位全部清空
-				gRobot.sDta.AT_motionFlag=0;
-
+		    //将标志位全部清空,但是要判断是否在金球区重启
+				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
+				{
+					USART_OUTByDMA("\r\nset reset gold\t");
+					gRobot.sDta.AT_motionFlag=0;
+					SetMotionFlag(AT_RESET_SHOOT_GOLD);
+				}else
+				{
+					USART_OUTByDMA("\r\nset unreset gold\t");
+					gRobot.sDta.AT_motionFlag=0;
+				}
 				Delay_ms(1000);
 				gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
 
 				SetMotionFlag(AT_RESET_THE_ROBOT);
+				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_GOLD);
+				else
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_ALL);
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 				BEEP_OFF;
-				Delay_ms(200);
+				Delay_ms(200);//什么意思？
 				
 				return 1;
 			}

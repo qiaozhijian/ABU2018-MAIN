@@ -72,14 +72,14 @@ void prepareMotionParaInit(void)
 	
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=61.f;
-  PrepareGetBall1.pitchAngle=-1.0f;
-  PrepareGetBall1.upSteerAngle=-55.7f;
+  PrepareGetBall1.pitchAngle=-1.f;
+  PrepareGetBall1.upSteerAngle=-60.7f;
 	PrepareGetBall1.downSteerAngle=-58.0f;
   PrepareGetBall1.gasAim=0.58f;
   
   /*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=173.0f;
-  PrepareShootBall1.pitchAngle=10.3f;
+  PrepareShootBall1.pitchAngle=7.3f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=0.f;
   PrepareShootBall1.gasAim=0.58f;
@@ -87,7 +87,7 @@ void prepareMotionParaInit(void)
 	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=91.5f;
-  PrepareGetBall2.pitchAngle=0.0f;
+  PrepareGetBall2.pitchAngle=0.f;
   PrepareGetBall2.upSteerAngle=87.f; 
 	PrepareGetBall2.downSteerAngle=89.f;
   PrepareGetBall2.gasAim=0.58f;
@@ -95,7 +95,7 @@ void prepareMotionParaInit(void)
 	
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=173.8f;
-  PrepareShootBall2.pitchAngle=11.f;
+  PrepareShootBall2.pitchAngle=7.8f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=0.0f;
   PrepareShootBall2.gasAim=0.58f;
@@ -109,59 +109,64 @@ void prepareMotionParaInit(void)
   PrepareGetBall3Wait.gasAim=0.5f;
 	/*接取第三个球的参数*/
 	PrepareGetBall3.courseAngle=94.f;
-  PrepareGetBall3.pitchAngle=-4.0f;
+  PrepareGetBall3.pitchAngle=-2.5f;
   PrepareGetBall3.upSteerAngle=-51.f;
-	PrepareGetBall3.downSteerAngle=-51.f;
-  PrepareGetBall3.gasAim=0.5f;
+	PrepareGetBall3.downSteerAngle=-43.f;
+  PrepareGetBall3.gasAim=0.49f;
   
   /*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=178.f;
-  PrepareShootBall3.pitchAngle=5.4f;
+  PrepareShootBall3.pitchAngle=2.2f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=0.0f;
-  PrepareShootBall3.gasAim=0.5f;
+  PrepareShootBall3.gasAim=0.49f;
 	
 	/*准备接第四个球的参数*/
-	PrepareGetBall4.courseAngle=91.5f;
-	PrepareGetBall4.pitchAngle = -1.3f; 
+	PrepareGetBall4.courseAngle=90.f;
+	PrepareGetBall4.pitchAngle = -2.3f; 
 	PrepareGetBall4.upSteerAngle = -66.f;
 	PrepareGetBall4.downSteerAngle = -60.1f;
-	PrepareGetBall4.gasAim = 0.5f;
+	PrepareGetBall4.gasAim = 0.49f;
+	//乔哥gaygaygay
 	
 	/*准备射第四个球的数据*/
-	PrepareShootBall4.courseAngle=180.f;
-  PrepareShootBall4.pitchAngle=3.f;
+	PrepareShootBall4.courseAngle=178.6f;
+  PrepareShootBall4.pitchAngle=3.4f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.5f;
+  PrepareShootBall4.gasAim=0.49f;
 	
 	
 	/*彩球1备件的射球参数*/
-	PrepareShootColorBall[0].courseAngle=150.0f;
-  PrepareShootColorBall[0].pitchAngle=10.3f;
+	PrepareShootColorBall[0].courseAngle=173.0f;
+  PrepareShootColorBall[0].pitchAngle=7.3f;
   PrepareShootColorBall[0].upSteerAngle=0.f;
 	PrepareShootColorBall[0].downSteerAngle=0.f;
   PrepareShootColorBall[0].gasAim=0.58f;
 	/*彩球2备件的射球参数*/
-	PrepareShootColorBall[1].courseAngle=156.8f;
-  PrepareShootColorBall[1].pitchAngle=11.f;
+	PrepareShootColorBall[1].courseAngle=173.8f;
+  PrepareShootColorBall[1].pitchAngle=5.8f;
   PrepareShootColorBall[1].upSteerAngle=0.0f;
 	PrepareShootColorBall[1].downSteerAngle=0.0f;
   PrepareShootColorBall[1].gasAim=0.58f;
 	
 	/*金球1备件的射球参数*/
-  PrepareShootGoldBall[0].courseAngle=165.f;
-  PrepareShootGoldBall[0].pitchAngle=5.4f;
+  PrepareShootGoldBall[0].courseAngle=178.f;
+  PrepareShootGoldBall[0].pitchAngle=3.0f;
 	PrepareShootGoldBall[0].upSteerAngle=0.0f;
   PrepareShootGoldBall[0].downSteerAngle=0.0f;
   PrepareShootGoldBall[0].gasAim=0.5f;
 	/*金球2备件的射球参数*/
-	PrepareShootGoldBall[1].courseAngle=170.f;
-  PrepareShootGoldBall[1].pitchAngle=3.f;
+	PrepareShootGoldBall[1].courseAngle=178.6f;
+  PrepareShootGoldBall[1].pitchAngle=1.4f;
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
   PrepareShootGoldBall[1].gasAim=0.5f;
 	
+}
+float GetPrepareShootGoldBallGasAim(void)
+{
+	return PrepareShootGoldBall[0].gasAim;
 }
 //
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)

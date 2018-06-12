@@ -108,7 +108,7 @@ void ConfigTask(void)
 	
   OSTaskSuspend(OS_PRIO_SELF);
 }
-
+int time=0;
 void RobotTask(void)
 {
   CPU_INT08U  os_err;
@@ -132,7 +132,6 @@ void RobotTask(void)
 				
 				/*调试数据发送*/
 				DebugDataUSART_OUT();
-				
 				
 				/*蓝牙命令处理&&和进入平板调试模式*/
 				if(KEYSWITCH){
@@ -163,10 +162,26 @@ void RobotTask(void)
 				{
 					case ROBOT_CONTROL_BY_BT:
 						USART_BT_SendGas(gRobot.gasValue);
-					  USART_OUTByDMA("P ");
-						USART_OUTByDMAF(gRobot.posX);
-						USART_OUTByDMAF(gRobot.posY);
-						USART_OUTByDMAF(gRobot.angle);
+//					  USART_OUTByDMA("P ");
+//						USART_OUTByDMAF(gRobot.posX);
+//						USART_OUTByDMAF(gRobot.posY);
+//						USART_OUTByDMAF(gRobot.angle);
+//					  USART_OUTByDMA("C ");
+//						USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+//						USART_OUTByDMAF(gRobot.courseAngle);
+//					  USART_OUTByDMA("P ");
+//						USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
+//						USART_OUTByDMAF(gRobot.pitchAngle);
+//					  USART_OUTByDMA("H1 ");
+//						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
+//						USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+					  USART_OUTByDMA("T ");
+						USART_OUTByDMAF(time++);
+					  USART_OUTByDMA("G ");
+						USART_OUTByDMAF(gRobot.gasValue);
+					  USART_OUTByDMA("H2 ");
+						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[1]);
+						USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 					  USART_OUTByDMA("L ");
 					  USART_OUTByDMA("A%d\t B%d\t",gRobot.laser[0],gRobot.laser[1]);
 						AT_CMD_Handle();
@@ -185,18 +200,20 @@ void RobotTask(void)
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
-							SetMotionFlag(~AT_RESET_THE_ROBOT);
+							SetMotionFlag(~AT_RESET_THE_ROBOT);//有何意义？
 							gRobot.sDta.robocon2018=ROBOT_START;
 						}
 					break;
 						
 					case INTO_RESET_PREPARE:
 						if(gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT){
-							BEEP_ON;
-							ShootLedOn();
-							//告诉控制卡抱死，主控准备重启完毕
-							MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET);
-							gRobot.sDta.robocon2018=ROBOT_START;			
+							if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_RESET_FINISH)
+							{
+								BEEP_ON;
+								ShootLedOn();
+								//告诉控制卡抱死，主控准备重启完毕
+								gRobot.sDta.robocon2018=ROBOT_START;	
+							}		
 						}
 					break;
 						
@@ -210,13 +227,44 @@ void RobotTask(void)
 						if(gRobot.posX>100.f)
 						{
 							BEEP_OFF;
-							PrepareGetBall(BALL_1);
+							if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
+								/*准备接球三*/
+								PrepareGetBall(BALL_3_WAIT);
+							else
+								PrepareGetBall(BALL_1);
 							ShootLedOff();
 						}
 						if(gRobot.posX>2000.f)
 						{
-							gRobot.sDta.process=TO_GET_BALL_1;
-							gRobot.sDta.robocon2018=COLORFUL_BALL_1;
+							
+							if(gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT)
+							{
+								USART_OUTByDMA("RESET\r\n");
+								//判断是否为金球区重启
+								if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
+								{
+									USART_OUTByDMA("gold RESET\r\n");
+									SetMotionFlag(~AT_RESET_SHOOT_GOLD);
+									//使用金球备件
+									SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
+									ExtendCarOn();
+									gRobot.sDta.process=TO_GET_BALL_3;		
+									gRobot.sDta.robocon2018=GOLD_BALL;
+								}
+								else
+								{
+									USART_OUTByDMA("gold unRESET\r\n");
+									gRobot.sDta.process=TO_GET_BALL_1;
+									gRobot.sDta.robocon2018=COLORFUL_BALL_1;
+								}
+								SetMotionFlag(~AT_RESET_THE_ROBOT);
+							}
+							else
+							{
+								gRobot.sDta.process=TO_GET_BALL_1;
+								gRobot.sDta.robocon2018=COLORFUL_BALL_1;
+							}
+								
 						}
 						break;
 					case COLORFUL_BALL_1:

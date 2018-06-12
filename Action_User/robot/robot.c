@@ -156,6 +156,31 @@ void SetMotionFlag(uint32_t status){
 		gRobot.sDta.AT_motionFlag&=~AT_RESET_THE_ROBOT;
 	break;
 	
+	case AT_RESET_SHOOT_GOLD:
+		gRobot.sDta.AT_motionFlag|=AT_RESET_SHOOT_GOLD;
+	break;
+	
+	case ~AT_RESET_SHOOT_GOLD:
+		gRobot.sDta.AT_motionFlag&=~AT_RESET_SHOOT_GOLD;
+	break;
+	
+	case AT_RESET_USE_GOLD_STANDYBY:
+		gRobot.sDta.AT_motionFlag|=AT_RESET_USE_GOLD_STANDYBY;
+	break;
+	
+	case ~AT_RESET_USE_GOLD_STANDYBY:
+		gRobot.sDta.AT_motionFlag&=~AT_RESET_USE_GOLD_STANDYBY;
+	break;
+	
+	case AT_GET_MOTIONCARD_RESET_FINISH:
+		gRobot.sDta.AT_motionFlag|=AT_GET_MOTIONCARD_RESET_FINISH;
+	break;
+	
+	case ~AT_GET_MOTIONCARD_RESET_FINISH:
+		gRobot.sDta.AT_motionFlag&=~AT_GET_MOTIONCARD_RESET_FINISH;
+	break;
+		
+	
   }
 }
 

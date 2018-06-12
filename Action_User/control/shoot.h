@@ -24,6 +24,7 @@ typedef struct{
   
 }motionPara_t;
 
+float GetPrepareShootGoldBallGasAim(void);
 
 void ShootBall(void);
 
