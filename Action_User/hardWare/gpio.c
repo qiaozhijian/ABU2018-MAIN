@@ -240,6 +240,9 @@ void KeySwitchCheck(void){
 		}
 		if(keyWipeWheelTouchTime>=3){
 			gRobot.sDta.robocon2018=ROBOT_CONTROL_BY_BT;
+			//让航向换个角度
+			gRobot.sDta.courseAimAngle=135.f;
+			CourseAngleMotion(gRobot.sDta.courseAimAngle);
 			MotionCardCMDSend(NOTIFY_MOTIONCARD_WIPE_WHEEL);
 			USART_OUTByDMA("In the WipeWheel\r\n");
 		}
