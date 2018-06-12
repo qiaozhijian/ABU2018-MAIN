@@ -239,6 +239,8 @@ void KeySwitchCheck(void){
 			keyWipeWheelTouchTime=0;
 		}
 		if(keyWipeWheelTouchTime>=3){
+			PosLoopCfg(CAN2, COURCE_MOTOR_ID, 600000, 600000,600000);
+			Delay_ms(1000);
 			gRobot.sDta.robocon2018=ROBOT_CONTROL_BY_BT;
 			//让航向换个角度
 			gRobot.sDta.courseAimAngle=135.f;
