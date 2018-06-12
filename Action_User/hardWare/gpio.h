@@ -15,6 +15,7 @@
 
 #define KEY_RESET_SWITCH		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_3))
 
+#define KEY_TEST_GOLD_SWITCH		    	(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_4))
 
 void GPIO_Init_Pins(GPIO_TypeDef * GPIOx,uint16_t GPIO_Pin,GPIOMode_TypeDef GPIO_Mode);
 
@@ -39,4 +40,6 @@ void KeySwitchIntoBTCtrl(void);
 void KeyResetInit(void);
 
 int KeySwitchIntoReset(void);
+
+int KeySwitchIntoTestGold(void);
 #endif

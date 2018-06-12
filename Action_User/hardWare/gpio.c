@@ -117,6 +117,19 @@ void KeyResetInit(void)
 	GPIO_Init(GPIOD, &GPIO_InitStructure);	
 }
 
+void KeyIntoTestGoldeInit(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);	
+}
+
 //LED
 void LEDInit(void)
 {
@@ -165,6 +178,7 @@ void PhotoelectricityCheckGoldBallInit(void)
 	
 	GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 }
+
 
 static int IsBallRack=0;
 #define IS_A_BaLL_RACK 1
@@ -362,4 +376,32 @@ int KeySwitchIntoReset(void){
 	}
 	
 	return 0;
+}
+
+int KeySwitchIntoTestGold(void){
+	//按住行程开关的时间
+	static int keyTestTouchTime=0;
+	if(KEY_TEST_GOLD_SWITCH){
+	  keyTestTouchTime++;
+	}
+	else{
+	  keyTestTouchTime=0;
+	}
+	
+	if(keyTestTouchTime>=200){
+		keyTestTouchTime=0;
+		
+		//通知控制卡准备测试摩擦
+		MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_TEST_GOLD);
+		BEEP_ON;
+		ShootLedOn();
+		USART_OUTByDMA("In the TEST_GOLD\r\n");
+		
+		ExtendCarOn();
+		Delay_ms(1500);
+		BEEP_OFF;
+		ShootLedOff();
+		return 1;
+	}
+	 return 0;
 }

@@ -126,12 +126,17 @@ void RobotTask(void)
 		#else
 			#ifdef TEST
 			  SelfTest();
-			#else		
+			#else
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
 				
 				/*调试数据发送*/
 				DebugDataUSART_OUT();
+		
+				//试场的时候才用，就跑最后一段
+		    #ifdef TEST_GOLD
+					KeySwitchIntoTestGold();
+				#endif
 				
 				/*蓝牙命令处理&&和进入平板调试模式*/
 				if(KEYSWITCH){
@@ -141,6 +146,7 @@ void RobotTask(void)
 				if(KEY_RESET_SWITCH){
 					KeySwitchIntoReset();
 				}
+				
 				
 				/*进入重启程序运行*/
 				
