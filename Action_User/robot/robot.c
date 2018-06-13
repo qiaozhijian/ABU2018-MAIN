@@ -179,7 +179,14 @@ void SetMotionFlag(uint32_t status){
 	case ~AT_GET_MOTIONCARD_RESET_FINISH:
 		gRobot.sDta.AT_motionFlag&=~AT_GET_MOTIONCARD_RESET_FINISH;
 	break;
-		
+	
+	case AT_GET_MOTIONCARD_GET_GOLDBALL_AREA:
+		gRobot.sDta.AT_motionFlag|=AT_GET_MOTIONCARD_GET_GOLDBALL_AREA;
+	break;
+	
+	case ~AT_GET_MOTIONCARD_GET_GOLDBALL_AREA:
+		gRobot.sDta.AT_motionFlag&=~AT_GET_MOTIONCARD_GET_GOLDBALL_AREA;
+	break;
 	
   }
 }

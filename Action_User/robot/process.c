@@ -348,9 +348,13 @@ void FightForGoldBall(void)
 		switch(gRobot.getBallStep.goldBall)
 		{
 			case 0:
-				if(gRobot.robotVel.countVel<300.f
+				if((gRobot.robotVel.countVel<300.f
 						&&fabs(gRobot.posX-HANDOVER_3_X)<50.f
-							&&fabs(gRobot.posY-HANDOVER_3_Y)<50.f){
+							&&fabs(gRobot.posY-HANDOVER_3_Y)<50.f)||gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_GET_GOLDBALL_AREA){
+								if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_GET_GOLDBALL_AREA){
+									ShootLedOn();
+									SetMotionFlag(~AT_GET_MOTIONCARD_GET_GOLDBALL_AREA);
+								}
 								gRobot.getBallStep.goldBall++;
 								GoldBallGraspStairTwoOn();
 				}
@@ -360,6 +364,7 @@ void FightForGoldBall(void)
 		  case 1:
 				//GoldRackInto()内部有死循环，一直在检测金球架光电，重启检测要加载里面
 				if(GoldRackInto()){
+					ShootLedOff();
 					gRobot.raceTime.goldBallWaitTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time;
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_GOT_BALL3);
 					gRobot.getBallStep.goldBall++;

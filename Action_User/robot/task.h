@@ -123,6 +123,9 @@
 
 #define AT_GET_MOTIONCARD_RESET_FINISH																0x2000000u
 
+#define AT_GET_MOTIONCARD_GET_GOLDBALL_AREA         									0x4000000u
+
+
 
 //状态量解释
 #define CAN_CLAW_STATUS_OPEN 																					0x01u
@@ -238,6 +241,8 @@
 #define GET_MOTIONCARD_SELFTEST_FINISH																4
 /*控制卡初始化完成*/
 #define GET_MOTIONCARD_PREPARE_READY																	5
+/*控制卡到达接金球位置*/
+#define GET_MOTIONCARD_GET_GOLDBALL_AREA															8
 /*控制卡告诉我涵道自检完成*/
 #define GET_MOTIONCARD_DUCT_SELFTEST_OK																21
 /*控制卡告诉我涵道自检完成*/
