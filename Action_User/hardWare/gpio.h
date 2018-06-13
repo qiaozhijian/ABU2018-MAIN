@@ -39,6 +39,8 @@ void KeySwitchIntoBTCtrl(void);
 
 void KeyResetInit(void);
 
+void KeyIntoTestGoldeInit(void);
+
 int KeySwitchIntoReset(void);
 
 int KeySwitchIntoTestGold(void);
