@@ -125,6 +125,10 @@ void FightForBall1(void)
 			
     /*第一个球取球完毕，去投射区一*/
 		case TO_THE_AREA_1:
+			/*提前亮灯*/
+			if(gRobot.posY>2000.f){
+				ShootLedOn();
+		  }
 			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
 				gRobot.sDta.process=TO_THROW_BALL_1;
 			StartCount();
@@ -225,7 +229,7 @@ void FightForBall2(void)
 				break;
 
 				case 2:
-					if(gRobot.posX>6000.f)
+					if(gRobot.posX>5500.f)
 					{	
 						USART_OUTByDMA("IntoTheArea\t");
 						gRobot.sDta.process=TO_THE_AREA_2;
@@ -236,6 +240,10 @@ void FightForBall2(void)
 				
 			/*第二个球取球完毕，去投射区二*/
 		case TO_THE_AREA_2:
+			/*提前亮灯*/
+			if(gRobot.posY>2000.f){
+				ShootLedOn();
+		  }
 			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
 				gRobot.sDta.process=TO_THROW_BALL_2;
 			StartCount();
@@ -468,6 +476,9 @@ void FightForGoldBall(void)
 		
     /*第三个球取球完毕，去投射区三*/
   case TO_THE_AREA_3:
+		if(gRobot.posY>5530.f){
+			ShootLedOn();
+		}
 		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)/*射金球点6080 ， 6030*/
 			gRobot.sDta.process=TO_THROW_BALL_3;
 		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
@@ -489,7 +500,6 @@ void FightForGoldBall(void)
 						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
 							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
-								/*&&(gRobot.posY>5530.f)*/
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {

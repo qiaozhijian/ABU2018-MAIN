@@ -388,7 +388,7 @@ int KeySwitchIntoTestGold(void){
 	  keyTestTouchTime=0;
 	}
 	
-	if(keyTestTouchTime>=200){
+	if(keyTestTouchTime>=600){
 		keyTestTouchTime=0;
 		
 		//通知控制卡准备测试摩擦
