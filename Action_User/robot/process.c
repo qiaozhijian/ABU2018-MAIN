@@ -358,6 +358,7 @@ void FightForGoldBall(void)
 								}
 								gRobot.getBallStep.goldBall++;
 								GoldBallGraspStairTwoOn();
+							  gRobot.sDta.WhichGoldBall=BALL_3;
 				}
 			break;
 							
@@ -419,7 +420,6 @@ void FightForGoldBall(void)
 						PrepareShootBall(BALL_3_BACKUP);
 					else
 						PrepareShootBall(BALL_3);
-					gRobot.sDta.WhichGoldBall=BALL_3;
 					gRobot.sDta.process=TO_THE_AREA_3;
 					USART_OUTByDMA("PrepareShoot ");
 					gRobot.getBallStep.goldBall=6;			
@@ -430,6 +430,7 @@ void FightForGoldBall(void)
 				
 			//接去第二金球
 			case 11:
+					gRobot.sDta.WhichGoldBall=BALL_4;
 				  Delay_ms(100);
 //        if((gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
 //					/*持球舵机到位*/&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS))
@@ -471,7 +472,6 @@ void FightForGoldBall(void)
 						PrepareShootBall(BALL_4_BACKUP);
 					else
 						PrepareShootBall(BALL_4);
-					gRobot.sDta.WhichGoldBall=BALL_4;
 					gRobot.sDta.process=TO_THROW_BALL_3;
 					gRobot.getBallStep.goldBall=15;
 				}
@@ -550,6 +550,7 @@ void FightForGoldBall(void)
 				gRobot.sDta.AT_motionFlag=0;
 				shootTime=0;
 				SetMotionFlag(AT_RESET_SHOOT_GOLD);
+				gRobot.sDta.WhichGoldBall=0;
 			}
 			
 			SetMotionFlag(AT_IS_SEND_DEBUG_DATA);

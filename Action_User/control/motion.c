@@ -163,7 +163,12 @@ void MotionStatusUpdate(void)
 	}
 	
 	
-	if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.005f)
+	//气压判断边界
+	float gasBoundary=0.005f;//彩球气压边界
+	if(gRobot.sDta.WhichGoldBall!=0){
+		gasBoundary=0.003f;//金球气压边界
+	}
+	if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)< gasBoundary)
 	{
 		SetMotionFlag(AT_GAS_SUCCESS);
 	}
@@ -171,6 +176,7 @@ void MotionStatusUpdate(void)
 	{
 		SetMotionFlag(~AT_GAS_SUCCESS);
 	}
+
 	
 	
 	/*判断持球舵机一是否到位*/

@@ -183,6 +183,8 @@ void AT_CMD_Handle(void){
     /*控制是否射击*/
   case SHOOT:
     USART_OUTByDMA("OK\r\n");
+	//某一个金球用于MotionStatusUpdate中气压满足边界的条件
+		gRobot.sDta.WhichGoldBall=0;
     if(*(buffer + 4) == '1')
     {
 			shootBallFlag=1;
@@ -204,6 +206,7 @@ void AT_CMD_Handle(void){
 				PrepareShootBall(BALL_2_BACKUP);
 			}else if(*(buffer + 5) =='4'){
 				WhichBall=BALL_3;
+				gRobot.sDta.WhichGoldBall=WhichBall;
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
@@ -216,6 +219,7 @@ void AT_CMD_Handle(void){
 				PrepareShootBall(BALL_3);
 			}else if(*(buffer + 5) =='5'){
 				WhichBall=BALL_4;
+				gRobot.sDta.WhichGoldBall=WhichBall;
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
@@ -228,6 +232,7 @@ void AT_CMD_Handle(void){
 				PrepareShootBall(BALL_4);
 			}else if(*(buffer + 5) =='6'){
 				WhichBall=BALL_3_BACKUP;
+				gRobot.sDta.WhichGoldBall=WhichBall;
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
@@ -240,6 +245,7 @@ void AT_CMD_Handle(void){
 				PrepareShootBall(BALL_3_BACKUP);
 			}else if(*(buffer + 5) =='7'){
 				WhichBall=BALL_4_BACKUP;
+				gRobot.sDta.WhichGoldBall=WhichBall;
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
@@ -280,6 +286,7 @@ void AT_CMD_Handle(void){
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='4'||*(buffer + 5) =='6'){
 				WhichBall=BALL_3;
+			  gRobot.sDta.WhichGoldBall=WhichBall;
 				if(getGoldBallStep==0){
 					WhichBall=BALL_3_WAIT;
 					PrepareGetBall(BALL_3_WAIT);
@@ -292,6 +299,7 @@ void AT_CMD_Handle(void){
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='5'||*(buffer + 5) =='7'){
 				WhichBall=BALL_4;
+				gRobot.sDta.WhichGoldBall=WhichBall;
 				PrepareGetBall(BALL_4);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='8'){
