@@ -647,9 +647,33 @@ void ChangeParamTemp(float value){
 			break;
 			
 			case GAS:
-				(*temp).gasAim=value;
-			  if(ball3ChangeOther!=NULL){
-					 (*ball3ChangeOther).gasAim=value;
+				//保证气压一样
+   			if(WhichBall==BALL_1){
+					PrepareGetBall1.gasAim=value;
+					PrepareShootBall1.gasAim=value;
+				}else if(WhichBall==BALL_2){
+					PrepareGetBall2.gasAim=value;
+					PrepareShootBall2.gasAim=value;
+				}else if(WhichBall==BALL_3){
+					PrepareGetBall3Wait.gasAim=value;
+					PrepareGetBall3.gasAim=value;
+					PrepareShootBall3.gasAim=value;
+				}else if(WhichBall==BALL_4){
+					PrepareGetBall4.gasAim=value;
+					PrepareShootBall4.gasAim=value;
+				}else if(WhichBall==BALL_1_BACKUP){
+					PrepareGetBall1.gasAim=value;
+					PrepareShootColorBall[0].gasAim=value;
+				}else if(WhichBall==BALL_2_BACKUP){
+					PrepareGetBall2.gasAim=value;
+					PrepareShootColorBall[1].gasAim=value;
+				}else if(WhichBall==BALL_3_BACKUP){
+					PrepareGetBall3Wait.gasAim=value;
+					PrepareGetBall3.gasAim=value;
+					PrepareShootGoldBall[0].gasAim=value;
+				}else if(WhichBall==BALL_4_BACKUP){
+					PrepareGetBall4.gasAim=value;
+					PrepareShootGoldBall[1].gasAim=value;
 				}
 			break;
 		}
