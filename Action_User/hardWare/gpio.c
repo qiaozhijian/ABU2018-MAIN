@@ -179,12 +179,16 @@ void PhotoelectricityCheckGoldBallInit(void)
 	GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 }
 
-
+extern Robot_t gRobot;
 static int IsBallRack=0;
 #define IS_A_BaLL_RACK 1
 #define NOT_A_Ball_RACK  0
 int GoldRackInto(void){	
 	while(1){
+		if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_GET_GOLDBALL_AREA){
+				ShootLedOn();
+				SetMotionFlag(~AT_GET_MOTIONCARD_GET_GOLDBALL_AREA);
+	  }
 		Delay_ms(2);
 		USART_OUTByDMA("BallRack %d ",PE_CHECK_GOLD);
 		
@@ -359,7 +363,7 @@ int KeySwitchIntoReset(void){
 				}
 				Delay_ms(1000);
 				gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
-
+				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 				SetMotionFlag(AT_RESET_THE_ROBOT);
 			  //告诉控制卡抱死重启模式选择
 				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)

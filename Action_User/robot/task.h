@@ -66,7 +66,7 @@
 #define UPSTEER_CODE_TO_ANGLE(code)                       						((code)/1280.f)       
 #define DOWN_STEER_CODE_TO_ANGLE(code)                    						((code)/1638.4f)
 
-#define UP_STEER_COMPENSATE                             						  (128.4f)   
+#define UP_STEER_COMPENSATE                             						  (118.4f)   
 #define DOWN_STEER_COMPENSATE																					(107.f)
 #define PITCH_COMPENSATE																							(30.f	 )
 #define COURCE_COMPENSATE																						  (42.f  )

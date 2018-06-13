@@ -351,6 +351,7 @@ void FightForGoldBall(void)
 				if((gRobot.robotVel.countVel<300.f
 						&&fabs(gRobot.posX-HANDOVER_3_X)<50.f
 							&&fabs(gRobot.posY-HANDOVER_3_Y)<50.f)||gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_GET_GOLDBALL_AREA){
+								
 								if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_GET_GOLDBALL_AREA){
 									ShootLedOn();
 									SetMotionFlag(~AT_GET_MOTIONCARD_GET_GOLDBALL_AREA);
