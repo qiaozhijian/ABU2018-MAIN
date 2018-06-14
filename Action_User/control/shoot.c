@@ -60,7 +60,7 @@ void ShootReset(void)
   ShootBigShut();
 	Delay_ms(250);
 }
-
+//初始化默认是蓝场参数
 void prepareMotionParaInit(void)
 {
 	/*准备区动作*/
@@ -106,7 +106,7 @@ void prepareMotionParaInit(void)
   PrepareGetBall3Wait.pitchAngle=-4.0f;
   PrepareGetBall3Wait.upSteerAngle=-50.f;
 	PrepareGetBall3Wait.downSteerAngle=-51.f;
-  PrepareGetBall3Wait.gasAim=0.48f;
+  PrepareGetBall3Wait.gasAim=0.49f;
 	/*接取第三个球的参数*/
 	PrepareGetBall3.courseAngle=94.f;
   PrepareGetBall3.pitchAngle=-3.5f;
@@ -162,6 +162,110 @@ void prepareMotionParaInit(void)
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
   PrepareShootGoldBall[1].gasAim=0.49f;
+	
+}
+//红场参数初始化
+void RedPrepareMotionParaInit(void)
+{
+	/*准备区动作*/
+  PrepareCompete.courseAngle=PrepareCompete.courseAngle;
+  PrepareCompete.pitchAngle=PrepareCompete.pitchAngle;
+  PrepareCompete.upSteerAngle=PrepareCompete.upSteerAngle;
+	PrepareCompete.downSteerAngle=PrepareCompete.downSteerAngle;
+  PrepareCompete.gasAim=PrepareCompete.gasAim;
+	
+  /*准备去拿第一个球的数据*/ 
+  PrepareGetBall1.courseAngle=PrepareGetBall1.courseAngle;
+  PrepareGetBall1.pitchAngle=PrepareGetBall1.pitchAngle;
+  PrepareGetBall1.upSteerAngle=PrepareGetBall1.upSteerAngle;
+	PrepareGetBall1.downSteerAngle=PrepareGetBall1.downSteerAngle;
+  PrepareGetBall1.gasAim =PrepareGetBall1.gasAim;
+  
+  /*准备射第一个球的数据*/
+  PrepareShootBall1.courseAngle=PrepareShootBall1.courseAngle;
+  PrepareShootBall1.pitchAngle=PrepareShootBall1.pitchAngle;
+  PrepareShootBall1.upSteerAngle=PrepareShootBall1.upSteerAngle;
+	PrepareShootBall1.downSteerAngle=PrepareShootBall1.downSteerAngle;
+  PrepareShootBall1.gasAim=PrepareShootBall1.gasAim;
+	
+	
+  /*准备去拿第二个球的数据*/
+  PrepareGetBall2.courseAngle=PrepareGetBall2.courseAngle;
+  PrepareGetBall2.pitchAngle=PrepareGetBall2.pitchAngle;
+  PrepareGetBall2.upSteerAngle=PrepareGetBall2.upSteerAngle; 
+	PrepareGetBall2.downSteerAngle=PrepareGetBall2.downSteerAngle;
+  PrepareGetBall2.gasAim=PrepareGetBall2.gasAim;
+  
+	
+  /*准备射第二个球的数据*/
+  PrepareShootBall2.courseAngle=PrepareShootBall2.courseAngle;
+  PrepareShootBall2.pitchAngle=PrepareShootBall2.pitchAngle;
+  PrepareShootBall2.upSteerAngle=PrepareShootBall2.upSteerAngle;
+	PrepareShootBall2.downSteerAngle=PrepareShootBall2.downSteerAngle;
+  PrepareShootBall2.gasAim=PrepareShootBall2.gasAim;
+  
+	
+  /*准备等待拿第三个球的数据*/
+  PrepareGetBall3Wait.courseAngle=PrepareGetBall3Wait.courseAngle;
+  PrepareGetBall3Wait.pitchAngle=PrepareGetBall3Wait.pitchAngle;
+  PrepareGetBall3Wait.upSteerAngle=PrepareGetBall3Wait.upSteerAngle;
+	PrepareGetBall3Wait.downSteerAngle=PrepareGetBall3Wait.downSteerAngle;
+  PrepareGetBall3Wait.gasAim=PrepareGetBall3Wait.gasAim;
+	/*接取第三个球的参数*/
+	PrepareGetBall3.courseAngle=PrepareGetBall3.courseAngle;
+  PrepareGetBall3.pitchAngle=PrepareGetBall3.pitchAngle;
+  PrepareGetBall3.upSteerAngle=PrepareGetBall3.upSteerAngle;
+	PrepareGetBall3.downSteerAngle=PrepareGetBall3.downSteerAngle;
+  PrepareGetBall3.gasAim=PrepareGetBall3.gasAim;
+  
+  /*准备射第三个球的数据*/
+  PrepareShootBall3.courseAngle=PrepareShootBall3.courseAngle;
+  PrepareShootBall3.pitchAngle=PrepareShootBall3.pitchAngle;
+	PrepareShootBall3.upSteerAngle=PrepareShootBall3.upSteerAngle;
+  PrepareShootBall3.downSteerAngle=PrepareShootBall3.downSteerAngle;
+  PrepareShootBall3.gasAim=PrepareShootBall3.gasAim;
+	
+	/*准备接第四个球的参数*/
+	PrepareGetBall4.courseAngle=PrepareGetBall4.courseAngle;
+	PrepareGetBall4.pitchAngle = PrepareGetBall4.pitchAngle; 
+	PrepareGetBall4.upSteerAngle = PrepareGetBall4.upSteerAngle;
+	PrepareGetBall4.downSteerAngle = PrepareGetBall4.downSteerAngle;
+	PrepareGetBall4.gasAim = PrepareGetBall4.gasAim;
+	//乔哥gaygaygay
+	
+	/*准备射第四个球的数据*/
+	PrepareShootBall4.courseAngle=PrepareShootBall4.courseAngle;
+  PrepareShootBall4.pitchAngle=PrepareShootBall4.pitchAngle;
+	PrepareShootBall4.upSteerAngle=PrepareShootBall4.upSteerAngle;
+  PrepareShootBall4.downSteerAngle=PrepareShootBall4.downSteerAngle;
+  PrepareShootBall4.gasAim=PrepareShootBall4.gasAim;
+	
+	
+	/*彩球1备件的射球参数*/
+	PrepareShootColorBall[0].courseAngle=PrepareShootColorBall[0].courseAngle;
+  PrepareShootColorBall[0].pitchAngle=PrepareShootColorBall[0].pitchAngle;
+  PrepareShootColorBall[0].upSteerAngle=PrepareShootColorBall[0].upSteerAngle;
+	PrepareShootColorBall[0].downSteerAngle=PrepareShootColorBall[0].downSteerAngle;
+  PrepareShootColorBall[0].gasAim=PrepareShootColorBall[0].gasAim;
+	/*彩球2备件的射球参数*/
+	PrepareShootColorBall[1].courseAngle=PrepareShootColorBall[1].courseAngle;
+  PrepareShootColorBall[1].pitchAngle= PrepareShootColorBall[1].pitchAngle;
+  PrepareShootColorBall[1].upSteerAngle=PrepareShootColorBall[1].upSteerAngle;
+	PrepareShootColorBall[1].downSteerAngle=PrepareShootColorBall[1].downSteerAngle;
+  PrepareShootColorBall[1].gasAim=PrepareShootColorBall[1].gasAim;
+	
+	/*金球1备件的射球参数*/
+  PrepareShootGoldBall[0].courseAngle=PrepareShootGoldBall[0].courseAngle;
+  PrepareShootGoldBall[0].pitchAngle=PrepareShootGoldBall[0].pitchAngle;
+	PrepareShootGoldBall[0].upSteerAngle=PrepareShootGoldBall[0].upSteerAngle;
+  PrepareShootGoldBall[0].downSteerAngle=PrepareShootGoldBall[0].downSteerAngle;
+  PrepareShootGoldBall[0].gasAim=PrepareShootGoldBall[0].gasAim;
+	/*金球2备件的射球参数*/
+	PrepareShootGoldBall[1].courseAngle=PrepareShootGoldBall[1].courseAngle;
+  PrepareShootGoldBall[1].pitchAngle=PrepareShootGoldBall[1].pitchAngle;
+	PrepareShootGoldBall[1].upSteerAngle=PrepareShootGoldBall[1].upSteerAngle;
+  PrepareShootGoldBall[1].downSteerAngle=PrepareShootGoldBall[1].downSteerAngle;
+  PrepareShootGoldBall[1].gasAim=PrepareShootGoldBall[1].gasAim;
 	
 }
 float GetPrepareShootGoldBallGasAim(void)
@@ -518,3 +622,31 @@ void PrepareWork(void)
 	}
 
 }
+
+void PrepareParamByRaBSwitch(void){
+	static int switchHighTime=0;
+	int checkTime=15;
+	while(checkTime--){
+			if(RED_BLUE_SWITCH){
+				switchHighTime++;
+			}else {
+				switchHighTime=0;
+			}
+
+			if(switchHighTime>6){
+				switchHighTime=0;
+				RedPrepareMotionParaInit();
+				BLUE_LIGHT_OFF;
+				RED_LIGHT_ON;
+				USART_OUTByDMA("\r\n  RedPrepareMotionParaInit\r\n");
+				return;
+			}
+  }
+	//默认蓝场
+	USART_OUTByDMA("\r\n  BlueprepareMotionParaInit\r\n");
+	prepareMotionParaInit();
+	RED_LIGHT_OFF;
+	BLUE_LIGHT_ON;
+}
+
+

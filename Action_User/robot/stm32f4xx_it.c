@@ -145,7 +145,8 @@ void CAN1_RX0_IRQHandler(void)
 		ppsErrorReportFlag=1;
 		USART_OUTByDMA("GET_PPS_PROBLEM\t");	
 	}
-   if(gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT)
+	
+  if(gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT||gRobot.sDta.robocon2018!=ROBOT_SELF_TEST)
     USART_OUTByDMA("GET_FROM_MOTIONCARD %d ",msg.data32[0]);
   }
   

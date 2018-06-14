@@ -203,6 +203,8 @@ void RobotTask(void)
 						{
 							BEEP_ON;
 							ShootLedOn();
+							//红蓝场参数选择
+              PrepareParamByRaBSwitch();
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
@@ -328,9 +330,14 @@ void HardWareInit(void){
 	/*检测到金球架进来就推助推气阀的光电*/
   PhotoelectricityCheckGoldBallInit();
 	
+	//行程开关初始化
 	KeyInit();
 	KeyResetInit();
 	KeyIntoTestGoldeInit();
+	//LED初始化
+	LEDInit();
+	//红蓝场开关初始化
+	RaBSwitchInit();
 	
   //蜂鸣器PE7
   GPIO_Init_Pins(GPIOC, GPIO_Pin_3, GPIO_Mode_OUT);

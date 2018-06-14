@@ -1002,6 +1002,7 @@ void RobotSelfTest(void){
 					if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.02){
 				    gasTestStep++;
 						GasTestTime=0;
+						BEEP_OFF;
 			    }
 					if(GasTestTime>1000){
 						BEEP_ON;
@@ -1015,6 +1016,7 @@ void RobotSelfTest(void){
 					if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)<0.02){
 				    ShootLEDShineOnce=1;
 				    selfTestStep++;
+						BEEP_OFF;
 			    }
 					if(GasTestTime>1000){
 						BEEP_ON;

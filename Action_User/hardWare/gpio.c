@@ -130,20 +130,34 @@ void KeyIntoTestGoldeInit(void)
 	GPIO_Init(GPIOB, &GPIO_InitStructure);	
 }
 
+//行程开关 PD7
+void RaBSwitchInit(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);	
+}
 //LED
 void LEDInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10|GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOE, &GPIO_InitStructure);
-	
-	GPIO_ResetBits(GPIOE, GPIO_Pin_7);
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	RED_LIGHT_OFF;
+	BLUE_LIGHT_ON;
 }
 
 
@@ -350,7 +364,7 @@ int KeySwitchIntoReset(void){
 				gRobot.getBallStep.colorBall1=0;
 				gRobot.getBallStep.colorBall2=0;
         gRobot.getBallStep.goldBall=0;
-				//将某一个金球置位0
+				//将某一个金球置位0,这个标志位控制气压满足范围
 				gRobot.sDta.WhichGoldBall=0;
 		    //将标志位全部清空,但是要判断是否在金球区重启
 				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
@@ -411,3 +425,4 @@ int KeySwitchIntoTestGold(void){
 	}
 	 return 0;
 }
+

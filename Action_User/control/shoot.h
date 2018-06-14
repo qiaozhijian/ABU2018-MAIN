@@ -39,5 +39,7 @@ void prepareMotionParaInit(void);
 void PrepareWork(void);
 
 void SmallChange(void);
+
+void PrepareParamByRaBSwitch(void);
 #endif
 

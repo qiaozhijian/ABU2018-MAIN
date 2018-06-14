@@ -17,6 +17,16 @@
 
 #define KEY_TEST_GOLD_SWITCH		    	(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_4))
 
+#define RED_BLUE_SWITCH           (GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1))
+
+
+  
+#define RED_LIGHT_ON             GPIO_ResetBits(GPIOB , GPIO_Pin_10)
+#define RED_LIGHT_OFF 					 GPIO_SetBits(GPIOB , GPIO_Pin_10)
+
+#define BLUE_LIGHT_ON						 GPIO_ResetBits(GPIOB , GPIO_Pin_11)
+#define BLUE_LIGHT_OFF					 GPIO_SetBits(GPIOB , GPIO_Pin_11)
+
 void GPIO_Init_Pins(GPIO_TypeDef * GPIOx,uint16_t GPIO_Pin,GPIOMode_TypeDef GPIO_Mode);
 
 void KeyInit(void);
@@ -44,4 +54,6 @@ void KeyIntoTestGoldeInit(void);
 int KeySwitchIntoReset(void);
 
 int KeySwitchIntoTestGold(void);
+
+void RaBSwitchInit(void);
 #endif
