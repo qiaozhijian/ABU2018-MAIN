@@ -278,15 +278,32 @@ void AT_CMD_Handle(void){
 			
 			if(*(buffer + 5) =='0'||*(buffer + 5) =='2'){
 				WhichBall=BALL_1;
+				if(*(buffer + 5) =='0'){
+					PrepareGetBall1.gasAim=PrepareShootBall1.gasAim;
+				}else {
+					PrepareGetBall1.gasAim=PrepareShootColorBall[0].gasAim;
+				}
 				PrepareGetBall(BALL_1);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='1'||*(buffer + 5) =='3'){
 				WhichBall=BALL_2;
+				if(*(buffer + 5) =='1'){
+					PrepareGetBall2.gasAim=PrepareShootBall2.gasAim;
+				}else {
+					PrepareGetBall2.gasAim=PrepareShootColorBall[1].gasAim;
+				}
 				PrepareGetBall(BALL_2);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='4'||*(buffer + 5) =='6'){
 				WhichBall=BALL_3;
 			  gRobot.sDta.WhichGoldBall=WhichBall;
+				if(*(buffer + 5) =='4'){
+					PrepareGetBall3Wait.gasAim=PrepareShootBall3.gasAim;
+					PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
+				}else {
+					PrepareGetBall3Wait.gasAim=PrepareShootGoldBall[0].gasAim;
+					PrepareGetBall3.gasAim=PrepareShootGoldBall[0].gasAim;
+				}
 				if(getGoldBallStep==0){
 					WhichBall=BALL_3_WAIT;
 					PrepareGetBall(BALL_3_WAIT);
@@ -300,6 +317,11 @@ void AT_CMD_Handle(void){
 			}else if(*(buffer + 5) =='5'||*(buffer + 5) =='7'){
 				WhichBall=BALL_4;
 				gRobot.sDta.WhichGoldBall=WhichBall;
+				if(*(buffer + 5) =='5'){
+					PrepareGetBall4.gasAim=PrepareShootBall4.gasAim;
+				}else {
+					PrepareGetBall4.gasAim=PrepareShootGoldBall[1].gasAim;
+				}
 				PrepareGetBall(BALL_4);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(*(buffer + 5) =='8'){
