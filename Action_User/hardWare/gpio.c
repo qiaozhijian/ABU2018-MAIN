@@ -341,9 +341,7 @@ int KeySwitchIntoReset(void){
 				GoldBallGraspStairTwoOn();
 
 				PrepareGetBall(READY);
-				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
-					gRobot.sDta.gasAimValue= GetPrepareShootGoldBallGasAim();
-				
+				//将金球射球次数置为0
 				SetShootTimeZero();
 				Delay_ms(1200);
 		   	PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
@@ -372,6 +370,8 @@ int KeySwitchIntoReset(void){
 					USART_OUTByDMA("\r\nset reset gold\t");
 					gRobot.sDta.AT_motionFlag=0;
 					SetMotionFlag(AT_RESET_SHOOT_GOLD);
+					//使用金球备件
+					SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
 				}else
 				{
 					USART_OUTByDMA("\r\nset unreset gold\t");

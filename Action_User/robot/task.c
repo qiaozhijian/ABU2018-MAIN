@@ -205,6 +205,10 @@ void RobotTask(void)
 							ShootLedOn();
 							//红蓝场参数选择
               PrepareParamByRaBSwitch();
+							//将金球的两个等待气压全部变成与备件射球一样的
+							if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY){
+								SetResetGoldGetBallGasaim();
+							}
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
@@ -251,8 +255,6 @@ void RobotTask(void)
 								{
 									USART_OUTByDMA("gold RESET\r\n");
 									SetMotionFlag(~AT_RESET_SHOOT_GOLD);
-									//使用金球备件
-									SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
 									ExtendCarOn();
 									gRobot.sDta.process=TO_GET_BALL_3;		
 									gRobot.sDta.robocon2018=GOLD_BALL;
