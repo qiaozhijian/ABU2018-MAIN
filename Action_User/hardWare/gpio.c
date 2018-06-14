@@ -339,10 +339,14 @@ int KeySwitchIntoReset(void){
 				
 				ExtendCarOff();
 				GoldBallGraspStairTwoOn();
-
+				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
+				{
+					//使用金球备件
+					SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
+				}
+				
 				PrepareGetBall(READY);
-				//将金球射球次数置为0
-				SetShootTimeZero();
+				
 				Delay_ms(1200);
 		   	PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
         PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
@@ -368,6 +372,9 @@ int KeySwitchIntoReset(void){
 				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
 				{
 					USART_OUTByDMA("\r\nset reset gold\t");
+					//将金球射球次数置为0
+				  SetShootTimeZero();
+					//标志位清空
 					gRobot.sDta.AT_motionFlag=0;
 					SetMotionFlag(AT_RESET_SHOOT_GOLD);
 					//使用金球备件
@@ -378,15 +385,18 @@ int KeySwitchIntoReset(void){
 					gRobot.sDta.AT_motionFlag=0;
 				}
 				Delay_ms(1000);
+				
 				gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
+				
 				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
 				SetMotionFlag(AT_RESET_THE_ROBOT);
+				
 			  //告诉控制卡抱死重启模式选择
 				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_GOLD);
 				else
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_ALL);
-				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+				
 				BEEP_OFF;
 				Delay_ms(200);
 				

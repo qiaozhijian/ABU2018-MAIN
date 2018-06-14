@@ -205,10 +205,6 @@ void RobotTask(void)
 							ShootLedOn();
 							//红蓝场参数选择
               PrepareParamByRaBSwitch();
-							//将金球的两个等待气压全部变成与备件射球一样的
-							if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY){
-								SetResetGoldGetBallGasaim();
-							}
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
@@ -220,6 +216,10 @@ void RobotTask(void)
 						if(gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT){
 							if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_RESET_FINISH)
 							{
+								//将金球的两个等待气压全部变成与备件射球一样的
+								if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY){
+									SetResetGoldGetBallGasaim();
+								}
 								BEEP_ON;
 								ShootLedOn();
 								gRobot.sDta.robocon2018=ROBOT_START;	
