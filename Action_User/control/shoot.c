@@ -78,7 +78,7 @@ void prepareMotionParaInit(void)
   PrepareCompete.gasAim=PrepareShootBall1.gasAim;
 	
   /*准备去拿第一个球的数据*/ 
-  PrepareGetBall1.courseAngle=61.f;
+  PrepareGetBall1.courseAngle=59.5f;
   PrepareGetBall1.pitchAngle=-0.8f;
   PrepareGetBall1.upSteerAngle=-57.7f;
 	PrepareGetBall1.downSteerAngle=-58.0f;
@@ -584,7 +584,7 @@ void PrepareWork(void)
 			
 			case 2:
 				/*之前打气检测只是开小电，这时候是正常模式再给气阀板发指令*/
-				GasMotion(gRobot.sDta.gasAimValue);
+				GasMotion(PrepareCompete.gasAim);
 	      GasEnable();
 				prepareWorkStep=3;
 			  cnt=0;

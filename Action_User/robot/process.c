@@ -511,7 +511,7 @@ void FightForGoldBall(void)
     {
 			//第一个球
 			if(shootTime==0){
-			  Delay_ms(350);
+			  Delay_ms(300);
 			}//第二个球
 			else{
 				Delay_ms(300);
