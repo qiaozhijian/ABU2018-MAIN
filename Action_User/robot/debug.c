@@ -104,12 +104,7 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMAF(gRobot.posX);
 	  USART_OUTByDMAF(gRobot.posY);
 		USART_OUTByDMAF(gRobot.angle);
-//					USART_OUTByDMAF(gRobot.angleBais);
-//					USART_OUTByDMAF(gRobot.KalmanZ);
-//					USART_OUTByDMAF(gRobot.AnguZlarVelocity);
 		USART_OUTByDMA("V ");
-		USART_OUTByDMAF(gRobot.robotVel.readCourseVel);
-		USART_OUTByDMAF(gRobot.robotVel.readSteerVel[0]);
 		USART_OUTByDMAF(gRobot.robotVel.countXVel);
 		USART_OUTByDMAF(gRobot.robotVel.countYVel);
 		USART_OUTByDMAF(gRobot.robotVel.countVel);
@@ -119,6 +114,7 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 		USART_OUTByDMAF(gRobot.pitchAngle);
 		USART_OUTByDMAF(gRobot.gasValue);
+		USART_OUTByDMAF(gRobot.gasControl);
 		USART_OUTByDMA("MAV ");
 		USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
 		USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);

@@ -270,7 +270,13 @@ void CAN2_RX0_IRQHandler(void)
 		
 	}
   
-  
+  if(canNodeId==GET_FROM_GET_FROM_GASSENSOR_CONTROL){
+		for(i = 0;i<4 ;i++){
+			msg4.data4[i]=buffer[i];
+		}
+		gRobot.gasControl=msg4.dataf;
+	}
+	
   if(canNodeId==GET_FROM_GASSENSOR)     //get speed value
   {
     //fix me, if length not 8

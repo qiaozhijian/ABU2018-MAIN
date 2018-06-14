@@ -428,6 +428,7 @@ typedef struct{
 	float angleBais;
 	float KalmanZ;
 	
+	float gasControl;
 	uint32_t posSystemReady;
 	
 //	/*¶æ»ú´íÎóÖ¸Ê¾*/
