@@ -584,7 +584,7 @@ void PrepareWork(void)
 			
 			case 2:
 				/*之前打气检测只是开小电，这时候是正常模式再给气阀板发指令*/
-				GasMotion(PrepareCompete.gasAim);
+				GasMotion(gRobot.sDta.gasAimValue);
 	      GasEnable();
 				prepareWorkStep=3;
 			  cnt=0;
