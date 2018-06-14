@@ -132,10 +132,10 @@ void prepareMotionParaInit(void)
 	
 	/*准备射第四个球的数据*/
 	PrepareShootBall4.courseAngle=178.3f;
-  PrepareShootBall4.pitchAngle=-0.f;
+  PrepareShootBall4.pitchAngle=0.4f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.475f;
+  PrepareShootBall4.gasAim=0.49f;
 	
 	
 	/*彩球1备件的射球参数*/
@@ -156,13 +156,13 @@ void prepareMotionParaInit(void)
   PrepareShootGoldBall[0].pitchAngle=2.5f;
 	PrepareShootGoldBall[0].upSteerAngle=0.0f;
   PrepareShootGoldBall[0].downSteerAngle=0.0f;
-  PrepareShootGoldBall[0].gasAim=0.5f;
+  PrepareShootGoldBall[0].gasAim=0.49f;
 	/*金球2备件的射球参数*/
 	PrepareShootGoldBall[1].courseAngle=178.3f;
-  PrepareShootGoldBall[1].pitchAngle=0.4f;
+  PrepareShootGoldBall[1].pitchAngle=0.f;
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
-  PrepareShootGoldBall[1].gasAim=0.49f;
+  PrepareShootGoldBall[1].gasAim=0.475f;
 	
 }
 //红场参数初始化
