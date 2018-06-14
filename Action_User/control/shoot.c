@@ -130,11 +130,11 @@ void prepareMotionParaInit(void)
 	//乔哥gaygaygay
 	
 	/*准备射第四个球的数据*/
-	PrepareShootBall4.courseAngle=178.6f;
-  PrepareShootBall4.pitchAngle=3.4f;
+	PrepareShootBall4.courseAngle=178.3f;
+  PrepareShootBall4.pitchAngle=0.f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.49f;
+  PrepareShootBall4.gasAim=0.475f;
 	
 	
 	/*彩球1备件的射球参数*/
