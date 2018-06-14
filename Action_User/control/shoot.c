@@ -67,7 +67,7 @@ void prepareMotionParaInit(void)
   PrepareShootBall1.courseAngle=173.0f;
   PrepareShootBall1.pitchAngle=6.f;
   PrepareShootBall1.upSteerAngle=0.f;
-	PrepareShootBall1.downSteerAngle=0.f;
+	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.58f;
 	
 	/*准备区动作*/
@@ -88,9 +88,9 @@ void prepareMotionParaInit(void)
 	
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=173.8f;
-  PrepareShootBall2.pitchAngle=8.5f;
+  PrepareShootBall2.pitchAngle=8.3f;
   PrepareShootBall2.upSteerAngle=0.0f;
-	PrepareShootBall2.downSteerAngle=0.0f;
+	PrepareShootBall2.downSteerAngle=-1.f;
   PrepareShootBall2.gasAim=0.58f;
 	
   /*准备去拿第二个球的数据*/
@@ -102,10 +102,10 @@ void prepareMotionParaInit(void)
   
 	
 	/*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=178.f;
-  PrepareShootBall3.pitchAngle=0.5f;
+  PrepareShootBall3.courseAngle=178.3f;
+  PrepareShootBall3.pitchAngle=0.f;
 	PrepareShootBall3.upSteerAngle=0.0f;
-  PrepareShootBall3.downSteerAngle=0.0f;
+  PrepareShootBall3.downSteerAngle=-1.f;
   PrepareShootBall3.gasAim=0.49f;
 	
 	
@@ -120,7 +120,7 @@ void prepareMotionParaInit(void)
 	PrepareGetBall3.courseAngle=94.f;
   PrepareGetBall3.pitchAngle=-3.5f;
   PrepareGetBall3.upSteerAngle=-48.f;
-	PrepareGetBall3.downSteerAngle=-43.f;
+	PrepareGetBall3.downSteerAngle=-39.f;
   PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
   
   
@@ -136,7 +136,7 @@ void prepareMotionParaInit(void)
 	PrepareGetBall4.courseAngle=90.f;
 	PrepareGetBall4.pitchAngle = -2.3f; 
 	PrepareGetBall4.upSteerAngle = -66.f;
-	PrepareGetBall4.downSteerAngle = -60.1f;
+	PrepareGetBall4.downSteerAngle = -53.1f;
 	PrepareGetBall4.gasAim = PrepareShootBall4.gasAim;
 	//乔哥gaygaygay
 	
@@ -158,8 +158,8 @@ void prepareMotionParaInit(void)
   PrepareShootGoldBall[0].courseAngle=178.6f;
   PrepareShootGoldBall[0].pitchAngle=2.5f;
 	PrepareShootGoldBall[0].upSteerAngle=0.0f;
-  PrepareShootGoldBall[0].downSteerAngle=0.0f;
-  PrepareShootGoldBall[0].gasAim=0.49f;
+  PrepareShootGoldBall[0].downSteerAngle=-1.f;
+  PrepareShootGoldBall[0].gasAim=0.495f;
 	/*金球2备件的射球参数*/
 	PrepareShootGoldBall[1].courseAngle=178.3f;
   PrepareShootGoldBall[1].pitchAngle=0.f;
