@@ -65,7 +65,7 @@ void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=173.0f;
-  PrepareShootBall1.pitchAngle=8.f;
+  PrepareShootBall1.pitchAngle=9.f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.58f;
@@ -498,7 +498,7 @@ void SmallChange(void){
 //				//金球的调节范围
 //				courseChangeDifference = 0.15f;
 //			}
-			if(fabs(gRobot.angle)>0.5f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				
 				if(gRobot.sDta.WhichGoldBall==BALL_3){
 					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
