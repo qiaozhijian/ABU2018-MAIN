@@ -188,6 +188,15 @@ void SetMotionFlag(uint32_t status){
 		gRobot.sDta.AT_motionFlag&=~AT_GET_MOTIONCARD_GET_GOLDBALL_AREA;
 	break;
 	
+	case AT_GET_PPS_PROBLEM:
+		gRobot.sDta.AT_motionFlag|=AT_GET_PPS_PROBLEM;
+	break;
+	
+	case ~AT_GET_PPS_PROBLEM:
+		gRobot.sDta.AT_motionFlag&=~AT_GET_PPS_PROBLEM;
+	break;
+	
+	
   }
 }
 

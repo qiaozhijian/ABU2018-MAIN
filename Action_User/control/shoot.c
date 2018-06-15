@@ -65,7 +65,7 @@ void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=173.0f;
-  PrepareShootBall1.pitchAngle=6.f;
+  PrepareShootBall1.pitchAngle=8.f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.58f;
@@ -414,24 +414,35 @@ void SmallChange(void){
 	int whetherCount=0;
 	//与预定航向的偏差量决定是否调节
 	float courseChangeDifference=0.f;
+	if(gRobot.sDta.AT_motionFlag&AT_GET_PPS_PROBLEM){
+		USART_OUTByDMA("AT_GET_PPS_PROBLEM");
+		return;
+	}
 	switch(gRobot.sDta.robocon2018){
 		case COLORFUL_BALL_1:
 			if(gRobot.sDta.process!=TO_THROW_BALL_1){
 				return;
 			}
 			
-			if((fabs(gRobot.posX-TZ_1_X)>25.f || fabs(gRobot.posY-TZ_1_Y)>25.f || fabs(gRobot.angle)>1.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-				 
-				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
-							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
-				 /*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
-				 /*减去车的偏移角度*/
-		
+//			if((fabs(gRobot.posX-TZ_1_X)>25.f || fabs(gRobot.posY-TZ_1_Y)>25.f || fabs(gRobot.angle)>1.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+//				 
+//				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
+//							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
+//				 /*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
+//				 /*减去车的偏移角度*/
+//		
+//				countAngle=countAngle + COLOR_BALL1_OFFSET - gRobot.angle;
+
+//				whetherCount=1;
+//				//第一个彩球的调节范围
+//			  courseChangeDifference = 1.f;
+//			}
+			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				countAngle=countAngle + COLOR_BALL1_OFFSET - gRobot.angle;
 
 				whetherCount=1;
 				//第一个彩球的调节范围
-			  courseChangeDifference = 1.f;
+			  courseChangeDifference = 0.5f;
 			}else {
 				 whetherCount=0;
 			}
@@ -442,27 +453,36 @@ void SmallChange(void){
 				return;
 			}
 		
-			if((fabs(gRobot.posX-TZ_2_X)>10.f || fabs(gRobot.posY-TZ_2_Y)>10.f || fabs(gRobot.angle)>0.5f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-				 
-				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
-							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
-				/*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
+//			if((fabs(gRobot.posX-TZ_2_X)>10.f || fabs(gRobot.posY-TZ_2_Y)>10.f || fabs(gRobot.angle)>0.5f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+//				 
+//				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
+//							- RAD_TO_ANGLE(atan2((COLOR_BALL_FRAME_POSX - gRobot.posX) , (COLOR_BALL_FRAME_POSY - (gRobot.posY-15)))) + 90.f;
+//				/*atan((525.f - gRobot.posX) / (3235.f - (gRobot.posY-15)))*/
+//				
+//				countAngle=countAngle + COLOR_BALL2_OFFSET - gRobot.angle;
+//				
+//				whetherCount=1;			
+//				//第二个彩球的调节范围
+//				courseChangeDifference = 1.f;
+//			}
+			if(fabs(gRobot.angle)>0.5f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				
 				countAngle=countAngle + COLOR_BALL2_OFFSET - gRobot.angle;
 				
 				whetherCount=1;			
 				//第二个彩球的调节范围
-				courseChangeDifference = 1.f;
-			}else {
+				courseChangeDifference = 0.5f;
+			}
+			else {
 				 whetherCount=0;
 			}
 		break;
 		
-//		case GOLD_BALL:
-//			if(gRobot.sDta.process!=TO_THROW_BALL_3){
-//				return;
-//			}
-//			
+		case GOLD_BALL:
+			if(gRobot.sDta.process!=TO_THROW_BALL_3){
+				return;
+			}
+			
 //			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 //				 
 //				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
@@ -477,10 +497,21 @@ void SmallChange(void){
 //				whetherCount=1;
 //				//金球的调节范围
 //				courseChangeDifference = 0.15f;
-//			}else {
-//				 whetherCount=0;
 //			}
-//		break;
+			if(fabs(gRobot.angle)>0.5f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+				
+				if(gRobot.sDta.WhichGoldBall==BALL_3){
+					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
+				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
+					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
+				}
+				whetherCount=1;
+				//金球的调节范围
+				courseChangeDifference = 0.15f;
+			}else {
+				 whetherCount=0;
+			}
+		break;
 	}	
 	
 	//如果计算了判断计算值是否与给定的值超过了courseChangeDifference,超过了则微调

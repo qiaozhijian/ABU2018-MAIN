@@ -143,6 +143,7 @@ void CAN1_RX0_IRQHandler(void)
 	if(msg.data32[0]==GET_PPS_PROBLEM)
 	{
 		ppsErrorReportFlag=1;
+		SetMotionFlag(AT_GET_PPS_PROBLEM);
 		USART_OUTByDMA("GET_PPS_PROBLEM\t");	
 	}
 	

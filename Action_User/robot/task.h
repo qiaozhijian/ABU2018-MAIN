@@ -125,6 +125,9 @@
 
 #define AT_GET_MOTIONCARD_GET_GOLDBALL_AREA         									0x4000000u
 
+#define AT_GET_PPS_PROBLEM         									                  0x8000000u
+
+
 
 
 //×´Ì¬Á¿½âÊÍ
