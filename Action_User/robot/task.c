@@ -114,6 +114,7 @@ void RobotTask(void)
   CPU_INT08U  os_err;
   os_err = os_err;
 	int BeepOnCnt=0;
+	int gasValueSendCnt=0;
   OSSemSet(PeriodSem, 0, &os_err);
   while(1)
   {
@@ -167,7 +168,11 @@ void RobotTask(void)
 				switch(gRobot.sDta.robocon2018)
 				{
 					case ROBOT_CONTROL_BY_BT:
-						USART_BT_SendGas(gRobot.gasValue);
+						gasValueSendCnt++;
+					  if(gasValueSendCnt>10){
+							gasValueSendCnt=0;
+							USART_BT_SendGas(gRobot.gasValue);
+						}
 //					  USART_OUTByDMA("P ");
 //						USART_OUTByDMAF(gRobot.posX);
 //						USART_OUTByDMAF(gRobot.posY);
