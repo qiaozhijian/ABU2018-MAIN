@@ -129,8 +129,11 @@ void FightForBall1(void)
 			if(gRobot.posY>2000.f){
 				ShootLedOn();
 		  }
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE)
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE){
 				gRobot.sDta.process=TO_THROW_BALL_1;
+				//到位之后万一控制卡发数发早了无法进行微调，先把这位置为0，下个周期进入SmallChange()检查
+				SetMotionFlag(~AT_COURSE_SUCCESS);
+			}
 			StartCount();
 			//在CAN中断当中读取控制卡发来的数据，到达指定位置让gRobot.sDta.process变为为TO_THROW_BALL_1
 			break;
@@ -244,8 +247,10 @@ void FightForBall2(void)
 			if(gRobot.posY>2000.f){
 				ShootLedOn();
 		  }
-			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE)
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_SECOND_PLACE){
 				gRobot.sDta.process=TO_THROW_BALL_2;
+				SetMotionFlag(~AT_COURSE_SUCCESS);
+			}
 			StartCount();
 //			if(!PrepareForTheBall())
 //			{
@@ -485,8 +490,10 @@ void FightForGoldBall(void)
 		if(gRobot.posY>5530.f){
 			ShootLedOn();
 		}
-		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE)/*射金球点6080 ， 6030*/
+		if(gRobot.sDta.AT_motionFlag&AT_REACH_THIRD_PLACE){
 			gRobot.sDta.process=TO_THROW_BALL_3;
+			SetMotionFlag(~AT_COURSE_SUCCESS);
+		}
 		//光电发现丢球这时候应该通知控制卡球丢了同时自己应该把gRobot.sDta.process归位取彩球进程
     if(!PrepareForTheBall())
     {
