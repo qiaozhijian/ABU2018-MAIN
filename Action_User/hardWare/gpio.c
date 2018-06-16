@@ -407,9 +407,7 @@ int KeySwitchIntoReset(void){
 					ExtendCarOff();
 					GoldBallGraspStairTwoOn();
 			
-					PrepareGetBall(READY);
-					
-					Delay_ms(1200);
+					Delay_ms(800);
 					PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
 					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
 					BEEP_OFF;
@@ -422,6 +420,7 @@ int KeySwitchIntoReset(void){
 					ShootLedOff();
 					//重启步骤归零
 					resetProgress=0;
+					
 					//取球步骤归零
 					gRobot.getBallStep.colorBall1=0;
 					gRobot.getBallStep.colorBall2=0;
@@ -444,7 +443,11 @@ int KeySwitchIntoReset(void){
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_ALL);
 						gRobot.sDta.AT_motionFlag=0;
 					}
-					Delay_ms(1000);
+					Delay_ms(200);
+					
+					PrepareGetBall(READY);
+					
+					Delay_ms(1200);
 					gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
 					
 					SetMotionFlag(AT_IS_SEND_DEBUG_DATA);

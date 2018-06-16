@@ -470,7 +470,7 @@ void TestFightForBall(void){
 			}else if(WhichBall==BALL_3||WhichBall==BALL_4||WhichBall==BALL_3_BACKUP||WhichBall==BALL_4_BACKUP){
 				 //射球前的延时
 			   if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
-					  Delay_ms(250);
+					  Delay_ms(300);
 			   }else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
             Delay_ms(300);
 				 }
@@ -480,7 +480,7 @@ void TestFightForBall(void){
 		     ClawOpen();
 				 //推杆执行时间
 				 if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
-					  Delay_ms(125);
+					  Delay_ms(200);
 			   }else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
             Delay_ms(300);
 				 }

@@ -546,7 +546,7 @@ void FightForGoldBall(void)
       shootTime++;
       /*给延时使发射杆能执行到位*/
 			if(shootTime==0){
-			  Delay_ms(125);
+			  Delay_ms(200);
 			}
 			else{
 				Delay_ms(300);
