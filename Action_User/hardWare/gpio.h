@@ -13,7 +13,9 @@
 
 #define PE_FOR_THE_BALL								(GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0))	
 
-#define KEY_RESET_SWITCH		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_3))
+#define KEY_RESET_GOLD_SWITCH		    	(GPIO_ReadInputDataBit(GPIOD, GPIO_Pin_3))
+
+#define KEY_RESET_COLOR_SWITCH		    	(GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_0))
 
 #define KEY_TEST_GOLD_SWITCH		    	(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_4))
 
@@ -47,13 +49,15 @@ void KeySwitchCheck(void);
 
 void KeySwitchIntoBTCtrl(void);
 
-void KeyResetInit(void);
+void KeyIntoGoldResetInit(void);
 
-void KeyIntoTestGoldeInit(void);
+void KeyIntoTestGoldInit(void);
 
 int KeySwitchIntoReset(void);
 
 int KeySwitchIntoTestGold(void);
 
 void RaBSwitchInit(void);
+
+void KeyIntoColorResetInit(void);
 #endif

@@ -521,9 +521,9 @@ void FightForGoldBall(void)
 						/*俯仰到位，*/
 						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
 									/*气压到位*/
-								//	&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
 			//第一个球
 			if(shootTime==0){
@@ -575,7 +575,7 @@ void FightForGoldBall(void)
 				gRobot.sDta.process=END_COMPETE;
 				gRobot.sDta.AT_motionFlag=0;
 				shootTime=0;
-				SetMotionFlag(AT_RESET_SHOOT_GOLD);
+				SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
 				gRobot.sDta.WhichGoldBall=0;
 			}
 			

@@ -234,6 +234,10 @@
 #define NOTIFY_MOTIONCARD_WIPE_WHEEL																	38               
 //通知控制卡进入金球走形测试测试
 #define NOTIFY_MOTIONCARD_INTO_TEST_GOLD                              68
+//通知控制卡红蓝场选择
+#define NOTIFY_MOTIONCARD_CHOOSE_BLUE                                 63
+
+#define NOTIFY_MOTIONCARD_CHOOSE_RED                                  64
 /*已到达区域一，可以投球*/
 #define GET_MOTIONCARD_REACH_AREA1																		1
 /*已到达区域二，可以投球*/

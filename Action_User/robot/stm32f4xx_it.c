@@ -83,8 +83,6 @@ void CAN1_RX0_IRQHandler(void)
 	{
       SetMotionFlag(AT_REACH_FIRST_PLACE);
 	  USART_OUTByDMA("GET_MOTIONCARD_REACH_AREA1\t");
-//      PrepareShootBall(BALL_1);
-//			SetMotionFlag(~AT_GAS_SUCCESS);
 	}
     if(msg.data32[0]==GET_MOTIONCARD_REACH_AREA2&&(gRobot.sDta.process==TO_THE_AREA_2||gRobot.sDta.process==TO_GET_BALL_2))
 	{
@@ -147,7 +145,7 @@ void CAN1_RX0_IRQHandler(void)
 		USART_OUTByDMA("GET_PPS_PROBLEM\t");	
 	}
 	
-  if(gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT||gRobot.sDta.robocon2018!=ROBOT_SELF_TEST)
+  if(gRobot.sDta.robocon2018!=ROBOT_CONTROL_BY_BT&&gRobot.sDta.robocon2018!=ROBOT_SELF_TEST)
     USART_OUTByDMA("GET_FROM_MOTIONCARD %d ",msg.data32[0]);
   }
   

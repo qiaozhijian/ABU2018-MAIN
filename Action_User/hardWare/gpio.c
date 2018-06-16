@@ -104,7 +104,7 @@ void KeyInit(void)
 	GPIO_Init(GPIOD, &GPIO_InitStructure);	
 }
 
-void KeyResetInit(void)
+void KeyIntoGoldResetInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
@@ -117,7 +117,7 @@ void KeyResetInit(void)
 	GPIO_Init(GPIOD, &GPIO_InitStructure);	
 }
 
-void KeyIntoTestGoldeInit(void)
+void KeyIntoTestGoldInit(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	
@@ -130,6 +130,18 @@ void KeyIntoTestGoldeInit(void)
 	GPIO_Init(GPIOB, &GPIO_InitStructure);	
 }
 
+void KeyIntoColorResetInit(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);	
+}
 //行程开关 PD7
 void RaBSwitchInit(void)
 {
@@ -199,6 +211,7 @@ static int IsBallRack=0;
 #define NOT_A_Ball_RACK  0
 int GoldRackInto(void){	
 	while(1){
+		//由于延时函数中有喂狗所以这里就不用喂狗了
 		if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_GET_GOLDBALL_AREA){
 				ShootLedOn();
 				SetMotionFlag(~AT_GET_MOTIONCARD_GET_GOLDBALL_AREA);
@@ -207,7 +220,7 @@ int GoldRackInto(void){
 		USART_OUTByDMA("BallRack %d ",PE_CHECK_GOLD);
 		
 		/*进入重启*/
-		if(KEY_RESET_SWITCH&&PE_CHECK_GOLD!=1){
+		if((KEY_RESET_GOLD_SWITCH||KEY_RESET_COLOR_SWITCH)&&PE_CHECK_GOLD!=1){
 			  Delay_ms(3);
 				if(KeySwitchIntoReset()){
 					break;
@@ -264,7 +277,7 @@ void KeySwitchCheck(void){
 			SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);
 		}
 		
-		if(KEY_RESET_SWITCH){
+		if(KEY_RESET_GOLD_SWITCH){
 			keyWipeWheelTouchTime++;
 		}
 		else{
@@ -315,97 +328,137 @@ void KeySwitchIntoBTCtrl(void){
 }
 
 int KeySwitchIntoReset(void){
-	//重启进程一共需要按两次
+	//重启进程一共需要按两次,重启进程
 	static int resetProgress=0;
-	//按住行程开关的时间
-	static int keyResetTouchTime=0;
-	if(KEY_RESET_SWITCH){
-	  keyResetTouchTime++;
+	//按住金球行程开关的时间
+	static int keyResetGoldTouchTime=0;
+	//没接到彩球行程开关的时间
+	static int keyResetColorTouchTime =0;
+	//重启动作执行标志位
+	static int carryOutResetActionFlag=0;
+	//返回按键结果	
+	int returnCommit=0;
+	if(KEY_RESET_GOLD_SWITCH){
+	  keyResetGoldTouchTime++;
 	}
 	else{
-	  keyResetTouchTime=0;
+	  keyResetGoldTouchTime=0;
 	}
 	
-	switch(resetProgress){
-		case 0:
-			if(keyResetTouchTime>=100){
-				resetProgress++;
-				keyResetTouchTime=0;
-				//通知控制卡准备重启
-				MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_RESET);
-				BEEP_ON;
-				ShootLedOn();
-				USART_OUTByDMA("In the RobotReset\r\n");
-				
-				ExtendCarOff();
-				GoldBallGraspStairTwoOn();
-				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
-				{
-					//使用金球备件
-					SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
-				}
-				
-				PrepareGetBall(READY);
-				
-				Delay_ms(1200);
-		   	PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
-        PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
-				BEEP_OFF;
-				
-				return 1;
-	    }
-		break;
-		
-		case 1:
-			if(keyResetTouchTime>=100){
-			  BEEP_ON;
-				ShootLedOff();
-				//重启步骤归零
-		    resetProgress=0;
-				//取球步骤归零
-				gRobot.getBallStep.colorBall1=0;
-				gRobot.getBallStep.colorBall2=0;
-        gRobot.getBallStep.goldBall=0;
-				//将某一个金球置位0,这个标志位控制气压满足范围
-				gRobot.sDta.WhichGoldBall=0;
-		    //将标志位全部清空,但是要判断是否在金球区重启
-				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
-				{
-					USART_OUTByDMA("\r\nset reset gold\t");
-					//将金球射球次数置为0
-				  SetShootTimeZero();
-					//标志位清空
-					gRobot.sDta.AT_motionFlag=0;
-					SetMotionFlag(AT_RESET_SHOOT_GOLD);
-					//使用金球备件
-					SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
-				}else
-				{
-					USART_OUTByDMA("\r\nset unreset gold\t");
-					gRobot.sDta.AT_motionFlag=0;
-				}
-				Delay_ms(1000);
-				
-				gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
-				
-				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
-				SetMotionFlag(AT_RESET_THE_ROBOT);
-				
-			  //告诉控制卡抱死重启模式选择
-				if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_GOLD);
-				else
-					MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_ALL);
-				
-				BEEP_OFF;
-				Delay_ms(200);
-				
-				return 1;
-			}
-		break;
+	if(KEY_RESET_COLOR_SWITCH){
+	  keyResetColorTouchTime++;
+	}
+	else{
+	  keyResetColorTouchTime=0;
 	}
 	
-	return 0;
+	if(keyResetGoldTouchTime>=100){
+		keyResetGoldTouchTime=0;
+		carryOutResetActionFlag=1;
+		switch(resetProgress){
+			case 0:
+				resetProgress=1;
+			  //标志位清空
+			  if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY)
+				{
+					//使用金球备件
+					gRobot.sDta.AT_motionFlag=0;
+				  SetMotionFlag(AT_RESET_SHOOT_GOLD);
+					SetMotionFlag(AT_RESET_USE_GOLD_STANDYBY);
+				}
+				else {
+					gRobot.sDta.AT_motionFlag=0;
+				  SetMotionFlag(AT_RESET_SHOOT_GOLD);
+				}
+			break;
+			
+			case 1:
+				resetProgress=2;
+			break;
+		}
+	}
+	
+	if(keyResetColorTouchTime>=100){
+		keyResetColorTouchTime=0;
+		carryOutResetActionFlag=1;
+		switch(resetProgress){
+			case 0:
+				resetProgress=1;
+			  gRobot.sDta.AT_motionFlag=0;
+			break;
+			
+			case 1:
+				resetProgress=2;
+			break;
+			
+		}
+	}
+	
+	if(carryOutResetActionFlag){
+		carryOutResetActionFlag=0;
+		switch(resetProgress){
+			case 1:
+					//通知控制卡准备重启
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_RESET);
+					BEEP_ON;
+					ShootLedOn();
+					USART_OUTByDMA("In the RobotReset\r\n");
+					
+					ExtendCarOff();
+					GoldBallGraspStairTwoOn();
+			
+					PrepareGetBall(READY);
+					
+					Delay_ms(1200);
+					PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
+					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
+					BEEP_OFF;
+					
+					returnCommit=1;
+			break;
+			
+			case 2:
+					BEEP_ON;
+					ShootLedOff();
+					//重启步骤归零
+					resetProgress=0;
+					//取球步骤归零
+					gRobot.getBallStep.colorBall1=0;
+					gRobot.getBallStep.colorBall2=0;
+					gRobot.getBallStep.goldBall=0;
+					//将某一个金球置位0,这个标志位控制气压满足范围
+					gRobot.sDta.WhichGoldBall=0;
+					//将标志位全部清空,但是要判断是否在金球区重启
+					if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD)
+					{
+						USART_OUTByDMA("\r\nset reset gold\t");
+						//将金球射球次数置为0
+						SetShootTimeZero();
+						//告诉控制卡抱死重启模式选择
+						MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_GOLD);
+					}
+					else
+					{
+						USART_OUTByDMA("\r\nset unreset gold\t");
+						//告诉控制卡抱死重启模式选择
+						MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_ALL);
+						gRobot.sDta.AT_motionFlag=0;
+					}
+					Delay_ms(1000);
+					gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
+					
+					SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+					SetMotionFlag(AT_RESET_THE_ROBOT);
+					
+					BEEP_OFF;
+					Delay_ms(200);
+					
+					returnCommit=1;
+			break;
+		}
+	}
+	
+	return returnCommit;
 }
 
 int KeySwitchIntoTestGold(void){
@@ -435,4 +488,5 @@ int KeySwitchIntoTestGold(void){
 	}
 	 return 0;
 }
+
 

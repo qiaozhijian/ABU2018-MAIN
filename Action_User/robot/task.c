@@ -143,8 +143,9 @@ void RobotTask(void)
 				if(KEYSWITCH){
 					KeySwitchIntoBTCtrl();
 				}
+				
 				/*进入重启*/
-				if(KEY_RESET_SWITCH){
+				if(KEY_RESET_GOLD_SWITCH||KEY_RESET_COLOR_SWITCH){
 					KeySwitchIntoReset();
 				}
 				
@@ -204,12 +205,12 @@ void RobotTask(void)
 					break;
 					
 					case ROBOT_PREPARE:
+						//红蓝场参数选择
+            PrepareParamByRaBSwitch();
 						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
 						{
 							BEEP_ON;
 							ShootLedOn();
-							//红蓝场参数选择
-              PrepareParamByRaBSwitch();
 							MotionCardCMDSend(NOTIFY_MOTIONCARD_PREPARE_FINISH);
 							//收到控制卡发数然后将AT_PREPARE_READY标志位置为零
 							SetMotionFlag(~AT_PREPARE_READY);
@@ -339,8 +340,9 @@ void HardWareInit(void){
 	
 	//行程开关初始化
 	KeyInit();
-	KeyResetInit();
-	KeyIntoTestGoldeInit();
+	KeyIntoGoldResetInit();
+  KeyIntoColorResetInit();
+	KeyIntoTestGoldInit();
 	//LED初始化
 	LEDInit();
 	//红蓝场开关初始化

@@ -105,18 +105,12 @@ void prepareMotionParaInit(void)
   PrepareGetBall2.gasAim=PrepareShootBall2.gasAim;
   
 	
-//	/*准备射第三个球的数据*/
-//  PrepareShootBall3.courseAngle=178.3f;
-//  PrepareShootBall3.pitchAngle=1.5f;
-//	PrepareShootBall3.upSteerAngle=0.0f;
-//  PrepareShootBall3.downSteerAngle=-1.f;
-//  PrepareShootBall3.gasAim=0.49f;
-
+	/*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=178.6f;
   PrepareShootBall3.pitchAngle=2.5f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=-1.f;
-  PrepareShootBall3.gasAim=0.495f;
+  PrepareShootBall3.gasAim=0.49f;
 	
 	
   /*准备等待拿第三个球的数据*/
@@ -134,18 +128,12 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
   
   
-//	/*准备射第四个球的数据*/
-//	PrepareShootBall4.courseAngle=178.3f;
-//  PrepareShootBall4.pitchAngle=1.6f;
-//	PrepareShootBall4.upSteerAngle=0.0f;
-//  PrepareShootBall4.downSteerAngle=0.0f;
-//  PrepareShootBall4.gasAim=0.49f;
-
+	/*准备射第四个球的数据*/
 	PrepareShootBall4.courseAngle=178.3f;
-  PrepareShootBall4.pitchAngle=0.5f;
+  PrepareShootBall4.pitchAngle=2.5f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.475f;
+  PrepareShootBall4.gasAim=0.495f;
 	
 	
 	/*准备接第四个球的参数*/
@@ -170,18 +158,18 @@ void prepareMotionParaInit(void)
 	PrepareShootColorBall[1].downSteerAngle=0.0f;
   PrepareShootColorBall[1].gasAim=0.58f;
 	
-//	/*金球1备件的射球参数*/
-//  PrepareShootGoldBall[0].courseAngle=178.6f;
-//  PrepareShootGoldBall[0].pitchAngle=2.5f;
-//	PrepareShootGoldBall[0].upSteerAngle=0.0f;
-//  PrepareShootGoldBall[0].downSteerAngle=-1.f;
-//  PrepareShootGoldBall[0].gasAim=0.495f;
-//	/*金球2备件的射球参数*/
-//	PrepareShootGoldBall[1].courseAngle=178.3f;
-//  PrepareShootGoldBall[1].pitchAngle=0.f;
-//	PrepareShootGoldBall[1].upSteerAngle=0.0f;
-//  PrepareShootGoldBall[1].downSteerAngle=0.0f;
-//  PrepareShootGoldBall[1].gasAim=0.475f;
+	/*金球1备件的射球参数*/
+  PrepareShootGoldBall[0].courseAngle=178.6f;
+  PrepareShootGoldBall[0].pitchAngle=2.5f;
+	PrepareShootGoldBall[0].upSteerAngle=0.0f;
+  PrepareShootGoldBall[0].downSteerAngle=-1.f;
+  PrepareShootGoldBall[0].gasAim=0.495f;
+	/*金球2备件的射球参数*/
+	PrepareShootGoldBall[1].courseAngle=178.3f;
+  PrepareShootGoldBall[1].pitchAngle=0.f;
+	PrepareShootGoldBall[1].upSteerAngle=0.0f;
+  PrepareShootGoldBall[1].downSteerAngle=0.0f;
+  PrepareShootGoldBall[1].gasAim=0.475f;
 	
 }
 //红场参数初始化
@@ -542,42 +530,42 @@ void SmallChange(void){
 			}
 		break;
 		
-		case GOLD_BALL:
-			if(gRobot.sDta.process!=TO_THROW_BALL_3){
-				lastAngle=0.f;
-				return;
-			}
-			errAngle=lastAngle-gRobot.angle;
-			lastAngle=gRobot.angle;
-//			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-//				 
-//				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
-//						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
-//				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
+//		case GOLD_BALL:
+//			if(gRobot.sDta.process!=TO_THROW_BALL_3){
+//				lastAngle=0.f;
+//				return;
+//			}
+//			errAngle=lastAngle-gRobot.angle;
+//			lastAngle=gRobot.angle;
+////			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+////				 
+////				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
+////						- RAD_TO_ANGLE(atan2((GOLD_BALL_FRAME_POSX - gRobot.posX) , (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))) + 90.f;
+////				/*atan((GOLD_BALL_FRAME_POSX - gRobot.posX) / (GOLD_BALL_FRAME_POSY - (gRobot.posY-ROBOT_CENTER_TO_COURCE)))*/ 
+////				
+////				if(gRobot.sDta.WhichGoldBall==BALL_3){
+////					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
+////				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
+////					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
+////				}
+////				whetherCount=1;
+////				//金球的调节范围
+////				courseChangeDifference = 0.15f;
+////			}
+//			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 //				
 //				if(gRobot.sDta.WhichGoldBall==BALL_3){
-//					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
+//					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL1_OFFSET + errAngle;
 //				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
-//					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
+//					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL2_OFFSET + errAngle;
 //				}
 //				whetherCount=1;
 //				//金球的调节范围
 //				courseChangeDifference = 0.15f;
+//			}else {
+//				 whetherCount=0;
 //			}
-			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-				
-				if(gRobot.sDta.WhichGoldBall==BALL_3){
-					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL1_OFFSET + errAngle;
-				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
-					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL2_OFFSET + errAngle;
-				}
-				whetherCount=1;
-				//金球的调节范围
-				courseChangeDifference = 0.15f;
-			}else {
-				 whetherCount=0;
-			}
-		break;
+//		break;
 	}	
 	
 	//如果计算了判断计算值是否与给定的值超过了courseChangeDifference,超过了则微调
@@ -734,29 +722,35 @@ void PrepareWork(void)
 
 void PrepareParamByRaBSwitch(void){
 	static int switchHighTime=0;
-	int checkTime=15;
+	static int checkTime=16;
 	
-	while(checkTime--){
-			if(RED_BLUE_SWITCH){
-				switchHighTime++;
-			}else {
-				switchHighTime=0;
-			}
+	if(checkTime){
+				checkTime--;
+				if(RED_BLUE_SWITCH){
+					switchHighTime++;
+				}else {
+					switchHighTime=0;
+				}
 
-			if(switchHighTime>6){
-				switchHighTime=0;
-				RedPrepareMotionParaInit();
-				BLUE_LIGHT_OFF;
-				RED_LIGHT_ON;
-				USART_OUTByDMA("\r\n  RedPrepareMotionParaInit\r\n");
-				return;
-			}
-  }
-	//默认蓝场
-	USART_OUTByDMA("\r\n  BlueprepareMotionParaInit\r\n");
-	prepareMotionParaInit();
-	RED_LIGHT_OFF;
-	BLUE_LIGHT_ON;
+				if(switchHighTime>8){
+					switchHighTime=0;
+					RedPrepareMotionParaInit();
+					BLUE_LIGHT_OFF;
+					RED_LIGHT_ON;
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_CHOOSE_RED);
+					USART_OUTByDMA("\r\n  RedPrepareMotionParaInit\r\n");
+					checkTime=0;
+					return;
+				}
+				if(checkTime==0){
+					//默认蓝场
+					USART_OUTByDMA("\r\n  BlueprepareMotionParaInit\r\n");
+					MotionCardCMDSend(NOTIFY_MOTIONCARD_CHOOSE_BLUE);
+					prepareMotionParaInit();
+					RED_LIGHT_OFF;
+					BLUE_LIGHT_ON;
+				}
+	}
 }
 //重启时设置金球的接球气压使其与射球一致
 void SetResetGoldGetBallGasaim(void){
