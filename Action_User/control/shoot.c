@@ -41,10 +41,12 @@ void ShootBall(void)
 //	}else if(gRobot.sDta.robocon2018==GOLD_BALL){
 //		Delay_ms(850);
 //	}
+	//失能气压传感器
+	GasDisable();
 	ShootBigOpen();
 	ShootLedOn();
 	ClawOpen();
-	Delay_ms(50);
+	Delay_ms(125);
 
   /*夹子打开*/
   /*把两个发射气缸打开*/
@@ -52,6 +54,8 @@ void ShootBall(void)
 
 void ShootReset(void)
 {
+	/*使能气压传感器*/
+	GasEnable();
 	/*关闭下方限位爪*/
   ClawShut();
 	ShootLedOff();
@@ -126,7 +130,7 @@ void prepareMotionParaInit(void)
   
 	/*准备射第四个球的数据*/
 	PrepareShootBall4.courseAngle=178.3f;
-  PrepareShootBall4.pitchAngle=1.4f;
+  PrepareShootBall4.pitchAngle=1.6f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
   PrepareShootBall4.gasAim=0.49f;
@@ -273,10 +277,49 @@ void RedPrepareMotionParaInit(void)
   PrepareShootGoldBall[1].gasAim=PrepareShootGoldBall[1].gasAim;
 	
 }
-float GetPrepareShootGoldBallGasAim(void)
+float GetPrepareShootGoldBallGasAim(int ballNum)
 {
-	//返回金球1备件气压
-	return PrepareShootGoldBall[0].gasAim;
+	float ballGas=0.58f;
+	switch(ballNum){
+		//返回金球1备件气压
+		case BALL_1:
+			ballGas=PrepareShootBall1.gasAim;			
+		break;
+		
+		case BALL_1_BACKUP:
+      ballGas=PrepareShootColorBall[0].gasAim;			
+		break;
+		
+		case BALL_2:
+			ballGas=PrepareShootBall2.gasAim;
+		break;
+		
+		case BALL_2_BACKUP:
+      ballGas=PrepareShootColorBall[1].gasAim;
+		break;
+		
+		case BALL_3:
+			ballGas=PrepareShootBall3.gasAim;
+		break;
+		
+		case BALL_3_BACKUP:
+			ballGas=PrepareShootGoldBall[0].gasAim;
+		break;
+		
+		case BALL_3_WAIT:
+			ballGas=PrepareShootBall3.gasAim;
+		break;
+		
+		case BALL_4:
+			ballGas=PrepareShootBall4.gasAim;
+		break;
+		
+		case BALL_4_BACKUP:
+			ballGas=PrepareShootGoldBall[1].gasAim;
+		break;
+		
+	}
+	return ballGas;
 }
 //
 void PrepareGetBallMotion(motionPara_t PrepareGetBall_t)
@@ -438,7 +481,7 @@ void SmallChange(void){
 //			  courseChangeDifference = 1.f;
 //			}
 			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-				countAngle=countAngle + COLOR_BALL1_OFFSET - gRobot.angle;
+				countAngle=gRobot.sDta.courseAimAngle + COLOR_BALL1_OFFSET - gRobot.angle;
 
 				whetherCount=1;
 				//第一个彩球的调节范围
@@ -467,7 +510,7 @@ void SmallChange(void){
 //			}
 			if(fabs(gRobot.angle)>0.5f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				
-				countAngle=countAngle + COLOR_BALL2_OFFSET - gRobot.angle;
+				countAngle=gRobot.sDta.courseAimAngle + COLOR_BALL2_OFFSET - gRobot.angle;
 				
 				whetherCount=1;			
 				//第二个彩球的调节范围
@@ -501,9 +544,9 @@ void SmallChange(void){
 			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				
 				if(gRobot.sDta.WhichGoldBall==BALL_3){
-					countAngle=countAngle + GOLD_BALL1_OFFSET - gRobot.angle;
+					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL1_OFFSET - gRobot.angle;
 				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
-					countAngle=countAngle + GOLD_BALL2_OFFSET - gRobot.angle;
+					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL2_OFFSET - gRobot.angle;
 				}
 				whetherCount=1;
 				//金球的调节范围
@@ -551,7 +594,7 @@ void PrepareWork(void)
 	gRobot.sDta.holdBallAimAngle[1]=PrepareCompete.downSteerAngle;
 	/*如果这里是金球重启的话*/
 	if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD){
-			gRobot.sDta.gasAimValue= GetPrepareShootGoldBallGasAim();
+			gRobot.sDta.gasAimValue= GetPrepareShootGoldBallGasAim(BALL_3_BACKUP);
 	}
 	else{
 			gRobot.sDta.gasAimValue=PrepareCompete.gasAim;

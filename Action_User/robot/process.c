@@ -95,7 +95,6 @@ void FightForBall1(void)
 									gRobot.raceTime.colorBall1WaitTime=gRobot.raceTime.roboconTime;
 									gRobot.getBallStep.colorBall1++;
 								}
-
 						break;
 					
 						case 1:
@@ -148,9 +147,9 @@ void FightForBall1(void)
 							/*俯仰到位，*/
 							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 								/*航向到位*/
-								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/)
 									  /*气压到位*/
-										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+//										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				USART_OUTByDMA("\r\nball1_wait_time\t");
 				USART_OUTByDMAF(returnEndUs()/1000.f);
@@ -168,6 +167,8 @@ void FightForBall1(void)
 				gRobot.raceTime.colorBall1ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1WaitTime;
 				gRobot.raceTime.colorBall1Time = gRobot.raceTime.colorBall1WaitTime + gRobot.raceTime.colorBall1ThrowTime ;
 				
+				//提前调节气压
+				GasMotion(GetPrepareShootGoldBallGasAim(BALL_2));
 				/*射球机构复位*/
 				ShootReset();
 				
@@ -267,9 +268,9 @@ void FightForBall2(void)
 								/*俯仰到位，*/
 								&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 									/*航向到位*/
-									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f)*/
+									&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f)*/)
 											/*气压到位*/
-											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+//											&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
 			{
 				USART_OUTByDMA("\r\nball2_wait_time\t");
 				USART_OUTByDMAF(returnEndUs()/1000.f);
@@ -286,7 +287,13 @@ void FightForBall2(void)
 				gRobot.raceTime.colorBall2ThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2WaitTime;
 				gRobot.raceTime.colorBall2Time=gRobot.raceTime.colorBall2ThrowTime + gRobot.raceTime.colorBall2WaitTime;
 				
-				
+				//提前调节气压
+				if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY){
+						GasMotion(GetPrepareShootGoldBallGasAim(BALL_3_BACKUP));
+				}
+				else {
+						GasMotion(GetPrepareShootGoldBallGasAim(BALL_3));
+				}
 				/*射球机构复位*/
 				ShootReset();
 				
@@ -512,20 +519,23 @@ void FightForGoldBall(void)
 						/*俯仰到位，*/
 						&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
 							/*航向到位*/
-							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)
+							&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
 									/*气压到位*/
-									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+								//	&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
 			//第一个球
 			if(shootTime==0){
-			  Delay_ms(300);
+				if(PE_FOR_THE_BALL)
+					Delay_ms(300);
 			}//第二个球
 			else{
-				Delay_ms(300);
+				if(PE_FOR_THE_BALL)
+					Delay_ms(300);
 			}
       /*射球*/
 //			ShootBall();
 			
+			GasDisable();
 			ShootBigOpen();
 	    ShootLedOn();
 	    Delay_ms(50);
@@ -543,6 +553,13 @@ void FightForGoldBall(void)
 			gRobot.raceTime.goldBallThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time - gRobot.raceTime.goldBallWaitTime;
 			gRobot.raceTime.goldBallTime=gRobot.raceTime.goldBallWaitTime + gRobot.raceTime.goldBallThrowTime;
 			
+			//提前调节气压
+			if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY&&shootTime==1){
+				 GasMotion(GetPrepareShootGoldBallGasAim(BALL_4_BACKUP));
+			}
+			else {
+				 GasMotion(GetPrepareShootGoldBallGasAim(BALL_4));
+			}
       /*射球机构复位*/
       ShootReset();
       			
