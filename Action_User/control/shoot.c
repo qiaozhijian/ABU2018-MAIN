@@ -46,7 +46,7 @@ void ShootBall(void)
 	ShootBigOpen();
 	ShootLedOn();
 	ClawOpen();
-	Delay_ms(125);
+	Delay_ms(75);
 
   /*夹子打开*/
   /*把两个发射气缸打开*/
@@ -68,8 +68,8 @@ void ShootReset(void)
 void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=173.f;
-  PrepareShootBall1.pitchAngle=7.5f;
+  PrepareShootBall1.courseAngle=171.2f;
+  PrepareShootBall1.pitchAngle=9.5f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.58f;
@@ -92,7 +92,7 @@ void prepareMotionParaInit(void)
 	
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=174.f;
-  PrepareShootBall2.pitchAngle=8.8f;
+  PrepareShootBall2.pitchAngle=9.6f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=-1.f;
   PrepareShootBall2.gasAim=0.58f;
@@ -142,7 +142,7 @@ void prepareMotionParaInit(void)
 //  PrepareShootBall4.gasAim=0.49f;
 
 	PrepareShootBall4.courseAngle=178.3f;
-  PrepareShootBall4.pitchAngle=0.f;
+  PrepareShootBall4.pitchAngle=0.5f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
   PrepareShootBall4.gasAim=0.475f;
