@@ -68,8 +68,8 @@ void ShootReset(void)
 void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=172.5f;
-  PrepareShootBall1.pitchAngle=7.f;
+  PrepareShootBall1.courseAngle=173.f;
+  PrepareShootBall1.pitchAngle=7.5f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.58f;
@@ -84,7 +84,7 @@ void prepareMotionParaInit(void)
   /*准备去拿第一个球的数据*/ 
   PrepareGetBall1.courseAngle=59.5f;
   PrepareGetBall1.pitchAngle=-0.8f;
-  PrepareGetBall1.upSteerAngle=-57.7f;
+  PrepareGetBall1.upSteerAngle=-62.7f;
 	PrepareGetBall1.downSteerAngle=-58.0f;
   PrepareGetBall1.gasAim=PrepareShootBall1.gasAim;
   
@@ -105,12 +105,18 @@ void prepareMotionParaInit(void)
   PrepareGetBall2.gasAim=PrepareShootBall2.gasAim;
   
 	
-	/*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=178.3f;
-  PrepareShootBall3.pitchAngle=1.5f;
+//	/*准备射第三个球的数据*/
+//  PrepareShootBall3.courseAngle=178.3f;
+//  PrepareShootBall3.pitchAngle=1.5f;
+//	PrepareShootBall3.upSteerAngle=0.0f;
+//  PrepareShootBall3.downSteerAngle=-1.f;
+//  PrepareShootBall3.gasAim=0.49f;
+
+  PrepareShootBall3.courseAngle=178.6f;
+  PrepareShootBall3.pitchAngle=2.5f;
 	PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=-1.f;
-  PrepareShootBall3.gasAim=0.49f;
+  PrepareShootBall3.gasAim=0.495f;
 	
 	
   /*准备等待拿第三个球的数据*/
@@ -128,12 +134,18 @@ void prepareMotionParaInit(void)
   PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
   
   
-	/*准备射第四个球的数据*/
+//	/*准备射第四个球的数据*/
+//	PrepareShootBall4.courseAngle=178.3f;
+//  PrepareShootBall4.pitchAngle=1.6f;
+//	PrepareShootBall4.upSteerAngle=0.0f;
+//  PrepareShootBall4.downSteerAngle=0.0f;
+//  PrepareShootBall4.gasAim=0.49f;
+
 	PrepareShootBall4.courseAngle=178.3f;
-  PrepareShootBall4.pitchAngle=1.6f;
+  PrepareShootBall4.pitchAngle=0.f;
 	PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.49f;
+  PrepareShootBall4.gasAim=0.475f;
 	
 	
 	/*准备接第四个球的参数*/
@@ -158,18 +170,18 @@ void prepareMotionParaInit(void)
 	PrepareShootColorBall[1].downSteerAngle=0.0f;
   PrepareShootColorBall[1].gasAim=0.58f;
 	
-	/*金球1备件的射球参数*/
-  PrepareShootGoldBall[0].courseAngle=178.6f;
-  PrepareShootGoldBall[0].pitchAngle=2.5f;
-	PrepareShootGoldBall[0].upSteerAngle=0.0f;
-  PrepareShootGoldBall[0].downSteerAngle=-1.f;
-  PrepareShootGoldBall[0].gasAim=0.495f;
-	/*金球2备件的射球参数*/
-	PrepareShootGoldBall[1].courseAngle=178.3f;
-  PrepareShootGoldBall[1].pitchAngle=0.f;
-	PrepareShootGoldBall[1].upSteerAngle=0.0f;
-  PrepareShootGoldBall[1].downSteerAngle=0.0f;
-  PrepareShootGoldBall[1].gasAim=0.475f;
+//	/*金球1备件的射球参数*/
+//  PrepareShootGoldBall[0].courseAngle=178.6f;
+//  PrepareShootGoldBall[0].pitchAngle=2.5f;
+//	PrepareShootGoldBall[0].upSteerAngle=0.0f;
+//  PrepareShootGoldBall[0].downSteerAngle=-1.f;
+//  PrepareShootGoldBall[0].gasAim=0.495f;
+//	/*金球2备件的射球参数*/
+//	PrepareShootGoldBall[1].courseAngle=178.3f;
+//  PrepareShootGoldBall[1].pitchAngle=0.f;
+//	PrepareShootGoldBall[1].upSteerAngle=0.0f;
+//  PrepareShootGoldBall[1].downSteerAngle=0.0f;
+//  PrepareShootGoldBall[1].gasAim=0.475f;
 	
 }
 //红场参数初始化
@@ -457,16 +469,22 @@ void SmallChange(void){
 	int whetherCount=0;
 	//与预定航向的偏差量决定是否调节
 	float courseChangeDifference=0.f;
+	//车身角度偏差误差量累计
+	float errAngle=0.f;
+  static float lastAngle=0.f;
 	if(gRobot.sDta.AT_motionFlag&AT_GET_PPS_PROBLEM){
+	  lastAngle=0.f;
 		USART_OUTByDMA("AT_GET_PPS_PROBLEM");
 		return;
 	}
 	switch(gRobot.sDta.robocon2018){
 		case COLORFUL_BALL_1:
 			if(gRobot.sDta.process!=TO_THROW_BALL_1){
+				lastAngle=0.f;
 				return;
 			}
-			
+			errAngle=lastAngle-gRobot.angle;
+			lastAngle=gRobot.angle;
 //			if((fabs(gRobot.posX-TZ_1_X)>25.f || fabs(gRobot.posY-TZ_1_Y)>25.f || fabs(gRobot.angle)>1.f )&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 //				 
 //				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
@@ -480,8 +498,9 @@ void SmallChange(void){
 //				//第一个彩球的调节范围
 //			  courseChangeDifference = 1.f;
 //			}
-			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
-				countAngle=gRobot.sDta.courseAimAngle + COLOR_BALL1_OFFSET - gRobot.angle;
+			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+				
+				countAngle=gRobot.sDta.courseAimAngle + COLOR_BALL1_OFFSET + errAngle;
 
 				whetherCount=1;
 				//第一个彩球的调节范围
@@ -493,9 +512,11 @@ void SmallChange(void){
 		
 		case COLORFUL_BALL_2:
 			if(gRobot.sDta.process!=TO_THROW_BALL_2){
+				lastAngle=0.f;
 				return;
 			}
-		
+			errAngle=lastAngle-gRobot.angle;
+			lastAngle=gRobot.angle;
 //			if((fabs(gRobot.posX-TZ_2_X)>10.f || fabs(gRobot.posY-TZ_2_Y)>10.f || fabs(gRobot.angle)>0.5f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 //				 
 //				 countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((525.f - gRobot.posX)*(525.f - gRobot.posX) + (3235.f - gRobot.posY)*(3235.f - gRobot.posY))))  \
@@ -508,9 +529,9 @@ void SmallChange(void){
 //				//第二个彩球的调节范围
 //				courseChangeDifference = 1.f;
 //			}
-			if(fabs(gRobot.angle)>0.5f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if(fabs(errAngle)>0.5f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				
-				countAngle=gRobot.sDta.courseAimAngle + COLOR_BALL2_OFFSET - gRobot.angle;
+				countAngle=gRobot.sDta.courseAimAngle + COLOR_BALL2_OFFSET + errAngle;
 				
 				whetherCount=1;			
 				//第二个彩球的调节范围
@@ -523,9 +544,11 @@ void SmallChange(void){
 		
 		case GOLD_BALL:
 			if(gRobot.sDta.process!=TO_THROW_BALL_3){
+				lastAngle=0.f;
 				return;
 			}
-			
+			errAngle=lastAngle-gRobot.angle;
+			lastAngle=gRobot.angle;
 //			if((fabs(gRobot.posX-TZ_3_X)>25.f || fabs(gRobot.posY-TZ_3_Y)>25.f || fabs(gRobot.angle)>1.f)&& gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 //				 
 //				countAngle = RAD_TO_ANGLE(asinf(445.f / sqrtf((GOLD_BALL_FRAME_POSX - gRobot.posX)*(GOLD_BALL_FRAME_POSX - gRobot.posX) + (GOLD_BALL_FRAME_POSY - gRobot.posY)*(GOLD_BALL_FRAME_POSY - gRobot.posY))))  \
@@ -541,12 +564,12 @@ void SmallChange(void){
 //				//金球的调节范围
 //				courseChangeDifference = 0.15f;
 //			}
-			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
+			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS ){
 				
 				if(gRobot.sDta.WhichGoldBall==BALL_3){
-					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL1_OFFSET - gRobot.angle;
+					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL1_OFFSET + errAngle;
 				}else if(gRobot.sDta.WhichGoldBall==BALL_4){
-					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL2_OFFSET - gRobot.angle;
+					countAngle=gRobot.sDta.courseAimAngle + GOLD_BALL2_OFFSET + errAngle;
 				}
 				whetherCount=1;
 				//金球的调节范围

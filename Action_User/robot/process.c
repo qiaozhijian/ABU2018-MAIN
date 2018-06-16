@@ -154,6 +154,8 @@ void FightForBall1(void)
 				USART_OUTByDMA("\r\nball1_wait_time\t");
 				USART_OUTByDMAF(returnEndUs()/1000.f);
 				USART_OUTByDMA("\r\n");
+				Delay_ms(200);
+
 				/*…‰«Ú*/
 				ShootBall();
 				
@@ -275,6 +277,7 @@ void FightForBall2(void)
 				USART_OUTByDMA("\r\nball2_wait_time\t");
 				USART_OUTByDMAF(returnEndUs()/1000.f);
 				USART_OUTByDMA("\r\n");
+				Delay_ms(200);
 				/*…‰«Ú*/
 				ShootBall();
 				

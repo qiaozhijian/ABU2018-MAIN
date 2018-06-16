@@ -158,7 +158,7 @@ void MotionStatusUpdate(void)
 	}
 	
 	/*ÅÐ¶Ï¸©Ñö½ÇÊÇ·ñµ½Î»*/
-	if(fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<0.01f)
+	if(fabs(gRobot.sDta.pitchAimAngle-gRobot.pitchAngle)<0.1f)
 	{
 		SetMotionFlag(AT_PITCH_SUCCESS);
 	}

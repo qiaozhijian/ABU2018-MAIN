@@ -474,6 +474,7 @@ void TestFightForBall(void){
 			   }else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
             Delay_ms(300);
 				 }
+				 GasDisable();
 				 ShootBigOpen();
 	       Delay_ms(50);
 		     ClawOpen();
@@ -485,6 +486,7 @@ void TestFightForBall(void){
 				 }
 			}
 			
+			GasMotion(GetPrepareShootGoldBallGasAim(WhichBall));
       /*射球机构复位*/
       ShootReset();
 			/*标志位置位0防止重复射球*/
