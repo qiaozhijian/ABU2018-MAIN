@@ -403,11 +403,13 @@ int KeySwitchIntoReset(void){
 					BEEP_ON;
 					ShootLedOn();
 					USART_OUTByDMA("In the RobotReset\r\n");
-					
+			
 					ExtendCarOff();
 					GoldBallGraspStairTwoOn();
 			
-					Delay_ms(800);
+					PrepareGetBall(READY);
+			
+					Delay_ms(1200);
 					PosLoopCfg(CAN2, PITCH_MOTOR_ID, 8000000, 8000000,1250000);        
 					PosLoopCfg(CAN2, COURCE_MOTOR_ID, 8000000, 8000000,12500000);
 					BEEP_OFF;
@@ -441,13 +443,9 @@ int KeySwitchIntoReset(void){
 						USART_OUTByDMA("\r\nset unreset gold\t");
 						//告诉控制卡抱死重启模式选择
 						MotionCardCMDSend(NOTIFY_MOTIONCARD_RESET_ALL);
-						gRobot.sDta.AT_motionFlag=0;
 					}
-					Delay_ms(200);
+					Delay_ms(1000);
 					
-					PrepareGetBall(READY);
-					
-					Delay_ms(1200);
 					gRobot.sDta.robocon2018=INTO_RESET_PREPARE;
 					
 					SetMotionFlag(AT_IS_SEND_DEBUG_DATA);

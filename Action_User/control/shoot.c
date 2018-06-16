@@ -69,7 +69,7 @@ void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=171.2f;
-  PrepareShootBall1.pitchAngle=9.5f;
+  PrepareShootBall1.pitchAngle=9.0f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.58f;
