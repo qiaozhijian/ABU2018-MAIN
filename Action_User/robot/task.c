@@ -222,6 +222,7 @@ void RobotTask(void)
 						if(gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT){
 							if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_RESET_FINISH)
 							{
+								SetMotionFlag(~AT_GET_MOTIONCARD_RESET_FINISH);
 								//将金球的两个等待气压全部变成与备件射球一样的
 								if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY){
 									SetResetGoldGetBallGasaim();
