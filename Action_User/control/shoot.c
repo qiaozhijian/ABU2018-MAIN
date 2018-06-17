@@ -606,7 +606,7 @@ void PrepareWork(void)
 	gRobot.sDta.holdBallAimAngle[0]=PrepareCompete.upSteerAngle;
 	gRobot.sDta.holdBallAimAngle[1]=PrepareCompete.downSteerAngle;
 	/*如果这里是金球重启的话*/
-	if(gRobot.sDta.AT_motionFlag&AT_RESET_SHOOT_GOLD){
+	if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY){
 			gRobot.sDta.gasAimValue= GetPrepareShootGoldBallGasAim(BALL_3_BACKUP);
 	}
 	else{

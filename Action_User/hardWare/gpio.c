@@ -351,7 +351,7 @@ int KeySwitchIntoReset(void){
 	else{
 	  keyResetColorTouchTime=0;
 	}
-	
+	//金球重启
 	if(keyResetGoldTouchTime>=100){
 		keyResetGoldTouchTime=0;
 		carryOutResetActionFlag=1;
@@ -359,7 +359,11 @@ int KeySwitchIntoReset(void){
 			case 0:
 				resetProgress=1;
 			  //标志位清空
-			  if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY)
+			break;
+			
+			case 1:
+				resetProgress=2;
+				if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY)
 				{
 					//使用金球备件
 					gRobot.sDta.AT_motionFlag=0;
@@ -371,23 +375,19 @@ int KeySwitchIntoReset(void){
 				  SetMotionFlag(AT_RESET_SHOOT_GOLD);
 				}
 			break;
-			
-			case 1:
-				resetProgress=2;
-			break;
 		}
 	}
-	
+	//彩球重启
 	if(keyResetColorTouchTime>=100){
 		keyResetColorTouchTime=0;
 		carryOutResetActionFlag=1;
 		switch(resetProgress){
 			case 0:
 				resetProgress=1;
-			  gRobot.sDta.AT_motionFlag=0;
 			break;
 			
 			case 1:
+				gRobot.sDta.AT_motionFlag=0;
 				resetProgress=2;
 			break;
 			
@@ -398,6 +398,8 @@ int KeySwitchIntoReset(void){
 		carryOutResetActionFlag=0;
 		switch(resetProgress){
 			case 1:
+					ShootLedOff();
+					Delay_ms(150);
 					//通知控制卡准备重启
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_RESET);
 					BEEP_ON;
