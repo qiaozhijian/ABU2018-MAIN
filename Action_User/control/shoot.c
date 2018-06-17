@@ -25,9 +25,9 @@ motionPara_t PrepareShootBall2;
 motionPara_t PrepareShootBall3;
 motionPara_t PrepareShootBall4;
 
-/*彩球备选参数*/
+/*彩球射球备选参数*/
 motionPara_t PrepareShootColorBall[2];
-/*金球备选参数*/
+/*金球射球备选参数*/
 motionPara_t PrepareShootGoldBall[2];
 
 void ShootBall(void)
@@ -69,7 +69,7 @@ void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
   PrepareShootBall1.courseAngle=171.2f;
-  PrepareShootBall1.pitchAngle=8.2f;
+  PrepareShootBall1.pitchAngle=7.9f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.58f;
@@ -167,7 +167,7 @@ void prepareMotionParaInit(void)
   PrepareShootGoldBall[0].gasAim=0.495f;
 	
 	/*金球2备件的射球参数*/
-	PrepareShootGoldBall[1].courseAngle=178.3f;
+	PrepareShootGoldBall[1].courseAngle=178.f;
   PrepareShootGoldBall[1].pitchAngle=0.f;
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
@@ -761,4 +761,12 @@ void SetResetGoldGetBallGasaim(void){
 	 PrepareGetBall3.gasAim=PrepareShootGoldBall[0].gasAim;
 	
 	 PrepareGetBall4.gasAim=PrepareShootGoldBall[1].gasAim;
+}
+//正常跑是设置金球接球气压与其射球一致
+void SetNormalGoldGetBallGasaim(void){
+	
+	 PrepareGetBall3Wait.gasAim=PrepareShootBall3.gasAim;
+	 PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
+	
+	 PrepareGetBall4.gasAim=PrepareShootBall4.gasAim;
 }

@@ -226,6 +226,8 @@ void RobotTask(void)
 								//将金球的两个等待气压全部变成与备件射球一样的
 								if(gRobot.sDta.AT_motionFlag&AT_RESET_USE_GOLD_STANDYBY){
 									SetResetGoldGetBallGasaim();
+								}else{
+									SetNormalGoldGetBallGasaim();
 								}
 								BEEP_ON;
 								ShootLedOn();

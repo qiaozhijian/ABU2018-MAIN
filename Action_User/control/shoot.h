@@ -43,5 +43,7 @@ void SmallChange(void);
 void PrepareParamByRaBSwitch(void);
 
 void SetResetGoldGetBallGasaim(void);
+
+void SetNormalGoldGetBallGasaim(void);
 #endif
 
