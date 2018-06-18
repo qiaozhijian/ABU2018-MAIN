@@ -92,7 +92,7 @@ void prepareMotionParaInit(void)
 	
   /*准备射第二个球的数据*/
   PrepareShootBall2.courseAngle=174.f;
-  PrepareShootBall2.pitchAngle=9.6f;
+  PrepareShootBall2.pitchAngle=9.1f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=-1.f;
   PrepareShootBall2.gasAim=0.58f;
