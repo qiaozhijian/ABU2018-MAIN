@@ -169,10 +169,10 @@ void prepareMotionParaInit(void)
 	
 	/*金球2备件的射球参数*/
 	PrepareShootGoldBall[1].courseAngle=177.3f;
-  PrepareShootGoldBall[1].pitchAngle=1.5f;
+  PrepareShootGoldBall[1].pitchAngle=2.f;
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
-  PrepareShootGoldBall[1].gasAim=0.5f;
+  PrepareShootGoldBall[1].gasAim=0.51f;
 	
 }
 //红场参数初始化
