@@ -43,9 +43,16 @@ void ShootBall(void)
 //	}
 	//失能气压传感器
 	GasDisable();
-	ShootBigOpen();
 	ShootLedOn();
+#if CLAW_OPEN_GAP>=0
 	ClawOpen();
+	Delay_ms(CLAW_OPEN_GAP);
+	ShootBigOpen();
+#else
+	ShootBigOpen();
+	Delay_ms((-CLAW_OPEN_GAP));
+	ClawOpen();
+#endif
 	Delay_ms(75);
 
   /*夹子打开*/

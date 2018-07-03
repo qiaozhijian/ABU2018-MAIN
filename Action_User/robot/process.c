@@ -528,11 +528,11 @@ void FightForGoldBall(void)
 			//第一个球
 			if(shootTime==0){
 				if(PE_FOR_THE_BALL)
-					Delay_ms(300);
+					Delay_ms(GOLD_BALL_DELAY);
 			}//第二个球
 			else{
 				if(PE_FOR_THE_BALL)
-					Delay_ms(300);
+					Delay_ms(GOLD_BALL_DELAY);
 			}
       /*射球*/
 //			ShootBall();
