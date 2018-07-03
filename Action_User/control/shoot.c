@@ -50,7 +50,7 @@ void ShootBall(void)
 	ShootBigOpen();
 #else
 	ShootBigOpen();
-	Delay_ms(CLAW_OPEN_GAP);
+	Delay_ms((-CLAW_OPEN_GAP));
 	ClawOpen();
 #endif
 	Delay_ms(75);
