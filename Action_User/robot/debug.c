@@ -105,8 +105,8 @@ void DebugDataUSART_OUT(void){
 	  USART_OUTByDMAF(gRobot.posY);
 		USART_OUTByDMAF(gRobot.angle);
 		USART_OUTByDMA("V ");
-		USART_OUTByDMAF(gRobot.robotVel.countXVel);
-		USART_OUTByDMAF(gRobot.robotVel.countYVel);
+//		USART_OUTByDMAF(gRobot.robotVel.countXVel);
+//		USART_OUTByDMAF(gRobot.robotVel.countYVel);
 		USART_OUTByDMAF(gRobot.robotVel.countVel);
 		USART_OUTByDMA("MV ");
 		USART_OUTByDMAF(gRobot.courseAngle);

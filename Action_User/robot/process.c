@@ -355,6 +355,23 @@ static int shootTime=0;
 /*完成投射金球的任务*/
 void FightForGoldBall(void)
 {
+	if((gRobot.sDta.process==TO_GET_BALL_3||gRobot.sDta.process==TO_THE_AREA_3)&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS)){
+		 gRobot.getBallStep.gasSatisfyCnt++;
+		 if(gRobot.getBallStep.gasSatisfyCnt>10){
+			 gRobot.getBallStep.gasSatisfyCnt=0;
+			 if(gRobot.getBallStep.gasSatisfyFlag==0){
+					GasDisable();
+				  gRobot.getBallStep.gasSatisfyFlag=1;
+				  USART_OUTByDMA("GasDisable");
+			 }
+		 }
+	}else if(gRobot.getBallStep.gasSatisfyFlag==1 &&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS)==0){
+		 gRobot.getBallStep.gasSatisfyFlag=0;
+		 GasMotion(gRobot.sDta.gasAimValue);
+		 GasEnable();
+		 USART_OUTByDMA("GasEnable");
+	}
+	
   switch(gRobot.sDta.process)
   {
     /*去取第三个球*/

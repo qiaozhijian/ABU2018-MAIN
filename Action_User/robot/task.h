@@ -389,6 +389,8 @@ typedef struct{
 	int colorBall1;
 	int colorBall2;
 	int goldBall;
+	uint8_t gasSatisfyFlag;
+  uint8_t gasSatisfyCnt;
 }GetBallStep_t;
 /**************typedef area**********/
 typedef struct{

@@ -429,6 +429,13 @@ int KeySwitchIntoReset(void){
 					gRobot.getBallStep.colorBall1=0;
 					gRobot.getBallStep.colorBall2=0;
 					gRobot.getBallStep.goldBall=0;
+					gRobot.getBallStep.gasSatisfyCnt=0;
+					if(gRobot.getBallStep.gasSatisfyFlag){
+						 gRobot.getBallStep.gasSatisfyFlag=0;
+						 GasMotion(gRobot.sDta.gasAimValue);
+						 GasEnable();
+						 USART_OUTByDMA("GasEnable");
+					}
 					//将某一个金球置位0,这个标志位控制气压满足范围
 					gRobot.sDta.WhichGoldBall=0;
 					//将标志位全部清空,但是要判断是否在金球区重启
