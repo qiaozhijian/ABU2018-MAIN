@@ -14,7 +14,7 @@
 #define CLAW_OPEN_GAP (0)
 
 //é‡‘çƒæŠ•å°„å‰çš„å»¶æ—¶
-#define GOLD_BALL_DELAY (300)
+#define GOLD_BALL_DELAY (0)
 
 typedef struct{
   /*º½Ïò½Ç*/
