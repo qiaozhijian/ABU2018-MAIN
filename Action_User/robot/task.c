@@ -190,7 +190,9 @@ void RobotTask(void)
 					  USART_OUTByDMA("T ");
 						USART_OUTByDMAF(time++);
 					  USART_OUTByDMA("G ");
+						USART_OUTByDMAF(gRobot.sDta.gasAimValue);
 						USART_OUTByDMAF(gRobot.gasValue);
+						USART_OUTByDMAF(gRobot.gasControl);
 					  USART_OUTByDMA("H2 ");
 						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[1]);
 						USART_OUTByDMAF(gRobot.holdBallAngle[1]);
