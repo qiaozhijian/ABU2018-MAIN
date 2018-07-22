@@ -48,4 +48,6 @@ void ExtendCarOn(void);
 
 void ExtendCarOff(void);
 void LedBallInto(void);
+
+void GasControlByPWM(float gasValue);
 #endif

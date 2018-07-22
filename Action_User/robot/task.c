@@ -80,7 +80,7 @@ void ConfigTask(void)
   /*dma初始化*/
   USARTDMASendInit(DEBUG_USART,USART1DMASendBuf,&DebugBLE_Init,921600);
 	
-	USART_OUTByDMA("START\r\n");
+  USART_OUTByDMA("START\r\n");
 //  USART_OUTByDMA("START\r\n");
 
   #ifndef TEST
@@ -126,7 +126,8 @@ void RobotTask(void)
 			debugFunction();
 		#else
 			#ifdef TEST
-			  SelfTest();
+//			  SelfTest();
+					GasControlByPWM(0.54f);
 			#else
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
@@ -356,7 +357,10 @@ void HardWareInit(void){
   //蜂鸣器PE7
   GPIO_Init_Pins(GPIOC, GPIO_Pin_3, GPIO_Mode_OUT);
 	
-  TIM_Init(TIM7,99,83,0,0);					//100us
+  TIM_Init(TIM7,99,83,0,0);					//100us、
+
+
+  TIM4_Pwm_Init(512-1,1-1);
   
 }
 void MotorInit(void){

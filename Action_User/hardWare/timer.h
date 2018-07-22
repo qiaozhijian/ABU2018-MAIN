@@ -17,7 +17,7 @@ void Delay_us(uint32_t nTime);
 void Delay_ms(uint32_t nTime);
 int DelayMsByProgramCycle(int timeWait);
 void TIM3_Pwm_Init(u32 arr,u32 psc);
-void TIM4_Pwm_Init(u32 arr,u32 psc);
+void TIM4_Pwm_Init(u32 arr,u16 psc);
 void SetCompare(uint8_t Num, float Percent);
 void SetSpeed(uint8_t Num,float percent);
 float GetSpeed(uint8_t Num);

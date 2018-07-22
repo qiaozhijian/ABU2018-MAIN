@@ -530,7 +530,7 @@ void TIM3_Pwm_Init(u32 arr,u32 psc)
 		TIM_SetCompare2(TIM3,0.05*2000);
 }
 
-void TIM4_Pwm_Init(u32 arr,u32 psc)
+void TIM4_Pwm_Init(u32 arr,u16 psc)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
@@ -539,10 +539,9 @@ void TIM4_Pwm_Init(u32 arr,u32 psc)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);//TIM4 时钟使能
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE); //使能 PORTD 时钟
 
-	GPIO_PinAFConfig(GPIOD,GPIO_PinSource12,GPIO_AF_TIM4); //复用为 TIM4
-	GPIO_PinAFConfig(GPIOD,GPIO_PinSource14,GPIO_AF_TIM4); //复用为 TIM4
+	GPIO_PinAFConfig(GPIOD,GPIO_PinSource15,GPIO_AF_TIM4); //复用为 TIM4
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12|GPIO_Pin_14; //GPIOB5
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15; //GPIOB5
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; //复用功能
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz; //速度 50MHz
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //推挽复用输出
@@ -558,17 +557,17 @@ void TIM4_Pwm_Init(u32 arr,u32 psc)
 	
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; //PWM 调制模式 2
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //比较输出使能
-	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //输出极性低
-	TIM_OC1Init(TIM4, &TIM_OCInitStructure); //初始化外设 TIM4 OC1
-	TIM_OC3Init(TIM4, &TIM_OCInitStructure); //初始化外设 TIM4 OC3
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_Low; //输出极性低
+	TIM_OC4Init(TIM4, &TIM_OCInitStructure); //初始化外设 TIM4 OC3
 
-	TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable); //使能预装载寄存器
-	TIM_OC3PreloadConfig(TIM4, TIM_OCPreload_Enable); //使能预装载寄存器
+	TIM_OC4PreloadConfig(TIM4, TIM_OCPreload_Enable); //使能预装载寄存器
 	TIM_ARRPreloadConfig(TIM4,ENABLE);//ARPE 使能
 	TIM_Cmd(TIM4, ENABLE); //使能 TIM4 
 	
-	TIM_SetCompare1(TIM4,0.05*2000);
-	TIM_SetCompare3(TIM4,0.05*2000);
+//	TIM_SetCompare4(TIM4,0.9/511*);
+
+	
+//	TIM_SetCompare3(TIM4,0.05*2000);
 }
 
 
