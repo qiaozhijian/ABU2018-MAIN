@@ -75,11 +75,11 @@ void ShootReset(void)
 void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=169.5f;
-  PrepareShootBall1.pitchAngle=8.5f;
+  PrepareShootBall1.courseAngle=167.5f;
+  PrepareShootBall1.pitchAngle=10.f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
-  PrepareShootBall1.gasAim=0.58f;
+  PrepareShootBall1.gasAim=0.52f;
 	
 	/*准备区动作*/
   PrepareCompete.courseAngle=90.0f;
@@ -98,11 +98,11 @@ void prepareMotionParaInit(void)
 	
 	
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=174.f;
-  PrepareShootBall2.pitchAngle=8.f;
+  PrepareShootBall2.courseAngle=173.5f;
+  PrepareShootBall2.pitchAngle=7.f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=-1.f;
-  PrepareShootBall2.gasAim=0.58f;
+  PrepareShootBall2.gasAim=0.52f;
 	
   /*准备去拿第二个球的数据*/
   PrepareGetBall2.courseAngle=91.5f;
@@ -114,10 +114,10 @@ void prepareMotionParaInit(void)
 	
 	/*准备射第三个球的数据*/
   PrepareShootBall3.courseAngle=178.5f;
-  PrepareShootBall3.pitchAngle=2.2f;
+  PrepareShootBall3.pitchAngle=2.8f;
   PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=-1.f;
-  PrepareShootBall3.gasAim=0.505f;
+  PrepareShootBall3.gasAim=0.518f;
 	
 	
   /*准备等待拿第三个球的数据*/
@@ -136,11 +136,11 @@ void prepareMotionParaInit(void)
   
   
 	/*准备射第四个球的数据*/
-  PrepareShootBall4.courseAngle=178.5f;
-  PrepareShootBall4.pitchAngle=1.f;
+  PrepareShootBall4.courseAngle=178.1f;
+  PrepareShootBall4.pitchAngle=2.8f;
   PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.495f;
+  PrepareShootBall4.gasAim=0.49f;
 	
 	/*准备接第四个球的参数*/
 	PrepareGetBall4.courseAngle=90.f;
@@ -174,11 +174,11 @@ void prepareMotionParaInit(void)
 
 	
 	/*金球2备件的射球参数*/
-	PrepareShootGoldBall[1].courseAngle=177.3f;
-  PrepareShootGoldBall[1].pitchAngle=2.f;
+	PrepareShootGoldBall[1].courseAngle=178.1f;
+  PrepareShootGoldBall[1].pitchAngle=2.8f;
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
-  PrepareShootGoldBall[1].gasAim=0.51f;
+  PrepareShootGoldBall[1].gasAim=0.48f;
 	
 }
 //红场参数初始化
