@@ -4,7 +4,7 @@
 #include "stdint.h"
 #include "stm32f4xx_adc.h"
 
-void Laser_Init(void); 				
+void AdcInit(void); 				
 uint16_t  Get_Adc(uint8_t channel); 				
 uint16_t Get_Adc_Average(uint8_t channel,uint8_t times);
 #endif 

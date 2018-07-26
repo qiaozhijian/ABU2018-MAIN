@@ -21,5 +21,7 @@ void TalkToCamera(uint32_t command);
 void GasEnable(void);
 void GasIF(void);
 void GasDisable(void);
+
+void GasRead(void);
 #endif
 

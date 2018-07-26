@@ -66,7 +66,6 @@ void App_Task()
 void MotorInit(void);
 void HardWareInit(void);
 void statusInit(void);
-
 /*全局变量的声明*/
 Robot_t gRobot={0};
 
@@ -90,6 +89,7 @@ void ConfigTask(void)
   #endif
 	
   HardWareInit();
+
   if(!gRobot.resetFlag)
   {
 			//给航向，俯仰电机上电初始化时间
@@ -126,8 +126,7 @@ void RobotTask(void)
 			debugFunction();
 		#else
 			#ifdef TEST
-//			  SelfTest();
-					GasControlByPWM(0.54f);
+			  SelfTest();
 			#else
 				/*喂狗，判断程序是否正常运行，另一处喂狗在延时函数里*/
 				IWDG_Feed();
@@ -361,6 +360,8 @@ void HardWareInit(void){
 
 
   TIM4_Pwm_Init(512-1,1-1);
+	
+	AdcInit();
   
 }
 void MotorInit(void){
@@ -438,7 +439,7 @@ void statusInit(void)
 	#ifdef TEST
 		#ifndef DEBUG
 		#endif
-		BEEP_ON;
+//		BEEP_ON;
 		ShootLedOn();
 		Delay_ms(2000);
 		ShootLedOff();

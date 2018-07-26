@@ -5,7 +5,7 @@
 #include "timer.h"
 #include "usart.h"
 									   
-void  Laser_Init(void)
+void  AdcInit(void)
 {    
   GPIO_InitTypeDef  GPIO_InitStructure;
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
@@ -15,7 +15,7 @@ void  Laser_Init(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); //使能ADC时钟
 
   /*配置GPIO端口号及其相关信息*/
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4|GPIO_Pin_5;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;//模拟输入模式，而不是复用
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
   GPIO_Init(GPIOC, &GPIO_InitStructure);

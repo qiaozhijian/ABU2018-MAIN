@@ -652,6 +652,11 @@ void PrepareWork(void)
 					  GasIF();
 						while(1){
 							Delay_ms(5);
+							#ifdef GAS_CONTOL_BY_PWM
+							//比例阀给满
+							GasMotion(0.85f);
+							GasRead();
+							#endif
 							cnt++;
 							/*先将蜂鸣器关了太吵了*/
 							if(cnt>=600){
@@ -718,7 +723,7 @@ void PrepareWork(void)
 					return;
 				}
 		
-		    if(cnt>450){
+		    if(cnt>600){
 			    BEEP_ON;
 			    USART_OUTByDMA("Course Not Ok You need reset\t");
 			    return;

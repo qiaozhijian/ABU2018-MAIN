@@ -451,7 +451,7 @@ void USART_OUT(USART_TypeDef* USARTx, const char *Data, ...)
   char buf[16];
   va_list ap;
   va_start(ap, Data);
-  
+    
   while(*Data != 0)				                          //判断是否到达字符串结束符
   {
     if(*Data == 0x5c)									  //'\'

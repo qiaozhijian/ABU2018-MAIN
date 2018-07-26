@@ -16,7 +16,7 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "iwdg.h"
-
+#include "motion.h"
 
 //精确延时函数调用wait
 void wait(uint32_t n)
@@ -564,6 +564,11 @@ void TIM4_Pwm_Init(u32 arr,u16 psc)
 	TIM_ARRPreloadConfig(TIM4,ENABLE);//ARPE 使能
 	TIM_Cmd(TIM4, ENABLE); //使能 TIM4 
 	
+	//上电保持高气压，防止打完气漏气
+	#ifdef  GAS_CONTOL_BY_PWM
+  GasMotion(0.7f);
+	#endif
+
 //	TIM_SetCompare4(TIM4,0.9/511*);
 
 	

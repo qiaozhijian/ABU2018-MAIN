@@ -11,6 +11,7 @@
 /**************#define area**********/
 #define TEST_GOLD
 //#define TEST
+#define GAS_CONTOL_BY_PWM  1
 //	 DEBUG
 
 //常量定义
@@ -68,8 +69,8 @@
 
 #define UP_STEER_COMPENSATE                             						  (116.f)   
 #define DOWN_STEER_COMPENSATE																					(107.f)
-#define PITCH_COMPENSATE																							(-10.f	 )
-#define COURCE_COMPENSATE																						  (42.f  )
+#define PITCH_COMPENSATE																							(-10.f)
+#define COURCE_COMPENSATE																						  (193.f)
 //状态量解释
 #define AT_CLAW_STATUS_OPEN 																					0x01u
 

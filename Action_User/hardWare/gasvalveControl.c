@@ -143,6 +143,6 @@ void LedBallInto(void){
 
 void GasControlByPWM(float gasValue){
 	
-	TIM_SetCompare4(TIM4,511-gasValue/0.9*511);
+	TIM_SetCompare4(TIM4,511-(gasValue-0.012f)/0.9f*511.f);
 	
 }
