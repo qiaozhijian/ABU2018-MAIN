@@ -17,6 +17,7 @@
 #include "stm32f4xx_gpio.h"
 #include "iwdg.h"
 #include "motion.h"
+#include "task.h"
 
 //精确延时函数调用wait
 void wait(uint32_t n)

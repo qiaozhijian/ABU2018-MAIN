@@ -108,7 +108,6 @@ void ConfigTask(void)
 	
   OSTaskSuspend(OS_PRIO_SELF);
 }
-int time=0;
 void RobotTask(void)
 {
   CPU_INT08U  os_err;
@@ -134,7 +133,7 @@ void RobotTask(void)
 				/*调试数据发送*/
 				DebugDataUSART_OUT();
 		
-				//试场的时候才用，就跑最后一段
+				//试场的时候才用,取球架3
 		    #ifdef TEST_GOLD
 					KeySwitchIntoTestGold();
 				#endif
@@ -187,12 +186,11 @@ void RobotTask(void)
 //					  USART_OUTByDMA("H1 ");
 //						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
 //						USART_OUTByDMAF(gRobot.holdBallAngle[0]);
-					  USART_OUTByDMA("T ");
-						USART_OUTByDMAF(time++);
 					  USART_OUTByDMA("G ");
 						USART_OUTByDMAF(gRobot.sDta.gasAimValue);
 						USART_OUTByDMAF(gRobot.gasValue);
 						USART_OUTByDMAF(gRobot.gasControl);
+						USART_OUTByDMA("adc %d",gRobot.gasAdc);
 					  USART_OUTByDMA("H2 ");
 						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[1]);
 						USART_OUTByDMAF(gRobot.holdBallAngle[1]);
@@ -201,6 +199,7 @@ void RobotTask(void)
 						AT_CMD_Handle();
 						TestFightForBall();
 					break;
+					
 					
 					case ROBOT_SELF_TEST:
 						 RobotSelfTest();
@@ -304,6 +303,10 @@ void RobotTask(void)
 						BEEP_ON;
 					  USART_OUTByDMA("INTO_HARDFAULT!!!");
 					break;
+					
+				  case RACK3_BALL:
+						GetRack3Ball();
+					break;
 				}
 				USART_OUTByDMA("\r\n");
 			#endif
@@ -312,6 +315,9 @@ void RobotTask(void)
 }
 
 void HardWareInit(void){
+	TIM4_Pwm_Init(512-1,1-1);
+
+	
   USART_OUTByDMA("HardWareInit\r\n");
   //定时器初始化
   TIM_Init(TIM2, 99, 839, 0, 0);   //1ms主定时器
@@ -359,7 +365,6 @@ void HardWareInit(void){
   TIM_Init(TIM7,99,83,0,0);					//100us、
 
 
-  TIM4_Pwm_Init(512-1,1-1);
 	
 	AdcInit();
   

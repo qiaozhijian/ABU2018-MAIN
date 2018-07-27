@@ -115,6 +115,9 @@ void DebugDataUSART_OUT(void){
 		USART_OUTByDMAF(gRobot.pitchAngle);
 		USART_OUTByDMAF(gRobot.gasValue);
 		USART_OUTByDMAF(gRobot.gasControl);
+		#ifdef GAS_CONTOL_BY_PWM 
+		USART_OUTByDMA("%d",gRobot.gasAdc);
+		#endif
 		USART_OUTByDMA("MAV ");
 		USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
 		USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);

@@ -484,16 +484,22 @@ int KeySwitchIntoTestGold(void){
 	if(keyTestTouchTime>=600){
 		keyTestTouchTime=0;
 		
-		//通知控制卡准备测试摩擦
-		MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_TEST_GOLD);
-		BEEP_ON;
-		ShootLedOn();
-		USART_OUTByDMA("In the TEST_GOLD\r\n");
-		
-		ExtendCarOn();
-		Delay_ms(1500);
-		BEEP_OFF;
-		ShootLedOff();
+		//通知控制卡准备取球架3的球
+		MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_GET_RACK3BALL);
+		USART_OUTByDMA("INTO_GET_RACK3BALL\r\n");
+				
+	  gRobot.sDta.robocon2018=RACK3_BALL;
+
+//		ExtendCarOn();
+		for(int i=0;i<5;i++){
+			BEEP_ON;
+      ShootLedOn();
+			Delay_ms(200);
+			BEEP_OFF;
+			ShootLedOff();
+			Delay_ms(200);
+		}
+//		ShootLedOff();
 		return 1;
 	}
 	 return 0;

@@ -1151,3 +1151,104 @@ void RobotSelfTest(void){
 		
 	}
 }
+
+
+void GetRack3Ball(void){
+	static 	int delayGetRack3BallTime=0;
+  static  uint8_t getRack3BallStep=0;
+	switch(getRack3BallStep){
+		case 0:
+			if(gRobot.posX>100.f){
+		    PrepareGetBall(BALL_RACK3);
+			}
+			if(gRobot.posX>3500.f)
+			{
+				delayGetRack3BallTime++;
+			}
+			if(delayGetRack3BallTime>800){
+					delayGetRack3BallTime=0;
+				  getRack3BallStep=1;
+				  MotionCardCMDSend(NOTIFY_MOTIONCARD_SHOT_BALL1);
+			}
+		break;
+			
+		case 1:
+			if(PrepareForTheBall()){
+					PrepareShootBall(BALL_1);
+				  getRack3BallStep=2;
+			}
+		break;
+			
+	  case 2:
+			if(gRobot.sDta.AT_motionFlag&AT_REACH_FIRST_PLACE){
+				ShootLedOn();
+				getRack3BallStep=3;
+				SetMotionFlag(~AT_REACH_FIRST_PLACE);
+			}
+		break;
+			
+		case 3:
+			if(/*持球舵机到位*/
+			   		(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS)
+						/*持球舵机到位*/
+						&&(gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_2_SUCCESS)
+							/*俯仰到位，*/
+							&&(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS)
+								/*航向到位*/
+								&&(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS)/*&&(gRobot.posY>2000.f*/)
+									  /*气压到位*/
+//										&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+			{
+				/*射球*/
+				ShootBall();
+				
+				/*给延时使发射杆能执行到位*/
+				Delay_ms(125);
+				
+				//提前调节气压
+				GasMotion(GetPrepareShootGoldBallGasAim(BALL_2));
+				/*射球机构复位*/
+				ShootReset();
+				
+				/*准备接球二*/
+				PrepareGetBall(BALL_2);
+				/*进入下一状态*/
+				
+				gRobot.sDta.process=TO_GET_BALL_2;
+				gRobot.sDta.robocon2018=COLORFUL_BALL_2;
+				SetMotionFlag(AT_IS_SEND_DEBUG_DATA);
+				SetMotionFlag(~AT_REACH_FIRST_PLACE);
+			}
+			else
+			{
+//				SetMotionFlag(~AT_IS_SEND_DEBUG_DATA);		
+				if(!PE_FOR_THE_BALL)
+					USART_OUTByDMA("!PE1 ");
+				if(!(gRobot.sDta.AT_motionFlag&AT_PITCH_SUCCESS))
+				{
+					USART_OUTByDMA("!PITCH1 ");
+					USART_OUTByDMAF(gRobot.pitchAngle);
+				}
+				if(!(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS))
+				{
+					USART_OUTByDMA("!COURSE1 ");
+					USART_OUTByDMAF(gRobot.courseAngle);
+				}
+				if(!(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
+				{
+					USART_OUTByDMA("!GAS1 ");
+					USART_OUTByDMAF(gRobot.gasValue);
+				}
+			}
+		break;
+	}
+		
+		
+		
+		
+}
+	
+	
+	
+	
+

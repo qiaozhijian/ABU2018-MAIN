@@ -20,10 +20,15 @@ motionPara_t PrepareGetBall2;
 motionPara_t PrepareGetBall3Wait;
 motionPara_t PrepareGetBall3;
 motionPara_t PrepareGetBall4;
+
+motionPara_t PrepareGetRack3Ball;
+
 motionPara_t PrepareShootBall1;
 motionPara_t PrepareShootBall2;
 motionPara_t PrepareShootBall3;
 motionPara_t PrepareShootBall4;
+
+
 
 /*彩球射球备选参数*/
 motionPara_t PrepareShootColorBall[2];
@@ -180,6 +185,14 @@ void prepareMotionParaInit(void)
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
   PrepareShootGoldBall[1].gasAim=0.48f;
 	
+	
+	/*演示取球架3上的彩球*/
+	PrepareGetRack3Ball.courseAngle=91.5f;
+  PrepareGetRack3Ball.pitchAngle=0.f;
+  PrepareGetRack3Ball.upSteerAngle=-87.f; 
+	PrepareGetRack3Ball.downSteerAngle=-89.f;
+  PrepareGetRack3Ball.gasAim=PrepareShootBall2.gasAim;
+	
 }
 //红场参数初始化
 void RedPrepareMotionParaInit(void)
@@ -285,6 +298,12 @@ void RedPrepareMotionParaInit(void)
   PrepareShootGoldBall[1].downSteerAngle=PrepareShootGoldBall[1].downSteerAngle;
   PrepareShootGoldBall[1].gasAim=PrepareShootGoldBall[1].gasAim;
 	
+	PrepareGetRack3Ball.courseAngle=PrepareGetRack3Ball.courseAngle;
+  PrepareGetRack3Ball.pitchAngle= PrepareGetRack3Ball.pitchAngle;
+  PrepareGetRack3Ball.upSteerAngle=PrepareGetRack3Ball.upSteerAngle; 
+	PrepareGetRack3Ball.downSteerAngle=PrepareGetRack3Ball.downSteerAngle;
+  PrepareGetRack3Ball.gasAim=PrepareGetRack3Ball.gasAim;
+	
 }
 float GetPrepareShootGoldBallGasAim(int ballNum)
 {
@@ -382,6 +401,11 @@ void PrepareGetBall(int index)
 		case BALL_4:
 			//传入准备得到球的参数
 			PrepareGetBallMotion(PrepareGetBall4);
+			break;
+		
+		case BALL_RACK3:
+			//传入准备得到球的参数
+			PrepareGetBallMotion(PrepareGetRack3Ball);
 			break;
 		
 		default:

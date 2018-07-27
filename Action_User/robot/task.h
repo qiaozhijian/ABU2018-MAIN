@@ -187,6 +187,8 @@
 #define INTO_RESET_PREPARE    																				16
 /*蓝牙调试自定义程序*/
 #define ROBOT_CONTROL_BY_BT   																				11
+
+#define RACK3_BALL                                                    18
 /*控制卡通信解释*/
 //开始出发
 #define NOTIFY_MOTIONCARD_START																				1
@@ -235,6 +237,8 @@
 #define NOTIFY_MOTIONCARD_WIPE_WHEEL																	38               
 //通知控制卡进入金球走形测试测试
 #define NOTIFY_MOTIONCARD_INTO_TEST_GOLD                              68
+//通知控制卡进入去球架三模式
+#define NOTIFY_MOTIONCARD_INTO_GET_RACK3BALL                          51                          
 //通知控制卡红蓝场选择
 #define NOTIFY_MOTIONCARD_CHOOSE_BLUE                                 63
 
@@ -281,6 +285,8 @@
 #define BALL_4_BACKUP																									10
 
 #define BALL_3_WAIT																										6
+/*球架3的球*/
+#define BALL_RACK3																										16
 
 #define DELAY_TASK_NUM																								2
 /*延时进行的任务*/
@@ -420,7 +426,7 @@ typedef struct{
   /*气压*/
   float gasValue;
   float gasAimValue;
-	
+	uint16_t gasAdc;
   
   /*延时类型*/
   uint32_t delayTask;
