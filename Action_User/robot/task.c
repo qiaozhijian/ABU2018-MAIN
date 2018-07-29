@@ -75,6 +75,8 @@ void ConfigTask(void)
   os_err = os_err;  
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
+	TIM4_Pwm_Init(512-1,1-1);
+	
 // DebugBLE_Init(921600);
   /*dma初始化*/
   USARTDMASendInit(DEBUG_USART,USART1DMASendBuf,&DebugBLE_Init,921600);
@@ -315,7 +317,6 @@ void RobotTask(void)
 }
 
 void HardWareInit(void){
-	TIM4_Pwm_Init(512-1,1-1);
 
 	
   USART_OUTByDMA("HardWareInit\r\n");
