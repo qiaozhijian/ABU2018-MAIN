@@ -230,6 +230,7 @@ void MotionStatusUpdate(void)
 	/*等到进入射球进程的时候进行一次计算微调航向*/
   SmallChange();
 	
+	
 }
 
 
@@ -239,3 +240,99 @@ void GasRead(void){
   gRobot.gasValue=((adc-370))*2.f*1.145f/4095.f;
 }
 
+
+//void SmallChangeGetBall(void){
+//	float countAngle=0.f;
+//	//定义是否进行计算了的变量
+//	int whetherCount=0;
+//	//与预定航向的偏差量决定是否调节
+//	float courseChangeDifference=0.f;
+//	//车身角度偏差误差量累计
+//	float errAngle=0.f;
+//	if(gRobot.sDta.AT_motionFlag&AT_GET_PPS_PROBLEM ){
+//		
+//		//USART_OUTByDMA("AT_GET_PPS_PROBLEM");
+//		return;
+//	//}else if(PE_FOR_THE_BALL){
+//		//	USART_OUTByDMA("PE_FOR_THE_BALL");
+//		return;
+//	}
+//	
+//	switch(gRobot.sDta.robocon2018){
+//		case COLORFUL_BALL_1:
+//			if(gRobot.sDta.process!=TO_GET_BALL_1){
+//				return;
+//			}
+//			errAngle=gRobot.angle;
+//			
+//			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
+//				
+//				countAngle =  errAngle;
+//				whetherCount=1;
+//				//第一个彩球的调节范围
+//			}else {
+//				 whetherCount=0;
+//			}
+//		break;
+//		
+//		case COLORFUL_BALL_2:
+//			if(gRobot.sDta.process!=TO_GET_BALL_2){
+//				return;
+//			}
+
+//			errAngle=gRobot.angle;
+//			
+//			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
+//				
+//				countAngle =  errAngle;
+//				whetherCount=1;
+//				//第一个彩球的调节范围
+//			}else {
+//				 whetherCount=0;
+//			}
+//		break;
+//		
+//		case GOLD_BALL:
+//			if(gRobot.sDta.process!=TO_GET_BALL_3){
+//				return;
+//			}
+//		  errAngle=gRobot.angle;
+//			
+//			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
+//				
+//				countAngle =  errAngle;
+//				whetherCount=1;
+//				//第一个彩球的调节范围
+//			}else {
+//				 whetherCount=0;
+//			}
+//		break;
+//	}	
+//	
+//	//如果计算了判断计算值是否与给定的值超过了courseChangeDifference,超过了则微调
+//	if(whetherCount){
+//		/*防止计算的值超过限定角度*/
+//		if(countAngle>189.f){
+//			USART_OUTByDMA("countAngle OUT OF RANGE");
+//			USART_OUTByDMAF(countAngle);
+//			return;
+//		}else if(countAngle<165.f){
+//			USART_OUTByDMA("countAngle OUT OF RANGE");
+//			USART_OUTByDMAF(countAngle);
+//			return;
+//		}
+//		
+//		if(fabs(gRobot.sDta.courseAimAngle - countAngle)>courseChangeDifference){
+//				SetMotionFlag(~AT_COURSE_SUCCESS);
+//			  gRobot.sDta.courseAimAngle = countAngle;
+//				USART_OUTByDMA("courseAngle need change=");
+//				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+//		}else {
+//				USART_OUTByDMA("courseAngle OK\t");
+//				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+//		}
+//  }
+//	
+//	
+//	
+//}
