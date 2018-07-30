@@ -23,5 +23,7 @@ void GasIF(void);
 void GasDisable(void);
 
 void GasRead(void);
+
+void SmallChangeGetBall(void);
 #endif
 

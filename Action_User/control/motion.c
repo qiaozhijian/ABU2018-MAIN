@@ -8,6 +8,8 @@
 #include "robot.h"
 #include "motion.h"
 #include "adc.h"
+#include "gpio.h"
+#include "dma.h"
 extern Robot_t gRobot;
 
 void PitchAngleMotion(float angle)
@@ -226,6 +228,8 @@ void MotionStatusUpdate(void)
 	{
 		SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
 	}
+	/*接球的时候进行接球微调*/
+	SmallChangeGetBall();
 	
 	/*等到进入射球进程的时候进行一次计算微调航向*/
   SmallChange();
@@ -241,98 +245,77 @@ void GasRead(void){
 }
 
 
-//void SmallChangeGetBall(void){
-//	float countAngle=0.f;
-//	//定义是否进行计算了的变量
-//	int whetherCount=0;
-//	//与预定航向的偏差量决定是否调节
-//	float courseChangeDifference=0.f;
-//	//车身角度偏差误差量累计
-//	float errAngle=0.f;
-//	if(gRobot.sDta.AT_motionFlag&AT_GET_PPS_PROBLEM ){
-//		
-//		//USART_OUTByDMA("AT_GET_PPS_PROBLEM");
-//		return;
-//	//}else if(PE_FOR_THE_BALL){
-//		//	USART_OUTByDMA("PE_FOR_THE_BALL");
-//		return;
-//	}
-//	
-//	switch(gRobot.sDta.robocon2018){
-//		case COLORFUL_BALL_1:
-//			if(gRobot.sDta.process!=TO_GET_BALL_1){
-//				return;
-//			}
-//			errAngle=gRobot.angle;
-//			
-//			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
-//				
-//				countAngle =  errAngle;
-//				whetherCount=1;
-//				//第一个彩球的调节范围
-//			}else {
-//				 whetherCount=0;
-//			}
-//		break;
-//		
-//		case COLORFUL_BALL_2:
-//			if(gRobot.sDta.process!=TO_GET_BALL_2){
-//				return;
-//			}
+void SmallChangeGetBall(void){
+	float countAngle=0.f;
+	//定义是否进行计算了的变量
+	int whetherCount=0;
+	
 
-//			errAngle=gRobot.angle;
-//			
-//			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
-//				
-//				countAngle =  errAngle;
-//				whetherCount=1;
-//				//第一个彩球的调节范围
-//			}else {
-//				 whetherCount=0;
-//			}
-//		break;
-//		
-//		case GOLD_BALL:
-//			if(gRobot.sDta.process!=TO_GET_BALL_3){
-//				return;
-//			}
-//		  errAngle=gRobot.angle;
-//			
-//			if(fabs(errAngle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
-//				
-//				countAngle =  errAngle;
-//				whetherCount=1;
-//				//第一个彩球的调节范围
-//			}else {
-//				 whetherCount=0;
-//			}
-//		break;
-//	}	
-//	
-//	//如果计算了判断计算值是否与给定的值超过了courseChangeDifference,超过了则微调
-//	if(whetherCount){
-//		/*防止计算的值超过限定角度*/
-//		if(countAngle>189.f){
-//			USART_OUTByDMA("countAngle OUT OF RANGE");
-//			USART_OUTByDMAF(countAngle);
-//			return;
-//		}else if(countAngle<165.f){
-//			USART_OUTByDMA("countAngle OUT OF RANGE");
-//			USART_OUTByDMAF(countAngle);
-//			return;
-//		}
-//		
-//		if(fabs(gRobot.sDta.courseAimAngle - countAngle)>courseChangeDifference){
-//				SetMotionFlag(~AT_COURSE_SUCCESS);
-//			  gRobot.sDta.courseAimAngle = countAngle;
-//				USART_OUTByDMA("courseAngle need change=");
-//				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-//		}else {
-//				USART_OUTByDMA("courseAngle OK\t");
-//				USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-//		}
-//  }
-//	
-//	
-//	
-//}
+	if(gRobot.sDta.AT_motionFlag&AT_GET_PPS_PROBLEM ){
+		
+		USART_OUTByDMA("AT_GET_PPS_PROBLEM");
+		return;
+	}else if(PE_FOR_THE_BALL){
+		
+		USART_OUTByDMA("PE_FOR_THE_BALL");
+		return;
+	}
+	
+	switch(gRobot.sDta.robocon2018){
+		case COLORFUL_BALL_1:
+			if(gRobot.sDta.process!=TO_GET_BALL_1){
+				return;
+			}
+			
+			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
+				countAngle = gRobot.sDta.holdBallAimAngle[0]-gRobot.angle;
+
+				whetherCount=1;
+				//第一个彩球的调节范围
+			}else {
+				 whetherCount=0;
+			}
+		break;
+		
+		case COLORFUL_BALL_2:
+			if(gRobot.sDta.process!=TO_GET_BALL_2){
+				return;
+			}
+			
+			if(fabs(gRobot.angle)>0.3f && gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS ){
+				
+			  countAngle = gRobot.sDta.holdBallAimAngle[0]-gRobot.angle;
+
+				whetherCount=1;
+				//第一个彩球的调节范围
+			}else {
+				 whetherCount=0;
+			}
+		break;
+		
+	}	
+	
+	//如果计算了判断计算值是否与给定的值超过了courseChangeDifference,超过了则微调
+	if(whetherCount){
+		/*防止计算的值超过限定角度*/
+		if(fabs(gRobot.angle)>6.f||fabs(countAngle - GetGetBallUpSteerAngle(gRobot.sDta.process)) > 6.f){
+			USART_OUTByDMA("countAngle OUT OF RANGE");
+			USART_OUTByDMAF(countAngle);
+			return;
+		}
+		
+		if(fabs(countAngle - gRobot.sDta.holdBallAimAngle[0])> 0.3f){
+			  
+				SetMotionFlag(~AT_HOLD_BALL_1_SUCCESS);
+				USART_OUTByDMA("upsteerAngle need change=");
+				USART_OUTByDMAF(countAngle);
+//			  gRobot.sDta.holdBallAimAngle[0]= countAngle;
+		}else {
+				USART_OUTByDMA("upsteerAngle OK\t");
+				USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
+		}
+  }
+	
+	
+	
+}
