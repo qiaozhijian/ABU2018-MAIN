@@ -806,3 +806,19 @@ void SetNormalGoldGetBallGasaim(void){
 	
 	 PrepareGetBall4.gasAim=PrepareShootBall4.gasAim;
 }
+
+
+float GetGetBallUpSteerAngle(int process){
+	float upsteerAngle = 0.f;
+	switch(process){
+		case TO_GET_BALL_1:
+			upsteerAngle = PrepareGetBall1.upSteerAngle;
+		break;
+		
+		case TO_GET_BALL_2:
+			upsteerAngle = PrepareGetBall2.upSteerAngle; 
+		break;
+		
+	}
+	return upsteerAngle;
+}

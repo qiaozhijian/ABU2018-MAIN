@@ -51,5 +51,7 @@ void PrepareParamByRaBSwitch(void);
 void SetResetGoldGetBallGasaim(void);
 
 void SetNormalGoldGetBallGasaim(void);
+
+float GetGetBallUpSteerAngle(int process);
 #endif
 
