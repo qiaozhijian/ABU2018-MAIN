@@ -255,9 +255,9 @@ void SmallChangeGetBall(void){
 		
 		USART_OUTByDMA("AT_GET_PPS_PROBLEM");
 		return;
-	}else if(PE_FOR_THE_BALL){
-		
-		USART_OUTByDMA("PE_FOR_THE_BALL");
+	}else if((gRobot.sDta.robocon2018==COLORFUL_BALL_1||gRobot.sDta.robocon2018==COLORFUL_BALL_2\
+	||gRobot.sDta.robocon2018==GOLD_BALL)&&(PE_FOR_THE_BALL)){
+	  USART_OUTByDMA("PE NO Change upsteer");
 		return;
 	}
 	
