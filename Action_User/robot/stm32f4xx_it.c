@@ -131,6 +131,8 @@ void CAN1_RX0_IRQHandler(void)
 			gRobot.laser[0]=msg.data32[1];
 		}else if(msg.data8[2]=='B'){
 			gRobot.laser[1]=msg.data32[1];
+		}else if(msg.data8[2]=='C'){
+			gRobot.laser[2]=msg.data32[1];
 		}
 	}
 	if(msg.data32[0]==GET_MOTIONCARD_INTO_HARDFAULT)

@@ -197,7 +197,7 @@ void RobotTask(void)
 						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[1]);
 						USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 					  USART_OUTByDMA("L ");
-					  USART_OUTByDMA("A%d\t B%d\t",gRobot.laser[0],gRobot.laser[1]);
+					  USART_OUTByDMA("A%d\t B%d\t C%d\t",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
 						AT_CMD_Handle();
 						TestFightForBall();
 					break;
