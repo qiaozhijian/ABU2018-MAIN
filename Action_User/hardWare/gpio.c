@@ -474,6 +474,7 @@ int KeySwitchIntoReset(void){
 int KeySwitchIntoTestGold(void){
 	//按住行程开关的时间
 	static int keyTestTouchTime=0;
+	int flashTime = 5;
 	if(KEY_TEST_GOLD_SWITCH){
 	  keyTestTouchTime++;
 	}
@@ -484,14 +485,23 @@ int KeySwitchIntoTestGold(void){
 	if(keyTestTouchTime>=600){
 		keyTestTouchTime=0;
 		
+		
+		#if TEST_GOLD==1
+		//通知控制卡准备测试摩擦
+		ExtendCarOn();
+		MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_TEST_GOLD);
+		USART_OUTByDMA("INTO_TEST_GOLD\r\n");
+		flashTime = 4;
+		#elif TEST_GOLD==2
 		//通知控制卡准备取球架3的球
 		MotionCardCMDSend(NOTIFY_MOTIONCARD_INTO_GET_RACK3BALL);
 		USART_OUTByDMA("INTO_GET_RACK3BALL\r\n");
-				
 	  gRobot.sDta.robocon2018=RACK3_BALL;
+		flashTime = 5;
+		#endif
+		
 
-//		ExtendCarOn();
-		for(int i=0;i<5;i++){
+		for(int i=0;i<flashTime;i++){
 			BEEP_ON;
       ShootLedOn();
 			Delay_ms(200);
@@ -499,7 +509,7 @@ int KeySwitchIntoTestGold(void){
 			ShootLedOff();
 			Delay_ms(200);
 		}
-//		ShootLedOff();
+		
 		return 1;
 	}
 	 return 0;

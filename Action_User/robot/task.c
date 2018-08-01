@@ -135,7 +135,7 @@ void RobotTask(void)
 				/*调试数据发送*/
 				DebugDataUSART_OUT();
 		
-				//试场的时候才用,取球架3
+				//试场的时候才用,取球架3或者测试摩擦
 		    #ifdef TEST_GOLD
 					KeySwitchIntoTestGold();
 				#endif

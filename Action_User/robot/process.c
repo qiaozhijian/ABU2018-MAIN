@@ -405,7 +405,7 @@ void FightForGoldBall(void)
 			break;
 				
 			case 2:
-				if(gRobot.posY>1500.f){
+				if(gRobot.posY>2100.f){
 					//接取金球一
 					PrepareGetBall(BALL_3);
 					gRobot.getBallStep.goldBall++;

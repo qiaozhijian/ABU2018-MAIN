@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "usart.h"
 /**************#define area**********/
-#define TEST_GOLD
+#define TEST_GOLD          1
 //#define TEST
 #define GAS_CONTOL_BY_PWM  1
 //	 DEBUG
