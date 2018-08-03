@@ -48,6 +48,19 @@ void CourseAngleMotion(float angle)
 
 void GasMotion(float value)
 {
+	float Kp=0.03f,Ki=0.05f;
+	float gasControl = 0.f;
+	float error = value - gRobot.gasValue;
+  if(fabs(error)<0.01&&fabs(error)>0.003){
+    gRobot.gasPidIntegral+=error;	
+		gasControl = Kp * error + Ki * gRobot.gasPidIntegral;
+		gRobot.gasControl = gasControl;
+	}
+	else{
+		gRobot.gasPidIntegral =0.f ;
+		gRobot.gasControl = 0.f;
+	}
+	
 	#ifndef  GAS_CONTOL_BY_PWM
 	uint32_t data[2]={0x00005045,0x00000000};
 	union
@@ -56,11 +69,11 @@ void GasMotion(float value)
 		uint32_t data32;
 	}sendData;
 	
-	sendData.dataFloat = value;
-	
-	data[1] = sendData.data32;
+	sendData.dataFloat = value /*+ gasControl*/;
+	data[1] = sendData.data32 ;
   CAN_TxMsg(CAN2,SEND_TO_GASSENSOR,(uint8_t*)(&data),8);
 	#else
+	value=value /*+ gasControl*/;
   GasControlByPWM(value);
 	#endif
 }
@@ -201,6 +214,8 @@ void MotionStatusUpdate(void)
 	if(fabs(gRobot.sDta.gasAimValue-gRobot.gasValue)< gasBoundary)
 	{
 		SetMotionFlag(AT_GAS_SUCCESS);
+		gRobot.gasPidIntegral =0.f ;
+		gRobot.gasControl = 0.f;
 	}
 	else
 	{
@@ -229,7 +244,7 @@ void MotionStatusUpdate(void)
 		SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
 	}
 	/*接球的时候进行接球微调*/
-	SmallChangeGetBall();
+//	SmallChangeGetBall();
 	
 	/*等到进入射球进程的时候进行一次计算微调航向*/
   SmallChange();

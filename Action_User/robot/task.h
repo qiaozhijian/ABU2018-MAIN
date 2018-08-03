@@ -445,6 +445,7 @@ typedef struct{
 	float KalmanZ;
 	
 	float gasControl;
+	float gasPidIntegral;
 	uint32_t posSystemReady;
 	
 //	/*¶æ»ú´íÎóÖ¸Ê¾*/
