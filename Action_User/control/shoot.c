@@ -8,6 +8,7 @@
 #include "robot.h"
 #include "dma.h"
 #include "gpio.h"
+#include "adc.h"
 extern OS_EVENT *PeriodSem;
 
 
@@ -681,7 +682,12 @@ void PrepareWork(void)
 							Delay_ms(5);
 							#ifdef GAS_CONTOL_BY_PWM
 							//±ÈÀý·§¸øÂú
-							GasMotion(0.85f);
+								#ifdef GAS_ADC_ZERO
+								GasMotion(0.f);
+								USART_OUTByDMA("%d ",Get_Adc_Average(11,15));
+								#else
+								GasMotion(0.85f);
+								#endif
 							GasRead();
 							#endif
 							cnt++;

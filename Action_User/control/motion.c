@@ -256,7 +256,7 @@ void MotionStatusUpdate(void)
 void GasRead(void){
   uint16_t adc = Get_Adc_Average(11,15);
 	gRobot.gasAdc = adc;
-  gRobot.gasValue=((adc-370))*2.f*1.145f/4095.f;
+  gRobot.gasValue=((adc-GAS_ADC_ZERO))*2.f*1.145f/4095.f;
 }
 
 

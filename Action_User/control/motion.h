@@ -6,7 +6,7 @@
 #define UP_STEER_MOTOR_ID     7
 #define DOWN_STEER_MOTOR_ID   8
 
-
+#define GAS_ADC_ZERO          363
 
 void PitchAngleMotion(float angle);
 
