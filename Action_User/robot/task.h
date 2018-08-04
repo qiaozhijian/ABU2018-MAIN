@@ -13,7 +13,7 @@
 //#define TEST
 #define GAS_CONTOL_BY_PWM  1
 //	 DEBUG
-//#define GAS_ADC_ZERO  
+//#define LOOK_FOR_GAS_ADC_ZERO  
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f
 //摄像头位于自动车偏右21.85mm，距墙172.44mm方向的地方
