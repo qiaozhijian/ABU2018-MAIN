@@ -52,8 +52,8 @@ void GasMotion(float value)
 	float gasControl = 0.f;
 	float error = value - gRobot.gasValue;
   if(fabs(error)<0.01&&fabs(error)>0.003){
-    gRobot.gasPidIntegral+=error;	
-		gasControl = Kp * error + Ki * gRobot.gasPidIntegral;
+    gRobot.gasPidIntegral += Ki * error;	
+		gasControl = Kp * error + gRobot.gasPidIntegral;
 		gRobot.gasControl = gasControl;
 	}
 	else{
