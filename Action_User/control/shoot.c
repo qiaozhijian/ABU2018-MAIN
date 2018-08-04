@@ -82,8 +82,8 @@ void ShootReset(void)
 void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=168.f;
-  PrepareShootBall1.pitchAngle=10.5f;
+  PrepareShootBall1.courseAngle=168.3f;
+  PrepareShootBall1.pitchAngle=9.5f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
   PrepareShootBall1.gasAim=0.52f;
@@ -826,35 +826,4 @@ float GetGetBallUpSteerAngle(int process){
 	return upsteerAngle;
 }
 
-/*分段取球*/
-void PrepareGetBallThree(void){
-		static uint8_t rotateStep = 0;
-			switch(rotateStep){
-				case 0:
-					gRobot.sDta.holdBallAimAngle[0] = PrepareGetGoldBallProcess[0].upSteerAngle;
-					gRobot.sDta.courseAimAngle = PrepareGetGoldBallProcess[0].courseAngle;
-					if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS&&gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS){
-						rotateStep=1;
-						gRobot.sDta.holdBallAimAngle[0] = PrepareGetGoldBallProcess[1].upSteerAngle;
-						gRobot.sDta.courseAimAngle = PrepareGetGoldBallProcess[1].courseAngle;
-					}
-				break;
-				
-				case 1:
-					if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS&&gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS){
-						rotateStep=2;
-						gRobot.sDta.holdBallAimAngle[0] = PrepareGetBall3.upSteerAngle;
-						gRobot.sDta.courseAimAngle = PrepareGetBall3.courseAngle;
-					}
-				break;
-				
-				case 2:
-					if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS&&gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS){
-					}
-				break;
-				
-			}
-
-	
-}	
 

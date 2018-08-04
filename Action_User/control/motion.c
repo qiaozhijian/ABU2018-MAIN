@@ -48,10 +48,10 @@ void CourseAngleMotion(float angle)
 
 void GasMotion(float value)
 {
-	float Kp=0.03f,Ki=0.05f;
+	float Kp=0.03f,Ki=0.02f;
 	float gasControl = 0.f;
 	float error = value - gRobot.gasValue;
-  if(fabs(error)<0.01&&fabs(error)>0.003){
+  if(fabs(error)<0.01&&fabs(error)>0.003&&gRobot.sDta.robocon2018==GOLD_BALL){
     gRobot.gasPidIntegral += Ki * error;	
 		gasControl = Kp * error + gRobot.gasPidIntegral;
 		gRobot.gasControl = gasControl;

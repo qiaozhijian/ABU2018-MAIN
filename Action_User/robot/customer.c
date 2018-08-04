@@ -18,7 +18,6 @@
 #include "robot.h"
 #include "dma.h"
 
-
 #define CLAW 						1
 #define SHOOT 					2
 #define PITCH 					3
@@ -130,6 +129,7 @@ void AT_CMD_Judge(void){
 			YesOrNoFlag=0;
 			shootBallFlag=0;
 			ballMode=PICK_BALL;
+			gRobot.sDta.AT_motionFlag=0;
 		}
 	  if(*(buffer + 5) =='0'){
 				WhichBall=BALL_1;
@@ -769,4 +769,7 @@ void ChangeParamTemp(float value){
 	
 	
 }
+
+
+
 
