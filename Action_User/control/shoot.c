@@ -22,6 +22,8 @@ motionPara_t PrepareGetBall3;
 motionPara_t PrepareGetBall4;
 
 motionPara_t PrepareGetRack3Ball;
+/*取金球中间步骤*/
+motionPara_t PrepareGetGoldBallProcess[2];
 
 motionPara_t PrepareShootBall1;
 motionPara_t PrepareShootBall2;
@@ -103,7 +105,7 @@ void prepareMotionParaInit(void)
 	
 	
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=174.3f;
+  PrepareShootBall2.courseAngle=175.0f;
   PrepareShootBall2.pitchAngle=9.f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=-1.f;
@@ -118,11 +120,11 @@ void prepareMotionParaInit(void)
   
 	
 	/*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=178.5f;
-  PrepareShootBall3.pitchAngle=4.5f;
+  PrepareShootBall3.courseAngle=178.9f;
+  PrepareShootBall3.pitchAngle=4.8f;
   PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=-1.f;
-  PrepareShootBall3.gasAim=0.554f;
+  PrepareShootBall3.gasAim=0.56f;
 	
 	
   /*准备等待拿第三个球的数据*/
@@ -135,17 +137,17 @@ void prepareMotionParaInit(void)
 	/*接取第三个球的参数*/
 	PrepareGetBall3.courseAngle=94.f;
   PrepareGetBall3.pitchAngle=-2.3f;
-  PrepareGetBall3.upSteerAngle=-42.f;
+  PrepareGetBall3.upSteerAngle=-47.f;
 	PrepareGetBall3.downSteerAngle=-39.f;
   PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
   
   
 	/*准备射第四个球的数据*/
 	PrepareShootBall4.courseAngle=178.6f;
-  PrepareShootBall4.pitchAngle=4.f;
+  PrepareShootBall4.pitchAngle=4.8f;
   PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.515f;
+  PrepareShootBall4.gasAim=0.56f;
 	
 
 	/*准备接第四个球的参数*/
@@ -173,18 +175,18 @@ void prepareMotionParaInit(void)
 	
 	/*金球1备件的射球参数*/
 	PrepareShootGoldBall[0].courseAngle=178.5f;
-  PrepareShootGoldBall[0].pitchAngle=4.8f;
+  PrepareShootGoldBall[0].pitchAngle=4.5f;
 	PrepareShootGoldBall[0].upSteerAngle=0.0f;
   PrepareShootGoldBall[0].downSteerAngle=-1.f;
-  PrepareShootGoldBall[0].gasAim=0.56f;
+  PrepareShootGoldBall[0].gasAim=0.554f;
 
 	
 	/*金球2备件的射球参数*/
 	PrepareShootGoldBall[1].courseAngle=178.5f;
-  PrepareShootGoldBall[1].pitchAngle=4.8f;
+  PrepareShootGoldBall[1].pitchAngle=4.f;
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
-  PrepareShootGoldBall[1].gasAim=0.56f;
+  PrepareShootGoldBall[1].gasAim=0.515f;
 	
 	
 	/*演示取球架3上的彩球*/
@@ -823,3 +825,36 @@ float GetGetBallUpSteerAngle(int process){
 	}
 	return upsteerAngle;
 }
+
+/*分段取球*/
+void PrepareGetBallThree(void){
+		static uint8_t rotateStep = 0;
+			switch(rotateStep){
+				case 0:
+					gRobot.sDta.holdBallAimAngle[0] = PrepareGetGoldBallProcess[0].upSteerAngle;
+					gRobot.sDta.courseAimAngle = PrepareGetGoldBallProcess[0].courseAngle;
+					if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS&&gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS){
+						rotateStep=1;
+						gRobot.sDta.holdBallAimAngle[0] = PrepareGetGoldBallProcess[1].upSteerAngle;
+						gRobot.sDta.courseAimAngle = PrepareGetGoldBallProcess[1].courseAngle;
+					}
+				break;
+				
+				case 1:
+					if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS&&gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS){
+						rotateStep=2;
+						gRobot.sDta.holdBallAimAngle[0] = PrepareGetBall3.upSteerAngle;
+						gRobot.sDta.courseAimAngle = PrepareGetBall3.courseAngle;
+					}
+				break;
+				
+				case 2:
+					if(gRobot.sDta.AT_motionFlag&AT_COURSE_SUCCESS&&gRobot.sDta.AT_motionFlag&AT_HOLD_BALL_1_SUCCESS){
+					}
+				break;
+				
+			}
+
+	
+}	
+

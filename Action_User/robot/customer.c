@@ -59,7 +59,7 @@ extern motionPara_t PrepareShootGoldBall[2];
 static char buffer[20];
 static int bufferI=0;
 static int atCommand=0;
-
+static uint8_t YesOrNoFlag=0;
 static int getGoldBallStep=0;
 /*哪一个球*/
 static int WhichBall=3;
@@ -110,12 +110,56 @@ void UART4_IRQHandler(void)
 
 void AT_CMD_Judge(void){
 	
-  if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0)//AT    
+  if((bufferI == 7) && strncmp(buffer, "AT+1", 4)==0){    
     atCommand=CLAW;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0)//AT    
+		if(*(buffer + 4) == '1') 
+    {
+      YesOrNoFlag=1;
+    }else if(*(buffer + 4) == '0') 
+    {
+      YesOrNoFlag=0;
+    } 
+	}
+  else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0){
+    if(*(buffer + 4) == '1'){
+			YesOrNoFlag=1;
+			shootBallFlag=1;
+			ballMode=SHOOT_BALL;
+			gRobot.sDta.AT_motionFlag=0;
+		}else if(*(buffer + 4) == '0'){
+			YesOrNoFlag=0;
+			shootBallFlag=0;
+			ballMode=PICK_BALL;
+		}
+	  if(*(buffer + 5) =='0'){
+				WhichBall=BALL_1;
+		}else if(*(buffer + 5) =='1'){
+				WhichBall=BALL_2;
+		}else if(*(buffer + 5) =='2'){
+				WhichBall=BALL_1_BACKUP;
+		}else if(*(buffer + 5) =='3'){
+				WhichBall=BALL_2_BACKUP;
+		}else if(*(buffer + 5) =='4'){
+				WhichBall=BALL_3;
+				gRobot.sDta.WhichGoldBall=WhichBall;	
+		}else if(*(buffer + 5) =='5'){
+				WhichBall=BALL_4;
+				gRobot.sDta.WhichGoldBall=WhichBall;
+		}else if(*(buffer + 5) =='6'){
+				WhichBall=BALL_3_BACKUP;
+				gRobot.sDta.WhichGoldBall=WhichBall;
+		}else if(*(buffer + 5) =='7'){
+				WhichBall=BALL_4_BACKUP;
+				gRobot.sDta.WhichGoldBall=WhichBall;
+		}else if(*(buffer + 5) =='8'){
+				WhichBall=0;
+		}
     atCommand=SHOOT;
-  else if((bufferI >= 4) && strncmp(buffer, "AT+3", 4)==0)//AT    
+	}
+  else if((bufferI >= 4) && strncmp(buffer, "AT+3", 4)==0){   
     atCommand=PITCH;
+		
+	}
   else if((bufferI >= 4) && strncmp(buffer, "AT+4", 4)==0)//发射按钮   
     atCommand=STEER;
   else if((bufferI >= 4) && strncmp(buffer, "AT+5", 4)==0)//发射按钮   
@@ -128,12 +172,39 @@ void AT_CMD_Judge(void){
     atCommand=STEER2;
   else if((bufferI >= 5) && strncmp(buffer, "AT+13", 5)==0)//  
     atCommand=BOOST;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0)//  
+  else if((bufferI >= 5) && strncmp(buffer, "AT+14", 5)==0){  
     atCommand=WHEEL;
-  else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0)//   
+		if(*(buffer + 5) == '1') 
+    {
+      YesOrNoFlag=1;
+    }
+    else if(*(buffer + 5) == '0') 
+    {
+      YesOrNoFlag=0;
+    } 
+	}
+  else if((bufferI >= 5) && strncmp(buffer, "AT+15", 5)==0){ 
     atCommand=STAIR2;
-	else if((bufferI >= 5) && strncmp(buffer, "AT+16", 5)==0)//   
+		if(*(buffer + 5) == '1') 
+    {
+      YesOrNoFlag=1;
+    }
+    else if(*(buffer + 5) == '0') 
+    {
+      YesOrNoFlag=0;
+    } 
+	}
+	else if((bufferI >= 5) && strncmp(buffer, "AT+16", 5)==0){ 
     atCommand=EXTEND_THE_CAR;
+		if(*(buffer + 5) == '1') 
+    {
+       YesOrNoFlag=1;
+    }
+    else if(*(buffer + 5) == '0') 
+    {
+       YesOrNoFlag=0;
+    } 
+	}
 	else if((bufferI >= 5) && strncmp(buffer, "AT+77", 5)==0)//   
     atCommand=GOLDEN_COURCE_SPEED;
 	else if((bufferI >= 5) && strncmp(buffer, "AT+78", 5)==0)//   
@@ -167,11 +238,11 @@ void AT_CMD_Handle(void){
     /*控制张爪*/
   case CLAW:
     USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 4) == '1') 
+    if(YesOrNoFlag== 1) 
     {
       ClawShut();
     }
-    else if(*(buffer + 4) == '0') 
+    else if(YesOrNoFlag == 0) 
     {
       ClawOpen();
     } 
@@ -185,28 +256,19 @@ void AT_CMD_Handle(void){
     USART_OUTByDMA("OK\r\n");
 	//某一个金球用于MotionStatusUpdate中气压满足边界的条件
 		gRobot.sDta.WhichGoldBall=0;
-    if(*(buffer + 4) == '1')
+    if(YesOrNoFlag== 1)
     {
-			shootBallFlag=1;
-			ballMode=SHOOT_BALL;
 			ShootSmallOpen();
 			Delay_ms(300);
-			gRobot.sDta.AT_motionFlag=0;
-			if(*(buffer + 5) =='0'){
-				WhichBall=BALL_1;
+			if(WhichBall==BALL_1){
 				PrepareShootBall(BALL_1);
-			}else if(*(buffer + 5) =='1'){
-				WhichBall=BALL_2;
+			}else if(WhichBall==BALL_2){
 				PrepareShootBall(BALL_2);
-			}else if(*(buffer + 5) =='2'){
-				WhichBall=BALL_1_BACKUP;
+			}else if(WhichBall==BALL_1_BACKUP){
 				PrepareShootBall(BALL_1_BACKUP);
-			}else if(*(buffer + 5) =='3'){
-				WhichBall=BALL_2_BACKUP;
+			}else if(WhichBall==BALL_2_BACKUP){
 				PrepareShootBall(BALL_2_BACKUP);
-			}else if(*(buffer + 5) =='4'){
-				WhichBall=BALL_3;
-				gRobot.sDta.WhichGoldBall=WhichBall;
+			}else if(WhichBall==BALL_3){
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
@@ -217,9 +279,7 @@ void AT_CMD_Handle(void){
 					}
 				}
 				PrepareShootBall(BALL_3);
-			}else if(*(buffer + 5) =='5'){
-				WhichBall=BALL_4;
-				gRobot.sDta.WhichGoldBall=WhichBall;
+			}else if(WhichBall==BALL_4){
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
@@ -230,9 +290,7 @@ void AT_CMD_Handle(void){
 					}
 				}
 				PrepareShootBall(BALL_4);
-			}else if(*(buffer + 5) =='6'){
-				WhichBall=BALL_3_BACKUP;
-				gRobot.sDta.WhichGoldBall=WhichBall;
+			}else if(WhichBall==BALL_3_BACKUP){
 				gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
@@ -243,10 +301,8 @@ void AT_CMD_Handle(void){
 					}
 				}
 				PrepareShootBall(BALL_3_BACKUP);
-			}else if(*(buffer + 5) =='7'){
-				WhichBall=BALL_4_BACKUP;
-				gRobot.sDta.WhichGoldBall=WhichBall;
-				gRobot.sDta.courseAimAngle = 179.9f;
+			}else if(WhichBall==BALL_4_BACKUP){
+			  gRobot.sDta.courseAimAngle = 179.9f;
 				CourseAngleMotion(gRobot.sDta.courseAimAngle);
 				while(1){
 					Delay_ms(5);
@@ -256,8 +312,7 @@ void AT_CMD_Handle(void){
 					}
 				}
 				PrepareShootBall(BALL_4_BACKUP);
-			}else if(*(buffer + 5) =='8'){
-				WhichBall=0;
+			}else if(WhichBall==0){
 				if(PE_FOR_THE_BALL){
 					ClawOpen();
 					Delay_ms(50);
@@ -265,9 +320,8 @@ void AT_CMD_Handle(void){
 				}
 			}
     }
-    else if(*(buffer + 4) == '0') 
+    else if(YesOrNoFlag==0) 
     {
-			ballMode=PICK_BALL;
       if(gRobot.sDta.AT_motionFlag&(AT_SHOOT_BIG_ENABLE|AT_SHOOT_SMALL_ENABLE))
       {
         ShootSmallShut();
@@ -276,28 +330,27 @@ void AT_CMD_Handle(void){
 				Delay_ms(500);
       }
 			
-			if(*(buffer + 5) =='0'||*(buffer + 5) =='2'){
-				WhichBall=BALL_1;
-				if(*(buffer + 5) =='0'){
+			if(WhichBall==BALL_1||WhichBall==BALL_1_BACKUP){
+				if(WhichBall==BALL_1){
 					PrepareGetBall1.gasAim=PrepareShootBall1.gasAim;
 				}else {
 					PrepareGetBall1.gasAim=PrepareShootColorBall[0].gasAim;
 				}
+				WhichBall=BALL_1;
 				PrepareGetBall(BALL_1);
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='1'||*(buffer + 5) =='3'){
-				WhichBall=BALL_2;
-				if(*(buffer + 5) =='1'){
+			}else if(WhichBall==BALL_2||WhichBall==BALL_2_BACKUP){
+				if(WhichBall==BALL_2){
 					PrepareGetBall2.gasAim=PrepareShootBall2.gasAim;
 				}else {
 					PrepareGetBall2.gasAim=PrepareShootColorBall[1].gasAim;
 				}
+				WhichBall=BALL_2;
 				PrepareGetBall(BALL_2);
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='4'||*(buffer + 5) =='6'){
-				WhichBall=BALL_3;
+			}else if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
 			  gRobot.sDta.WhichGoldBall=WhichBall;
-				if(*(buffer + 5) =='4'){
+				if(WhichBall==BALL_3){
 					PrepareGetBall3Wait.gasAim=PrepareShootBall3.gasAim;
 					PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
 				}else {
@@ -314,18 +367,17 @@ void AT_CMD_Handle(void){
 					getGoldBallStep=0;
 				}
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='5'||*(buffer + 5) =='7'){
-				WhichBall=BALL_4;
+			}else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
 				gRobot.sDta.WhichGoldBall=WhichBall;
-				if(*(buffer + 5) =='5'){
+				if(WhichBall==BALL_4){
 					PrepareGetBall4.gasAim=PrepareShootBall4.gasAim;
 				}else {
 					PrepareGetBall4.gasAim=PrepareShootGoldBall[1].gasAim;
 				}
+				WhichBall=BALL_4;
 				PrepareGetBall(BALL_4);
 				gRobot.sDta.AT_motionFlag=0;
-			}else if(*(buffer + 5) =='8'){
-				WhichBall=0;
+			}else if(WhichBall==0){
 				gRobot.sDta.AT_motionFlag=0;
 				ShootSmallShut();
 				ShootBigShut();
@@ -399,22 +451,22 @@ void AT_CMD_Handle(void){
   
   case WHEEL:
     USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 5) == '1') 
+    if(YesOrNoFlag==1) 
     {
       MotionCardCMDSend(NOTIFY_MOTIONCARD_ENABLE_WHEEL);
     }
-    else if(*(buffer + 5) == '0') 
+    else if(YesOrNoFlag ==0) 
     {
       MotionCardCMDSend(NOTIFY_MOTIONCARD_DISABLE_WHEEL);
     } 
     break;
   case STAIR2:
     USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 5) == '1') 
+    if(YesOrNoFlag==1)  
     {
       GoldBallGraspStairTwoOn();
     }
-    else if(*(buffer + 5) == '0') 
+    else if(YesOrNoFlag==0) 
     {
       GoldBallGraspStairTwoOff();
     } 
@@ -422,11 +474,11 @@ void AT_CMD_Handle(void){
 		
 	case EXTEND_THE_CAR:
     USART_OUTByDMA("OK\r\n");
-    if(*(buffer + 5) == '1') 
+    if(YesOrNoFlag==1) 
     {
       ExtendCarOn();
     }
-    else if(*(buffer + 5) == '0') 
+    else if(YesOrNoFlag==0) 
     {
       ExtendCarOff();
     } 

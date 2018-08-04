@@ -1253,7 +1253,4 @@ void GetRack3Ball(void){
 		
 }
 	
-	
-	
-	
 
