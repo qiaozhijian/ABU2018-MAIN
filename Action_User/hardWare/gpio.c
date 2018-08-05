@@ -398,6 +398,7 @@ int KeySwitchIntoReset(void){
 		carryOutResetActionFlag=0;
 		switch(resetProgress){
 			case 1:
+					gRobot.sDta.robocon2018=NULL_PROCESS;
 					ShootLedOff();
 					Delay_ms(150);
 					//通知控制卡准备重启
