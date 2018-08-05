@@ -83,7 +83,7 @@ void ShootReset(void)
 void prepareMotionParaInit(void)
 {
 	/*准备射第一个球的数据*/
-  PrepareShootBall1.courseAngle=168.3f;
+  PrepareShootBall1.courseAngle=168.8f;
   PrepareShootBall1.pitchAngle=8.5f;
   PrepareShootBall1.upSteerAngle=0.f;
 	PrepareShootBall1.downSteerAngle=-1.f;
@@ -106,7 +106,7 @@ void prepareMotionParaInit(void)
 	
 	
   /*准备射第二个球的数据*/
-  PrepareShootBall2.courseAngle=175.0f;
+  PrepareShootBall2.courseAngle=175.5f;
   PrepareShootBall2.pitchAngle=9.f;
   PrepareShootBall2.upSteerAngle=0.0f;
 	PrepareShootBall2.downSteerAngle=-1.f;
@@ -125,7 +125,7 @@ void prepareMotionParaInit(void)
   PrepareShootBall3.pitchAngle=4.5f;
   PrepareShootBall3.upSteerAngle=0.0f;
   PrepareShootBall3.downSteerAngle=-1.f;
-  PrepareShootBall3.gasAim=0.56f;
+  PrepareShootBall3.gasAim=0.565f;
 	
 	
   /*准备等待拿第三个球的数据*/
@@ -144,7 +144,7 @@ void prepareMotionParaInit(void)
   
   
 	/*准备射第四个球的数据*/
-	PrepareShootBall4.courseAngle=178.5f;
+	PrepareShootBall4.courseAngle=178.8f;
   PrepareShootBall4.pitchAngle=3.6f;
   PrepareShootBall4.upSteerAngle=0.0f;
   PrepareShootBall4.downSteerAngle=0.0f;

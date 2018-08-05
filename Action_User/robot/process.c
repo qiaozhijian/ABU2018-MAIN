@@ -560,7 +560,6 @@ void FightForGoldBall(void)
 	    Delay_ms(50);
 		  ClawOpen();
 
-      shootTime++;
       /*给延时使发射杆能执行到位*/
 			if(shootTime==0){
 			  Delay_ms(200);
@@ -568,6 +567,8 @@ void FightForGoldBall(void)
 			else{
 				Delay_ms(300);
 			}
+			shootTime++;
+
       
 			gRobot.raceTime.goldBallThrowTime=gRobot.raceTime.roboconTime - gRobot.raceTime.colorBall1Time - gRobot.raceTime.colorBall2Time - gRobot.raceTime.goldBallWaitTime;
 			gRobot.raceTime.goldBallTime=gRobot.raceTime.goldBallWaitTime + gRobot.raceTime.goldBallThrowTime;
