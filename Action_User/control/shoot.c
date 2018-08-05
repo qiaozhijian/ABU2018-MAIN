@@ -175,19 +175,19 @@ void prepareMotionParaInit(void)
 	
 	
 	/*金球1备件的射球参数*/
-	PrepareShootGoldBall[0].courseAngle=178.9f;
-  PrepareShootGoldBall[0].pitchAngle=4.8f;
+	PrepareShootGoldBall[0].courseAngle=179.3f;
+  PrepareShootGoldBall[0].pitchAngle=4.5f;
 	PrepareShootGoldBall[0].upSteerAngle=0.0f;
   PrepareShootGoldBall[0].downSteerAngle=-1.f;
-  PrepareShootGoldBall[0].gasAim=0.56f;
+  PrepareShootGoldBall[0].gasAim=0.565f;
 
 	
 	/*金球2备件的射球参数*/
-	PrepareShootGoldBall[1].courseAngle=178.6f;
-  PrepareShootGoldBall[1].pitchAngle=4.8f;
+	PrepareShootGoldBall[1].courseAngle=178.9f;
+  PrepareShootGoldBall[1].pitchAngle=4.f;
 	PrepareShootGoldBall[1].upSteerAngle=0.0f;
   PrepareShootGoldBall[1].downSteerAngle=0.0f;
-  PrepareShootGoldBall[1].gasAim=0.56f;
+  PrepareShootGoldBall[1].gasAim=0.57f;
 	
 	
 	/*演示取球架3上的彩球*/
@@ -290,17 +290,19 @@ void RedPrepareMotionParaInit(void)
   PrepareShootColorBall[1].gasAim=PrepareShootColorBall[1].gasAim;
 	
 	/*金球1备件的射球参数*/
-  PrepareShootGoldBall[0].courseAngle=PrepareShootGoldBall[0].courseAngle;
-  PrepareShootGoldBall[0].pitchAngle=PrepareShootGoldBall[0].pitchAngle;
-	PrepareShootGoldBall[0].upSteerAngle=PrepareShootGoldBall[0].upSteerAngle;
-  PrepareShootGoldBall[0].downSteerAngle=PrepareShootGoldBall[0].downSteerAngle;
-  PrepareShootGoldBall[0].gasAim=PrepareShootGoldBall[0].gasAim;
+	PrepareShootGoldBall[0].courseAngle=178.9f;
+  PrepareShootGoldBall[0].pitchAngle=4.8f;
+	PrepareShootGoldBall[0].upSteerAngle=0.0f;
+  PrepareShootGoldBall[0].downSteerAngle=-1.f;
+  PrepareShootGoldBall[0].gasAim=0.56f;
+
+	
 	/*金球2备件的射球参数*/
-	PrepareShootGoldBall[1].courseAngle=PrepareShootGoldBall[1].courseAngle;
-  PrepareShootGoldBall[1].pitchAngle=PrepareShootGoldBall[1].pitchAngle;
-	PrepareShootGoldBall[1].upSteerAngle=PrepareShootGoldBall[1].upSteerAngle;
-  PrepareShootGoldBall[1].downSteerAngle=PrepareShootGoldBall[1].downSteerAngle;
-  PrepareShootGoldBall[1].gasAim=PrepareShootGoldBall[1].gasAim;
+	PrepareShootGoldBall[1].courseAngle=178.6f;
+  PrepareShootGoldBall[1].pitchAngle=4.8f;
+	PrepareShootGoldBall[1].upSteerAngle=0.0f;
+  PrepareShootGoldBall[1].downSteerAngle=0.0f;
+  PrepareShootGoldBall[1].gasAim=0.56f;
 	
 	PrepareGetRack3Ball.courseAngle=PrepareGetRack3Ball.courseAngle;
   PrepareGetRack3Ball.pitchAngle= PrepareGetRack3Ball.pitchAngle;
