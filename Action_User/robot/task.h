@@ -187,6 +187,7 @@
 #define INTO_RESET_PREPARE    																				16
 /*蓝牙调试自定义程序*/
 #define ROBOT_CONTROL_BY_BT   																				11
+#define NULL_PROCESS                                                  100
 
 #define RACK3_BALL                                                    18
 /*控制卡通信解释*/

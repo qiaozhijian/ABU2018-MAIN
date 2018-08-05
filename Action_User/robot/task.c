@@ -309,6 +309,10 @@ void RobotTask(void)
 				  case RACK3_BALL:
 						GetRack3Ball();
 					break;
+					
+					default:
+						
+					break;
 				}
 				USART_OUTByDMA("\r\n");
 			#endif
