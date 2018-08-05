@@ -247,7 +247,7 @@ void MotionStatusUpdate(void)
 //	SmallChangeGetBall();
 	
 	/*等到进入射球进程的时候进行一次计算微调航向*/
-  SmallChange();
+//  SmallChange();
 	
 	
 }

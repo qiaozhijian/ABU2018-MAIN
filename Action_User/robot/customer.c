@@ -120,6 +120,7 @@ void AT_CMD_Judge(void){
     } 
 	}
   else if((bufferI >= 4) && strncmp(buffer, "AT+2", 4)==0){
+		//清空标志位防止其立马射出
     if(*(buffer + 4) == '1'){
 			YesOrNoFlag=1;
 			shootBallFlag=1;
@@ -246,14 +247,16 @@ void AT_CMD_Handle(void){
     {
       ClawOpen();
     } 
-    else{
-		
-		}
     break;
     
     /*控制是否射击*/
   case SHOOT:
     USART_OUTByDMA("OK\r\n");
+	  SetMotionFlag(~AT_COURSE_SUCCESS);
+		SetMotionFlag(~AT_PITCH_SUCCESS);
+		SetMotionFlag(~AT_GAS_SUCCESS);
+		SetMotionFlag(~AT_HOLD_BALL_1_SUCCESS);
+		SetMotionFlag(~AT_HOLD_BALL_2_SUCCESS);
 	//某一个金球用于MotionStatusUpdate中气压满足边界的条件
 		gRobot.sDta.WhichGoldBall=0;
     if(YesOrNoFlag== 1)
