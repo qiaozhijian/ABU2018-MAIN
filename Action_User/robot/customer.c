@@ -349,7 +349,6 @@ void AT_CMD_Handle(void){
 				PrepareGetBall(BALL_2);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
-			  gRobot.sDta.WhichGoldBall=WhichBall;
 				if(WhichBall==BALL_3){
 					PrepareGetBall3Wait.gasAim=PrepareShootBall3.gasAim;
 					PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
@@ -363,18 +362,19 @@ void AT_CMD_Handle(void){
 					getGoldBallStep=1;
 				}else if(getGoldBallStep==1){
 					WhichBall=BALL_3;
+					gRobot.sDta.WhichGoldBall=WhichBall;
 					PrepareGetBall(BALL_3);
 					getGoldBallStep=0;
 				}
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
-				gRobot.sDta.WhichGoldBall=WhichBall;
 				if(WhichBall==BALL_4){
 					PrepareGetBall4.gasAim=PrepareShootBall4.gasAim;
 				}else {
 					PrepareGetBall4.gasAim=PrepareShootGoldBall[1].gasAim;
 				}
 				WhichBall=BALL_4;
+				gRobot.sDta.WhichGoldBall=WhichBall;
 				PrepareGetBall(BALL_4);
 				gRobot.sDta.AT_motionFlag=0;
 			}else if(WhichBall==0){
@@ -515,17 +515,19 @@ void TestFightForBall(void){
 									/*气压到位*/
 									&&(gRobot.sDta.AT_motionFlag&AT_GAS_SUCCESS))
     {
+			USART_OUTByDMA("WhichBall=%d\t",WhichBall);
 			if(WhichBall==BALL_1||WhichBall==BALL_2){
 				 ShootBall();
 				//推杆执行时间
 				 Delay_ms(125);
 			}else if(WhichBall==BALL_3||WhichBall==BALL_4||WhichBall==BALL_3_BACKUP||WhichBall==BALL_4_BACKUP){
+				 USART_OUTByDMA("WhichBall=%d\t",WhichBall);
 				 //射球前的延时
-			   if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
+//			   if(WhichBall==BALL_3||WhichBall==BALL_3_BACKUP){
 					  Delay_ms(300);
-			   }else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
-            Delay_ms(300);
-				 }
+//			   }else if(WhichBall==BALL_4||WhichBall==BALL_4_BACKUP){
+//            Delay_ms(300);
+//				 }
 				 GasDisable();
 				 ShootBigOpen();
 	       Delay_ms(50);

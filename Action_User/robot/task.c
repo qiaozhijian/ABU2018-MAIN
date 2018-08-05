@@ -179,23 +179,23 @@ void RobotTask(void)
 //						USART_OUTByDMAF(gRobot.posX);
 //						USART_OUTByDMAF(gRobot.posY);
 //						USART_OUTByDMAF(gRobot.angle);
-//					  USART_OUTByDMA("C ");
-//						USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
-//						USART_OUTByDMAF(gRobot.courseAngle);
-//					  USART_OUTByDMA("P ");
-//						USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
-//						USART_OUTByDMAF(gRobot.pitchAngle);
-//					  USART_OUTByDMA("H1 ");
-//						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
-//						USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+					  USART_OUTByDMA("C ");
+						USART_OUTByDMAF(gRobot.sDta.courseAimAngle);
+						USART_OUTByDMAF(gRobot.courseAngle);
+					  USART_OUTByDMA("P ");
+						USART_OUTByDMAF(gRobot.sDta.pitchAimAngle);
+						USART_OUTByDMAF(gRobot.pitchAngle);
+					  USART_OUTByDMA("H1 ");
+						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[0]);
+						USART_OUTByDMAF(gRobot.holdBallAngle[0]);
+						USART_OUTByDMA("H2 ");
+						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[1]);
+						USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 					  USART_OUTByDMA("G ");
 						USART_OUTByDMAF(gRobot.sDta.gasAimValue);
 						USART_OUTByDMAF(gRobot.gasValue);
 						USART_OUTByDMAF(gRobot.gasControl);
 						USART_OUTByDMA("adc %d",gRobot.gasAdc);
-					  USART_OUTByDMA("H2 ");
-						USART_OUTByDMAF(gRobot.sDta.holdBallAimAngle[1]);
-						USART_OUTByDMAF(gRobot.holdBallAngle[1]);
 					  USART_OUTByDMA("L ");
 					  USART_OUTByDMA("A%d\t B%d\t C%d\t",gRobot.laser[0],gRobot.laser[1],gRobot.laser[2]);
 						AT_CMD_Handle();
@@ -209,8 +209,7 @@ void RobotTask(void)
 					
 					case ROBOT_PREPARE:
 						//红蓝场参数选择
-            PrepareParamByRaBSwitch();
-						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY)
+						if(gRobot.sDta.AT_motionFlag&AT_PREPARE_READY&&PrepareParamByRaBSwitch())
 						{
 							BEEP_ON;
 							ShootLedOn();
@@ -222,7 +221,8 @@ void RobotTask(void)
 					break;
 						
 					case INTO_RESET_PREPARE:
-						if(gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT){
+						PrepareParamByRaBSwitch();
+						if(gRobot.sDta.AT_motionFlag&AT_RESET_THE_ROBOT&&PrepareParamByRaBSwitch()){
 							if(gRobot.sDta.AT_motionFlag&AT_GET_MOTIONCARD_RESET_FINISH)
 							{
 								SetMotionFlag(~AT_GET_MOTIONCARD_RESET_FINISH);
