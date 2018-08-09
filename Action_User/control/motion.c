@@ -10,6 +10,13 @@
 #include "adc.h"
 #include "gpio.h"
 #include "dma.h"
+
+#if  GAS_CONTROL == 1           
+#define GAS_ADC_ZERO          363
+#else
+#define GAS_ADC_ZERO          380
+#endif 
+
 extern Robot_t gRobot;
 
 void PitchAngleMotion(float angle)
@@ -256,7 +263,11 @@ void MotionStatusUpdate(void)
 void GasRead(void){
   uint16_t adc = Get_Adc_Average(11,15);
 	gRobot.gasAdc = adc;
-  gRobot.gasValue=((adc-GAS_ADC_ZERO))*1.145f/2048.f;
+//  #if  GAS_CONTROL == 1       
+//  gRobot.gasValue=((adc-GAS_ADC_ZERO))*1.145f/2048.f;
+//	#else
+	gRobot.gasValue=((adc-GAS_ADC_ZERO))*1.145f/2048.f;
+//	#endif
 }
 
 

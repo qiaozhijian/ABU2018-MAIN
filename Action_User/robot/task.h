@@ -13,6 +13,9 @@
 //#define TEST
 #define GAS_CONTOL_BY_PWM  1
 //	 DEBUG
+/*如果定义该变量为2则使用阀2为1在使用阀1*/
+#define GAS_CONTROL        1
+/*如果定义该变量则标定adc 0点*/
 //#define LOOK_FOR_GAS_ADC_ZERO  
 //常量定义
 //定位系统位于自动车水平方向的中间，垂直方向距墙mm505.f

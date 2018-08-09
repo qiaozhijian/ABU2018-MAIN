@@ -685,7 +685,7 @@ void PrepareWork(void)
 							#ifdef GAS_CONTOL_BY_PWM
 							//±ÈÀý·§¸øÂú
 								#ifdef LOOK_FOR_GAS_ADC_ZERO
-								GasMotion(0.f);
+	              TIM_SetCompare4(TIM4,511);
 								USART_OUTByDMA("%d ",Get_Adc_Average(11,15));
 								#else
 								GasMotion(0.85f);
