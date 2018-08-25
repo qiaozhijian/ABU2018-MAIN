@@ -11,7 +11,7 @@
 #define  GOLD_BALL2_OFFSET   (0.f)
 
 //下爪张开和投射的时间间隔
-#define CLAW_OPEN_GAP (0)
+#define CLAW_OPEN_GAP (50)
 
 //金球投射前的延时
 #define GOLD_BALL_DELAY (300)

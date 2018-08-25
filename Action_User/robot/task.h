@@ -322,6 +322,15 @@
 #define HANDOVER_3_X																									(6894.f)
 #define HANDOVER_3_Y																									(935.f)
 
+
+#ifndef RED_COURT
+#define RED_COURT (1)
+#endif
+
+#ifndef BLUE_COURT
+#define BLUE_COURT (2)
+#endif
+
 typedef struct{
   
 	/*判断此次是否为看门狗复位*/
@@ -478,7 +487,11 @@ typedef struct{
 	RobotconTime_t raceTime;
 	
 	ErrorTime_t  errorTime;
+	
+	uint8_t isRedOrBlue;
 }Robot_t ;
+
+extern Robot_t gRobot;
 
 #include "gasvalveControl.h"
 #include "elmo.h"

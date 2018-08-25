@@ -53,9 +53,23 @@ void ShootBall(void)
 	GasDisable();
 	ShootLedOn();
 #if CLAW_OPEN_GAP>=0
-	ClawOpen();
-	Delay_ms(CLAW_OPEN_GAP);
-	ShootBigOpen();
+	if(gRobot.isRedOrBlue==RED_COURT)
+	{
+		ClawOpen();
+		Delay_ms(CLAW_OPEN_GAP);
+		ShootBigOpen();	
+	}
+	else if(gRobot.isRedOrBlue==BLUE_COURT)
+	{
+		ClawOpen();
+		ShootBigOpen();	
+	}
+	else
+	{
+		ClawOpen();
+		ShootBigOpen();		
+	}
+
 #else
 	ShootBigOpen();
 	Delay_ms((-CLAW_OPEN_GAP));
@@ -240,11 +254,11 @@ void RedPrepareMotionParaInit(void)
 	
   
 	/*准备射第三个球的数据*/
-  PrepareShootBall3.courseAngle=178.8f;
-  PrepareShootBall3.pitchAngle=4.5f;
-  PrepareShootBall3.upSteerAngle=0.0f;
-  PrepareShootBall3.downSteerAngle=-1.f;
-  PrepareShootBall3.gasAim=0.554f;
+  PrepareShootBall3.courseAngle=PrepareShootBall3.courseAngle;
+  PrepareShootBall3.pitchAngle=PrepareShootBall3.pitchAngle;
+  PrepareShootBall3.upSteerAngle=PrepareShootBall3.upSteerAngle;
+  PrepareShootBall3.downSteerAngle=PrepareShootBall3.downSteerAngle;
+  PrepareShootBall3.gasAim=0.548f;
 	
   /*准备等待拿第三个球的数据*/
   PrepareGetBall3Wait.courseAngle=PrepareGetBall3Wait.courseAngle;
@@ -260,11 +274,11 @@ void RedPrepareMotionParaInit(void)
   PrepareGetBall3.gasAim=PrepareShootBall3.gasAim;
   
   /*准备射第四个球的数据*/
-	PrepareShootBall4.courseAngle=178.5f;
-  PrepareShootBall4.pitchAngle=3.6f;
-  PrepareShootBall4.upSteerAngle=0.0f;
-  PrepareShootBall4.downSteerAngle=0.0f;
-  PrepareShootBall4.gasAim=0.535f;
+	PrepareShootBall4.courseAngle=PrepareShootBall4.courseAngle;
+  PrepareShootBall4.pitchAngle=PrepareShootBall4.pitchAngle;
+  PrepareShootBall4.upSteerAngle=PrepareShootBall4.upSteerAngle;
+  PrepareShootBall4.downSteerAngle=PrepareShootBall4.downSteerAngle;
+  PrepareShootBall4.gasAim=0.525f;
 	
 	
 	/*准备接第四个球的参数*/
@@ -290,19 +304,19 @@ void RedPrepareMotionParaInit(void)
   PrepareShootColorBall[1].gasAim=PrepareShootColorBall[1].gasAim;
 	
 	/*金球1备件的射球参数*/
-	PrepareShootGoldBall[0].courseAngle=178.9f;
-  PrepareShootGoldBall[0].pitchAngle=4.8f;
-	PrepareShootGoldBall[0].upSteerAngle=0.0f;
-  PrepareShootGoldBall[0].downSteerAngle=-1.f;
-  PrepareShootGoldBall[0].gasAim=0.56f;
+	PrepareShootGoldBall[0].courseAngle=PrepareShootGoldBall[0].courseAngle;
+  PrepareShootGoldBall[0].pitchAngle=PrepareShootGoldBall[0].pitchAngle;
+	PrepareShootGoldBall[0].upSteerAngle=PrepareShootGoldBall[0].upSteerAngle;
+  PrepareShootGoldBall[0].downSteerAngle=PrepareShootGoldBall[0].downSteerAngle;
+  PrepareShootGoldBall[0].gasAim=PrepareShootGoldBall[0].gasAim;
 
 	
 	/*金球2备件的射球参数*/
-	PrepareShootGoldBall[1].courseAngle=178.6f;
-  PrepareShootGoldBall[1].pitchAngle=4.8f;
-	PrepareShootGoldBall[1].upSteerAngle=0.0f;
-  PrepareShootGoldBall[1].downSteerAngle=0.0f;
-  PrepareShootGoldBall[1].gasAim=0.56f;
+	PrepareShootGoldBall[1].courseAngle=PrepareShootGoldBall[1].courseAngle;
+  PrepareShootGoldBall[1].pitchAngle=PrepareShootGoldBall[1].pitchAngle;
+	PrepareShootGoldBall[1].upSteerAngle=PrepareShootGoldBall[1].upSteerAngle;
+  PrepareShootGoldBall[1].downSteerAngle=PrepareShootGoldBall[1].downSteerAngle;
+  PrepareShootGoldBall[1].gasAim=PrepareShootGoldBall[1].gasAim;
 	
 	PrepareGetRack3Ball.courseAngle=PrepareGetRack3Ball.courseAngle;
   PrepareGetRack3Ball.pitchAngle= PrepareGetRack3Ball.pitchAngle;
@@ -787,6 +801,7 @@ int PrepareParamByRaBSwitch(void){
 					BLUE_LIGHT_OFF;
 					RED_LIGHT_ON;
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_CHOOSE_RED);
+					gRobot.isRedOrBlue = RED_COURT;
 					USART_OUTByDMA("\r\n  RedPrepareMotionParaInit\r\n");
 					checkTime=16;
 					return 1;
@@ -795,6 +810,7 @@ int PrepareParamByRaBSwitch(void){
 					//默认蓝场
 					USART_OUTByDMA("\r\n  BlueprepareMotionParaInit\r\n");
 					MotionCardCMDSend(NOTIFY_MOTIONCARD_CHOOSE_BLUE);
+					gRobot.isRedOrBlue = BLUE_COURT;
 					prepareMotionParaInit();
 					RED_LIGHT_OFF;
 					BLUE_LIGHT_ON;

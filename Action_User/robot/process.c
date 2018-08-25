@@ -553,12 +553,30 @@ void FightForGoldBall(void)
 			}
       /*射球*/
 //			ShootBall();
-			
+		if(gRobot.isRedOrBlue==RED_COURT)
+		{
+			ClawOpen();
+			Delay_ms(50);
 			GasDisable();
 			ShootBigOpen();
+		}
+		else if(gRobot.isRedOrBlue==BLUE_COURT)
+		{
+			GasDisable();
+			ShootBigOpen();	
+			Delay_ms(50);
+			ClawOpen();
+		}
+		else
+		{
+			GasDisable();
+			ShootBigOpen();	
+			Delay_ms(50);
+			ClawOpen();			
+		}
+
 	    ShootLedOn();
-	    Delay_ms(50);
-		  ClawOpen();
+
 
       /*给延时使发射杆能执行到位*/
 			if(shootTime==0){
